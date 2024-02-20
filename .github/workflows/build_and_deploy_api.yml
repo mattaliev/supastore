@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
   GOOGLE_CLOUD_SA_KEY: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
-  SERVICE_NAME: api-shop # Change to your Cloud Run service name
+  SERVICE_NAME: ditch-api # Change to your Cloud Run service name
   IMAGE: asia-southeast1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT }}/ditch/ditch-api # Change to your image name
   REGION: asia-southeast1 # Change to your Google Cloud region
 
