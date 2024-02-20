@@ -43,7 +43,7 @@ jobs:
       with:
         registry: asia-southeast1-docker.pkg.dev
         username: _json_key
-        password: $GOOGLE_CLOUD_SA_KEY
+        password: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
 
     - name: Build and push
       uses: docker/build-push-action@v5
