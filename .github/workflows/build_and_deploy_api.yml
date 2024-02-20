@@ -67,6 +67,8 @@ jobs:
     - id: Deploy
       uses: google-github-actions/deploy-cloudrun@v2
       with:
+        project_id: ${{ env.PROJECT_ID }}
         service: ${{ env.SERVICE_NAME }}
         image: ${{ env.IMAGE }}:latest
+        region: ${{ env.REGION }}
 
