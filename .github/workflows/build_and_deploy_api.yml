@@ -51,15 +51,13 @@ jobs:
         push: true
         context: ./api-shop/shop
         tags: | 
-          ditch/ditch-api:latest
-          ditch/ditch-api:${{ github.short_sha }}
-          $IMAGE:${{ github.short_sha }}
-          $IMAGE:latest
+          ${{ env.IMAGE }}:${{ github.short_sha }}
+          ${{ env.IMAGE }}:latest
         
 
     - id: Deploy
       uses: google-github-actions/deploy-cloudrun@v2
       with:
-        service: $SERVICE_NAME
-        image: $IMAGE:latest
+        service: ${{ env.SERVICE_NAME }}
+        image: ${{ env.IMAGE }}:latest
 
