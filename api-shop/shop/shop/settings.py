@@ -31,6 +31,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 try:
     _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
 except google.auth.exceptions.DefaultCredentialsError:
+    print("Could not authenticate with Google Cloud...")
     pass
 
 if os.path.isfile(env_file):
@@ -40,11 +41,11 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
     # Use Google Cloud Secrets if available
     print("Pulling secrets from Google Cloud Secret Manager")
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-    project_num = os.environ.get("GOOGLE_CLOUD_PROJECT_NUM")
+    print("Project ID:", project_id)
     settings_name = os.environ.get("SETTINGS_NAME", "api-shop-settings")
 
     client = secretmanager.SecretManagerServiceClient()
-    name = f"projects/{project_num}/secrets/{settings_name}/versions/latest"
+    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
     env.read_env(io.StringIO(payload))
 else:
