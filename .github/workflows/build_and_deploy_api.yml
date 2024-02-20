@@ -7,12 +7,14 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+  GOOGLE_CLOUD_SA_KEY: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
   SERVICE_NAME: api-shop # Change to your Cloud Run service name
   IMAGE: asia-southeast1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT }}/ditch/ditch-api # Change to your image name
   REGION: asia-southeast1 # Change to your Google Cloud region
 
 jobs:
   setup-build-publish-deploy:
+    environment: deployment
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
 
@@ -26,7 +28,7 @@ jobs:
     - id: auth
       uses: google-github-actions/auth@v2
       with:
-        credentials_json: '${{ secrets.GOOGLE_CLOUD_SA_KEY }}'
+        credentials_json: $GOOGLE_CLOUD_SA_KEY
 
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
@@ -41,7 +43,7 @@ jobs:
       with:
         registry: asia-southeast1-docker.pkg.dev
         username: _json_key
-        password: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
+        password: $GOOGLE_CLOUD_SA_KEY
 
     - name: Build and push
       uses: docker/build-push-action@v5
