@@ -1,0 +1,17 @@
+import RemoveFromCartButton from "@/components/cart/remove-from-cart";
+import UpdateItemQuantitySelect from "@/components/cart/update-quantity-select";
+import { CartItem } from "@/lib/api/types";
+
+export default function CartItemQuantity({
+  item,
+}: {
+  item: CartItem;
+}): JSX.Element {
+  return (
+    <div className="flex items-center gap-1">
+      <div className="text-sm text-telegram-text-color">Quantity</div>
+      <UpdateItemQuantitySelect itemId={item.id} quantity={item.quantity} />
+      <RemoveFromCartButton itemId={item.id} quantity={item.quantity} />
+    </div>
+  );
+}
