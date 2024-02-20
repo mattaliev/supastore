@@ -71,4 +71,7 @@ jobs:
         service: ${{ env.SERVICE_NAME }}
         image: ${{ env.IMAGE }}:latest
         region: ${{ env.REGION }}
+        secrets: |
+          GOOGLE_CLOUD_PROJECT=${{ secrets.GOOGLE_CLOUD_PROJECT }}
+          GOOGLE_CLOUD_PROJECT_NUM=${{ secrets.GOOGLE_CLOUD_PROJECT_NUM }}
 
