@@ -30,6 +30,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 try:
     credentials, project_id = google.auth.default()
+    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
 except google.auth.exceptions.DefaultCredentialsError:
     print("Could not authenticate with Google Cloud...")
     pass
