@@ -1,47 +1,74 @@
 name: Build and Deploy Telegram Frontend to Google Cloud Run
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
-  SERVICE_NAME: ditch/tg-shop # Change to your service name
-  IMAGE: gcr.io/${{ secrets.GOOGLE_CLOUD_PROJECT }}/ditch-tg # Change to your image name
-  REGION: asia-southeast1 # Change to your preferred region
+  GOOGLE_CLOUD_SA_KEY: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
+  SERVICE_NAME: ditch-tg # Change to your service name
+  IMAGE: asia-southeast1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT }}/ditch/ditch-tg # Change to your image name
+  REGION: asia-southeast1 # Change to your Google Cloud region
 
 jobs:
-  build-and-deploy:
+  setup-build-and-deploy-frontend:
+    environment: deployment
+    name: Setup, Build, Publish and Deploy Frontend
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: benjlevesque/short-sha@v3.0
+        id: short-sha
+        with:
+          length: 6
+
+      - run: echo $SHA
+        env:
+          SHA: ${{ steps.short-sha.outputs.sha }}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
-          service_account_key: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
-          export_default_credentials: true
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: asia-southeast1-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
           push: true
+          context: ./api-shop/shop
           tags: |
-            ${{ env.IMAGE }}:${{ github.event.release.tag_name }}
+            ${{ env.IMAGE }}:${{ env.SHA }}
             ${{ env.IMAGE }}:latest
+
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy $SERVICE_NAME \
-            --image $IMAGE:${{ github.event.release.tag_name }} \
-            --region $REGION \
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --quiet \
+            --image ${{ env.IMAGE }}:latest \
+            --region ${{ env.REGION }} \
             --platform managed \
+            --format json \
             --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}
-          
+            --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }} \
+            --set-env-vars NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}  
