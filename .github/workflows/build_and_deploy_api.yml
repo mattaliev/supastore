@@ -72,7 +72,7 @@ jobs:
           --region ${{ env.REGION }} \
           --platform managed \
           --format json \
-          --allow-unauthenticated
+          --allow-unauthenticated \
           --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }}
 
 #    - id: Deploy
