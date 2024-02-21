@@ -10,6 +10,7 @@ def product_list():
 
 
 def product_detail(id: UUID) -> Product:
+    print("Fetching product with id: %s", id)
     logger = logging.getLogger(__name__)
     logger.debug("Fetching product with id: %s", id)
     return Product.objects.get(pk=id)
