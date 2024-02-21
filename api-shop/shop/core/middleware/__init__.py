@@ -1,1 +1,1 @@
-from graphql_log_error_middleware import GraphqlErrorLogMiddleware
+from .graphql_log_error_middleware import GraphqlErrorLogMiddleware
