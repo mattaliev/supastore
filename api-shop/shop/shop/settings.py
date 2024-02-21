@@ -29,7 +29,8 @@ env = environ.Env(DEBUG=(bool, False))
 env_file = os.path.join(BASE_DIR, ".env")
 
 try:
-    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+    credentials, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+    print("Credentials are: ", credentials)
 except google.auth.exceptions.DefaultCredentialsError:
     print("Could not authenticate with Google Cloud...")
     pass
