@@ -55,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./api-shop/shop
+          context: ./tg-shop
           tags: |
             ${{ env.IMAGE }}:${{ env.SHA }}
             ${{ env.IMAGE }}:latest
