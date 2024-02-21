@@ -7,6 +7,6 @@ from core.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("/", index, name="index"),
+    path("", index, name="index"),
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True)))
 ]
