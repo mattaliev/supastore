@@ -30,14 +30,13 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 try:
     credentials, project_id = google.auth.default()
-    print(f"Authenticated with Google Cloud Project: {project_id}")
-    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
 except google.auth.exceptions.DefaultCredentialsError:
     print("Could not authenticate with Google Cloud...")
     pass
 
 if os.path.isfile(env_file):
     # Use local file if provided
+    print("Pulling secrets from local .env file")
     env.read_env(env_file)
 elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
     # Use Google Cloud Secrets if available
@@ -75,6 +74,7 @@ if CLOUD_RUN_SERVICE_URL:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:
     ALLOWED_HOSTS = ["*"]
+    SECURE_SSL_REDIRECT = False
 
 if FRONTEND_CLIENT_URL:
     CSRF_TRUSTED_ORIGINS.append(FRONTEND_CLIENT_URL)
@@ -147,6 +147,7 @@ DATABASES = {
 }
 
 if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+    print("Using Cloud SQL Auth Proxy...")
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = "5432"
 
@@ -229,6 +230,6 @@ LOGGING = {
 #     }
 #     LOGGING['loggers']['']['handlers'].append('console')
 # else:
-client = google.cloud.logging.Client()
+client = google.cloud.logging.Client(credentials=credentials)
 client.setup_logging(log_level="DEBUG")
 

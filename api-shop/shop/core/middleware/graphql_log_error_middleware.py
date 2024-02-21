@@ -16,6 +16,7 @@ class GraphqlErrorLogMiddleware(object):
         response = self.get_response(request)
 
         try:
+            print(response.__dict__)
             if 400 >= response.status_code and "graphql" in request.path.lower():
                 response_json = json.loads(response.content)
 
