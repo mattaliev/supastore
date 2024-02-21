@@ -24,13 +24,12 @@ import google.cloud.logging
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env(DEBUG=(bool, False))
+env = environ.Env(DEBUG=(bool, True))
 
 env_file = os.path.join(BASE_DIR, ".env")
 
 try:
     credentials, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-    print("Credentials are: ", credentials)
 except google.auth.exceptions.DefaultCredentialsError:
     print("Could not authenticate with Google Cloud...")
     pass
@@ -42,7 +41,6 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
     # Use Google Cloud Secrets if available
     print("Pulling secrets from Google Cloud Secret Manager")
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-    print("Project ID:", project_id)
     settings_name = os.environ.get("SETTINGS_NAME", "api-shop-settings")
 
     client = secretmanager.SecretManagerServiceClient()
@@ -213,14 +211,14 @@ LOGGING = {
     }
 }
 
-if DEBUG:
-    LOGGING['handlers']['console'] = {
-        'level': 'DEBUG',
-        'class': 'logging.StreamHandler',
-        'formatter': 'detailed',
-    }
-    LOGGING['loggers']['']['handlers'].append('console')
-else:
+# if DEBUG:
+#     LOGGING['handlers']['console'] = {
+#         'level': 'DEBUG',
+#         'class': 'logging.StreamHandler',
+#         'formatter': 'detailed',
+#     }
+#     LOGGING['loggers']['']['handlers'].append('console')
+# else:
     client = google.cloud.logging.Client()
     client.setup_logging(log_level="DEBUG")
 
