@@ -64,11 +64,22 @@ jobs:
           ${{ env.IMAGE }}:latest
         
 
-    - id: Deploy
-      uses: google-github-actions/deploy-cloudrun@v2
-      with:
-        project_id: ${{ env.PROJECT_ID }}
-        service: ${{ env.SERVICE_NAME }}
-        image: ${{ env.IMAGE }}:latest
-        region: ${{ env.REGION }}
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy ${{ env.SERVICE_NAME }} \
+          --quiet \
+          --image ${{ env.IMAGE }}:latest \
+          --region ${{ env.REGION }} \
+          --platform managed \
+          --format json \
+          --allow-unauthenticated
+          --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }}
+
+#    - id: Deploy
+#      uses: google-github-actions/deploy-cloudrun@v2
+#      with:
+#        project_id: ${{ env.PROJECT_ID }}
+#        service: ${{ env.SERVICE_NAME }}
+#        image: ${{ env.IMAGE }}:latest
+#        region: ${{ env.REGION }}
 
