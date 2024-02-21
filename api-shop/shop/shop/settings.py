@@ -219,6 +219,6 @@ LOGGING = {
 #     }
 #     LOGGING['loggers']['']['handlers'].append('console')
 # else:
-    client = google.cloud.logging.Client()
-    client.setup_logging(log_level="DEBUG")
+client = google.cloud.logging.Client()
+client.setup_logging(log_level="DEBUG")
 
