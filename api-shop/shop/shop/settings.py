@@ -66,6 +66,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 if CLOUD_RUN_SERVICE_URL:
+    print("Can see CLOUD_RUN_SERVICE_URL...")
     ALLOWED_HOSTS = [urlparse(CLOUD_RUN_SERVICE_URL).netloc]
     CSRF_TRUSTED_ORIGINS.append(CLOUD_RUN_SERVICE_URL)
     SECURE_SSL_REDIRECT = True
@@ -112,6 +113,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.GraphqlErrorLogMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
 
