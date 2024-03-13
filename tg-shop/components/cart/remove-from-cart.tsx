@@ -22,7 +22,7 @@ function DrawerTriggerButton() {
     "bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color p-0 h-6 w-6";
 
   return (
-    <DrawerTrigger asChild>
+    <DrawerTrigger asChild className="border-none outline-none">
       <Button className={clsx(buttonClasses)}>
         <TrashIcon className="h-5 w-5" />
         <span className="sr-only">Remove</span>
@@ -91,7 +91,7 @@ export default function RemoveFromCart({
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <DrawerTriggerButton />
-      <DrawerContent className="bg-telegram-bg-color text-telegram-text-color border-none">
+      <DrawerContent className="bg-telegram-bg-color text-telegram-text-color border-none outline-none">
         <DrawerHeader>
           <DrawerTitle>
             Are you sure you want to remove this item from your cart?
