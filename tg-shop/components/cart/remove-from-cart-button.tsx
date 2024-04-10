@@ -1,4 +1,5 @@
 "use client";
+import { useHapticFeedback } from "@tma.js/sdk-react";
 import { clsx } from "clsx";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -18,12 +19,16 @@ import {
 import { TrashIcon } from "@/components/ui/icons";
 
 function DrawerTriggerButton() {
+  const hapticFeedback = useHapticFeedback();
   const buttonClasses =
     "bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color p-0 h-6 w-6";
 
   return (
     <DrawerTrigger asChild className="border-none outline-none">
-      <Button className={clsx(buttonClasses)}>
+      <Button
+        className={clsx(buttonClasses)}
+        onClick={() => hapticFeedback.impactOccurred("heavy")}
+      >
         <TrashIcon className="h-5 w-5" />
         <span className="sr-only">Remove</span>
       </Button>
@@ -32,7 +37,10 @@ function DrawerTriggerButton() {
 }
 
 function CancelButton({ setIsDrawerOpen }: { setIsDrawerOpen: Function }) {
+  const hapticFeedback = useHapticFeedback();
+
   const handleClose = () => {
+    hapticFeedback.impactOccurred("light");
     setIsDrawerOpen(false);
   };
 
@@ -47,6 +55,7 @@ function CancelButton({ setIsDrawerOpen }: { setIsDrawerOpen: Function }) {
 
 export function SubmitButton() {
   const { pending } = useFormStatus();
+  const hapticFeedback = useHapticFeedback();
   const buttonClasses =
     "text-telegram-text-color hover:text-telegram-text-color bg-telegram-bg-color hover:bg-telegram-bg-color border border-telegram-text-color w-full my-2";
   const disabledClasses =
@@ -66,6 +75,7 @@ export function SubmitButton() {
       className={clsx(buttonClasses)}
       onClick={(e: React.FormEvent<HTMLButtonElement>) => {
         if (pending) e.preventDefault();
+        hapticFeedback.impactOccurred("light");
       }}
     >
       Remove from cart
@@ -73,7 +83,7 @@ export function SubmitButton() {
   );
 }
 
-export default function RemoveFromCart({
+export default function RemoveFromCartButton({
   itemId,
   quantity,
 }: {

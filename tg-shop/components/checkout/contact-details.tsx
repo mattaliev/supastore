@@ -17,7 +17,7 @@ export default function ContactDetails({
   formErrors?: ShippingDetailsFieldErrors;
 }) {
   return (
-    <Card className="mx-auto bg-telegram-bg-color pt-16">
+    <Card className="mx-auto bg-telegram-bg-color">
       <CardHeader className="flex flex-col items-center space-y-2">
         <CardTitle>Contact information</CardTitle>
         <CardDescription>Enter your contact information below</CardDescription>

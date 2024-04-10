@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-import AddToCart from "@/components/cart/add-to-cart";
+import AddToCartButton from "@/components/cart/add-to-cart-button";
 import ProductImages from "@/components/product/product-images";
 import ProductVariants from "@/components/product/product-variants";
 import { Product } from "@/lib/api/types";
@@ -19,7 +19,7 @@ export default function CatalogProduct({ product }: { product: Product }) {
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
     product.variants && product.variants.length > 0
       ? product.variants[0]?.id
-      : undefined
+      : undefined,
   );
 
   return (
@@ -35,7 +35,7 @@ export default function CatalogProduct({ product }: { product: Product }) {
           selectedVariant={selectedVariant}
           setSelectedVariant={setSelectedVariant}
         />
-        <AddToCart
+        <AddToCartButton
           productId={product.id}
           doesProductHaveVariants={doesProductHaveVariants}
           selectedVariantId={selectedVariant}

@@ -8,6 +8,7 @@ export const shippingDetailsFragment = /* GraphQL */ `
     lastName
     country
     city
+    province
     address
     postcode
     phone

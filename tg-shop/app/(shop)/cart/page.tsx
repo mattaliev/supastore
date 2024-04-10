@@ -3,9 +3,16 @@ import { cookies } from "next/headers";
 import CartItems from "@/components/cart/cart-items";
 import CartTotal from "@/components/cart/cart-total";
 import EmptyCart from "@/components/cart/empty-cart";
-import FinalizeButton from "@/components/checkout/checkout-button";
+import CheckoutButton from "@/components/checkout/checkout-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cartGet } from "@/lib/api";
+
+/**
+ * Добавить
+ * Ты в нужном вермени, в нужном месте
+ *
+ * @constructor
+ */
 
 export default async function Cart(): Promise<JSX.Element> {
   const cartId = cookies().get("cartId")?.value;
@@ -17,7 +24,7 @@ export default async function Cart(): Promise<JSX.Element> {
   }
 
   return (
-    <Card className="bg-telegram-bg-color pt-20 min-h-screen">
+    <Card className="bg-telegram-bg-color">
       <CardContent>
         <div className="grid gap-8">
           <CartTotal
@@ -26,7 +33,7 @@ export default async function Cart(): Promise<JSX.Element> {
           />
           <CartItems items={cart.items} />
         </div>
-        <FinalizeButton />
+        <CheckoutButton />
       </CardContent>
     </Card>
   );

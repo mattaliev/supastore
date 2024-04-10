@@ -1,4 +1,4 @@
-import RemoveFromCartButton from "@/components/cart/remove-from-cart";
+import RemoveFromCartButton from "@/components/cart/remove-from-cart-button";
 import UpdateItemQuantitySelect from "@/components/cart/update-quantity-select";
 import { CartItem } from "@/lib/api/types";
 

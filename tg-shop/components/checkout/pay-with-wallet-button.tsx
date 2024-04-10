@@ -1,6 +1,11 @@
 "use client";
 
-import { useUtils } from "@tma.js/sdk-react";
+import {
+  useClosingBehavior,
+  useHapticFeedback,
+  useMiniApp,
+  useUtils,
+} from "@tma.js/sdk-react";
 import { clsx } from "clsx";
 import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -13,8 +18,9 @@ import { Order } from "@/lib/api/types";
 
 function SubmitButton(): JSX.Element {
   const { pending } = useFormStatus();
+  const hapticFeedback = useHapticFeedback();
   const buttonClass =
-    "mt-4 w-full bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color";
+    "mt-4 w-full bg-telegram-button-color text-telegram-text-color hover:bg-telegram-button-color border-none border-telegram-text-color hover:text-telegram-button-text-color hover:border-none";
   const disabledClass =
     "bg-telegram-hint-color text-telegram-text-color cursor-not-allowed";
 
@@ -26,20 +32,29 @@ function SubmitButton(): JSX.Element {
     );
   }
 
-  return <Button className={clsx(buttonClass)}>Collect payment</Button>;
+  return (
+    <Button
+      className={clsx(buttonClass)}
+      onClick={() => hapticFeedback.impactOccurred("heavy")}
+    >
+      Pay via Wallet
+    </Button>
+  );
 }
 
-export default function CollectPaymentButton({
+export default function PayWithWalletButton({
   order,
 }: {
   order: Order;
 }): JSX.Element {
   const utils = useUtils();
+  const miniApp = useMiniApp();
   const [invoiceResponse, formAction] = useFormState(createInvoice, null);
 
   useEffect(() => {
     if (invoiceResponse?.paymentLink) {
       utils.openTelegramLink(invoiceResponse.paymentLink);
+      miniApp.close();
     }
   }, [invoiceResponse?.paymentLink]);
 

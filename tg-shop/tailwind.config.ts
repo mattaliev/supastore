@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -59,14 +59,17 @@ const config = {
           "link-color": "var(--tg-theme-link-color, #3390ec)",
           "button-color": "var(--tg-theme-button-color, #3390ec)",
           "button-text-color": "var(--tg-theme-button-text-color, #ffffff)",
-          "secondary-bg-color": "var(--tg-theme-secondary-background-color, #f4f4f5)",
+          "secondary-bg-color":
+            "var(--tg-theme-secondary-background-color, #f4f4f5)",
           "header-bg-color": "var(--tg-theme-header-bg-color, #ffffff)",
           "accent-text-color": "var(--tg-theme-accent-text-color, #3390ec)",
           "section-bg-color": "var(--tg-theme-section-bg-color, #ffffff)",
-          "section-header-text-color": "var(--tg-theme-section-header-text-color, #000000)",
+          "section-header-text-color":
+            "var(--tg-theme-section-header-text-color, #000000)",
           "suitable-text-color": "var(--tg-theme-suitable-text-color, #000000)",
-          "destructive-text-color": "var(--tg-theme-destructive-text-color, #ff3b30)",
-        }
+          "destructive-text-color":
+            "var(--tg-theme-destructive-text-color, #ff3b30)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -82,14 +85,34 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "draw-circle": {
+          "0%": { "stroke-dashoffset": "166" },
+          "100%": { "stroke-dashoffset": "0" },
+        },
+        "draw-check": {
+          "0%": { "stroke-dashoffset": "40" },
+          "100%": { "stroke-dashoffset": "0" },
+        },
+        "scale-down": {
+          "0%": { transform: "scale(2)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "draw-circle": "draw-circle 2s ease-in-out forwards",
+        "draw-check": "draw-check 2s ease-in-out forwards",
+        "scale-down": "scale-down 1s ease-out forwards",
+        "fade-in": "fade-in 2s ease-in-out forwards",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

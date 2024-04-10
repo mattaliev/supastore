@@ -21,16 +21,17 @@ export default function FormInput({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      {error && (
-        <p className="text-telegram-accent-text-color text-xs">{error}</p>
-      )}
       <Input
         name={id}
         id={id}
         placeholder={placeholder}
         type={type}
+        value={defaultValue}
         defaultValue={defaultValue}
       />
+      {error && (
+        <p className="text-telegram-accent-text-color text-xs">{error}</p>
+      )}
     </div>
   );
 }

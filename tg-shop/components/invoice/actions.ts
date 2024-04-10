@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-import { invoiceCreate } from "@/lib/api";
+import { invoiceCreate, invoiceGetByOrderId } from "@/lib/api";
 
 export type InvoiceCreateResponse = {
   error?: string;
@@ -20,11 +20,11 @@ export const createInvoice = async (
   }
 
   try {
-    const { paymentLink } = await invoiceCreate({
+    const { directPaymentLink } = await invoiceCreate({
       userId,
       orderId,
     });
-    return { paymentLink };
+    return { paymentLink: directPaymentLink };
   } catch (e) {
     return { error: "Error creating invoice, try refreshing the page" };
   }

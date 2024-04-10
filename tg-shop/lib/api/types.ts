@@ -25,6 +25,7 @@ export type TelegramUser = {
   isBot?: boolean | null;
   photoUrl?: string | null;
   allowsNotifications?: boolean;
+  chatId?: number;
 };
 
 export type ShippingDetails = {
@@ -34,7 +35,8 @@ export type ShippingDetails = {
   phone?: string | null;
   email?: string | null;
   address: string;
-  city: string;
+  city?: string;
+  province?: string;
   postcode: string;
   country: string;
 };
@@ -199,6 +201,7 @@ export type BackendOrderGetByIdOperation = {
   };
   variables: {
     orderId: string;
+    state?: string;
   };
 };
 
@@ -208,6 +211,7 @@ export type BackendOrderGetByCartIdOperation = {
   };
   variables: {
     cartId: string;
+    state?: string;
   };
 };
 
@@ -247,6 +251,7 @@ export type BackendShippingDetailsUpdateOperation = {
   variables: {
     input: ShippingDetails & {
       shippingDetailsId: string;
+      orderId: string;
       userId?: string;
       isDefault: boolean;
     };

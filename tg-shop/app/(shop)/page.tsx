@@ -4,11 +4,7 @@ import { productsGet } from "@/lib/api";
 const CatalogPage = async () => {
   const products = await productsGet();
 
-  return (
-    <div>
-      <Catalog products={products} />
-    </div>
-  );
+  return <Catalog products={products} />;
 };
 
 export default CatalogPage;

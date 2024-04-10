@@ -1,5 +1,5 @@
 export const invoiceFragment = /* GraphQL */ `
-  fragment InvoiceFields on Invoice {
+  fragment InvoiceFields on InvoiceType {
     id
     telegramInvoiceId
     paymentLink

@@ -1,19 +1,19 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 import {
   orderCreate,
-  orderGetByCartId,
   shippingDetailsCreate,
   shippingDetailsUpdate,
+  TAGS,
 } from "@/lib/api";
 import { ShippingDetails } from "@/lib/api/types";
 
 import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createOrder = async (prevState: any): Promise<string | void> => {
   const cartId = cookies().get("cartId")?.value;
   const userId = cookies().get("userId")?.value;
@@ -25,14 +25,7 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
   let redirectPath = "/checkout/shipping";
 
   try {
-    let order;
-    console.log("Getting order by cart id");
-    order = await orderGetByCartId(cartId);
-
-    if (!order) {
-      console.log("Creating new order");
-      order = await orderCreate(cartId, userId);
-    }
+    const order = await orderCreate(cartId, userId);
 
     cookies().set("orderId", order.id);
 
@@ -44,7 +37,8 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
     return "Could not create order";
   }
 
-  redirect(redirectPath);
+  revalidateTag(TAGS.ORDER);
+  redirect(redirectPath, RedirectType.push);
 };
 
 export type FormErrorResponse = {
@@ -52,10 +46,9 @@ export type FormErrorResponse = {
   formError?: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const createShippingDetails = async (
+export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormErrorResponse> => {
   const orderId = cookies().get("orderId")?.value;
   const userId = cookies().get("userId")?.value;
@@ -68,6 +61,7 @@ export const createShippingDetails = async (
     address: formData.get("address") || "",
     country: formData.get("country") || "",
     city: formData.get("city") || "",
+    province: formData.get("province") || "",
     postcode: formData.get("postcode") || "",
   });
 
@@ -76,7 +70,6 @@ export const createShippingDetails = async (
   }
 
   if (!validatedData.success) {
-    console.log(validatedData.error.issues);
     return { fieldErrors: validatedData.error.flatten().fieldErrors };
   }
 
@@ -84,10 +77,9 @@ export const createShippingDetails = async (
 
   try {
     if (shippingDetailsId) {
-      // Update existing shipping details
-      console.log("Updating shipping details");
       await shippingDetailsUpdate({
         ...(validatedData.data as ShippingDetails),
+        orderId,
         shippingDetailsId,
         userId,
         isDefault: Boolean(formData.get("is-default")),
@@ -103,5 +95,7 @@ export const createShippingDetails = async (
   } catch (e) {
     return { formError: "Could not create shipping details" };
   }
-  redirect("/checkout/payment");
+
+  revalidateTag(TAGS.ORDER);
+  redirect("/checkout/payment", RedirectType.push);
 };

@@ -3,7 +3,7 @@ import Logo from "@/components/layout/logo";
 
 function Nav() {
   return (
-    <nav className="flex justify-between items-center p-4 bg-telegram-bg-color fixed z-10 w-full">
+    <nav className="flex justify-between items-center p-4 bg-telegram-bg-color sticky top-0 z-10 w-full">
       <Logo />
       <CartIcon />
     </nav>

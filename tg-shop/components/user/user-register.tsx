@@ -1,6 +1,10 @@
 "use client";
+import { retrieveLaunchData } from "@tma.js/sdk";
 import { useInitData } from "@tma.js/sdk-react";
+import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
+
+import { getPath } from "@/lib/path";
 
 const AuthContext = createContext<{ authenticated: boolean }>({
   authenticated: false,
@@ -13,10 +17,24 @@ export default function AuthProvider({
 }) {
   const [authenticated, setAuthenticated] = useState(false);
   const initData = useInitData();
+  const { launchParams, isPageReload } = retrieveLaunchData();
+  const router = useRouter();
 
   useEffect(() => {
     const authenticate = async () => {
+      if (isPageReload) return;
+
+      if (launchParams.startParam) {
+        const path = getPath(launchParams.startParam);
+        router.push(path);
+      }
+
       if (!initData) return;
+
+      console.log("Launch parameters: ", launchParams);
+      console.log("Page reload: ", isPageReload);
+      console.log("Start app param", launchParams.startParam);
+      console.log("Init data: ", initData);
 
       if (!initData.user?.id) {
         throw new Error("Telegram user id is required to authenticate user");
@@ -25,6 +43,8 @@ export default function AuthProvider({
       if (authenticated) return;
 
       try {
+        console.log("Registering user...");
+        console.log("Chat id: ", initData.chat);
         const register = await fetch("/api/register", {
           method: "POST",
           headers: {
@@ -39,6 +59,7 @@ export default function AuthProvider({
             allowsNotifications: initData.user.allowsWriteToPm,
             photoUrl: initData.user.photoUrl,
             languageCode: initData.user.languageCode,
+            chatId: initData.chat?.id,
           }),
         });
 

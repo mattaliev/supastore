@@ -34,7 +34,7 @@ export default function ProductImages({ images }: { images: ProductImage[] }) {
   return (
     <>
       <Carousel
-        className="w-full"
+        className="w-full z-10"
         setApi={setApi}
         opts={{
           align: "start",
@@ -57,7 +57,7 @@ export default function ProductImages({ images }: { images: ProductImage[] }) {
           })}
         </CarouselContent>
       </Carousel>
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-2">
         {Array.from({ length: count }).map((_, index) => (
           <span
             key={index}
