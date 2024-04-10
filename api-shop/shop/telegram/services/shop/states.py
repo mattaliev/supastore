@@ -1,0 +1,85 @@
+from abc import ABC, abstractmethod
+
+from django.contrib.auth import get_user_model
+
+from telegram.models.user_bot_state import States, UserBotState
+from telegram.services import telegram_shop_message_send
+from telegram.services.shop.inline_buttons import ContactSupportInlineButton, OpenShopInlineButton
+
+
+__all__ = [
+    "telegram_user_state_process",
+    "StateProcessor",
+    "JoinPromoCodeStateProcessor",
+    "bot_states"
+]
+
+from telegram.services.shop.messages import EMAIL_ACCEPTED_MESSAGE, EMAIL_REJECTED_MESSAGE, UNRECOGNIZED_ACTION_MESSAGE
+
+
+def telegram_user_state_process(*, user: dict, chat_id: int, message: str):
+    User = get_user_model()
+
+    telegram_user = User.objects.get(telegram_id=user['id'])
+
+    current_user_state = UserBotState.objects.get(user=telegram_user)
+
+    for bot_state in bot_states:
+        if bot_state.state == current_user_state.state:
+            bot_state.execute(user=user, chat_id=chat_id, message=message)
+            return
+
+    telegram_shop_message_send(
+        chat_id=chat_id,
+        text=UNRECOGNIZED_ACTION_MESSAGE
+    )
+
+
+class StateProcessor(ABC):
+    def __init__(self, state: States):
+        self.state = state
+
+    @abstractmethod
+    def execute(self, *args, **kwargs):
+        pass
+
+
+class JoinPromoCodeStateProcessor(StateProcessor):
+    def __init__(self):
+        super().__init__(States.JOIN_PROMO_CODE)
+
+    def execute(self, *,  user: dict, chat_id: int, message: str):
+        # validated_email = validate_email(message)
+        validated_email = message
+
+        if not validated_email:
+            telegram_shop_message_send(
+                chat_id=chat_id,
+                text=EMAIL_REJECTED_MESSAGE
+            )
+            return
+
+        # Send email to user address
+
+        text = EMAIL_ACCEPTED_MESSAGE
+
+        reply_markup = [
+            [OpenShopInlineButton().as_json()],
+            [ContactSupportInlineButton().as_json()]
+        ]
+
+        current_user = get_user_model().objects.get(telegram_id=user['id'])
+        current_user.email = validated_email
+        current_user_state = UserBotState.objects.get(user=current_user)
+        current_user_state.state = States.SHOPPING
+
+        telegram_shop_message_send(
+            chat_id=chat_id,
+            text=text,
+            reply_markup=reply_markup
+        )
+
+
+bot_states = [
+    JoinPromoCodeStateProcessor(),
+]

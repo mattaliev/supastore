@@ -56,6 +56,7 @@ DEBUG = env("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 
 CLOUD_RUN_SERVICE_URL = env("CLOUD_RUN_SERVICE_URL", default=None)
+SERVICE_URL = env("SERVICE_URL", default=None)
 FRONTEND_CLIENT_URL = env("FRONTEND_CLIENT_URL", default=None)
 
 CORS_ALLOWED_ORIGINS = [
@@ -66,7 +67,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://studio.apollographql.com"
 ]
 
-
 if CLOUD_RUN_SERVICE_URL:
     print("Can see CLOUD_RUN_SERVICE_URL...")
     ALLOWED_HOSTS = [urlparse(CLOUD_RUN_SERVICE_URL).netloc]
@@ -74,12 +74,16 @@ if CLOUD_RUN_SERVICE_URL:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:
+    SECURE_SSL_REDIRECT = False
+    SECURE_PROXY_SSL_HEADER = None
     ALLOWED_HOSTS = ["*"]
 
-if FRONTEND_CLIENT_URL:
-    CSRF_TRUSTED_ORIGINS.append(FRONTEND_CLIENT_URL)
-    CORS_ALLOWED_ORIGINS.append(FRONTEND_CLIENT_URL)
+CACHE_MIDDLEWARE_SECONDS = 0
 
+#
+# if FRONTEND_CLIENT_URL:
+#     CSRF_TRUSTED_ORIGINS.append(FRONTEND_CLIENT_URL)
+#     CORS_ALLOWED_ORIGINS.append(FRONTEND_CLIENT_URL)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -104,7 +108,9 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'order.apps.OrderConfig',
     'user.apps.UserConfig',
-    'analytics.apps.AnalyticsConfig'
+    'analytics.apps.AnalyticsConfig',
+    'invoice.apps.InvoiceConfig',
+    'telegram.apps.TelegramConfig',
 ]
 
 MIDDLEWARE = [
@@ -200,9 +206,7 @@ GRAPHENE = {
     "SCHEMA": "core.gql.schema",
 }
 
-
 CORS_ALLOW_CREDENTIALS = True
-
 
 LOGGING = {
     'version': 1,
@@ -222,14 +226,29 @@ LOGGING = {
     }
 }
 
-# if DEBUG:
-#     LOGGING['handlers']['console'] = {
-#         'level': 'DEBUG',
-#         'class': 'logging.StreamHandler',
-#         'formatter': 'detailed',
-#     }
-#     LOGGING['loggers']['']['handlers'].append('console')
-# else:
-client = google.cloud.logging.Client(credentials=credentials)
-client.setup_logging(log_level="DEBUG")
+if DEBUG:
+    LOGGING['handlers']['console'] = {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'detailed',
+    }
+    LOGGING['loggers']['']['handlers'].append('console')
+else:
+    client = google.cloud.logging.Client(credentials=credentials)
+    client.setup_logging(log_level="DEBUG")
+
+# ------------------- TELEGRAM -------------------
+TELEGRAM_API_URL = env("TELEGRAM_API_URL")
+TELEGRAM_SHOP_BOT_USERNAME = env("TELEGRAM_SHOP_BOT_USERNAME")
+TELEGRAM_SUPPORT_BOT_USERNAME = env("TELEGRAM_SUPPORT_BOT_USERNAME")
+TELEGRAM_SHOP_TOKEN = env("TELEGRAM_SHOP_TOKEN")
+TELEGRAM_SUPPORT_TOKEN = env("TELEGRAM_SUPPORT_TOKEN")
+TELEGRAM_WEB_APP_URL = env("TELEGRAM_WEB_APP_URL")
+TELEGRAM_ADMIN_CHAT_ID = env("TELEGRAM_ADMIN_CHAT_ID")
+TELEGRAM_SUPPORT_CHAT_ID = env("TELEGRAM_SUPPORT_CHAT_ID")
+
+# PAYMENT
+TELEGRAM_WALLET_PAY_URL = env("TELEGRAM_WALLET_PAY_URL")
+TELEGRAM_WALLET_API_KEY = env("TELEGRAM_WALLET_API_KEY")
+TELEGRAM_PAYMENT_RETURN_URL = env("TELEGRAM_PAYMENT_RETURN_URL")
 

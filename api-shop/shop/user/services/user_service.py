@@ -29,7 +29,8 @@ def user_create_or_update(
     is_bot: bool = None,
     photo_url: str = None,
     allows_notifications: bool = None,
-    role: str = None
+    role: str = None,
+    chat_id: int = None
 ):
     logger = logging.getLogger(__name__)
     logger.debug("Creating or updating user", {"telegram_id": telegram_id})
@@ -42,7 +43,8 @@ def user_create_or_update(
         'is_bot': is_bot,
         'photo_url': photo_url,
         'allows_notifications': allows_notifications,
-        'role': role
+        'role': role,
+        'chat_id': chat_id
     }
 
     defaults = {k: v for k, v in fields.items() if v is not None}
@@ -56,4 +58,4 @@ def user_create_or_update(
 
     user_visit_register(user=user)
 
-    return user
+    return user, created

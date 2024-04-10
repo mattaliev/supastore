@@ -5,6 +5,7 @@ from cart.schemas import Query as CartQuery, Mutation as CartMutation
 from user.schemas import Query as UserQuery, Mutation as UserMutation
 
 from order.schemas import (OrderMutation, OrderQuery, ShippingDetailsMutation)
+from invoice.schemas import Query as InvoiceQuery, Mutation as InvoiceMutation
 
 
 class Query(
@@ -12,6 +13,7 @@ class Query(
     CartQuery,
     OrderQuery,
     UserQuery,
+    InvoiceQuery,
     graphene.ObjectType
 ):
     pass
@@ -22,6 +24,7 @@ class Mutation(
     OrderMutation,
     UserMutation,
     ShippingDetailsMutation,
+    InvoiceMutation,
     graphene.ObjectType
 ):
     pass

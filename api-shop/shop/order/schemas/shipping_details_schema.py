@@ -28,7 +28,8 @@ class ShippingDetailsInput(graphene.InputObjectType):
     last_name = graphene.String(required=True)
     address = graphene.String(required=True)
     country = graphene.String(required=True)
-    city = graphene.String(required=True)
+    city = graphene.String()
+    province = graphene.String()
     postcode = graphene.String(required=True)
     phone = graphene.String()
     email = graphene.String()
@@ -40,6 +41,7 @@ class ShippingDetailsCreateInput(ShippingDetailsInput):
 
 class ShippingDetailsUpdateInput(ShippingDetailsInput):
     shipping_details_id = graphene.UUID(required=True)
+    order_id = graphene.UUID(required=True)
 
 
 class ShippingDetailsCreateMutation(graphene.Mutation):

@@ -7,7 +7,8 @@ from invoice.models import Invoice, PaymentStatusChoices
 __all__ = [
     "PaymentStatus",
     "InvoiceType",
-    "Mutation"
+    "Mutation",
+    "Query",
 ]
 
 from invoice.services.invoice_service import invoice_create

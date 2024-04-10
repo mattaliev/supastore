@@ -8,9 +8,9 @@ __all__ = [
 
 
 class PaymentStatusChoices(models.TextChoices):
-    PENDING = "PENDING", "pending"
+    PENDING = "ACTIVE", "active"
     PAID = "PAID", "paid"
-    FAILED = "FAILED", "failed"
+    CANCELLED = "CANCELLED", "cancelled"
     EXPIRED = "EXPIRED", "expired"
 
 
@@ -27,8 +27,10 @@ class Invoice(BaseEntity):
 
     order = models.OneToOneField(
         "order.Order",
-        on_delete=models.CASCADE,
-        related_name="invoices",
+        on_delete=models.SET_NULL,
+        related_name="invoice",
+        blank=True,
+        null=True
     )
 
     currency_code = models.CharField(
