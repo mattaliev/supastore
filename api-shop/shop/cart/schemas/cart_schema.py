@@ -140,7 +140,7 @@ class Query(graphene.ObjectType):
         logger.debug("Getting cart detail for id: %s", cart_id)
 
         try:
-            cart = Cart.objects.get(pk=cart_id)
+            cart = Cart.objects.get(pk=cart_id, state="ACTIVE")
         except Cart.DoesNotExist:
             cart = None
 

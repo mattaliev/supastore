@@ -41,6 +41,7 @@ class RegisterUserInput(graphene.InputObjectType):
     photo_url = graphene.String()
     allows_notifications = graphene.Boolean()
     role = graphene.String()
+    chat_id = graphene.Int()
 
 
 class RegisterUserMutation(graphene.Mutation):
@@ -57,7 +58,7 @@ class RegisterUserMutation(graphene.Mutation):
         logger = logging.getLogger(cls.__name__)
         logger.debug("Registering user")
 
-        user = user_create_or_update(**user_input)
+        user, created = user_create_or_update(**user_input)
 
         cart, created_cart = cart_get_or_create(cart_id=cart_id, user=user)
 

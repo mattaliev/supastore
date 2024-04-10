@@ -1,1 +1,1 @@
-from invoice_schema import *
+from .invoice_schema import *

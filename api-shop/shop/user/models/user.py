@@ -33,6 +33,8 @@ class TelegramUser(AbstractUser, BaseEntity):
         blank=True,
         null=True,
     )
+    email = models.EmailField(blank=True, null=True)
+    chat_id = models.IntegerField(blank=True, null=True)
     USERNAME_FIELD = "telegram_id"
 
     class Meta:

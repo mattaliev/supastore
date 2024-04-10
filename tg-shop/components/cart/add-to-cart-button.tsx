@@ -1,5 +1,6 @@
 "use client";
 
+import { useHapticFeedback } from "@tma.js/sdk-react";
 import { clsx } from "clsx";
 import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -15,6 +16,7 @@ function SubmitButton({
   doesProductHaveVariants: boolean;
 }) {
   const { pending } = useFormStatus();
+  const hapticFeedback = useHapticFeedback();
   const buttonClass =
     "mt-4 w-full bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color";
   const disabledClass =
@@ -30,16 +32,26 @@ function SubmitButton({
 
   if (doesProductHaveVariants && !selectedVariantId) {
     return (
-      <Button className={clsx(buttonClass, disabledClass)}>
+      <Button
+        className={clsx(buttonClass, disabledClass)}
+        onClick={() => hapticFeedback.impactOccurred("medium")}
+      >
         Select a Variant
       </Button>
     );
   }
 
-  return <Button className={clsx(buttonClass)}>Add to Cart</Button>;
+  return (
+    <Button
+      className={clsx(buttonClass)}
+      onClick={() => hapticFeedback.impactOccurred("light")}
+    >
+      Add to Cart
+    </Button>
+  );
 }
 
-export default function AddToCart({
+export default function AddToCartButton({
   productId,
   selectedVariantId,
   doesProductHaveVariants,

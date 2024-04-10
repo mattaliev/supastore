@@ -1,4 +1,5 @@
 "use client";
+import { useHapticFeedback } from "@tma.js/sdk-react";
 import { clsx } from "clsx";
 import { useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -58,8 +59,10 @@ export default function UpdateItemQuantitySelect({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [message, formAction] = useFormState(updateCartItem, null);
+  const hapticFeedback = useHapticFeedback();
 
   const onSelectChange = (value: string) => {
+    hapticFeedback.selectionChanged();
     formRef.current?.requestSubmit();
   };
 

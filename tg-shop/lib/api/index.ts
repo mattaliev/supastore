@@ -12,6 +12,7 @@ import {
 } from "@/lib/api/mutations/shipping-details";
 import { registerUserMutation } from "@/lib/api/mutations/user";
 import { cartGetQuery } from "@/lib/api/queries/cart";
+import { invoiceGetByOrderIdQuery } from "@/lib/api/queries/invoice";
 import {
   orderGetByCartIdQuery,
   orderGetByIdQuery,
@@ -51,6 +52,7 @@ const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/graphql/`;
 export const TAGS = {
   CART: "cart",
   PRODUCT: "product",
+  ORDER: "order",
 };
 
 export const backendFetch = async <T>({
@@ -99,7 +101,7 @@ export const backendFetch = async <T>({
 
 export const registerUser = async (
   input: RegisterUserInput,
-  cartId?: string
+  cartId?: string,
 ): Promise<{ user: TelegramUser; cart: Cart }> => {
   const { body } = await backendFetch<BackendRegisterUserOperation>({
     query: registerUserMutation,
@@ -107,7 +109,7 @@ export const registerUser = async (
       input,
       cartId,
     },
-    cache: "force-cache",
+    cache: "no-store",
   });
 
   return body.data.register;
@@ -218,14 +220,17 @@ export const cartUpdateItem = async (input: {
 };
 
 export const orderGetById = async (
-  orderId: string
+  orderId: string,
+  state?: string,
 ): Promise<Order | undefined> => {
   const { body } = await backendFetch<BackendOrderGetByIdOperation>({
     query: orderGetByIdQuery,
     variables: {
       orderId,
+      state,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   if (!body.data.orderGetById) {
@@ -236,14 +241,17 @@ export const orderGetById = async (
 };
 
 export const orderGetByCartId = async (
-  cartId: string
+  cartId: string,
+  state?: string,
 ): Promise<Order | undefined> => {
   const { body } = await backendFetch<BackendOrderGetByCartIdOperation>({
     query: orderGetByCartIdQuery,
     variables: {
       cartId,
+      state,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   return body.data.orderGetByCartId;
@@ -251,7 +259,7 @@ export const orderGetByCartId = async (
 
 export const orderCreate = async (
   cartId: string,
-  userId?: string
+  userId?: string,
 ): Promise<Order> => {
   const { body } = await backendFetch<BackendOrderCreateOperation>({
     query: orderCreateMutation,
@@ -260,6 +268,7 @@ export const orderCreate = async (
       cartId,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   return body.data.orderCreate.order;
@@ -270,7 +279,7 @@ export const shippingDetailsCreate = async (
     orderId: string;
     userId?: string;
     isDefault: boolean;
-  }
+  },
 ): Promise<ShippingDetails> => {
   const { body } = await backendFetch<BackendShippingDetailsCreateOperation>({
     query: shippingDetailsCreateMutation,
@@ -278,6 +287,7 @@ export const shippingDetailsCreate = async (
       input,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   return body.data.shippingDetailsCreate.shippingDetails;
@@ -286,9 +296,10 @@ export const shippingDetailsCreate = async (
 export const shippingDetailsUpdate = async (
   input: ShippingDetails & {
     shippingDetailsId: string;
+    orderId: string;
     userId?: string;
     isDefault: boolean;
-  }
+  },
 ): Promise<ShippingDetails> => {
   const { body } = await backendFetch<BackendShippingDetailsUpdateOperation>({
     query: shippingDetailsUpdateMutation,
@@ -296,6 +307,7 @@ export const shippingDetailsUpdate = async (
       input,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   return body.data.shippingDetailsUpdate.shippingDetails;
@@ -305,26 +317,30 @@ export const invoiceCreate = async (input: {
   orderId: string;
   userId: string;
 }): Promise<Invoice> => {
+  console.log(input);
+
   const { body } = await backendFetch<BackendInvoiceCreateOperation>({
     query: invoiceCreateMutation,
     variables: {
       input,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   return body.data.invoiceCreate.invoice;
 };
 
 export const invoiceGetByOrderId = async (
-  orderId: string
+  orderId: string,
 ): Promise<Invoice | undefined> => {
   const { body } = await backendFetch<BackendInvoiceGetByOrderIdOperation>({
-    query: invoiceCreateMutation,
+    query: invoiceGetByOrderIdQuery,
     variables: {
       orderId,
     },
     cache: "no-store",
+    tags: [TAGS.ORDER],
   });
 
   return body.data.invoiceGetByOrderId;

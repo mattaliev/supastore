@@ -1,7 +1,9 @@
 "use client";
+import { useHapticFeedback } from "@tma.js/sdk-react";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
-import { createShippingDetails } from "@/components/checkout/actions";
+import { createOrUpdateShippingDetails } from "@/components/checkout/actions";
 import ContinueToPaymentButton from "@/components/checkout/continue-to-payment-button";
 import ShippingDetailsInput from "@/components/checkout/shipping-details-input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +17,17 @@ export default function ShippingDetailsForm({
 }: {
   shippingDetails?: ShippingDetails;
 }) {
-  const [formStatus, formAction] = useFormState(createShippingDetails, null);
+  const [formStatus, formAction] = useFormState(
+    createOrUpdateShippingDetails,
+    null,
+  );
+  const hapticFeedback = useHapticFeedback();
+
+  useEffect(() => {
+    if (formStatus?.formError || formStatus?.fieldErrors) {
+      hapticFeedback.notificationOccurred("error");
+    }
+  }, [formStatus?.formError, formStatus?.fieldErrors]);
 
   return (
     <form action={formAction}>

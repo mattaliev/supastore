@@ -11,11 +11,14 @@ export const ShippingDetailsScheme = z.object({
       invalid_type_error: "Invalid country",
     })
     .min(1, { message: "Country is required" }),
-  city: z
-    .string({
-      invalid_type_error: "Invalid city",
-    })
-    .min(1, { message: "City is required" }),
+  city: z.string({
+    invalid_type_error: "Invalid city",
+  }),
+  province: z.optional(
+    z.string({
+      invalid_type_error: "Invalid province",
+    }),
+  ),
   postcode: z
     .string({
       invalid_type_error: "Invalid postcode",
@@ -36,7 +39,7 @@ export const ShippingDetailsScheme = z.object({
   email: z.optional(
     z.string().email({
       message: "Invalid email address",
-    })
+    }),
   ),
   phone: z.optional(z.number()),
 });

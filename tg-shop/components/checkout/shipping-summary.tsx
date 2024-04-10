@@ -1,7 +1,5 @@
-import Link from "next/link";
-
+import UpdateShippingDetailsButton from "@/components/checkout/update-shipping-details-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PencilIcon } from "@/components/ui/icons";
 import { ShippingDetails } from "@/lib/api/types";
 
 export const ShippingSummary = ({
@@ -11,13 +9,15 @@ export const ShippingSummary = ({
 }) => {
   return (
     <>
-      <Card className="pt-16">
+      <Card>
         <CardHeader>
           <CardTitle>Contact information</CardTitle>
         </CardHeader>
         <CardContent className="text-sm flex items-center">
           <div className="grid gap-1">
-            <div className="text-telegram-hint-color">{`${shippingDetails.firstName} ${shippingDetails.lastName}`}</div>
+            <div className="text-telegram-hint-color">
+              {`${shippingDetails.firstName} ${shippingDetails.lastName}`}
+            </div>
             <div className="text-telegram-hint-color">
               {shippingDetails.phone}
             </div>
@@ -32,9 +32,7 @@ export const ShippingSummary = ({
               </div>
             )}
           </div>
-          <Link href={`/checkout/shipping?update=true`}>
-            <PencilIcon className="w-4 h-4 ml-2 text-telegram-hint-color hover:text-telegram-button-color" />
-          </Link>
+          <UpdateShippingDetailsButton />
         </CardContent>
       </Card>
       <Card>
@@ -45,13 +43,15 @@ export const ShippingSummary = ({
           <div className="text-telegram-hint-color">
             {`${shippingDetails.address}`}
             <br />
-            {`${shippingDetails.city}, ${shippingDetails.postcode}`}
+            {`${shippingDetails.city}`}
+            <br />
+            {`${shippingDetails.province}`}
+            <br />
+            {`${shippingDetails.postcode}`}
             <br />
             {`${shippingDetails.country}`}
           </div>
-          <Link href={`/checkout/shipping?update=true`}>
-            <PencilIcon className="w-4 h-4 ml-2 text-telegram-hint-color hover:text-telegram-button-color" />
-          </Link>
+          <UpdateShippingDetailsButton />
         </CardContent>
       </Card>
     </>

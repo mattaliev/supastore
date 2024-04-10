@@ -1,4 +1,6 @@
-import CollectPaymentButton from "@/components/checkout/collect-payment-button";
+import PayWithCardButton from "@/components/checkout/pay-with-card-button";
+import PayWithWalletButton from "@/components/checkout/pay-with-wallet-button";
+import USPaymentOption from "@/components/checkout/us-payment-option";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -37,8 +39,13 @@ export default function OrderPayment({ order }: { order: Order }) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex items-center">
-        <CollectPaymentButton order={order} />
+      <CardFooter className="">
+        {/*<PayWithCardButton />*/}
+        {order.shippingDetails.country !== "United States" ? (
+          <PayWithWalletButton order={order} />
+        ) : (
+          <USPaymentOption order={order} />
+        )}
       </CardFooter>
     </Card>
   );
