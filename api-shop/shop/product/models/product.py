@@ -13,6 +13,7 @@ class Product(BaseEntity):
         db_table = "products"
         verbose_name = "product"
         verbose_name_plural = "products"
+        ordering = ["-created"]
 
 
 class ProductVariant(BaseEntity):
