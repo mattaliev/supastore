@@ -40,7 +40,7 @@ def telegram_invoice_request(
             "amount": 0.1
         },
         "autoConversionCurrency": auto_conversion_currency_code,
-        "description": "Order payment",
+        "description": "Order " + str(order.order_number),
         "returnUrl": success_url,
         "failReturnUrl": fail_url,
         "externalId": str(order.id),
