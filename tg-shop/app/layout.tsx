@@ -26,12 +26,12 @@ export default function RootLayout({
           content={metadata.description ? metadata.description : ""}
         />
         <title>DITCH SHOP</title>
-        {process.env.NODE_ENV === "development" && (
+        {
           <>
             <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
             <script>eruda.init();</script>
           </>
-        )}
+        }
       </head>
 
       <body className={inter.className + "min-h-screen"}>{children}</body>
