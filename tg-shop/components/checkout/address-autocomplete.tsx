@@ -27,6 +27,12 @@ export function AddressAutocomplete({
   onPlaceSelected,
 }: AddressAutocompleteProps) {
   console.log("apiKey", process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY);
+  console.log(
+    "backend service url",
+    process.env.NEXT_PUBLIC_BACKEND_SERVICE_URL,
+  );
+  console.log("Env: ", process.env);
+
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY,
     onPlaceSelected: (places) => onPlaceSelected(places),
