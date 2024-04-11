@@ -59,6 +59,9 @@ jobs:
           tags: |
             ${{ env.IMAGE }}:${{ env.SHA }}
             ${{ env.IMAGE }}:latest
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}
+            NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}
 
 
       - name: Deploy to Cloud Run
@@ -70,6 +73,4 @@ jobs:
             --platform managed \
             --format json \
             --allow-unauthenticated \
-            --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }} \
-            --set-env-vars "NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}" \
-            --set-env-vars "NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}"  
+            --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }} 
