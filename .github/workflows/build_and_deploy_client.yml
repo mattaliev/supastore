@@ -71,4 +71,5 @@ jobs:
             --format json \
             --allow-unauthenticated \
             --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }} \
-            --set-env-vars NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }},NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}  
+            --set-env-vars NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }} \
+            --set-env-vars NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}  
