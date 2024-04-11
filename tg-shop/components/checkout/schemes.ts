@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+const phoneRegex = new RegExp(
+  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
+);
+
 export const ShippingDetailsScheme = z.object({
   address: z
     .string({
@@ -41,7 +45,9 @@ export const ShippingDetailsScheme = z.object({
       message: "Invalid email address",
     }),
   ),
-  phone: z.optional(z.number()),
+  phone: z.optional(
+    z.string().regex(phoneRegex, { message: "Invalid phone number" }),
+  ),
 });
 
 export type ShippingDetailsType = z.infer<typeof ShippingDetailsScheme>;

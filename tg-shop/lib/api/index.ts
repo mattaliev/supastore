@@ -69,7 +69,6 @@ export const backendFetch = async <T>({
   headers?: HeadersInit;
 }): Promise<{ status: number; body: T }> => {
   try {
-    console.log(endpoint);
     const result = await fetch(endpoint, {
       method: "POST",
       headers: {

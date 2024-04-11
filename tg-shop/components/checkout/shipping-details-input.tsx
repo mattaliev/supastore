@@ -38,6 +38,15 @@ export default function ShippingDetailsInput({
     country: shippingDetails?.country || "",
   });
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setShippingAddress((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handlePlaceSelected = (places: AddressAutocompleteSelectedResult) => {
     const address: ShippingAddress = {
       id: shippingAddress.id,
@@ -47,8 +56,6 @@ export default function ShippingDetailsInput({
       postcode: "",
       country: "",
     };
-
-    console.log(places);
 
     places.address_components.forEach((component) => {
       const type = component.types[0];
@@ -90,6 +97,7 @@ export default function ShippingDetailsInput({
           onPlaceSelected={handlePlaceSelected}
           error={formErrors?.address && formErrors?.address[0]}
           defaultValue={shippingAddress.address || ""}
+          value={shippingAddress.address || ""}
         />
         {/*<FormInput*/}
         {/*  label="Address"*/}
@@ -103,28 +111,36 @@ export default function ShippingDetailsInput({
           id="city"
           placeholder="Enter your city"
           error={formErrors?.city && formErrors?.city[0]}
+          value={shippingAddress.city || ""}
           defaultValue={shippingAddress.city || ""}
+          onChange={handleInputChange}
         />
         <FormInput
           label={"Province/State"}
           id={"province"}
           placeholder={"Enter your state/province"}
           error={formErrors?.province && formErrors?.province[0]}
+          value={shippingAddress.province || ""}
           defaultValue={shippingAddress.province || ""}
+          onChange={handleInputChange}
         />
         <FormInput
           label="Postal code"
           id="postcode"
           placeholder="Enter your postal code"
           error={formErrors?.postcode && formErrors?.postcode[0]}
+          value={shippingAddress.postcode || ""}
           defaultValue={shippingAddress.postcode || ""}
+          onChange={handleInputChange}
         />
         <FormInput
           label="Country"
           id="country"
           placeholder="Enter your country"
           error={formErrors?.country && formErrors?.country[0]}
+          value={shippingAddress.country || ""}
           defaultValue={shippingAddress.country || ""}
+          onChange={handleInputChange}
         />
         <FormCheckbox
           label="Save for faster checkout next time"
