@@ -10,14 +10,10 @@ export const revalidate = 0;
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const authData: RegisterUserInput = await req.json();
-    console.log("Registering user...");
 
     const cartId = cookies().get("cartId")?.value;
 
     const { user, cart } = await registerUser({ ...authData }, cartId);
-    console.log("User registered successfully");
-    console.log("User:", user);
-    console.log("Cart:", cart);
 
     cookies().set("userId", user.id);
     cookies().set("cartId", cart.id);

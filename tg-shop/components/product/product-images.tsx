@@ -27,10 +27,6 @@ export default function ProductImages({ images }: { images: ProductImage[] }) {
     });
   }, [api]);
 
-  useEffect(() => {
-    console.log(current, count);
-  }, [current, count]);
-
   return (
     <>
       <Carousel

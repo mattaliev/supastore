@@ -21,8 +21,6 @@ export default async function OrderSummaryPage() {
     return notFound();
   }
 
-  console.log("Order: ", order);
-
   return (
     <div>
       <ShippingSummary shippingDetails={order.shippingDetails} />
