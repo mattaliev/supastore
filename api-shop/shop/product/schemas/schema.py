@@ -1,16 +1,17 @@
-import logging
-
 import graphene
 from graphene_django import DjangoObjectType
 
 from product.models.product import Product, ProductVariant, ProductImage
-from product.services.product_services import product_list, product_detail
+
 
 __all__ = [
     "ProductType",
     "ProductVariantType",
     "ProductImageType",
-    "Query",
+    "ProductInput",
+    "ProductVariantInput",
+    "ProductCreateInput",
+    "ProductUpdateInput"
 ]
 
 
@@ -41,19 +42,27 @@ class ProductImageType(DjangoObjectType):
         return self.image.url
 
 
-class Query(graphene.ObjectType):
-    products_get = graphene.List(ProductType)
-    product_detail = graphene.Field(ProductType, id=graphene.UUID())
-
-    def resolve_products_get(self, info, **kwargs):
-        logger = logging.getLogger(self.__class__.__name__)
-        logger.debug("Fetching all products")
-        return product_list()
-
-    def resolve_product_detail(self, info, id):
-        logger = logging.getLogger(self.__class__.__name__)
-        logger.debug("Fetching product with id: %s", id)
-        return product_detail(id)
+class ProductInput(graphene.InputObjectType):
+    title = graphene.String(required=True)
+    description = graphene.String()
+    price = graphene.String(required=True)
+    sku = graphene.String(required=True)
+    quantity = graphene.Int()
+    image_urls = graphene.List(graphene.String)
+    variants = graphene.List("product.schemas.schema.ProductVariantInput")
 
 
-schema = graphene.Schema(query=Query)
+class ProductVariantInput(graphene.InputObjectType):
+    size = graphene.String()
+    color = graphene.String()
+    material = graphene.String()
+    quantity = graphene.Int(required=True)
+
+
+class ProductCreateInput(ProductInput):
+    pass
+
+
+class ProductUpdateInput(ProductInput):
+    product_id = graphene.UUID(required=True)
+

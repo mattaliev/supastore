@@ -1,1 +1,3 @@
-from .product_schema import *
+from .schema import *
+from .query import *
+from .mutation import *
