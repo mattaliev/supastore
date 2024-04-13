@@ -2,7 +2,7 @@ from decimal import Decimal
 from uuid import UUID
 import logging
 
-from core.models import Image
+from core.models import Image, EntityStateChoices
 from product.models.product import Product, ProductImage, ProductVariant
 
 
@@ -37,7 +37,8 @@ def product_create(
     sku: str,
     quantity: int = None,
     image_urls: list[str] = [],
-    variants: list[dict] = []
+    variants: list[dict] = [],
+    state: str = EntityStateChoices.ACTIVE
 ) -> Product:
     logger = logging.getLogger(__name__)
     logger.debug("Creating product with title: %s", title)
@@ -47,7 +48,8 @@ def product_create(
         description=description,
         price=Decimal(price),
         sku=sku,
-        quantity=quantity
+        quantity=quantity,
+        state=state
     )
 
     product_images_create(product_id=product.id, image_urls=image_urls)
@@ -66,7 +68,8 @@ def product_update(
     sku: str,
     quantity: int = None,
     image_urls: list[str] = [],
-    variants: list[dict] = []
+    variants: list[dict] = [],
+    state: str = EntityStateChoices.ACTIVE
 ) -> Product:
     logger = logging.getLogger(__name__)
     logger.debug("Updating product with id: %s", product_id)
@@ -78,6 +81,7 @@ def product_update(
     product.price = Decimal(price)
     product.sku = sku
     product.quantity = quantity
+    product.state = state
     product.save()
 
     ProductImage.objects.filter(product=product).delete()

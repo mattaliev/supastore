@@ -50,6 +50,7 @@ class ProductInput(graphene.InputObjectType):
     quantity = graphene.Int()
     image_urls = graphene.List(graphene.String)
     variants = graphene.List("product.schemas.schema.ProductVariantInput")
+    state = graphene.String()
 
 
 class ProductVariantInput(graphene.InputObjectType):
