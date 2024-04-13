@@ -10,7 +10,7 @@ export type InvoiceCreateResponse = {
 };
 
 export const createInvoice = async (
-  prevState: any,
+  prevState: any
 ): Promise<InvoiceCreateResponse> => {
   const orderId = cookies().get("orderId")?.value;
   const userId = cookies().get("userId")?.value;

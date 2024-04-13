@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const phoneRegex = new RegExp(
-  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
+  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
 export const ShippingDetailsScheme = z.object({
@@ -21,7 +21,7 @@ export const ShippingDetailsScheme = z.object({
   province: z.optional(
     z.string({
       invalid_type_error: "Invalid province",
-    }),
+    })
   ),
   postcode: z
     .string({
@@ -43,10 +43,10 @@ export const ShippingDetailsScheme = z.object({
   email: z.optional(
     z.string().email({
       message: "Invalid email address",
-    }),
+    })
   ),
   phone: z.optional(
-    z.string().regex(phoneRegex, { message: "Invalid phone number" }),
+    z.string().regex(phoneRegex, { message: "Invalid phone number" })
   ),
 });
 
