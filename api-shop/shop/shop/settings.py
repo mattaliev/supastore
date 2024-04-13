@@ -58,6 +58,7 @@ SECRET_KEY = env("SECRET_KEY")
 CLOUD_RUN_SERVICE_URL = env("CLOUD_RUN_SERVICE_URL", default=None)
 SERVICE_URL = env("SERVICE_URL", default=None)
 FRONTEND_CLIENT_URL = env("FRONTEND_CLIENT_URL", default=None)
+ADMIN_CLIENT_URL = env("ADMIN_CLIENT_URL", default=None)
 
 CORS_ALLOWED_ORIGINS = [
     "https://studio.apollographql.com"
@@ -81,9 +82,12 @@ else:
 CACHE_MIDDLEWARE_SECONDS = 0
 
 #
-# if FRONTEND_CLIENT_URL:
-#     CSRF_TRUSTED_ORIGINS.append(FRONTEND_CLIENT_URL)
-#     CORS_ALLOWED_ORIGINS.append(FRONTEND_CLIENT_URL)
+if FRONTEND_CLIENT_URL:
+    CSRF_TRUSTED_ORIGINS.append(FRONTEND_CLIENT_URL)
+    CORS_ALLOWED_ORIGINS.append(FRONTEND_CLIENT_URL)
+
+    CSRF_TRUSTED_ORIGINS.append(ADMIN_CLIENT_URL)
+    CORS_ALLOWED_ORIGINS.append(ADMIN_CLIENT_URL)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
