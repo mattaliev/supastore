@@ -28,6 +28,7 @@
     "lucide-react": "^0.367.0",
     "luxon": "^3.4.4",
     "next": "14.2.1",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
