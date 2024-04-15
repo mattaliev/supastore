@@ -17,7 +17,10 @@ import {
   orderGetByCartIdQuery,
   orderGetByIdQuery,
 } from "@/lib/api/queries/order";
-import { productsGetQuery } from "@/lib/api/queries/product";
+import {
+  productsGetQuery,
+  productsPaginatedGetQuery,
+} from "@/lib/api/queries/product";
 import { profileQuery } from "@/lib/api/queries/user";
 import {
   RegisterUserInput,
@@ -41,6 +44,9 @@ import {
   BackendInvoiceCreateOperation,
   BackendInvoiceGetByOrderIdOperation,
   BackendShippingDetailsUpdateOperation,
+  EntityState,
+  Paginated,
+  BackendProductsPaginatedGetOperation,
 } from "@/lib/api/types";
 
 type ExtractVariables<T> = T extends { variables: object }
@@ -133,6 +139,24 @@ export const productsGet = async ({
   }
 
   return body.data.productsGet;
+};
+
+export const productsPaginatedGet = async ({
+  state,
+  page,
+  limit,
+}: {
+  state?: EntityState;
+  page?: number;
+  limit?: number;
+}): Promise<Paginated<Product>> => {
+  const { body } = await backendFetch<BackendProductsPaginatedGetOperation>({
+    query: productsPaginatedGetQuery,
+    variables: { state, page, limit },
+    tags: [TAGS.PRODUCT],
+  });
+
+  return body.data.productsPaginatedGet;
 };
 
 export const cartGet = async (cartId?: string): Promise<Cart | undefined> => {
