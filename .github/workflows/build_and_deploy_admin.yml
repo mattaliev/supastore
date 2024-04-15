@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "admin-shop/**"
+      - ".github/workflows/build_and_deploy_admin.yml"
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
