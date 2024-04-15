@@ -74,10 +74,17 @@ export const backendFetch = async <T>({
   }
 };
 
-export const productsGet = async (): Promise<Product[]> => {
+export const productsGet = async ({
+  state,
+}: {
+  state?: "ACTIVE" | "INACTIVE";
+}): Promise<Product[]> => {
   const { body } = await backendFetch<BackendProductsGetOperation>({
     query: productsGetQuery,
     tags: [TAGS.PRODUCT],
+    variables: {
+      state,
+    },
   });
 
   if (!body.data.productsGet) {

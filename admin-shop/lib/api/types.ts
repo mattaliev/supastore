@@ -18,8 +18,8 @@ export enum EntityState {
 }
 
 export type BaseEntity = {
-  created: Date;
-  updated: Date;
+  created: string;
+  updated: string;
   state: EntityState;
 };
 
@@ -166,6 +166,9 @@ export type BackendProductDetailOperation = {
 export type BackendProductsGetOperation = {
   data: {
     productsGet: Product[];
+  };
+  variables: {
+    state?: string;
   };
 };
 

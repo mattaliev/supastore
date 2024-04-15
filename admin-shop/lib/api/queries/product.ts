@@ -13,8 +13,8 @@ export const productDetailQuery = /* GraphQL */ `
 `;
 
 export const productsGetQuery = /* GraphQL */ `
-  query ProductsGet {
-    productsGet {
+  query ProductsGet($state: String) {
+    productsGet(state: $state) {
       ...CollectionProductFields
     }
   }
