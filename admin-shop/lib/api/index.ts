@@ -1,6 +1,7 @@
 import {
   productDetailQuery,
   productsGetQuery,
+  productsPaginatedGetQuery,
 } from "@/lib/api/queries/product";
 import {
   BackendProductsGetOperation,
@@ -11,6 +12,9 @@ import {
   ProductUpdateInput,
   BackendProductDetailOperation,
   BackendProductDeleteOperation,
+  EntityState,
+  BackendProductsPaginatedGetOperation,
+  Paginated,
 } from "@/lib/api/types";
 import {
   productCreateMutation,
@@ -77,7 +81,7 @@ export const backendFetch = async <T>({
 export const productsGet = async ({
   state,
 }: {
-  state?: "ACTIVE" | "INACTIVE";
+  state?: EntityState;
 }): Promise<Product[]> => {
   const { body } = await backendFetch<BackendProductsGetOperation>({
     query: productsGetQuery,
@@ -92,6 +96,24 @@ export const productsGet = async ({
   }
 
   return body.data.productsGet;
+};
+
+export const productsPaginatedGet = async ({
+  state,
+  page,
+  limit,
+}: {
+  state?: EntityState;
+  page?: number;
+  limit?: number;
+}): Promise<Paginated<Product>> => {
+  const { body } = await backendFetch<BackendProductsPaginatedGetOperation>({
+    query: productsPaginatedGetQuery,
+    variables: { state, page, limit },
+    tags: [TAGS.PRODUCT],
+  });
+
+  return body.data.productsPaginatedGet;
 };
 
 export const productDetail = async (

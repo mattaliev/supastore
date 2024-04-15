@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { ThemeProvider } from "@/components/theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <EdgeStoreProvider>{children}</EdgeStoreProvider>
+        <EdgeStoreProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </EdgeStoreProvider>
       </body>
     </html>
   );

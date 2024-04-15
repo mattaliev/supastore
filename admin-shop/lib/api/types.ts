@@ -23,6 +23,15 @@ export type BaseEntity = {
   state: EntityState;
 };
 
+export type Paginated<T> = {
+  hasNext: boolean;
+  hasPrev: boolean;
+  page: number;
+  pages: number;
+  totalItems: number;
+  objects: T[];
+};
+
 export type TelegramUser = {
   id: string;
   telegramId: number;
@@ -168,7 +177,18 @@ export type BackendProductsGetOperation = {
     productsGet: Product[];
   };
   variables: {
-    state?: string;
+    state?: EntityState;
+  };
+};
+
+export type BackendProductsPaginatedGetOperation = {
+  data: {
+    productsPaginatedGet: Paginated<Product>;
+  };
+  variables: {
+    state?: EntityState;
+    page?: number;
+    limit?: number;
   };
 };
 
