@@ -1,5 +1,7 @@
-import { initEdgeStore } from '@edgestore/server';
-import { createEdgeStoreNextHandler } from '@edgestore/server/adapters/next/app';
+import { initEdgeStore } from "@edgestore/server";
+import { createEdgeStoreNextHandler } from "@edgestore/server/adapters/next/app";
+
+export const dynamic = "force-dynamic";
 
 const es = initEdgeStore.create();
 
@@ -7,16 +9,15 @@ const es = initEdgeStore.create();
  * This is the main router for the Edge Store buckets.
  */
 const edgeStoreRouter = es.router({
-    publicFiles: es.fileBucket(),
-    publicImages: es.imageBucket({
-        maxSize: 1024 * 1024,       // 1 MB limit for images
-    }),
+  publicFiles: es.fileBucket(),
+  publicImages: es.imageBucket({
+    maxSize: 1024 * 1024, // 1 MB limit for images
+  }),
 });
 
 const handler = createEdgeStoreNextHandler({
-    router: edgeStoreRouter,
+  router: edgeStoreRouter,
 });
-
 
 export { handler as GET, handler as POST };
 

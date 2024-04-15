@@ -2,6 +2,8 @@ import { productDetail } from "@/lib/api";
 import ProductUpdateForm from "@/components/product/product-update-form";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 type ProductEditPageProps = {
   params: {
     productId: string;
