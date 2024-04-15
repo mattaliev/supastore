@@ -32,6 +32,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { usePathname } from "next/navigation";
+import HeaderBreadcrumb from "@/components/layout/header-breadcrumb";
 
 export default function Header() {
   const pathname = usePathname();
@@ -40,13 +41,6 @@ export default function Header() {
     "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground";
   const sheetItemSelectedClass =
     "flex items-center gap-4 px-2.5 text-foreground";
-
-  const pathnames: Record<string, string> = {
-    "/": "Dashboard",
-    "/products": "Products",
-    "/customers": "Customers",
-    "/analytics": "Settings",
-  };
 
   return (
     <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -86,7 +80,7 @@ export default function Header() {
               <Link
                 href="/products"
                 className={
-                  pathname === "/products"
+                  pathname.startsWith("/products")
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -97,7 +91,7 @@ export default function Header() {
               <Link
                 href="#"
                 className={
-                  pathname === "/customers"
+                  pathname.startsWith("/customers")
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -108,7 +102,7 @@ export default function Header() {
               <Link
                 href="#"
                 className={
-                  pathname === "/analytics"
+                  pathname.startsWith("/analytics")
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -119,24 +113,7 @@ export default function Header() {
             </nav>
           </SheetContent>
         </Sheet>
-        <Breadcrumb className="hidden md:flex">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Dashboard</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            {pathname !== "/" && <BreadcrumbSeparator />}
-
-            {pathname !== "/" && (
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">{pathnames[pathname]}</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            )}
-          </BreadcrumbList>
-        </Breadcrumb>
+        <HeaderBreadcrumb pathname={pathname} />
         <div className="relative ml-auto flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
