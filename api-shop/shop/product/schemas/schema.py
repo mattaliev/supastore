@@ -1,11 +1,13 @@
 import graphene
 from graphene_django import DjangoObjectType
 
+from core.schemas import PaginatedType
 from product.models.product import Product, ProductVariant, ProductImage
 
 
 __all__ = [
     "ProductType",
+    "ProductPaginatedType",
     "ProductVariantType",
     "ProductImageType",
     "ProductInput",
@@ -21,6 +23,10 @@ class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class ProductPaginatedType(PaginatedType):
+    objects = graphene.List("product.schemas.ProductType")
 
 
 class ProductVariantType(DjangoObjectType):
