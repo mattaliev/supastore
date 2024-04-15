@@ -17,9 +17,13 @@ __all__ = [
 ]
 
 
-def product_list():
+def product_list(*, state: EntityStateChoices = None):
     logger = logging.getLogger(__name__)
-    logger.debug("Fetching all products")
+    logger.debug("Fetching all products. State: %s", state if state else "All")
+
+    if state:
+        return Product.objects.filter(state=state)
+
     return Product.objects.all()
 
 

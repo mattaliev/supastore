@@ -9,11 +9,11 @@ __all__ = [
 ]
 
 class Query(graphene.ObjectType):
-    products_get = graphene.List(ProductType)
+    products_get = graphene.List(ProductType, state=graphene.String())
     product_detail = graphene.Field(ProductType, id=graphene.UUID())
 
-    def resolve_products_get(self, info, **kwargs):
-        return product_list()
+    def resolve_products_get(self, info, state=None, **kwargs):
+        return product_list(state=state)
 
     def resolve_product_detail(self, info, id):
         return product_detail(id)
