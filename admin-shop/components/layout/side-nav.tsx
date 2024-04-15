@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import {
   Home,
@@ -13,8 +14,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePathname } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 export default function SideNav() {
+  const pathname = usePathname();
+
+  const navItemClass =
+    "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8";
+  const navItemSelectedClass = "bg-accent";
+
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -28,8 +37,12 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              href="/"
+              className={
+                pathname === "/"
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
             >
               <Home className="h-5 w-5" />
               <span className="sr-only">Dashboard</span>
@@ -41,7 +54,11 @@ export default function SideNav() {
           <TooltipTrigger asChild>
             <Link
               href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              className={
+                pathname === "/orders"
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
             >
               <ShoppingCart className="h-5 w-5" />
               <span className="sr-only">Orders</span>
@@ -52,8 +69,12 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              href="/products"
+              className={
+                pathname === "/products"
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
             >
               <Package className="h-5 w-5" />
               <span className="sr-only">Products</span>
@@ -65,7 +86,11 @@ export default function SideNav() {
           <TooltipTrigger asChild>
             <Link
               href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              className={
+                pathname === "/customers"
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
             >
               <Users2 className="h-5 w-5" />
               <span className="sr-only">Customers</span>
@@ -77,7 +102,11 @@ export default function SideNav() {
           <TooltipTrigger asChild>
             <Link
               href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              className={
+                pathname === "/analytics"
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
             >
               <LineChart className="h-5 w-5" />
               <span className="sr-only">Analytics</span>
@@ -91,7 +120,11 @@ export default function SideNav() {
           <TooltipTrigger asChild>
             <Link
               href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              className={
+                pathname === "/"
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
             >
               <Settings className="h-5 w-5" />
               <span className="sr-only">Settings</span>
