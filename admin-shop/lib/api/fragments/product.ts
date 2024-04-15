@@ -57,3 +57,17 @@ export const productDetailFragment = /* GraphQL */ `
     created
   }
 `;
+
+export const paginatedProductsFragment = /* GraphQL */ `
+  fragment PaginatedProductsFields on ProductPaginatedType {
+    hasNext
+    hasPrev
+    page
+    pages
+    totalItems
+    objects {
+      ...CollectionProductFields
+    }
+  }
+  ${collectionProductFragment}
+`;

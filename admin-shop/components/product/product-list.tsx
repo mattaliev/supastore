@@ -25,7 +25,20 @@ import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import ProductAdminActions from "@/components/product/product-admin-actions";
 
-export default function ProductList({ products }: { products: Product[] }) {
+export default function ProductList({
+  products,
+  page,
+  limit,
+  totalProductCount,
+}: {
+  products: Product[];
+  page: number;
+  totalProductCount: number;
+  limit: number;
+}) {
+  const firstProductIndex = (page - 1) * limit + 1;
+  const lastProductIndex = Math.min(page * limit, totalProductCount);
+
   return (
     <Card>
       <CardHeader>
@@ -103,8 +116,11 @@ export default function ProductList({ products }: { products: Product[] }) {
       </CardContent>
       <CardFooter>
         <div className="text-xs text-muted-foreground">
-          Showing <strong>{products.length}</strong> of{" "}
-          <strong>{products.length}</strong> products
+          Showing{" "}
+          <strong>
+            {firstProductIndex} - {lastProductIndex}
+          </strong>{" "}
+          of <strong>{totalProductCount}</strong> products
         </div>
       </CardFooter>
     </Card>
