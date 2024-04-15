@@ -4,7 +4,7 @@ import { productsGet } from "@/lib/api";
 
 type ProductListPageProps = {
   searchParams: {
-    state?: string;
+    state?: "ACTIVE" | "INACTIVE";
   };
 };
 
