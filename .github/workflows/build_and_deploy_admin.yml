@@ -57,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./admin
+          context: ./admin-shop
           tags: |
             ${{ env.IMAGE }}:${{ env.SHA }}
             ${{ env.IMAGE }}:latest
