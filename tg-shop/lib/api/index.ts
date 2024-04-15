@@ -101,7 +101,7 @@ export const backendFetch = async <T>({
 
 export const registerUser = async (
   input: RegisterUserInput,
-  cartId?: string
+  cartId?: string,
 ): Promise<{ user: TelegramUser; cart: Cart }> => {
   const { body } = await backendFetch<BackendRegisterUserOperation>({
     query: registerUserMutation,
@@ -115,10 +115,17 @@ export const registerUser = async (
   return body.data.register;
 };
 
-export const productsGet = async (): Promise<Product[]> => {
+export const productsGet = async ({
+  state,
+}: {
+  state?: "ACTIVE" | "INACTIVE";
+}): Promise<Product[]> => {
   const { body } = await backendFetch<BackendProductsGetOperation>({
     query: productsGetQuery,
     tags: [TAGS.PRODUCT],
+    variables: {
+      state,
+    },
   });
 
   if (!body.data.productsGet) {
@@ -221,7 +228,7 @@ export const cartUpdateItem = async (input: {
 
 export const orderGetById = async (
   orderId: string,
-  state?: string
+  state?: string,
 ): Promise<Order | undefined> => {
   const { body } = await backendFetch<BackendOrderGetByIdOperation>({
     query: orderGetByIdQuery,
@@ -242,7 +249,7 @@ export const orderGetById = async (
 
 export const orderGetByCartId = async (
   cartId: string,
-  state?: string
+  state?: string,
 ): Promise<Order | undefined> => {
   const { body } = await backendFetch<BackendOrderGetByCartIdOperation>({
     query: orderGetByCartIdQuery,
@@ -259,7 +266,7 @@ export const orderGetByCartId = async (
 
 export const orderCreate = async (
   cartId: string,
-  userId?: string
+  userId?: string,
 ): Promise<Order> => {
   const { body } = await backendFetch<BackendOrderCreateOperation>({
     query: orderCreateMutation,
@@ -279,7 +286,7 @@ export const shippingDetailsCreate = async (
     orderId: string;
     userId?: string;
     isDefault: boolean;
-  }
+  },
 ): Promise<ShippingDetails> => {
   const { body } = await backendFetch<BackendShippingDetailsCreateOperation>({
     query: shippingDetailsCreateMutation,
@@ -299,7 +306,7 @@ export const shippingDetailsUpdate = async (
     orderId: string;
     userId?: string;
     isDefault: boolean;
-  }
+  },
 ): Promise<ShippingDetails> => {
   const { body } = await backendFetch<BackendShippingDetailsUpdateOperation>({
     query: shippingDetailsUpdateMutation,
@@ -332,7 +339,7 @@ export const invoiceCreate = async (input: {
 };
 
 export const invoiceGetByOrderId = async (
-  orderId: string
+  orderId: string,
 ): Promise<Invoice | undefined> => {
   const { body } = await backendFetch<BackendInvoiceGetByOrderIdOperation>({
     query: invoiceGetByOrderIdQuery,
