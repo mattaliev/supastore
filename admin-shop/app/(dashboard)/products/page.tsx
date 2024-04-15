@@ -29,7 +29,7 @@ export default async function ProductListPage({
   } = await productsPaginatedGet({
     state: EntityState[searchParams.state as keyof typeof EntityState],
     page: searchParams.page ? parseInt(searchParams.page) : 1,
-    limit: searchParams.limit ? parseInt(searchParams.limit) : 10,
+    limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
   });
 
   return (
