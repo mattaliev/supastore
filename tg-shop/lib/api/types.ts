@@ -130,6 +130,9 @@ export type BackendProductsGetOperation = {
   data: {
     productsGet: Product[];
   };
+  variables: {
+    state?: "ACTIVE" | "INACTIVE";
+  };
 };
 
 export type BackendCartGetOperation = {
