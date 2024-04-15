@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "api-shop/**"
+      - ".github/workflows/build_and_deploy_api.yml"
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
