@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "tg-shop/**"
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}

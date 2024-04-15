@@ -1,6 +1,6 @@
 import graphene
 
-from product.schemas import Query as ProductQuery
+from product.schemas import Query as ProductQuery, Mutation as ProductMutation
 from cart.schemas import Query as CartQuery, Mutation as CartMutation
 from user.schemas import Query as UserQuery, Mutation as UserMutation
 
@@ -20,6 +20,7 @@ class Query(
 
 
 class Mutation(
+    ProductMutation,
     CartMutation,
     OrderMutation,
     UserMutation,

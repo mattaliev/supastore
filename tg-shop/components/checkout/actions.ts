@@ -48,7 +48,7 @@ export type FormErrorResponse = {
 
 export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<FormErrorResponse> => {
   const orderId = cookies().get("orderId")?.value;
   const userId = cookies().get("userId")?.value;

@@ -38,4 +38,5 @@ class ProductImage(BaseModel):
         db_table = "product_images"
         verbose_name = "product image"
         verbose_name_plural = "product images"
+        ordering = ["order"]
 

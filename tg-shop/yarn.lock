@@ -712,17 +712,15 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tma.js/sdk-react@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@tma.js/sdk-react/-/sdk-react-1.1.4.tgz#73d5abe314228eca48f45aa695dab42a716ffff5"
-  integrity sha512-sNVBWiEuRS4pMEX1FSMXfoMrYFL0JeUDoGJjLoDlweo834HGbAUwCQcOlNKtXw60VK9JcO4GGnCb0Zw/5Lp1eQ==
-  dependencies:
-    "@tma.js/sdk" "1.4.1"
+"@tma.js/sdk-react@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@tma.js/sdk-react/-/sdk-react-2.0.3.tgz#209cbb3efa17b043ddf2bc2b01ed18fe8e8bf19c"
+  integrity sha512-8fvnVk/bwCuOOhKLGLL2ryE93GzcY2l3cSCRg7ATHmzrzV9NIZpkEtNY2CtsjmGONIrtxpT/WTcljj86hN5lOw==
 
-"@tma.js/sdk@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@tma.js/sdk/-/sdk-1.4.1.tgz#049aede4ab3633637a73422785c471fc3ec15b3d"
-  integrity sha512-/MasFSUxtDCC9a4k7UKLzOQjBpr7LTKBOI/mqiJklux6Pt59NM5oTBBLWjSqMllfErcjhrGryyCLqIX1JAkxNA==
+"@tma.js/sdk@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@tma.js/sdk/-/sdk-1.5.3.tgz#989b597b73e43ec2a128ea247e86218e0a8ad080"
+  integrity sha512-oXWtFoiiJCzsueOrX7FFQhpljUOLY3BkxNen6J6Ri0r1gZrlu1uFKZVeCpV7KUzsNTLfIK9VQEOcNxI3zuejJA==
 
 "@types/animejs@^3.1.12":
   version "3.1.12"

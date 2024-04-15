@@ -19,7 +19,7 @@ export default function ShippingDetailsForm({
 }) {
   const [formStatus, formAction] = useFormState(
     createOrUpdateShippingDetails,
-    null,
+    null
   );
   const hapticFeedback = useHapticFeedback();
 

@@ -22,14 +22,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json(
       { message: "User authenticated successfully" },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error: any) {
     console.error(error);
 
     return NextResponse.json(
       { message: "Unexpected error occurred" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }
