@@ -12,6 +12,26 @@ export enum PaymentStatus {
   FAILED = "FAILED",
 }
 
+export enum EntityState {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
+export type BaseEntity = {
+  created: string;
+  updated: string;
+  state: EntityState;
+};
+
+export type Paginated<T> = {
+  hasNext: boolean;
+  hasPrev: boolean;
+  page: number;
+  pages: number;
+  totalItems: number;
+  objects: T[];
+};
+
 export type TelegramUser = {
   id: string;
   telegramId: number;
@@ -64,7 +84,7 @@ export type Product = {
   sku: string;
   images?: ProductImage[] | null;
   variants?: ProductVariant[] | null;
-};
+} & BaseEntity;
 
 export type ProductImage = {
   id: string;
@@ -132,6 +152,17 @@ export type BackendProductsGetOperation = {
   };
   variables: {
     state?: "ACTIVE" | "INACTIVE";
+  };
+};
+
+export type BackendProductsPaginatedGetOperation = {
+  data: {
+    productsPaginatedGet: Paginated<Product>;
+  };
+  variables: {
+    state?: EntityState;
+    page?: number;
+    limit?: number;
   };
 };
 

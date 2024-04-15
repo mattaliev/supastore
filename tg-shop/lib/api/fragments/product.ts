@@ -32,3 +32,17 @@ export const collectionProductFragment = /* GraphQL */ `
     }
   }
 `;
+
+export const paginatedProductsFragment = /* GraphQL */ `
+  fragment PaginatedProductsFields on ProductPaginatedType {
+    hasNext
+    hasPrev
+    page
+    pages
+    totalItems
+    objects {
+      ...CollectionProductFields
+    }
+  }
+  ${collectionProductFragment}
+`;
