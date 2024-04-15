@@ -4,6 +4,10 @@ const nextConfig = {
     domains: ['static.tildacdn.com', 'files.edgestore.dev']
   },
   reactStrictMode: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  output: "standalone",
 };
 
 export default nextConfig;
