@@ -1,15 +1,23 @@
 import ProductList from "@/components/product/product-list";
-import Filters from "@/components/filters/filters";
+import ProductFilters from "@/components/product/product-filters";
 import { productsGet } from "@/lib/api";
+
+type ProductListPageProps = {
+  searchParams: {
+    state?: string;
+  };
+};
 
 export const dynamic = "force-dynamic";
 
-export default async function ProductListPage() {
-  const products = await productsGet();
+export default async function ProductListPage({
+  searchParams,
+}: ProductListPageProps) {
+  const products = await productsGet({ state: searchParams.state });
 
   return (
     <>
-      <Filters />
+      <ProductFilters />
       <ProductList products={products} />
     </>
   );

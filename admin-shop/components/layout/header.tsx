@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import Link from "next/link";
@@ -30,8 +31,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Input } from "@/components/ui/input";
+import { usePathname } from "next/navigation";
+import HeaderBreadcrumb from "@/components/layout/header-breadcrumb";
 
 export default function Header() {
+  const pathname = usePathname();
+
+  const sheetItemClass =
+    "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground";
+  const sheetItemSelectedClass =
+    "flex items-center gap-4 px-2.5 text-foreground";
+
   return (
     <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -52,8 +62,10 @@ export default function Header() {
                 <span className="sr-only">Acme Inc</span>
               </Link>
               <Link
-                href="#"
-                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                href="/"
+                className={
+                  pathname === "/" ? sheetItemSelectedClass : sheetItemClass
+                }
               >
                 <Home className="h-5 w-5" />
                 Dashboard
@@ -66,22 +78,34 @@ export default function Header() {
                 Orders
               </Link>
               <Link
-                href="#"
-                className="flex items-center gap-4 px-2.5 text-foreground"
+                href="/products"
+                className={
+                  pathname.startsWith("/products")
+                    ? sheetItemSelectedClass
+                    : sheetItemClass
+                }
               >
                 <Package className="h-5 w-5" />
                 Products
               </Link>
               <Link
                 href="#"
-                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                className={
+                  pathname.startsWith("/customers")
+                    ? sheetItemSelectedClass
+                    : sheetItemClass
+                }
               >
                 <Users2 className="h-5 w-5" />
                 Customers
               </Link>
               <Link
                 href="#"
-                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                className={
+                  pathname.startsWith("/analytics")
+                    ? sheetItemSelectedClass
+                    : sheetItemClass
+                }
               >
                 <LineChart className="h-5 w-5" />
                 Settings
@@ -89,25 +113,7 @@ export default function Header() {
             </nav>
           </SheetContent>
         </Sheet>
-        <Breadcrumb className="hidden md:flex">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="#">Dashboard</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="#">Products</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>All Products</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <HeaderBreadcrumb pathname={pathname} />
         <div className="relative ml-auto flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -122,15 +128,7 @@ export default function Header() {
               variant="outline"
               size="icon"
               className="overflow-hidden rounded-full"
-            >
-              {/*<Image*/}
-              {/*  src="#"*/}
-              {/*  width={36}*/}
-              {/*  height={36}*/}
-              {/*  alt="Avatar"*/}
-              {/*  className="overflow-hidden rounded-full"*/}
-              {/*/>*/}
-            </Button>
+            ></Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
