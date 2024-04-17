@@ -1,17 +1,18 @@
+"use client";
 import * as React from "react";
 import { X } from "lucide-react";
 import { FileState } from "@/components/file-upload/multi-file-sortable-dropzone";
 import { Sortable } from "@/components/drag-and-drop/sortable";
-import { twMerge } from "tailwind-merge";
+import { Button } from "@/components/ui/button";
 
 export function DropzoneImage(props: {
   imageUrls: string[] | any[];
   index: number;
   disabled: boolean | undefined;
-  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onRemoveImage: (index: number) => void;
   fileState: FileState;
 }) {
-  const { imageUrls, index, disabled, onClick, fileState } = props;
+  const { imageUrls, index, disabled, onRemoveImage, fileState } = props;
 
   return (
     <>
@@ -31,22 +32,16 @@ export function DropzoneImage(props: {
         </div>
       )}
       {/* Remove Image Icon */}
-      {imageUrls[index + 1] &&
-        !disabled &&
-        fileState.progress === "PENDING" && (
-          <div
-            className="group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 transform"
-            onClick={onClick}
-          >
-            <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6 dark:border-gray-400 dark:bg-black">
-              <X
-                className="text-gray-500 dark:text-gray-400"
-                width={16}
-                height={16}
-              />
-            </div>
-          </div>
-        )}
+      <Button
+        className="group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 p-0 h-5 w-5 transform flex cursor-pointer items-center justify-center"
+        variant={"outline"}
+        size={"sm"}
+        onClick={() => onRemoveImage(index)}
+        type={"button"}
+      >
+        <X className="text-primary" width={16} height={16} />
+        {/*<div className=" rounded-md border border-solid  bg-accent transition-all duration-300 hover:h-6 hover:w-6 dark:bg-accent"></div>*/}
+      </Button>
     </>
   );
 }
@@ -55,12 +50,12 @@ export function SortableDropzoneImage(props: {
   imageUrls: string[] | any[];
   index: number;
   disabled: boolean | undefined;
-  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onRemoveImage: (index: number) => void;
   fileState: FileState;
   className?: string;
 }) {
   return (
-    <Sortable id={props.fileState.key} className={props.className || ""}>
+    <Sortable id={props.fileState.key} className={props.className}>
       <DropzoneImage {...props} />
     </Sortable>
   );
