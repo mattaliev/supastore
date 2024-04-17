@@ -91,6 +91,10 @@ const MultiImageSortableDropzone = React.forwardRef<
       return [];
     }, [value]);
 
+    const onRemoveImage = (index: number) => {
+      void onChange?.(value?.filter((_, i) => i !== index) ?? []);
+    };
+
     // dropzone configuration
     const {
       getRootProps,
@@ -156,7 +160,13 @@ const MultiImageSortableDropzone = React.forwardRef<
       return undefined;
     }, [fileRejections, dropzoneOptions]);
 
-    const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+    const mouseSensor = useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 25,
+      },
+    });
+
+    const sensors = useSensors(mouseSensor, useSensor(TouchSensor));
 
     if (!value) {
       return (
@@ -192,10 +202,7 @@ const MultiImageSortableDropzone = React.forwardRef<
                   index={index}
                   fileState={fileState}
                   disabled={disabled}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    void onChange?.(value.filter((_, i) => i !== index) ?? []);
-                  }}
+                  onRemoveImage={onRemoveImage}
                   className={twMerge(
                     variants.image,
                     "w-full aspect-square first:col-span-3",

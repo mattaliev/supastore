@@ -10,7 +10,7 @@ export function Sortable({
 }: {
   id: UniqueIdentifier;
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
