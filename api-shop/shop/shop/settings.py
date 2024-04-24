@@ -115,6 +115,7 @@ INSTALLED_APPS = [
     'analytics.apps.AnalyticsConfig',
     'invoice.apps.InvoiceConfig',
     'telegram.apps.TelegramConfig',
+    'shipping.apps.ShippingConfig'
 ]
 
 MIDDLEWARE = [
