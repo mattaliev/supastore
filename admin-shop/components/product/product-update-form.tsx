@@ -10,10 +10,11 @@ import { twMerge } from "tailwind-merge";
 import ProductDeleteDialog from "@/components/product/product-delete-dialog";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProductUpdateForm({ product }: { product: Product }) {
+  const { back } = useRouter();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
   const [formErrors, formAction] = useFormState(updateProduct, null);
 
   return (
@@ -26,25 +27,24 @@ export default function ProductUpdateForm({ product }: { product: Product }) {
               size="icon"
               className="h-7 w-7"
               type="button"
+              onClick={() => back()}
             >
-              <Link href="/products">
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back</span>
-              </Link>
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
             </Button>
             <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
               {product.title}
             </h1>
             <div className={"hidden md:ml-auto md:flex items-center gap-2"}>
               <Link href={"/products"}>
-                <Button size={"sm"} type={"button"}>
+                <Button size={"sm"} type={"button"} variant="outline">
                   Discard
                 </Button>
               </Link>
               <UpdateProductButton className={""} />
 
               <DialogTrigger asChild>
-                <Button variant="outline" size={"sm"} type={"button"}>
+                <Button variant="destructive" size={"sm"} type={"button"}>
                   Delete
                 </Button>
               </DialogTrigger>
@@ -62,13 +62,13 @@ export default function ProductUpdateForm({ product }: { product: Product }) {
           )}
           <div className={"items-center gap-2 flex"}>
             <Link href={"/products"}>
-              <Button size={"sm"} type={"button"}>
+              <Button size={"sm"} type={"button"} variant="outline">
                 Discard
               </Button>
             </Link>
             <UpdateProductButton className={"flex"} />
             <DialogTrigger asChild>
-              <Button variant="outline" size={"sm"} type={"button"}>
+              <Button size={"sm"} type={"button"} variant={"destructive"}>
                 Delete
               </Button>
             </DialogTrigger>
@@ -97,7 +97,7 @@ function UpdateProductButton({ className }: { className?: string }) {
           disabled
         >
           <LoaderCircle className="animate-spin" />
-          Edit Product
+          Editing...
         </Button>
       </div>
     );
