@@ -23,7 +23,7 @@ User = get_user_model()
 
 class TelegramUserType(DjangoObjectType):
     state = graphene.Field("core.schemas.EntityState")
-    shipping_details = graphene.Field("order.schemas.shipping_details_schema.ShippingDetailsType")
+    shipping_details = graphene.Field("shipping.schemas.ShippingDetailsType")
     has_default_shipping_details = graphene.Boolean()
 
     class Meta:

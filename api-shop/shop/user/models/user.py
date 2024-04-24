@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from core.models.core import BaseEntity
 
-
 __all__ = [
     "TelegramUser",
     "UserRoleChoices",
@@ -15,7 +14,8 @@ class UserRoleChoices(models.TextChoices):
 
 
 class TelegramUser(AbstractUser, BaseEntity):
-    username = models.CharField(max_length=100, blank=True, null=True, unique=False)
+    username = models.CharField(max_length=100, blank=True, null=True,
+                                unique=False)
     telegram_id = models.IntegerField(unique=True)
     language_code = models.CharField(max_length=10, blank=True, null=True)
     is_bot = models.BooleanField(default=False)
@@ -27,7 +27,7 @@ class TelegramUser(AbstractUser, BaseEntity):
         default=UserRoleChoices.USER
     )
     shipping_details = models.OneToOneField(
-        "order.ShippingDetails",
+        "shipping.ShippingDetails",
         on_delete=models.CASCADE,
         related_name="user",
         blank=True,
@@ -46,3 +46,5 @@ class TelegramUser(AbstractUser, BaseEntity):
     def has_default_shipping_details(self):
         return self.shipping_details is not None
 
+    def __str__(self):
+        return str(self.username)

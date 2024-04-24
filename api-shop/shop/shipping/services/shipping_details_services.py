@@ -1,10 +1,13 @@
+import logging
 from uuid import UUID
 
 from django.contrib.auth import get_user_model
 
-from order.models import ShippingDetails, Order
+from order.models import ShippingDetails, FulfillmentStatusChoices
+from shipping.models import Shipping
 
 __all__ = [
+    "shipping_add_tracking",
     "shipping_details_create",
     "shipping_details_update"
 ]
@@ -12,20 +15,37 @@ __all__ = [
 User = get_user_model()
 
 
+def shipping_add_tracking(*, shipping_id: UUID, carrier: str,
+                          tracking_number: str) -> Shipping:
+    logger = logging.getLogger(__name__)
+    logger.debug(
+        "Adding tracking to shipping: %(shipping_id)s",
+        {"shipping_id": shipping_id}
+    )
+    shipping = Shipping.objects.get(pk=shipping_id)
+    shipping.carrier = carrier
+    shipping.tracking_number = tracking_number
+    shipping.order.fulfilment_status = FulfillmentStatusChoices.TRACKING
+    shipping.save()
+    shipping.order.save()
+
+    return shipping
+
+
 def shipping_details_create(
-    *,
-    order_id: UUID,
-    user_id: UUID = None,
-    first_name: str,
-    last_name: str,
-    address: str,
-    country: str,
-    city: str = None,
-    province: str = None,
-    postcode: str,
-    phone: str = None,
-    email: str = None,
-    is_default: bool = False
+        *,
+        shipping_id: UUID,
+        user_id: UUID = None,
+        first_name: str,
+        last_name: str,
+        address: str,
+        country: str,
+        city: str = None,
+        province: str = None,
+        postcode: str,
+        phone: str = None,
+        email: str = None,
+        is_default: bool = False
 ) -> ShippingDetails:
     shipping_details = ShippingDetails.objects.create(
         first_name=first_name,
@@ -44,9 +64,9 @@ def shipping_details_create(
         user.shipping_details = shipping_details
         user.save()
 
-    order = Order.objects.get(pk=order_id)
-    order.shipping_details = shipping_details
-    order.save()
+    shipping = Shipping.objects.get(pk=shipping_id)
+    shipping.details = shipping_details
+    shipping.save()
 
     shipping_details.save()
 
@@ -54,29 +74,29 @@ def shipping_details_create(
 
 
 def shipping_details_update(
-    *,
-    shipping_details_id: UUID,
-    user_id: UUID = None,
-    order_id: UUID,
-    first_name: str,
-    last_name: str,
-    address: str,
-    country: str,
-    city: str = None,
-    province: str = None,
-    postcode: str,
-    phone: str = None,
-    email: str = None,
-    is_default: bool = False
+        *,
+        shipping_details_id: UUID,
+        user_id: UUID = None,
+        shipping_id: UUID,
+        first_name: str,
+        last_name: str,
+        address: str,
+        country: str,
+        city: str = None,
+        province: str = None,
+        postcode: str,
+        phone: str = None,
+        email: str = None,
+        is_default: bool = False
 ) -> ShippingDetails:
     shipping_details = ShippingDetails.objects.get(pk=shipping_details_id)
     user = User.objects.get(pk=user_id)
-    order = Order.objects.get(pk=order_id)
+    shipping = Shipping.objects.get(pk=shipping_id)
 
     if user.shipping_details == shipping_details and not is_default:
         shipping_details = shipping_details_create(
             user_id=user_id,
-            order_id=order_id,
+            shipping_id=shipping_id,
             first_name=first_name,
             last_name=last_name,
             address=address,
@@ -106,6 +126,6 @@ def shipping_details_update(
         user.save()
 
     shipping_details.save()
-    order.save()
+    shipping.save()
 
     return shipping_details
