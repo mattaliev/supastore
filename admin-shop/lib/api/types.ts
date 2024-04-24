@@ -1,6 +1,7 @@
 export enum OrderStatus {
   PENDING = "PENDING",
   PROCESSING = "PROCESSING",
+  SHIPPED = "SHIPPED",
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED",
   REFUNDED = "REFUNDED",
@@ -9,7 +10,15 @@ export enum OrderStatus {
 export enum PaymentStatus {
   PENDING = "PENDING",
   PAID = "PAID",
-  FAILED = "FAILED",
+  REFUNDED = "REFUNDED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum FulfilmentStatus {
+  UNFULFILLED = "UNFULFILLED",
+  FULFILLED = "FULFILLED",
+  TRACKING = "TRACKING",
+  CANCELLED = "CANCELLED",
 }
 
 export enum EntityState {
@@ -46,6 +55,15 @@ export type TelegramUser = {
   photoUrl?: string | null;
   allowsNotifications?: boolean;
   chatId?: number;
+  email?: string;
+};
+
+export type Shipping = {
+  id: string;
+  details?: ShippingDetails;
+  shippingAmount: string; // Decimal
+  carrier?: string;
+  trackingNumber?: string;
 };
 
 export type ShippingDetails = {
@@ -110,19 +128,22 @@ export type RegisterUserInput = Omit<
   "id" | "created" | "updated" | "shippingDetails"
 >;
 
+export type OrderItem = CartItem;
+
 export type Order = {
   id: string;
   orderNumber: string;
   subtotalAmount: number;
   totalAmount: number;
   deliveryAmount: number;
-  cart: Cart;
-  user: TelegramUser;
-  shippingDetails: ShippingDetails;
-  orderStatus: OrderStatus;
+  cart?: Cart;
+  user?: TelegramUser;
+  items: OrderItem[];
+  shipping: Shipping;
   paymentStatus: PaymentStatus;
+  fulfilmentStatus: FulfilmentStatus;
   hasDefaultShippingDetails: boolean;
-};
+} & BaseEntity;
 
 export type Invoice = {
   id: string;
@@ -148,6 +169,13 @@ export type ProductCreateInput = {
 
 export type ProductUpdateInput = ProductCreateInput & {
   productId: string;
+};
+
+export type SalesAnalytics = {
+  salesThisWeek: number;
+  salesThisMonth: number;
+  salesIncreaseThisWeek: number;
+  salesIncreaseThisMonth: number;
 };
 
 export type BackendRegisterUserOperation = {
@@ -225,9 +253,22 @@ export type BackendProductDeleteOperation = {
   };
 };
 
+export type BackendOrderPaginatedGetOperation = {
+  data: {
+    ordersPaginatedGet: Paginated<Order>;
+  };
+  variables: {
+    paymentStatus?: PaymentStatus;
+    fulfilmentStatus?: FulfilmentStatus;
+    state?: string;
+    page?: number;
+    limit?: number;
+  };
+};
+
 export type BackendOrderGetByIdOperation = {
   data: {
-    orderGetById: Order;
+    orderGetById?: Order;
   };
   variables: {
     orderId: string;
@@ -308,5 +349,58 @@ export type BackendInvoiceGetByOrderIdOperation = {
   };
   variables: {
     orderId: string;
+  };
+};
+
+export type BackendSalesAnalyticsOperation = {
+  data: {
+    salesAnalyticsGet: {
+      salesThisWeek: string;
+      salesThisMonth: string;
+      salesIncreaseThisWeek: string;
+      salesIncreaseThisMonth: string;
+    };
+  };
+};
+
+export type BackendOrderStatusUpdateOperation = {
+  data: {
+    orderStatusUpdate: {
+      order: Order;
+    };
+  };
+  variables: {
+    input: {
+      orderId: string;
+      paymentStatus?: PaymentStatus;
+      fulfilmentStatus?: FulfilmentStatus;
+      notifyUser?: boolean;
+    };
+  };
+};
+
+export type BackendOrderDeleteOperation = {
+  data: {
+    orderDelete: {
+      success: boolean;
+    };
+  };
+  variables: {
+    orderId: string;
+  };
+};
+
+export type BackendShippingAddTrackingOperation = {
+  data: {
+    shippingAddTracking: {
+      shipping: Shipping;
+    };
+  };
+  variables: {
+    input: {
+      shippingId: string;
+      trackingNumber: string;
+      carrier: string;
+    };
   };
 };

@@ -1,15 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ChevronLeft, LoaderCircle } from "lucide-react";
 import ProductInputFields from "@/components/product/product-input-fields";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
-import { useFormState } from "react-dom";
 import { createProduct } from "@/components/product/actions";
+import { useRouter } from "next/navigation";
 
 export default function ProductCreateForm() {
   const [formErrors, formAction] = useFormState(createProduct, null);
+  const { back } = useRouter();
 
   return (
     <form action={formAction}>
@@ -20,11 +20,10 @@ export default function ProductCreateForm() {
             size="icon"
             className="h-7 w-7"
             type="button"
+            onClick={() => back()}
           >
-            <Link href="/products">
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
-            </Link>
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only">Back</span>
           </Button>
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
             Create Product
@@ -54,6 +53,7 @@ function SubmitButton({ className }: { className?: string }) {
           disabled
         >
           <LoaderCircle className="animate-spin" />
+          Creating...
         </Button>
       </div>
     );

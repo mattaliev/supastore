@@ -12,14 +12,6 @@ import {
   ShoppingCart,
   Users2,
 } from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 
 import {
   DropdownMenu,
@@ -71,8 +63,12 @@ export default function Header() {
                 Dashboard
               </Link>
               <Link
-                href="#"
-                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                href="/orders"
+                className={
+                  pathname.startsWith("/orders")
+                    ? sheetItemSelectedClass
+                    : sheetItemClass
+                }
               >
                 <ShoppingCart className="h-5 w-5" />
                 Orders

@@ -1,18 +1,22 @@
 import { userFragment } from "@/lib/api/fragments/user";
+import { orderProductFragment } from "@/lib/api/fragments/product";
+import { shippingFragment } from "@/lib/api/fragments/shipping";
 
-export const shippingDetailsFragment = /* GraphQL */ `
-  fragment ShippingDetailsFields on ShippingDetailsType {
+export const orderItemFragment = /* GraphQL */ `
+  fragment OrderItemFields on OrderItemType {
     id
-    firstName
-    lastName
-    country
-    city
-    province
-    address
-    postcode
-    phone
-    email
+    product {
+      ...OrderProductFields
+    }
+    variant {
+      id
+      size
+      color
+      material
+    }
+    quantity
   }
+  ${orderProductFragment}
 `;
 
 export const orderFragment = /* GraphQL */ `
@@ -22,15 +26,36 @@ export const orderFragment = /* GraphQL */ `
     user {
       ...UserFields
     }
-    shippingDetails {
-      ...ShippingDetailsFields
+    shipping {
+      ...ShippingFields
     }
-    orderStatus
+    items {
+      ...OrderItemFields
+    }
+    paymentStatus
+    fulfilmentStatus
     totalAmount
     subtotalAmount
     deliveryAmount
     hasDefaultShippingDetails
+    created
+    updated
   }
   ${userFragment}
-  ${shippingDetailsFragment}
+  ${shippingFragment}
+  ${orderItemFragment}
+`;
+
+export const orderPaginatedFragment = /* GraphQL */ `
+  fragment PaginatedOrdersFields on OrderPaginatedType {
+    hasNext
+    hasPrev
+    page
+    pages
+    totalItems
+    objects {
+      ...OrderFields
+    }
+  }
+  ${orderFragment}
 `;
