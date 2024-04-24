@@ -9,7 +9,7 @@ import { orderCreateMutation } from "@/lib/api/mutations/order";
 import {
   shippingDetailsCreateMutation,
   shippingDetailsUpdateMutation,
-} from "@/lib/api/mutations/shipping-details";
+} from "@/lib/api/mutations/shipping";
 import { registerUserMutation } from "@/lib/api/mutations/user";
 import { cartGetQuery } from "@/lib/api/queries/cart";
 import { invoiceGetByOrderIdQuery } from "@/lib/api/queries/invoice";
@@ -21,32 +21,31 @@ import {
   productsGetQuery,
   productsPaginatedGetQuery,
 } from "@/lib/api/queries/product";
-import { profileQuery } from "@/lib/api/queries/user";
 import {
-  RegisterUserInput,
-  BackendRegisterUserOperation,
   BackendCartAddItemOperation,
   BackendCartCreateOperation,
   BackendCartGetOperation,
   BackendCartRemoveItemOperation,
   BackendCartUpdateItemOperation,
-  BackendProductsGetOperation,
-  Cart,
-  Product,
-  TelegramUser,
-  BackendOrderCreateOperation,
-  Order,
-  ShippingDetails,
-  BackendShippingDetailsCreateOperation,
-  BackendOrderGetByIdOperation,
-  BackendOrderGetByCartIdOperation,
-  Invoice,
   BackendInvoiceCreateOperation,
   BackendInvoiceGetByOrderIdOperation,
-  BackendShippingDetailsUpdateOperation,
-  EntityState,
-  Paginated,
+  BackendOrderCreateOperation,
+  BackendOrderGetByCartIdOperation,
+  BackendOrderGetByIdOperation,
+  BackendProductsGetOperation,
   BackendProductsPaginatedGetOperation,
+  BackendRegisterUserOperation,
+  BackendShippingDetailsCreateOperation,
+  BackendShippingDetailsUpdateOperation,
+  Cart,
+  EntityState,
+  Invoice,
+  Order,
+  Paginated,
+  Product,
+  RegisterUserInput,
+  ShippingDetails,
+  TelegramUser,
 } from "@/lib/api/types";
 
 type ExtractVariables<T> = T extends { variables: object }
@@ -301,13 +300,14 @@ export const orderCreate = async (
     cache: "no-store",
     tags: [TAGS.ORDER],
   });
+  console.log(body);
 
   return body.data.orderCreate.order;
 };
 
 export const shippingDetailsCreate = async (
   input: ShippingDetails & {
-    orderId: string;
+    shippingId: string;
     userId?: string;
     isDefault: boolean;
   },
@@ -327,7 +327,7 @@ export const shippingDetailsCreate = async (
 export const shippingDetailsUpdate = async (
   input: ShippingDetails & {
     shippingDetailsId: string;
-    orderId: string;
+    shippingId: string;
     userId?: string;
     isDefault: boolean;
   },

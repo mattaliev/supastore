@@ -6,11 +6,11 @@ import { ShippingDetails } from "@/lib/api/types";
 export default function DeliverySummary({
   shippingDetails,
 }: {
-  shippingDetails: ShippingDetails;
+  shippingDetails?: ShippingDetails;
 }): JSX.Element {
   if (
-    shippingDetails.country === "Indonesia" &&
-    shippingDetails.province === "Bali"
+    shippingDetails?.country === "Indonesia" &&
+    shippingDetails?.province === "Bali"
   ) {
     return (
       <Card>

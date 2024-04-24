@@ -1,7 +1,5 @@
-import PayWithCardButton from "@/components/checkout/pay-with-card-button";
 import PayWithWalletButton from "@/components/checkout/pay-with-wallet-button";
 import USPaymentOption from "@/components/checkout/us-payment-option";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -41,7 +39,7 @@ export default function OrderPayment({ order }: { order: Order }) {
       </CardContent>
       <CardFooter className="">
         {/*<PayWithCardButton />*/}
-        {order.shippingDetails.country !== "United States" ? (
+        {order.shipping.details?.country !== "United States" ? (
           <PayWithWalletButton order={order} />
         ) : (
           <USPaymentOption order={order} />

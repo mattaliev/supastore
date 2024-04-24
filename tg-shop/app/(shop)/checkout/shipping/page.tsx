@@ -17,5 +17,10 @@ export default async function ShippingDetailsPage() {
     return notFound();
   }
 
-  return <ShippingDetailsForm shippingDetails={order.shippingDetails} />;
+  return (
+    <ShippingDetailsForm
+      shippingDetails={order.shipping.details}
+      shippingId={order.shipping.id}
+    />
+  );
 }

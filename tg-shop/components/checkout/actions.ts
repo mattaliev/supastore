@@ -28,6 +28,7 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
     const order = await orderCreate(cartId, userId);
 
     cookies().set("orderId", order.id);
+    redirectPath = `/checkout/shipping?shippingId=${order.shipping.id}`;
 
     if (order.hasDefaultShippingDetails) {
       redirectPath = "/checkout/payment";
@@ -48,10 +49,15 @@ export type FormErrorResponse = {
 
 export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormErrorResponse> => {
   const orderId = cookies().get("orderId")?.value;
   const userId = cookies().get("userId")?.value;
+  const shippingId = formData.get("shipping-id") as string;
+
+  if (!shippingId) {
+    return { formError: "No shipping found" };
+  }
 
   const validatedData = ShippingDetailsScheme.safeParse({
     firstName: formData.get("first-name") || "",
@@ -65,10 +71,6 @@ export const createOrUpdateShippingDetails = async (
     postcode: formData.get("postcode") || "",
   });
 
-  if (!orderId) {
-    return { formError: "No order found" };
-  }
-
   if (!validatedData.success) {
     return { fieldErrors: validatedData.error.flatten().fieldErrors };
   }
@@ -79,7 +81,7 @@ export const createOrUpdateShippingDetails = async (
     if (shippingDetailsId) {
       await shippingDetailsUpdate({
         ...(validatedData.data as ShippingDetails),
-        orderId,
+        shippingId,
         shippingDetailsId,
         userId,
         isDefault: Boolean(formData.get("is-default")),
@@ -87,7 +89,7 @@ export const createOrUpdateShippingDetails = async (
     } else {
       await shippingDetailsCreate({
         ...(validatedData.data as ShippingDetails),
-        orderId,
+        shippingId,
         userId,
         isDefault: Boolean(formData.get("is-default")),
       });

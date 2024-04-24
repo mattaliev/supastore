@@ -33,6 +33,7 @@ export function AddressAutocomplete({
       types: ["address"],
       fields: ["address_components", "formatted_address"],
       defaultValue: "Bali",
+      language: "en",
     },
   });
 
