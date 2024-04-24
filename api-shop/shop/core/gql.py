@@ -1,11 +1,12 @@
 import graphene
 
-from product.schemas import Query as ProductQuery, Mutation as ProductMutation
+from analytics.schemas import Query as AnalyticsQuery
 from cart.schemas import Query as CartQuery, Mutation as CartMutation
-from user.schemas import Query as UserQuery, Mutation as UserMutation
-
-from order.schemas import (OrderMutation, OrderQuery, ShippingDetailsMutation)
 from invoice.schemas import Query as InvoiceQuery, Mutation as InvoiceMutation
+from order.schemas import Query as OrderQuery, Mutation as OrderMutation
+from product.schemas import Query as ProductQuery, Mutation as ProductMutation
+from shipping.schemas import Mutation as ShippingDetailsMutation
+from user.schemas import Query as UserQuery, Mutation as UserMutation
 
 
 class Query(
@@ -14,6 +15,7 @@ class Query(
     OrderQuery,
     UserQuery,
     InvoiceQuery,
+    AnalyticsQuery,
     graphene.ObjectType
 ):
     pass
