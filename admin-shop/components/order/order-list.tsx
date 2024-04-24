@@ -37,7 +37,7 @@ export default function OrderList({
   return (
     <div className="grid gap-3">
       <OrderFilters />
-      <Card x-chunk="dashboard-05-chunk-3">
+      <Card>
         <CardHeader className="px-7">
           <CardTitle>Orders</CardTitle>
           <CardDescription>Recent orders from your store.</CardDescription>
@@ -66,7 +66,7 @@ export default function OrderList({
 
 function OrderTable({ orders }: { orders?: Order[] }) {
   return (
-    <Table>
+    <Table containerClassname={"w-full overflow-x-auto relative"}>
       <TableHeader>
         <TableRow>
           <TableHead>Order #</TableHead>
@@ -76,7 +76,7 @@ function OrderTable({ orders }: { orders?: Order[] }) {
           <TableHead className="text-right">Amount</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody className="overflow-y-auto">
         {orders?.map((order) => (
           <TableRow key={order.id}>
             <TableCell>

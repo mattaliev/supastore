@@ -61,7 +61,7 @@ export default function ProductVariants({
             <TableRow>
               <TableHead>Size</TableHead>
               <TableHead>Color</TableHead>
-              <TableHead>Material</TableHead>
+              {/*<TableHead>Material</TableHead>*/}
               <TableHead>Quantity</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -132,17 +132,17 @@ function ProductVariantDisplay({
           defaultValue={variant?.color || ""}
         />
       </TableCell>
-      <TableCell className="font-semibold">
-        <Label htmlFor={"variant-material-" + index} className="sr-only">
-          Material
-        </Label>
-        <Input
-          id={"variant-material-" + index}
-          name={"variant-material-" + index}
-          type="text"
-          defaultValue={variant?.material || ""}
-        />
-      </TableCell>
+      {/*<TableCell className="font-semibold">*/}
+      {/*  <Label htmlFor={"variant-material-" + index} className="sr-only">*/}
+      {/*    Material*/}
+      {/*  </Label>*/}
+      {/*  <Input*/}
+      {/*    id={"variant-material-" + index}*/}
+      {/*    name={"variant-material-" + index}*/}
+      {/*    type="text"*/}
+      {/*    defaultValue={variant?.material || ""}*/}
+      {/*  />*/}
+      {/*</TableCell>*/}
       <TableCell className="font-semibold">
         <Label htmlFor={"variant-quantity-" + index} className="sr-only">
           Quantity

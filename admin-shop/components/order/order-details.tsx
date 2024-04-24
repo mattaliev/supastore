@@ -50,8 +50,9 @@ export default function OrderDetails({ order }: { order: Order }) {
                 <span className="sr-only">Image</span>
               </TableHead>
               <TableHead>Product</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Price</TableHead>
+              {/*<TableHead>Quantity</TableHead>*/}
+              {/*<TableHead>Price</TableHead>*/}
+              <TableHead></TableHead>
               <TableHead>Total</TableHead>
             </TableRow>
           </TableHeader>
@@ -79,8 +80,10 @@ export default function OrderDetails({ order }: { order: Order }) {
                     {item.product.title}
                   </Link>
                 </TableCell>
-                <TableCell>{item.quantity}</TableCell>
-                <TableCell>{"$" + item.product.price}</TableCell>
+                <TableCell>
+                  {item.quantity} x {"$" + item.product.price}
+                </TableCell>
+                {/*<TableCell>{"$" + item.product.price}</TableCell>*/}
                 <TableCell>
                   {"$" + (item.product.price * item.quantity).toFixed(2)}
                 </TableCell>
