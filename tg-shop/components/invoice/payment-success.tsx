@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
-import { CardContent, Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { PaymentSuccessIcon } from "@/components/ui/icons";
 import { Order } from "@/lib/api/types";
 
@@ -54,7 +54,7 @@ export default function PaymentSuccess({ order }: { order: Order }) {
               <div className="text-telegram-text-color text-base font-semibold">
                 Items
               </div>
-              {order.cart.items.map((item, index) => (
+              {order.items.map((item, index) => (
                 <div key={index} className="flex justify-between">
                   <div className="text-telegram-text-color">
                     {item.product.title}{" "}
