@@ -9,7 +9,15 @@ export enum OrderStatus {
 export enum PaymentStatus {
   PENDING = "PENDING",
   PAID = "PAID",
-  FAILED = "FAILED",
+  REFUNDED = "REFUNDED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum FulfilmentStatus {
+  UNFULFILLED = "UNFULFILLED",
+  FULFILLED = "FULFILLED",
+  TRACKING = "TRACKING",
+  CANCELLED = "CANCELLED",
 }
 
 export enum EntityState {
@@ -46,6 +54,14 @@ export type TelegramUser = {
   photoUrl?: string | null;
   allowsNotifications?: boolean;
   chatId?: number;
+};
+
+export type Shipping = {
+  id: string;
+  details?: ShippingDetails;
+  shippingAmount: string; // Decimal
+  carrier?: string;
+  trackingNumber?: string;
 };
 
 export type ShippingDetails = {
@@ -107,19 +123,22 @@ export type RegisterUserInput = Omit<
   "id" | "created" | "updated" | "shippingDetails"
 >;
 
+export type OrderItem = CartItem;
+
 export type Order = {
   id: string;
   orderNumber: string;
   subtotalAmount: number;
   totalAmount: number;
   deliveryAmount: number;
-  cart: Cart;
-  user: TelegramUser;
-  shippingDetails: ShippingDetails;
-  orderStatus: OrderStatus;
+  cart?: Cart;
+  user?: TelegramUser;
+  items: OrderItem[];
+  shipping: Shipping;
   paymentStatus: PaymentStatus;
+  fulfilmentStatus: FulfilmentStatus;
   hasDefaultShippingDetails: boolean;
-};
+} & BaseEntity;
 
 export type Invoice = {
   id: string;
@@ -269,7 +288,7 @@ export type BackendShippingDetailsCreateOperation = {
   };
   variables: {
     input: ShippingDetails & {
-      orderId: string;
+      shippingId: string;
       userId?: string;
       isDefault: boolean;
     };
@@ -285,7 +304,7 @@ export type BackendShippingDetailsUpdateOperation = {
   variables: {
     input: ShippingDetails & {
       shippingDetailsId: string;
-      orderId: string;
+      shippingId: string;
       userId?: string;
       isDefault: boolean;
     };

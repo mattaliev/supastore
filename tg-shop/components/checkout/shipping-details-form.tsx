@@ -6,20 +6,20 @@ import { useFormState } from "react-dom";
 import { createOrUpdateShippingDetails } from "@/components/checkout/actions";
 import ContinueToPaymentButton from "@/components/checkout/continue-to-payment-button";
 import ShippingDetailsInput from "@/components/checkout/shipping-details-input";
-import { Button } from "@/components/ui/button";
-import FormInput from "@/components/ui/form-input";
 import { ShippingDetails } from "@/lib/api/types";
 
 import ContactDetails from "./contact-details";
 
 export default function ShippingDetailsForm({
   shippingDetails,
+  shippingId,
 }: {
   shippingDetails?: ShippingDetails;
+  shippingId: string;
 }) {
   const [formStatus, formAction] = useFormState(
     createOrUpdateShippingDetails,
-    null
+    null,
   );
   const hapticFeedback = useHapticFeedback();
 
@@ -31,6 +31,7 @@ export default function ShippingDetailsForm({
 
   return (
     <form action={formAction}>
+      <input type="hidden" name="shipping-id" value={shippingId} />
       <input type="hidden" name="id" value={shippingDetails?.id} />
       <ContactDetails
         shippingDetails={shippingDetails}

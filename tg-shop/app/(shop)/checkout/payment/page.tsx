@@ -23,9 +23,9 @@ export default async function OrderSummaryPage() {
 
   return (
     <div>
-      <ShippingSummary shippingDetails={order.shippingDetails} />
-      <OrderItems items={order.cart.items} />
-      <DeliverySummary shippingDetails={order.shippingDetails} />
+      <ShippingSummary shippingDetails={order.shipping.details} />
+      <OrderItems items={order.items} />
+      <DeliverySummary shippingDetails={order.shipping.details} />
       <OrderPayment order={order} />
     </div>
   );

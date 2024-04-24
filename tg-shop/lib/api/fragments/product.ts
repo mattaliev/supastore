@@ -46,3 +46,17 @@ export const paginatedProductsFragment = /* GraphQL */ `
   }
   ${collectionProductFragment}
 `;
+
+export const orderProductFragment = /* GraphQL */ `
+  fragment OrderProductFields on ProductType {
+    id
+    title
+    price
+    description
+    images {
+      order
+      url
+      id
+    }
+  }
+`;
