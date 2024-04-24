@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, PlusCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,9 +21,42 @@ import {
 } from "@/components/ui/table";
 import { Product } from "@/lib/api/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDate } from "@/lib/utils";
+import { formatDateMedium } from "@/lib/utils";
 import Link from "next/link";
 import ProductAdminActions from "@/components/product/product-admin-actions";
+
+function NoProducts() {
+  return (
+    <Card className="min-h-[80vh]">
+      <CardHeader>
+        <CardTitle>Products</CardTitle>
+        <CardDescription>
+          Manage your products and view their sales performance.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-full">
+          <div className="flex flex-1 items-center justify-center rounded-lg ">
+            <div className="flex flex-col items-center gap-1 text-center">
+              <h3 className="text-2xl font-bold tracking-tight">
+                No products found
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                You can start selling as soon as you add a product.
+              </p>
+              <Link href="/products/create">
+                <Button size="sm" className="h-8 gap-1 mt-4">
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span className="sm:whitespace-nowrap">Add Product</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function ProductList({
   products,
@@ -38,6 +71,10 @@ export default function ProductList({
 }) {
   const firstProductIndex = (page - 1) * limit + 1;
   const lastProductIndex = Math.min(page * limit, totalProductCount);
+
+  if (totalProductCount === 0) {
+    return <NoProducts />;
+  }
 
   return (
     <Card>
@@ -104,7 +141,7 @@ export default function ProductList({
                     : product.quantity || 0}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {product.created && formatDate(product.created)}
+                  {product.created && formatDateMedium(product.created)}
                 </TableCell>
                 <TableCell>
                   <ProductAdminActions id={product.id} title={product.title} />
