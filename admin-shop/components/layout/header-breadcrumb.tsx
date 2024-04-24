@@ -12,6 +12,8 @@ import Link from "next/link";
 const pathnames: Record<string, string[]> = {
   "/": ["Dashboard"],
   "/products": ["Dashboard", "Products"],
+  "/orders": ["Dashboard", "Orders"],
+  "/orders/edit": ["Dashboard", "Orders", "Edit"],
   "/products/create": ["Dashboard", "Products", "Create"],
   "/products/edit": ["Dashboard", "Products", "Edit"],
   "/customers": ["Dashboard", "Customers"],

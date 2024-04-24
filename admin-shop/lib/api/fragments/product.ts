@@ -1,5 +1,5 @@
-export const cartProductFragment = /* GraphQL */ `
-  fragment CartProductFields on ProductType {
+export const orderProductFragment = /* GraphQL */ `
+  fragment OrderProductFields on ProductType {
     id
     title
     price

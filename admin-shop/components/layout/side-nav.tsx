@@ -53,9 +53,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href="/orders"
               className={
-                pathname === "/orders"
+                pathname.startsWith("/orders")
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -71,7 +71,7 @@ export default function SideNav() {
             <Link
               href="/products"
               className={
-                pathname === "/products"
+                pathname.startsWith("/products")
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -87,7 +87,7 @@ export default function SideNav() {
             <Link
               href="#"
               className={
-                pathname === "/customers"
+                pathname.startsWith("/customers")
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -103,7 +103,7 @@ export default function SideNav() {
             <Link
               href="#"
               className={
-                pathname === "/analytics"
+                pathname.startsWith("/analytics")
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -121,7 +121,7 @@ export default function SideNav() {
             <Link
               href="#"
               className={
-                pathname === "/"
+                pathname.startsWith("/settings")
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }

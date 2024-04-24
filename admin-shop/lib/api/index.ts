@@ -4,23 +4,44 @@ import {
   productsPaginatedGetQuery,
 } from "@/lib/api/queries/product";
 import {
-  BackendProductsGetOperation,
-  Product,
+  BackendOrderDeleteOperation,
+  BackendOrderGetByIdOperation,
+  BackendOrderPaginatedGetOperation,
+  BackendOrderStatusUpdateOperation,
   BackendProductCreateOperation,
+  BackendProductDeleteOperation,
+  BackendProductDetailOperation,
+  BackendProductsGetOperation,
+  BackendProductsPaginatedGetOperation,
   BackendProductUpdateOperation,
+  BackendSalesAnalyticsOperation,
+  BackendShippingAddTrackingOperation,
+  EntityState,
+  FulfilmentStatus,
+  Order,
+  Paginated,
+  PaymentStatus,
+  Product,
   ProductCreateInput,
   ProductUpdateInput,
-  BackendProductDetailOperation,
-  BackendProductDeleteOperation,
-  EntityState,
-  BackendProductsPaginatedGetOperation,
-  Paginated,
+  SalesAnalytics,
+  Shipping,
 } from "@/lib/api/types";
 import {
   productCreateMutation,
   productDeleteMutation,
   productUpdateMutation,
 } from "@/lib/api/mutations/product";
+import {
+  orderGetByIdQuery,
+  ordersPaginatedGetQuery,
+} from "@/lib/api/queries/order";
+import { salesAnalyticsGetQuery } from "@/lib/api/queries/analytics";
+import {
+  orderDeleteMutation,
+  orderStatusUpdateMutation,
+} from "@/lib/api/mutations/order";
+import { shippingAddTrackingMutation } from "@/lib/api/mutations/shipping";
 
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
@@ -178,4 +199,106 @@ export const productDelete = async (id: string): Promise<boolean> => {
   });
 
   return body.data.productDelete.success;
+};
+
+export const ordersPaginatedGet = async ({
+  state,
+  page,
+  limit,
+  paymentStatus,
+  fulfilmentStatus,
+}: {
+  state?: EntityState;
+  paymentStatus?: PaymentStatus;
+  fulfilmentStatus?: FulfilmentStatus;
+  page?: number;
+  limit?: number;
+}): Promise<Paginated<Order>> => {
+  const { body } = await backendFetch<BackendOrderPaginatedGetOperation>({
+    query: ordersPaginatedGetQuery,
+    variables: { paymentStatus, fulfilmentStatus, state, page, limit },
+    tags: [TAGS.ORDER],
+    cache: "no-store",
+  });
+
+  return body.data.ordersPaginatedGet;
+};
+
+export const orderGetById = async (
+  orderId: string,
+  state?: EntityState,
+): Promise<Order | undefined> => {
+  const { body } = await backendFetch<BackendOrderGetByIdOperation>({
+    query: orderGetByIdQuery,
+    variables: { orderId: orderId, state },
+    tags: [TAGS.ORDER],
+  });
+
+  return body.data.orderGetById;
+};
+
+export const salesAnalyticsGet = async (): Promise<SalesAnalytics> => {
+  const { body } = await backendFetch<BackendSalesAnalyticsOperation>({
+    query: salesAnalyticsGetQuery,
+    tags: [TAGS.ORDER],
+  });
+
+  const {
+    salesThisWeek,
+    salesThisMonth,
+    salesIncreaseThisWeek,
+    salesIncreaseThisMonth,
+  } = body.data.salesAnalyticsGet;
+
+  return {
+    salesThisWeek: parseInt(salesThisWeek),
+    salesThisMonth: parseInt(salesThisMonth),
+    salesIncreaseThisWeek: parseInt(salesIncreaseThisWeek),
+    salesIncreaseThisMonth: parseInt(salesIncreaseThisMonth),
+  };
+};
+
+export const orderStatusUpdate = async (input: {
+  orderId: string;
+  paymentStatus?: PaymentStatus;
+  fulfilmentStatus?: FulfilmentStatus;
+  notifyCustomer?: boolean;
+}): Promise<Order> => {
+  const { body } = await backendFetch<BackendOrderStatusUpdateOperation>({
+    query: orderStatusUpdateMutation,
+    tags: [TAGS.ORDER],
+    variables: { input },
+  });
+
+  return body.data.orderStatusUpdate.order;
+};
+
+export const orderDelete = async (
+  orderId: string,
+): Promise<{
+  success: boolean;
+}> => {
+  const { body } = await backendFetch<BackendOrderDeleteOperation>({
+    query: orderDeleteMutation,
+    tags: [TAGS.ORDER],
+    variables: {
+      orderId,
+    },
+  });
+
+  return body.data.orderDelete;
+};
+
+export const shippingAddTracking = async (input: {
+  shippingId: string;
+  trackingNumber: string;
+  carrier: string;
+}): Promise<Shipping> => {
+  const { body } = await backendFetch<BackendShippingAddTrackingOperation>({
+    query: shippingAddTrackingMutation,
+    tags: [TAGS.ORDER],
+    variables: { input },
+  });
+
+  return body.data.shippingAddTracking.shipping;
 };
