@@ -1,20 +1,37 @@
 import random
 from decimal import Decimal
 
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 from core.models.core import BaseEntity
 
 __all__ = [
-    "OrderStatusChoices",
+    "PaymentStatusChoices",
+    "FulfillmentStatusChoices",
     "Order",
+    "OrderItem"
 ]
+
+
+class PaymentStatusChoices(models.TextChoices):
+    PENDING = "PENDING", "pending"
+    PAID = "PAID", "paid"
+    REFUNDED = "REFUNDED", "refunded"
+    EXPIRED = "EXPIRED", "expired"
+
+
+class FulfillmentStatusChoices(models.TextChoices):
+    UNFULFILLED = "PENDING", "pending"
+    FULFILLED = "FULFILLED", "fulfilled"
+    TRACKING = "TRACKING", "tracking"
+    CANCELLED = "CANCELLED", "cancelled"
 
 
 class OrderStatusChoices(models.TextChoices):
     PENDING = "PENDING", "pending"
     PROCESSING = "PROCESSING", "processing"
+    SHIPPED = "SHIPPED", "SHIPPED"
     COMPLETED = "COMPLETED", "completed"
     CANCELLED = "CANCELLED", "cancelled"
     REFUNDED = "REFUNDED", "refunded"
@@ -29,47 +46,49 @@ class Order(BaseEntity):
         blank=True,
         null=True
     )
-    cart = models.ForeignKey("cart.Cart", on_delete=models.CASCADE, related_name="orders")
-    subtotal_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    delivery_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    order_status = models.CharField(
-        max_length=50,
-        choices=OrderStatusChoices.choices,
-        default=OrderStatusChoices.PENDING
-    )
-
-    shipping_details = models.ForeignKey(
-        "order.ShippingDetails",
-        on_delete=models.CASCADE,
-        related_name="orders",
+    cart = models.ForeignKey(
+        "cart.Cart",
+        on_delete=models.SET_NULL,
         blank=True,
-        null=True
+        null=True,
+        related_name="orders"
+    )
+    shipping = models.OneToOneField(
+        "shipping.Shipping",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="order"
+    )
+    subtotal_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    delivery_amount = models.DecimalField(max_digits=10, decimal_places=2,
+                                          default=Decimal("0.00"))
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PaymentStatusChoices.choices,
+        default=PaymentStatusChoices.PENDING
     )
 
-    def order_status_sort(self):
-        return {
-            'PENDING': 1,
-            'PROCESSING': 2,
-            'COMPLETED': 3,
-            'CANCELLED': 4,
-            'REFUNDED': 5,
-        }.get(self.order_status, 6)
+    fulfilment_status = models.CharField(
+        max_length=20,
+        choices=FulfillmentStatusChoices.choices,
+        default=FulfillmentStatusChoices.UNFULFILLED
+    )
 
     @property
     def has_shipping_details(self):
-        return self.shipping_details is not None
+        return self.shipping.details is not None
 
     def save(self, *args, **kwargs):
-        print("Saving an order")
         if not self.order_number:
             self.order_number = self.generate_order_number()
 
-        if self.shipping_details:
-            print("Shipping amount", self.shipping_details.shipping_amount)
-            self.delivery_amount = self.shipping_details.shipping_amount
+        self.total_amount = self.subtotal_amount
+        if self.shipping:
+            self.total_amount += self.shipping.shipping_amount
 
-        self.total_amount = self.subtotal_amount + self.delivery_amount
         super().save(*args, **kwargs)
 
     @staticmethod
@@ -83,6 +102,28 @@ class Order(BaseEntity):
         db_table = "orders"
         verbose_name = "order"
         verbose_name_plural = "orders"
+        ordering = ["-created"]
 
 
+class OrderItem(BaseEntity):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,
+                              related_name="items")
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE,
+                                related_name="order_items")
+    variant = models.ForeignKey(
+        "product.ProductVariant",
+        on_delete=models.CASCADE,
+        related_name="order_items",
+        null=True,
+        blank=True
+    )
+    quantity = models.IntegerField(default=0)
 
+    class Meta:
+        db_table = "order_items"
+        verbose_name = "order item"
+        verbose_name_plural = "order items"
+        # constraints = [
+        #     models.UniqueConstraint(fields=['order', 'variant'],
+        #                             name='unique_order_variant')
+        # ]
