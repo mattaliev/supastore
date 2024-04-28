@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from django.utils import timezone
 
-from order.models import Order, PaymentStatusChoices
+from payment.models import Payment, PaymentStatusChoices
 
 __all__ = [
     "sales_analytics_get"
@@ -11,7 +11,7 @@ __all__ = [
 
 
 def sales_analytics_get():
-    orders = Order.objects.filter(payment_status=PaymentStatusChoices.PAID)
+    payments = Payment.objects.filter(payment_status=PaymentStatusChoices.PAID)
 
     # Get today's date
     today = timezone.now()
@@ -33,10 +33,10 @@ def sales_analytics_get():
     last_month = [last_month_start, today - timedelta(days=30)]
 
     # Filter orders
-    orders_this_week = orders.filter(created__range=current_week)
-    orders_this_month = orders.filter(created__range=current_month)
-    orders_last_week = orders.filter(created__range=last_week)
-    orders_last_month = orders.filter(created__range=last_month)
+    orders_this_week = payments.filter(created__range=current_week)
+    orders_this_month = payments.filter(created__range=current_month)
+    orders_last_week = payments.filter(created__range=last_week)
+    orders_last_month = payments.filter(created__range=last_month)
 
     sales_this_week = Decimal(sum(
         [order.total_amount for order in orders_this_week]
