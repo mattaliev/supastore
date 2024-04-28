@@ -1,7 +1,8 @@
 import graphene
 
 from order.schemas.schema import OrderStatusUpdateInput
-from order.services import order_create, order_status_update, order_delete
+from order.services import order_create, order_delete, \
+    order_fulfilment_status_update
 
 __all__ = [
     "OrderCreateMutation",
@@ -28,7 +29,7 @@ class OrderUpdateMutation(graphene.Mutation):
         input = OrderStatusUpdateInput(required=True)
 
     def mutate(self, info, input, **kwargs):
-        order = order_status_update(**input)
+        order = order_fulfilment_status_update(**input)
         return OrderUpdateMutation(order=order)
 
 
