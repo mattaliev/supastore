@@ -1,7 +1,6 @@
+import { cartGet } from "@ditch/lib";
 import { cookies } from "next/headers";
 import Link from "next/link";
-
-import { cartGet } from "@ditch/lib";
 
 export default async function CartIcon() {
   const cartId = cookies().get("cartId")?.value;

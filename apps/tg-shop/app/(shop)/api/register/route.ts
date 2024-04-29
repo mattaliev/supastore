@@ -1,8 +1,7 @@
+import { registerUser, RegisterUserInput, TAGS } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-
-import { registerUser, RegisterUserInput, TAGS } from "@ditch/lib";
 
 export const revalidate = 0;
 
@@ -21,14 +20,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json(
       { message: "User authenticated successfully" },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error: any) {
     console.error(error);
 
     return NextResponse.json(
       { message: "Unexpected error occurred" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }

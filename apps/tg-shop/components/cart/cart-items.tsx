@@ -1,7 +1,7 @@
+import { CartItem } from "@ditch/lib";
 import Image from "next/image";
 
 import CartItemQuantity from "@/components/cart/cart-item-quantity";
-import { CartItem } from "@ditch/lib";
 
 export default function CartItems({ items }: { items: CartItem[] }) {
   return (

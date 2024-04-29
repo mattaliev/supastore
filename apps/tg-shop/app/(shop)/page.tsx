@@ -1,5 +1,6 @@
-import Catalog from "@/components/product/product-catalog";
 import { EntityState, productsPaginatedGet } from "@ditch/lib";
+
+import Catalog from "@/components/product/product-catalog";
 
 const defaultLimit = 20;
 

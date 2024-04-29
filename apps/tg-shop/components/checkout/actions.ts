@@ -1,9 +1,5 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
-import { redirect, RedirectType } from "next/navigation";
-
 import {
   EntityState,
   orderCreate,
@@ -16,6 +12,9 @@ import {
   shippingDetailsUpdate,
   TAGS,
 } from "@ditch/lib";
+import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect, RedirectType } from "next/navigation";
 
 import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
 
@@ -67,7 +66,7 @@ export type FormErrorResponse = {
 
 export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<FormErrorResponse> => {
   const orderId = cookies().get("orderId")?.value;
   const userId = cookies().get("userId")?.value;
@@ -125,7 +124,7 @@ export const createPayment = async (
   payload: {
     paymentMethodId: string;
     currency?: string;
-  },
+  }
 ): Promise<{ success: boolean; paymentLink?: string; error?: string }> => {
   const orderId = cookies().get("orderId")?.value;
   const { paymentMethodId, currency = "USD" } = payload;
@@ -166,4 +165,3 @@ export const createPayment = async (
     paymentLink: parsedPaymentInfo.direct_payment_link,
   };
 };
-

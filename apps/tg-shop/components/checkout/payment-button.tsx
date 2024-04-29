@@ -1,12 +1,13 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
-import { createPayment } from "@/components/checkout/actions";
-import { useEffect } from "react";
-import { useHapticFeedback, useMiniApp, useUtils } from "@tma.js/sdk-react";
-import { Button } from "@/components/ui/button";
-import { clsx } from "clsx";
-import { AiOutlineLoading } from "react-icons/ai";
 import { PaymentMethod } from "@ditch/lib";
+import { useHapticFeedback, useMiniApp, useUtils } from "@tma.js/sdk-react";
+import { clsx } from "clsx";
+import { useEffect } from "react";
+import { useFormState, useFormStatus } from "react-dom";
+import { AiOutlineLoading } from "react-icons/ai";
+
+import { createPayment } from "@/components/checkout/actions";
+import { Button } from "@/components/ui/button";
 
 const buttonClasses: Record<string, string> = {
   "Wallet Pay":

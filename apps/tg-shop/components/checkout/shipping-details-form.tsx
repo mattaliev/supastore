@@ -1,4 +1,5 @@
 "use client";
+import { ShippingDetails } from "@ditch/lib";
 import { useHapticFeedback } from "@tma.js/sdk-react";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
@@ -6,7 +7,6 @@ import { useFormState } from "react-dom";
 import { createOrUpdateShippingDetails } from "@/components/checkout/actions";
 import ContinueToPaymentButton from "@/components/checkout/continue-to-payment-button";
 import ShippingDetailsInput from "@/components/checkout/shipping-details-input";
-import { ShippingDetails } from "@ditch/lib";
 
 import ContactDetails from "./contact-details";
 
@@ -19,7 +19,7 @@ export default function ShippingDetailsForm({
 }) {
   const [formStatus, formAction] = useFormState(
     createOrUpdateShippingDetails,
-    null,
+    null
   );
   const hapticFeedback = useHapticFeedback();
 

@@ -1,8 +1,8 @@
-import * as React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -55,7 +55,7 @@ const PaginationLink = ({
       className,
       isActive
         ? "bg-telegram-button-color text-telegram-button-text-color border-telegram-hint-color hover:text-telegram-button-text-color hover:bg-telegram-button-color border-none"
-        : "bg-telegram-bg-color text-telegram-text-color hover:bg-telegram-button-color hover:text-telegram-button-text-color hover:border-none border-telegram-hint-color",
+        : "bg-telegram-bg-color text-telegram-text-color hover:bg-telegram-button-color hover:text-telegram-button-text-color hover:border-none border-telegram-hint-color"
     )}
     {...props}
   />

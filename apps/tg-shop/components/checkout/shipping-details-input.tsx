@@ -1,4 +1,5 @@
 "use client";
+import { ShippingDetails } from "@ditch/lib";
 import { useState } from "react";
 
 import {
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/card";
 import FormCheckbox from "@/components/ui/form-checkbox";
 import FormInput from "@/components/ui/form-input";
-import { ShippingDetails } from "@ditch/lib";
 
 type ShippingAddress = Omit<
   ShippingDetails,

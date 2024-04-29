@@ -1,7 +1,7 @@
+import { orderGetById } from "@ditch/lib";
 import { notFound } from "next/navigation";
 
 import PaymentSuccess from "@/components/invoice/payment-success";
-import { orderGetById } from "@ditch/lib";
 
 type Props = {
   params: {};

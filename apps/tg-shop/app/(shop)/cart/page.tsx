@@ -1,3 +1,4 @@
+import { cartGet } from "@ditch/lib";
 import { cookies } from "next/headers";
 
 import CartItems from "@/components/cart/cart-items";
@@ -5,7 +6,6 @@ import CartTotal from "@/components/cart/cart-total";
 import EmptyCart from "@/components/cart/empty-cart";
 import CheckoutButton from "@/components/checkout/checkout-button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cartGet } from "@ditch/lib";
 
 /**
  * Добавить

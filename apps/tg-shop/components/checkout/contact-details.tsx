@@ -1,3 +1,5 @@
+import { ShippingDetails } from "@ditch/lib";
+
 import { ShippingDetailsFieldErrors } from "@/components/checkout/schemes";
 import {
   Card,
@@ -7,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FormInput from "@/components/ui/form-input";
-import { ShippingDetails } from "@ditch/lib";
 
 export default function ContactDetails({
   shippingDetails,

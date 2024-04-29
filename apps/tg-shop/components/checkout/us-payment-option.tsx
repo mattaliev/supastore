@@ -1,11 +1,11 @@
 "use client";
+import { Order } from "@ditch/lib";
 import { useUtils } from "@tma.js/sdk-react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { Button } from "@/components/ui/button";
-import { Order } from "@ditch/lib";
 
 export default function USPaymentOption({
   order,

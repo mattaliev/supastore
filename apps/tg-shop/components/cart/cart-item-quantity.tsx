@@ -1,6 +1,7 @@
+import { CartItem } from "@ditch/lib";
+
 import RemoveFromCartButton from "@/components/cart/remove-from-cart-button";
 import UpdateItemQuantitySelect from "@/components/cart/update-quantity-select";
-import { CartItem } from "@ditch/lib";
 
 export default function CartItemQuantity({
   item,

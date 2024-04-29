@@ -1,4 +1,5 @@
 "use client";
+import { Order } from "@ditch/lib";
 import { useHapticFeedback } from "@tma.js/sdk-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -6,7 +7,6 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PaymentSuccessIcon } from "@/components/ui/icons";
-import { Order } from "@ditch/lib";
 
 export default function PaymentSuccess({ order }: { order: Order }) {
   const hapticFeedback = useHapticFeedback();

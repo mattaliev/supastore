@@ -1,3 +1,5 @@
+import { CartItem } from "@ditch/lib";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -7,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CartItem } from "@ditch/lib";
 
 export default function OrderItems({ items }: { items: CartItem[] }) {
   return (

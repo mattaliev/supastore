@@ -1,12 +1,12 @@
-import UpdateShippingDetailsButton
-  from "@/components/checkout/update-shipping-details-button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShippingDetails } from "@ditch/lib";
 
+import UpdateShippingDetailsButton from "@/components/checkout/update-shipping-details-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 export const ShippingSummary = ({
-                                  shippingDetails,
-                                  mutable = true,
-                                }: {
+  shippingDetails,
+  mutable = true,
+}: {
   shippingDetails?: ShippingDetails;
   mutable?: boolean;
 }) => {
@@ -24,16 +24,8 @@ export const ShippingSummary = ({
             {/*<div className="text-telegram-hint-color">*/}
             {/*  {shippingDetails?.phone || ""}*/}
             {/*</div>*/}
-            {shippingDetails?.email && (
-              <dd>
-                {shippingDetails.email || ""}
-              </dd>
-            )}
-            {shippingDetails?.phone && (
-              <dd>
-                {shippingDetails.phone || ""}
-              </dd>
-            )}
+            {shippingDetails?.email && <dd>{shippingDetails.email || ""}</dd>}
+            {shippingDetails?.phone && <dd>{shippingDetails.phone || ""}</dd>}
           </dt>
           {mutable && <UpdateShippingDetailsButton />}
         </CardContent>
@@ -42,8 +34,7 @@ export const ShippingSummary = ({
         <CardHeader>
           <CardTitle>Shipping address</CardTitle>
         </CardHeader>
-        <CardContent
-          className="text-sm text-telegram-hint-color flex items-center">
+        <CardContent className="text-sm text-telegram-hint-color flex items-center">
           <address className="text-telegram-hint-color not-italic">
             <dd>{shippingDetails?.address || ""}</dd>
             <dd>{shippingDetails?.city || ""}</dd>

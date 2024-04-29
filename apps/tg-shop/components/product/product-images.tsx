@@ -1,3 +1,4 @@
+import { ProductImage } from "@ditch/lib";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -7,7 +8,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { ProductImage } from "@ditch/lib";
 
 export default function ProductImages({ images }: { images: ProductImage[] }) {
   const [api, setApi] = useState<CarouselApi>();

@@ -1,6 +1,7 @@
-import CatalogProduct from "@/components/product/product";
 import { Paginated, Product } from "@ditch/lib";
+
 import Pagination from "@/components/pagination";
+import CatalogProduct from "@/components/product/product";
 
 export const revalidate = 5;
 

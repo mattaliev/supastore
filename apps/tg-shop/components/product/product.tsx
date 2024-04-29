@@ -1,10 +1,10 @@
 "use client";
+import { Product } from "@ditch/lib";
 import { useState } from "react";
 
 import AddToCartButton from "@/components/cart/add-to-cart-button";
 import ProductImages from "@/components/product/product-images";
 import ProductVariants from "@/components/product/product-variants";
-import { Product } from "@ditch/lib";
 
 export default function CatalogProduct({ product }: { product: Product }) {
   /**
@@ -19,7 +19,7 @@ export default function CatalogProduct({ product }: { product: Product }) {
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
     product.variants && product.variants.length > 0
       ? product.variants[0]?.id
-      : undefined,
+      : undefined
   );
 
   return (
