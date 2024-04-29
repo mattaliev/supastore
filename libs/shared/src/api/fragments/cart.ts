@@ -1,4 +1,4 @@
-import { cartProductFragment } from "@/lib/api/fragments/product";
+import { cartProductFragment } from "./product";
 
 export const cartFragment = /* GraphQL */ `
   fragment CartFields on CartType {

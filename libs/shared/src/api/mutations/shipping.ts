@@ -1,4 +1,15 @@
-import { shippingDetailsFragment } from "@/lib/api/fragments/shipping";
+import { shippingDetailsFragment, shippingFragment } from "../fragments";
+
+export const shippingAddTrackingMutation = /* GraphQL */ `
+  mutation shippingAddTracking($input: ShippingAddTrackingInput!) {
+    shippingAddTracking(input: $input) {
+      shipping {
+        ...ShippingFields
+      }
+    }
+  }
+  ${shippingFragment}
+`;
 
 export const shippingDetailsCreateMutation = /* GraphQL */ `
   mutation ShippingDetailsCreate($input: ShippingDetailsCreateInput!) {

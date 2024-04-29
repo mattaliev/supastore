@@ -1,4 +1,4 @@
-import { collectionProductFragment } from "@/lib/api/fragments/product";
+import { collectionProductFragment } from "../fragments";
 
 export const productCreateMutation = /* GraphQL */ `
   mutation ProductCreate($input: ProductCreateInput!) {

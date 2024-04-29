@@ -1,4 +1,4 @@
-import { cartFragment } from "@/lib/api/fragments/cart";
+import { cartFragment } from "../fragments";
 
 export const cartGetQuery = /* GraphQL */ `
   query GetCart($cartId: UUID!) {

@@ -1,4 +1,15 @@
-import { orderFragment } from "@/lib/api/fragments/order";
+import { orderFragment } from "../fragments";
+
+export const orderCreateMutation = /* GraphQL */ `
+  mutation orderCreate($cartId: UUID!, $userId: UUID) {
+    orderCreate(cartId: $cartId, userId: $userId) {
+      order {
+        ...OrderFields
+      }
+    }
+  }
+  ${orderFragment}
+`;
 
 export const orderDeleteMutation = /* GraphQL */ `
   mutation orderDelete($orderId: UUID!) {

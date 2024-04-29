@@ -2,7 +2,7 @@ import {
   collectionProductFragment,
   paginatedProductsFragment,
   productDetailFragment,
-} from "@/lib/api/fragments/product";
+} from "../fragments";
 
 export const productDetailQuery = /* GraphQL */ `
   query ProductDetail($id: UUID!) {

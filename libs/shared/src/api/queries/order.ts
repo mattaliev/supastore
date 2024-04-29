@@ -1,7 +1,4 @@
-import {
-  orderFragment,
-  orderPaginatedFragment,
-} from "@/lib/api/fragments/order";
+import { orderFragment, orderPaginatedFragment } from "../fragments";
 
 export const orderListQuery = /* GraphQL */ `
   query OrderListQuery($state: String) {
@@ -42,6 +39,15 @@ export const ordersPaginatedGetQuery = /* GraphQL */ `
 export const orderGetByIdQuery = /* GraphQL */ `
   query OrderGetByIdQuery($orderId: UUID!, $state: String) {
     orderGetById(orderId: $orderId, state: $state) {
+      ...OrderFields
+    }
+  }
+  ${orderFragment}
+`;
+
+export const orderGetByCartIdQuery = /* GraphQL */ `
+  query orderGetByCartId($cartId: UUID!) {
+    orderGetByCartId(cartId: $cartId) {
       ...OrderFields
     }
   }

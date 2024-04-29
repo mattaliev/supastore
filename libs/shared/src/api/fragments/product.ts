@@ -1,3 +1,17 @@
+export const cartProductFragment = /* GraphQL */ `
+  fragment CartProductFields on ProductType {
+    id
+    title
+    price
+    description
+    images {
+      order
+      url
+      id
+    }
+  }
+`;
+
 export const orderProductFragment = /* GraphQL */ `
   fragment OrderProductFields on ProductType {
     id
@@ -19,6 +33,7 @@ export const collectionProductFragment = /* GraphQL */ `
     price
     description
     images {
+      order
       url
       id
     }
@@ -31,6 +46,7 @@ export const collectionProductFragment = /* GraphQL */ `
     }
     state
     created
+    updated
   }
 `;
 

@@ -1,26 +1,3 @@
-export enum OrderStatus {
-  PENDING = "PENDING",
-  PROCESSING = "PROCESSING",
-  SHIPPED = "SHIPPED",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
-  REFUNDED = "REFUNDED",
-}
-
-export enum PaymentStatus {
-  PENDING = "PENDING",
-  PAID = "PAID",
-  REFUNDED = "REFUNDED",
-  EXPIRED = "EXPIRED",
-}
-
-export enum FulfilmentStatus {
-  UNFULFILLED = "UNFULFILLED",
-  FULFILLED = "FULFILLED",
-  TRACKING = "TRACKING",
-  CANCELLED = "CANCELLED",
-}
-
 export enum EntityState {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
@@ -41,6 +18,29 @@ export type Paginated<T> = {
   objects: T[];
 };
 
+export enum PaymentStatus {
+  UNPAID = "UNPAID",
+  PAID = "PAID",
+  REFUNDED = "REFUNDED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum FulfilmentStatus {
+  OPEN = "OPEN",
+  PENDING = "PENDING",
+  UNFULFILLED = "UNFULFILLED",
+  FULFILLED = "FULFILLED",
+  TRACKING = "TRACKING",
+  CANCELLED = "CANCELLED"
+}
+
+export enum PaymentProvider {
+  WALLET_PAY = "WALLET_PAY",
+  TELEGRAM_INVOICE = "TELEGRAM_INVOICE",
+  BANK_TRANSFER = "BANK_TRANSFER",
+  CRYPTO_TRANSFER = "CRYPTO_TRANSFER",
+}
+
 export type TelegramUser = {
   id: string;
   telegramId: number;
@@ -55,8 +55,7 @@ export type TelegramUser = {
   photoUrl?: string | null;
   allowsNotifications?: boolean;
   chatId?: number;
-  email?: string;
-};
+} & BaseEntity;
 
 export type Shipping = {
   id: string;
@@ -64,7 +63,8 @@ export type Shipping = {
   shippingAmount: string; // Decimal
   carrier?: string;
   trackingNumber?: string;
-};
+} & BaseEntity;
+
 
 export type ShippingDetails = {
   id: string;
@@ -77,7 +77,7 @@ export type ShippingDetails = {
   province?: string;
   postcode: string;
   country: string;
-};
+} & BaseEntity;
 
 export type Cart = {
   id: string;
@@ -85,14 +85,14 @@ export type Cart = {
   totalPrice: number;
   totalQuantity: number;
   userId?: string;
-};
+} & BaseEntity;
 
 export type CartItem = {
   id: string;
   product: Product;
   quantity: number;
   variant: CartProductVariant;
-};
+} & BaseEntity;
 
 export type Product = {
   id: string;
@@ -109,7 +109,7 @@ export type ProductImage = {
   id: string;
   url: string;
   order: number;
-};
+} & BaseEntity;
 
 export type ProductVariant = {
   id: string;
@@ -117,9 +117,12 @@ export type ProductVariant = {
   material?: string | null;
   color?: string | null;
   quantity: number;
-};
+} & BaseEntity;
 
-export type StrippedProductVariant = Omit<ProductVariant, "id">;
+export type StrippedProductVariant = Omit<
+  ProductVariant,
+  "id" | "created" | "updated" | "state"
+>;
 
 type CartProductVariant = Omit<ProductVariant, "quantity">;
 
@@ -128,34 +131,20 @@ export type RegisterUserInput = Omit<
   "id" | "created" | "updated" | "shippingDetails"
 >;
 
-export type OrderItem = CartItem;
-
 export type Order = {
   id: string;
   orderNumber: string;
-  subtotalAmount: number;
-  totalAmount: number;
-  deliveryAmount: number;
-  cart?: Cart;
+  cart: Cart;
   user?: TelegramUser;
-  items: OrderItem[];
   shipping: Shipping;
-  paymentStatus: PaymentStatus;
+  payment?: Payment;
   fulfilmentStatus: FulfilmentStatus;
+  fulfilmentDate?: string;
   hasDefaultShippingDetails: boolean;
+  subtotalAmount: string;
+  shippingAmount: string;
+  totalAmount: string;
 } & BaseEntity;
-
-export type Invoice = {
-  id: string;
-  telegramInvoiceId: string;
-  user: TelegramUser;
-  order: Order;
-  currencyCode: string;
-  autoCurrencyConversionCode: string;
-  amount: number;
-  paymentLink: string;
-  directPaymentLink: string;
-};
 
 export type ProductCreateInput = {
   title: string;
@@ -177,6 +166,26 @@ export type SalesAnalytics = {
   salesIncreaseThisWeek: number;
   salesIncreaseThisMonth: number;
 };
+
+export type PaymentMethod = {
+  id: string;
+  name: string;
+  provider: PaymentProvider;
+} & BaseEntity;
+
+export type Payment = {
+  id: string;
+  paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
+  subtotalAmount: string;
+  shippingAmount: string;
+  totalAmount: string;
+  currency: string;
+  transactionId?: string;
+  paymentDate: string;
+  paymentExpiry: string;
+  additionalInfo?: string;
+} & BaseEntity;
 
 export type BackendRegisterUserOperation = {
   data: {
@@ -253,6 +262,79 @@ export type BackendProductDeleteOperation = {
   };
 };
 
+export type BackendCartGetOperation = {
+  data: {
+    cartGet: Cart;
+  };
+  variables: {
+    cartId?: string;
+  };
+};
+
+export type BackendCartCreateOperation = {
+  data: {
+    cartCreate: {
+      cart: Cart;
+    };
+  };
+};
+
+export type BackendCartAddItemOperation = {
+  data: {
+    addToCart: {
+      cart: Cart;
+    };
+  };
+  variables: {
+    input: {
+      cartId: string;
+      productId: string;
+      variantId?: string | null;
+      quantity: number;
+    };
+  };
+};
+
+export type BackendCartRemoveItemOperation = {
+  data: {
+    removeFromCart: {
+      cart: Cart;
+    };
+  };
+  variables: {
+    input: {
+      cartId: string;
+      cartItemId: string;
+      quantity: number;
+    };
+  };
+};
+
+export type BackendCartUpdateItemOperation = {
+  data: {
+    cartItemUpdate: {
+      cart: Cart;
+    };
+  };
+  variables: {
+    input: {
+      cartId: string;
+      cartItemId: string;
+      quantity: number;
+    };
+  };
+};
+
+export type BackendOrderGetByIdOperation = {
+  data: {
+    orderGetById: Order;
+  };
+  variables: {
+    orderId: string;
+    state?: string;
+  };
+};
+
 export type BackendOrderPaginatedGetOperation = {
   data: {
     ordersPaginatedGet: Paginated<Order>;
@@ -263,16 +345,6 @@ export type BackendOrderPaginatedGetOperation = {
     state?: string;
     page?: number;
     limit?: number;
-  };
-};
-
-export type BackendOrderGetByIdOperation = {
-  data: {
-    orderGetById?: Order;
-  };
-  variables: {
-    orderId: string;
-    state?: string;
   };
 };
 
@@ -298,71 +370,6 @@ export type BackendOrderCreateOperation = {
   };
 };
 
-export type BackendShippingDetailsCreateOperation = {
-  data: {
-    shippingDetailsCreate: {
-      shippingDetails: ShippingDetails;
-    };
-  };
-  variables: {
-    input: ShippingDetails & {
-      orderId: string;
-      userId?: string;
-      isDefault: boolean;
-    };
-  };
-};
-
-export type BackendShippingDetailsUpdateOperation = {
-  data: {
-    shippingDetailsUpdate: {
-      shippingDetails: ShippingDetails;
-    };
-  };
-  variables: {
-    input: ShippingDetails & {
-      shippingDetailsId: string;
-      orderId: string;
-      userId?: string;
-      isDefault: boolean;
-    };
-  };
-};
-
-export type BackendInvoiceCreateOperation = {
-  data: {
-    invoiceCreate: {
-      invoice: Invoice;
-    };
-  };
-  variables: {
-    input: {
-      userId: string;
-      orderId: string;
-    };
-  };
-};
-
-export type BackendInvoiceGetByOrderIdOperation = {
-  data: {
-    invoiceGetByOrderId: Invoice;
-  };
-  variables: {
-    orderId: string;
-  };
-};
-
-export type BackendSalesAnalyticsOperation = {
-  data: {
-    salesAnalyticsGet: {
-      salesThisWeek: string;
-      salesThisMonth: string;
-      salesIncreaseThisWeek: string;
-      salesIncreaseThisMonth: string;
-    };
-  };
-};
-
 export type BackendOrderStatusUpdateOperation = {
   data: {
     orderStatusUpdate: {
@@ -372,7 +379,6 @@ export type BackendOrderStatusUpdateOperation = {
   variables: {
     input: {
       orderId: string;
-      paymentStatus?: PaymentStatus;
       fulfilmentStatus?: FulfilmentStatus;
       notifyUser?: boolean;
     };
@@ -402,5 +408,114 @@ export type BackendShippingAddTrackingOperation = {
       trackingNumber: string;
       carrier: string;
     };
+  };
+};
+
+export type BackendShippingDetailsCreateOperation = {
+  data: {
+    shippingDetailsCreate: {
+      shippingDetails: ShippingDetails;
+    };
+  };
+  variables: {
+    input: ShippingDetails & {
+      shippingId: string;
+      userId?: string;
+      isDefault: boolean;
+    };
+  };
+};
+
+export type BackendShippingDetailsUpdateOperation = {
+  data: {
+    shippingDetailsUpdate: {
+      shippingDetails: ShippingDetails;
+    };
+  };
+  variables: {
+    input: ShippingDetails & {
+      shippingDetailsId: string;
+      shippingId: string;
+      userId?: string;
+      isDefault: boolean;
+    };
+  };
+};
+
+export type BackendSalesAnalyticsOperation = {
+  data: {
+    salesAnalyticsGet: {
+      salesThisWeek: string;
+      salesThisMonth: string;
+      salesIncreaseThisWeek: string;
+      salesIncreaseThisMonth: string;
+    };
+  };
+};
+
+export type BackendPaymentMethodsListOperations = {
+  data: {
+    paymentMethodsList: PaymentMethod[];
+  };
+  variables: {
+    state?: EntityState;
+  };
+};
+
+export type BackendPaymentMethodCreateOperation = {
+  data: {
+    paymentMethodCreate: {
+      paymentMethod: PaymentMethod;
+    };
+  };
+  variables: {
+    input: {
+      name: string;
+      provider: PaymentProvider;
+      otherInfo?: string;
+    };
+  };
+};
+
+export type BackendPaymentMethodDeleteOperation = {
+  data: {
+    paymentMethodDelete: {
+      success: boolean;
+    };
+  };
+  variables: {
+    paymentMethodId: string;
+  };
+};
+
+export type BackendPaymentCreateOperation = {
+  data: {
+    paymentCreate: {
+      paymentInfo: string;
+      provider: PaymentProvider;
+    };
+  };
+  variables: {
+    input: {
+      currency?: string;
+      orderId: string;
+      paymentMethodId: string;
+      notifyCustomer?: boolean;
+    };
+  };
+};
+
+export type BackendPaymentStatusUpdateOperation = {
+  data: {
+    paymentStatusUpdate: {
+      success: boolean
+    };
+  };
+  variables: {
+    input: {
+      paymentId: string;
+      paymentStatus: PaymentStatus;
+      notifyCustomer?: boolean;
+    }
   };
 };

@@ -1,5 +1,4 @@
-import { cartFragment } from "@/lib/api/fragments/cart";
-import { userFragment } from "@/lib/api/fragments/user";
+import { cartFragment, userFragment } from "../fragments";
 
 export const registerUserMutation = /* GraphQL */ `
   mutation RegisterUser($input: RegisterUserInput!, $cartId: UUID) {
