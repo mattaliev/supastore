@@ -1,5 +1,5 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 from core.models.core import BaseEntity
 
@@ -32,8 +32,10 @@ class Cart(BaseEntity):
 
 
 class CartItem(BaseEntity):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey("product.Product", on_delete=models.CASCADE, related_name="cart_items")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,
+                             related_name="items")
+    product = models.ForeignKey("product.Product", on_delete=models.CASCADE,
+                                related_name="cart_items")
     variant = models.ForeignKey(
         "product.ProductVariant",
         on_delete=models.CASCADE,
@@ -48,6 +50,6 @@ class CartItem(BaseEntity):
         verbose_name = "cart item"
         verbose_name_plural = "cart items"
         constraints = [
-            models.UniqueConstraint(fields=['cart', 'variant'], name='unique_cart_variant')
+            models.UniqueConstraint(fields=['cart', 'variant'],
+                                    name='unique_cart_variant')
         ]
-
