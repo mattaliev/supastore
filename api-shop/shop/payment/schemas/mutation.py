@@ -4,7 +4,7 @@ from payment.services.payment_services import payment_create, \
     payment_method_create, payment_method_update, payment_method_delete, \
     payment_status_update
 from .schema import PaymentCreateInput, PaymentMethodCreateInput, \
-    PaymentMethodUpdateInput, PaymentStatusUpdate
+    PaymentMethodUpdateInput, PaymentStatusUpdateInput
 
 __all__ = [
     "Mutation"
@@ -65,7 +65,7 @@ class PaymentCreateMutation(graphene.Mutation):
 
 class PaymentStatusUpdateMutation(graphene.Mutation):
     class Arguments:
-        input = PaymentStatusUpdate(required=True)
+        input = PaymentStatusUpdateInput(required=True)
 
     success = graphene.Boolean()
 
