@@ -1,0 +1,25 @@
+name: Lint Admin
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/admin-shop/**"
+      - ".github/workflows/lint_admin.yml"
+
+jobs:
+  run-lint-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run lint
+        run: yarn lint:admin

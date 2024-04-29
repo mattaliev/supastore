@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "admin-shop/**"
+      - "apps/admin-shop/**"
       - ".github/workflows/build_and_deploy_admin.yml"
+  workflow_dispatch:
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
@@ -58,7 +59,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./admin-shop
+          file: ./apps/admin-shop/Dockerfile
+          context: ./
           tags: |
             ${{ env.IMAGE }}:${{ env.SHA }}
             ${{ env.IMAGE }}:latest
@@ -66,7 +68,7 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}
             EDGE_STORE_ACCESS_KEY=${{ secrets.EDGE_STORE_ACCESS_KEY }}
             EDGE_STORE_SECRET_KEY=${{ secrets.EDGE_STORE_SECRET_KEY }}
-            
+
 
       - name: Deploy to Cloud Run
         run: |

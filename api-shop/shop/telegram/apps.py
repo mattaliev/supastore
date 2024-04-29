@@ -1,8 +1,8 @@
-import logging
-
 from django.apps import AppConfig
 
-from telegram.services import telegram_shop_webhook_set, telegram_support_webhook_set
+
+# from telegram.services.core import telegram_shop_webhook_set, \
+#     telegram_support_webhook_set
 
 
 class TelegramConfig(AppConfig):

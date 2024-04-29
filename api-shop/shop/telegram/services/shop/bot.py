@@ -1,12 +1,12 @@
 import logging
 
-from django.conf import settings
-
+from payment.services.telegram_payments import \
+    telegram_successful_payment_process
 from telegram.services import telegram_shop_message_send
 from telegram.services.shop.commands import telegram_command_process
-from telegram.services.shop.inline_buttons import telegram_callback_query_process
+from telegram.services.shop.inline_buttons import \
+    telegram_callback_query_process
 from telegram.services.shop.states import telegram_user_state_process
-
 
 __all__ = [
     "telegram_shop_request_process"
@@ -24,6 +24,7 @@ def telegram_shop_request_process(body: dict) -> None:
         chat_type = message["chat"]["type"]
         text = message["text"]
         callback_query = body.get("callback_query")
+        successful_payment = body.get("successful_payment")
 
         # For now, lets ignore the messages that are sent in groups or supergroups
         if chat_type in ["group", "supergroup"]:
@@ -53,6 +54,9 @@ def telegram_shop_request_process(body: dict) -> None:
             )
             return
 
+        if successful_payment:
+            telegram_successful_payment_process(successful_payment)
+
         telegram_shop_message_send(
             chat_id=chat_id,
             text="I'm sorry, I don't understand what you're saying. Please look at the /help command"
@@ -66,6 +70,3 @@ def telegram_shop_request_process(body: dict) -> None:
                 "error": e
             }
         )
-
-
-

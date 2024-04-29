@@ -6,7 +6,6 @@ from django.conf import settings
 
 from core.exceptions import TelegramResponseError
 
-
 __all__ = [
     "telegram_request_send",
     "telegram_message_send",
@@ -16,11 +15,16 @@ __all__ = [
     "telegram_support_message_send",
     "telegram_shop_webhook_set",
     "telegram_support_webhook_set",
-    "telegram_support_message_forward"
+    "telegram_support_message_forward",
+    "telegram_shop_create_invoice_link"
 ]
 
+from core.utils.encryption import decrypt
 
-def telegram_request_send(*, bot_token: str, method: str, data: dict) -> None:
+from payment.models import Payment
+
+
+def telegram_request_send(*, bot_token: str, method: str, data: dict) -> dict:
     """
     Send a response to the telegram API
 
@@ -31,18 +35,23 @@ def telegram_request_send(*, bot_token: str, method: str, data: dict) -> None:
     """
 
     logger = logging.getLogger(__name__)
-    logger.debug("Sending telegram request. Method: %(method)s", {"method": method})
+    logger.debug("Sending telegram request. Method: %(method)s",
+                 {"method": method})
 
     url = f"{settings.TELEGRAM_API_URL}/bot{bot_token}/{method}"
 
     try:
         response = requests.post(url, data=data)
+        body = json.loads(response.text)
 
         if response.status_code != 200:
-            body = json.loads(response.text)
-            raise TelegramResponseError(error_code=body["error_code"], description=body["description"])
+            raise TelegramResponseError(error_code=body["error_code"],
+                                        description=body["description"])
+
+        return body
     except requests.exceptions.RequestException:
-        raise TelegramResponseError(error_code=500, description="Telegram API request failed")
+        raise TelegramResponseError(error_code=500,
+                                    description="Telegram API request failed")
 
 
 def telegram_message_send(
@@ -69,10 +78,12 @@ def telegram_message_send(
     }
 
     try:
-        telegram_request_send(bot_token=bot_token, method="sendMessage", data=data)
+        telegram_request_send(bot_token=bot_token, method="sendMessage",
+                              data=data)
         logger.debug("Telegram message send success!")
     except TelegramResponseError as e:
-        logger.error("Telegram message send failed. Error: %(error)s", {"error": e.message})
+        logger.error("Telegram message send failed. Error: %(error)s",
+                     {"error": e.message})
 
 
 def telegram_webhook_set(*, bot_token: str, url: str) -> None:
@@ -84,13 +95,16 @@ def telegram_webhook_set(*, bot_token: str, url: str) -> None:
     }
 
     try:
-        telegram_request_send(bot_token=bot_token, method="setWebhook", data=data)
+        telegram_request_send(bot_token=bot_token, method="setWebhook",
+                              data=data)
         logger.debug("Telegram webhook set success!")
     except TelegramResponseError as e:
-        logger.error("Telegram webhook set failed. Error: %(error)s", {"error": e.message})
+        logger.error("Telegram webhook set failed. Error: %(error)s",
+                     {"error": e.message})
 
 
-def telegram_message_forward(*, bot_token: str, chat_id: int, from_chat_id: int, message_id: int) -> None:
+def telegram_message_forward(*, bot_token: str, chat_id: int, from_chat_id: int,
+                             message_id: int) -> None:
     logger = logging.getLogger(__name__)
     logger.debug("Forwarding telegram message...")
 
@@ -101,10 +115,55 @@ def telegram_message_forward(*, bot_token: str, chat_id: int, from_chat_id: int,
     }
 
     try:
-        telegram_request_send(bot_token=bot_token, method="forwardMessage", data=data)
+        telegram_request_send(bot_token=bot_token, method="forwardMessage",
+                              data=data)
         logger.debug("Telegram message forwarded")
     except TelegramResponseError as e:
-        logger.error("Telegram message forward failed. Error: %(error)s", {"error": e.message})
+        logger.error("Telegram message forward failed. Error: %(error)s",
+                     {"error": e.message})
+
+
+def telegram_create_invoice_link(
+        *,
+        bot_token: str,
+        payment: Payment
+) -> str:
+    logger = logging.getLogger(__name__)
+    logger.debug("Creating telegram invoice link...")
+
+    prices = [
+        {
+            "label": "Subtotal amount",
+            "amount": int(payment.subtotal_amount * 100)
+        },
+        {
+            "label": "Delivery amount",
+            "amount": int(payment.shipping_amount * 100)
+        },
+    ]
+
+    data = {
+        "title": f"Order {payment.order.order_number}",
+        "description": "\n".join(
+            [item.product.title for item in payment.order.cart.items.all()]),
+        "payload": str(payment.id),
+        "provider_token": decrypt(
+            payment.payment_method.other_info.get("provider_token")),
+        "currency": payment.currency,
+        "prices": json.dumps(prices)
+    }
+    try:
+        body = telegram_request_send(
+            bot_token=bot_token,
+            method="createInvoiceLink",
+            data=data
+        )
+        logger.debug("Telegram invoice link created")
+        return body["result"]
+
+    except TelegramResponseError as e:
+        logger.error("Telegram invoice link creation failed. Error: %(error)s",
+                     {"error": e.message})
 
 
 def telegram_shop_message_send(
@@ -125,7 +184,8 @@ def telegram_shop_message_send(
     )
 
 
-def telegram_support_message_send(*, chat_id: int, text: str, reply_markup: [dict] = None) -> None:
+def telegram_support_message_send(*, chat_id: int, text: str,
+                                  reply_markup: [dict] = None) -> None:
     logger = logging.getLogger(__name__)
     logger.debug("Sending telegram support message")
     telegram_message_send(
@@ -142,10 +202,11 @@ def telegram_shop_webhook_set() -> None:
     logger.debug("Setting telegram shop webhook...")
 
     if not settings.SERVICE_URL:
-        logger.warning("Couldn't set telegram shop webhook URL, SERVICE_URL is not provided")
+        logger.warning(
+            "Couldn't set telegram shop webhook URL, SERVICE_URL is not provided")
         return
 
-    url = f"{settings.SERVICE_URL}/webhooks/telegram/shop/sendUpdate/"
+    url = f"{settings.SERVICE_URL}/telegram/webhooks/shop/sendUpdate/"
 
     telegram_webhook_set(
         bot_token=settings.TELEGRAM_SHOP_TOKEN,
@@ -158,10 +219,11 @@ def telegram_support_webhook_set() -> None:
     logger.debug("Setting telegram support webhook...")
 
     if not settings.SERVICE_URL:
-        logger.warning("Couldn't set telegram support webhook URL, SERVICE_URL is not provided")
+        logger.warning(
+            "Couldn't set telegram support webhook URL, SERVICE_URL is not provided")
         return
 
-    url = f"{settings.SERVICE_URL}/webhooks/telegram/support/sendUpdate/"
+    url = f"{settings.SERVICE_URL}/telegram/webhooks/support/sendUpdate/"
 
     telegram_webhook_set(
         bot_token=settings.TELEGRAM_SUPPORT_TOKEN,
@@ -169,13 +231,15 @@ def telegram_support_webhook_set() -> None:
     )
 
 
-def telegram_support_message_forward(*, chat_id: int, from_chat_id: int, message_id: int) -> None:
+def telegram_support_message_forward(*, chat_id: int, from_chat_id: int,
+                                     message_id: int) -> None:
     logger = logging.getLogger(__name__)
     logger.disabled = False
     logger.debug("Forwarding telegram support message...")
 
     logger.debug("Chat id: %(chat_id)s", {"chat_id": chat_id})
-    logger.debug("From chat id: %(from_chat_id)s", {"from_chat_id": from_chat_id})
+    logger.debug("From chat id: %(from_chat_id)s",
+                 {"from_chat_id": from_chat_id})
     logger.debug("Message id: %(message_id)s", {"message_id": message_id})
 
     telegram_message_forward(
@@ -186,3 +250,11 @@ def telegram_support_message_forward(*, chat_id: int, from_chat_id: int, message
     )
 
 
+def telegram_shop_create_invoice_link(
+        *,
+        payment: Payment
+) -> str:
+    return telegram_create_invoice_link(
+        bot_token=settings.TELEGRAM_SHOP_TOKEN,
+        payment=payment
+    )
