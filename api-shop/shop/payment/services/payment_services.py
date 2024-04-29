@@ -1,9 +1,11 @@
 import logging
 from uuid import UUID
 
+from django.utils import timezone
+
 from core.models import EntityStateChoices
 from core.utils.encryption import encrypt
-from order.models import Order
+from order.models import Order, FulfillmentStatusChoices
 from payment.models import PaymentMethod, Payment, PaymentProviderChoices
 from payment.models import PaymentStatusChoices
 from payment.models.providers import payment_providers
@@ -78,7 +80,8 @@ def payment_create(
         *,
         order_id: UUID,
         payment_method_id: UUID,
-        currency: str = "USD"
+        currency: str = "USD",
+        notify_customer: bool = True
 ) -> tuple[str, dict]:
     payment_method = PaymentMethod.objects.get(pk=payment_method_id)
     order = Order.objects.get(pk=order_id)
@@ -99,9 +102,26 @@ def payment_create(
         currency=currency
     )
 
+    payment_info = None
+
     for provider in payment_providers:
         if provider.provider == payment_method.provider:
-            return provider.create_payment(payment=payment)
+            payment_info = provider.create_payment(payment=payment)
+            if notify_customer:
+                provider.send_payment_message(payment=payment)
+
+    # Make order immutable. Once user creates and order it should not be changed
+    order.state = EntityStateChoices.INACTIVE
+    order.cart.state = EntityStateChoices.INACTIVE
+    order.fulfilment_status = FulfillmentStatusChoices.PENDING
+
+    order.save()
+    order.cart.save()
+
+    if not payment_info:
+        raise ValueError("Payment provider not found")
+
+    return payment_info
 
 
 def payment_status_update(
@@ -123,10 +143,12 @@ def payment_status_update(
         raise ValueError("Order not found")
 
     if payment_status == PaymentStatusChoices.PAID:
-        payment.order.state = EntityStateChoices.INACTIVE
-        payment.order.cart.state = EntityStateChoices.INACTIVE
+        if payment.order.fulfilment_status == FulfillmentStatusChoices.PENDING or \
+                payment.order.fulfilment_status == FulfillmentStatusChoices.OPEN:
+            payment.order.fulfilment_status = FulfillmentStatusChoices.UNFULFILLED
+        payment.payment_date = timezone.now()
+        payment.save()
         payment.order.save()
-        payment.order.cart.save()
         telegram_order_confirmation_to_admin_send(order=payment.order)
 
     payment.payment_status = payment_status
