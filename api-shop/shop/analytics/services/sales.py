@@ -18,7 +18,8 @@ def sales_analytics_get():
 
     # Calculate the start of the week. Meaning finding a period
     # from the start of the week to today
-    current_week_start = today - timedelta(days=today.weekday())
+    current_week_start = today - timedelta(days=today.weekday()) - timedelta(
+        hours=today.hour)
     current_week = [current_week_start, today]
 
     # Calculate the end of the week
