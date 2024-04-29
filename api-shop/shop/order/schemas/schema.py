@@ -55,11 +55,9 @@ class OrderType(DjangoObjectType):
         return self.user.has_default_shipping_details
 
     def resolve_shipping(self, info):
-        print(self.shipping)
         return self.shipping
 
     def resolve_payment(self, info):
-        print(hasattr(self, "payment"))
         if hasattr(self, "payment"):
             return self.payment
         return None

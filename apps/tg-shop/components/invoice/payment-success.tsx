@@ -54,7 +54,7 @@ export default function PaymentSuccess({ order }: { order: Order }) {
               <div className="text-telegram-text-color text-base font-semibold">
                 Items
               </div>
-              {order.items.map((item, index) => (
+              {order.cart.items.map((item, index) => (
                 <div key={index} className="flex justify-between">
                   <div className="text-telegram-text-color">
                     {item.product.title}{" "}

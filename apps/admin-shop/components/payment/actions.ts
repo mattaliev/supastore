@@ -25,8 +25,6 @@ export const updatePaymentStatus = async (
     notifyCustomer: formData.get("notify-user") === "on",
   };
 
-  console.log(payload);
-
   try {
     await paymentStatusUpdate(payload);
   } catch (e) {

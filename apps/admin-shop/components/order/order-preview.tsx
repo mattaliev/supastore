@@ -28,13 +28,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export default function OrderPreview({
-                                       orders,
-                                       hasNext,
-                                       hasPrev,
-                                       limit,
-                                       totalItems,
-                                       page,
-                                     }: {
+  orders,
+  hasNext,
+  hasPrev,
+  limit,
+  totalItems,
+  page,
+}: {
   orders: Order[];
   hasNext: boolean;
   hasPrev: boolean;
@@ -49,7 +49,7 @@ export default function OrderPreview({
   const [current, setCurrent] = useState(
     searchParams.get("current")
       ? parseInt(searchParams.get("current") as string)
-      : 0,
+      : 0
   );
 
   const formatDate = (date: string) => {
@@ -92,8 +92,7 @@ export default function OrderPreview({
     <Card className="hidden lg:block">
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-1">
-          <CardTitle
-            className="group flex items-center gap-2 text-lg hover:underline">
+          <CardTitle className="group flex items-center gap-2 text-lg hover:underline">
             <Link href={`/orders/edit/${orders[current].id}`}>
               Order {orders[current].orderNumber}
             </Link>
@@ -170,8 +169,7 @@ export default function OrderPreview({
               </dd>
               <dd>{orders[current].shipping.details?.phone}</dd>
               <dd>{orders[current].shipping.details?.email}</dd>
-              <address
-                className="grid gap-0.5 not-italic text-muted-foreground">
+              <address className="grid gap-0.5 not-italic text-muted-foreground">
                 <dd>{orders[current].shipping.details?.address}</dd>
                 <dd>{orders[current].shipping.details?.city || ""}</dd>
                 <dd>{orders[current].shipping.details?.province || ""}</dd>
@@ -222,8 +220,7 @@ export default function OrderPreview({
           </div>
         )}
       </CardContent>
-      <CardFooter
-        className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+      <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
         {orders[current].fulfilmentDate && (
           <div className="text-xs text-muted-foreground">
             Fulfilled on{" "}
