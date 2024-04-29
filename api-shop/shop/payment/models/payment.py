@@ -15,7 +15,7 @@ __all__ = [
 
 
 class PaymentStatusChoices(models.TextChoices):
-    PENDING = "PENDING", "pending"
+    UNPAID = "UNPAID", "unpaid"
     PAID = "PAID", "paid"
     REFUNDED = "REFUNDED", "refunded"
     EXPIRED = "EXPIRED", "expired"
@@ -95,7 +95,7 @@ class Payment(BaseEntity):
     payment_status = models.CharField(
         max_length=50,
         choices=PaymentStatusChoices.choices,
-        default=PaymentStatusChoices.PENDING
+        default=PaymentStatusChoices.UNPAID
     )
     subtotal_amount = models.DecimalField(
         max_digits=10,
@@ -151,9 +151,6 @@ class Payment(BaseEntity):
                 self.shipping_amount = self.order.shipping.shipping_amount
 
             self.total_amount = self.subtotal_amount + self.shipping_amount
-
-        if self.payment_status == PaymentStatusChoices.PAID:
-            self.payment_date = timezone.now()
 
         super().save(*args, **kwargs)
 
