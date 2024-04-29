@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo for DITCH Concept Telegram Store",
+  "main": "index.js",
+  "repository": "https://github.com/Toamatvey/DITCH.git",
+  "author": "toamatvey@gmail.com",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ]
+}
