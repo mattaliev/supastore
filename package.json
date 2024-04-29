@@ -6,6 +6,14 @@
   "repository": "https://github.com/Toamatvey/DITCH.git",
   "author": "toamatvey@gmail.com",
   "license": "MIT",
+  "scripts": {
+    "lint:tg": "yarn workspace @ditch/tg-shop lint",
+    "lint:admin": "yarn workspace @ditch/admin-shop lint",
+    "lint": "yarn workspace @ditch/tg-shop lint && yarn workspace @ditch/admin-shop lint",
+    "dev:tg": "yarn workspace @ditch/tg-shop dev",
+    "dev:admin": "yarn workspace @ditch/admin-shop dev",
+    "lint:fix": "yarn workspace @ditch/admin-shop lint:fix && yarn workspace @ditch/tg-shop lint:fix"
+  },
   "workspaces": [
     "apps/*",
     "libs/*"
