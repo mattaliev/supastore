@@ -38,6 +38,7 @@ class InlineButtonType(Enum):
     START_SHOPPING = "START_SHOPPING"
     PAY_WITH_TELEGRAM_INVOICE = "PAY_WITH_TELEGRAM_INVOICE"
     PAY_WITH_WALLET_PAY = "PAY_WITH_WALLET_PAY"
+    OPEN_ORDER = "OPEN_ORDER"
 
 
 class InlineButton(ABC):
@@ -119,6 +120,26 @@ class PayWithWalletPayButton(InlineButton):
         return {
             "text": self.text,
             "url": self.direct_payment_link
+        }
+
+    def execute(self, *args, **kwargs):
+        """
+        Does not execute anything since it opens the chat with the support
+        """
+        pass
+
+
+class OpenOrderButton(InlineButton):
+    def __init__(self, order_id: str, text: str = "📦Open order"):
+        self.order_id = order_id
+        super().__init__(InlineButtonType.OPEN_ORDER, text)
+
+    def as_json(self):
+        return {
+            "text": self.text,
+            "web_app": {
+                "url": f"{settings.FRONTEND_CLIENT_URL}/checkout/payment?orderId={self.order_id}"
+            }
         }
 
     def execute(self, *args, **kwargs):

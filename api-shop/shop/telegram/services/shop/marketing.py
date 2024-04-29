@@ -56,17 +56,18 @@ def telegram_order_confirmation_to_admin_send(order: Order):
 
         message += f"x {item.quantity}\n\n"
 
+    if order.shipping.details is not None:
+        message += "\n"
+        message += "Contact details:\n"
+        message += f"Name: {order.shipping.details.first_name} {order.shipping.details.last_name}\n"
+        message += f"Phone: {order.shipping.details.phone}\n"
+        message += f"Email: {order.shipping.details.email}\n"
+        message += f"Address: {order.shipping.details.address}\n"
+        message += f"City: {order.shipping.details.city}\n"
+        message += f"Country: {order.shipping.details.country}\n"
+        message += f"Postal Code: {order.shipping.details.postcode}\n"
     message += "\n"
-    message += "Contact details:\n"
-    message += f"Name: {order.shipping.details.first_name} {order.shipping.details.last_name}\n"
-    message += f"Phone: {order.shipping.details.phone}\n"
-    message += f"Email: {order.shipping.details.email}\n"
-    message += f"Address: {order.shipping.details.address}\n"
-    message += f"City: {order.shipping.details.city}\n"
-    message += f"Country: {order.shipping.details.country}\n"
-    message += f"Postal Code: {order.shipping.details.postcode}\n"
-    message += "\n"
-    message += f"Total: {order.cart.get_total_price()}\n"
+    message += f"Total: {order.payment.total_amount}\n"
 
     telegram_shop_message_send(
         chat_id=settings.TELEGRAM_ADMIN_CHAT_ID,
