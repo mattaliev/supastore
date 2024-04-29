@@ -14,7 +14,8 @@
     "lint": "yarn workspace @ditch/tg-shop lint && yarn workspace @ditch/admin-shop lint",
     "dev:tg": "yarn workspace @ditch/tg-shop dev",
     "dev:admin": "yarn workspace @ditch/admin-shop dev",
-    "lint:fix": "yarn workspace @ditch/admin-shop lint:fix && yarn workspace @ditch/tg-shop lint:fix"
+    "lint:fix": "yarn workspace @ditch/admin-shop lint:fix && yarn workspace @ditch/tg-shop lint:fix",
+    "prepare": "husky"
   },
   "workspaces": [
     "apps/*",
