@@ -1,5 +1,17 @@
 "use client";
 
+import { FulfilmentStatus, Order, PaymentStatus } from "@ditch/lib";
+import { ChevronLeft, ChevronRight, CreditCard, Truck } from "lucide-react";
+import { DateTime } from "luxon";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+
+import {
+  FulfilmentStatusBadge,
+  PaymentStatusBadge,
+} from "@/components/order/order-badges";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,32 +20,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, CreditCard, Truck } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
-import { FulfilmentStatus, Order } from "@/lib/api/types";
-import { useState } from "react";
-import { DateTime } from "luxon";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  OrderFulfilmentStatusBadge,
-  OrderPaymentStatusBadge,
-} from "@/components/order/order-badges";
-import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 export default function OrderPreview({
-  orders,
-  hasNext,
-  hasPrev,
-  limit,
-  totalItems,
-  page,
-}: {
+                                       orders,
+                                       hasNext,
+                                       hasPrev,
+                                       limit,
+                                       totalItems,
+                                       page,
+                                     }: {
   orders: Order[];
   hasNext: boolean;
   hasPrev: boolean;
@@ -91,7 +92,8 @@ export default function OrderPreview({
     <Card className="hidden lg:block">
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-1">
-          <CardTitle className="group flex items-center gap-2 text-lg hover:underline">
+          <CardTitle
+            className="group flex items-center gap-2 text-lg hover:underline">
             <Link href={`/orders/edit/${orders[current].id}`}>
               Order {orders[current].orderNumber}
             </Link>
@@ -100,10 +102,12 @@ export default function OrderPreview({
             Date: {formatDate(orders[current].created)}
           </CardDescription>
           <div className="flex items-center justify-start space-x-1 mt-2">
-            <OrderPaymentStatusBadge
-              paymentStatus={orders[current].paymentStatus}
+            <PaymentStatusBadge
+              paymentStatus={
+                orders[current].payment?.paymentStatus || PaymentStatus.UNPAID
+              }
             />
-            <OrderFulfilmentStatusBadge
+            <FulfilmentStatusBadge
               fulfilmentStatus={orders[current].fulfilmentStatus}
             />
           </div>
@@ -123,7 +127,7 @@ export default function OrderPreview({
         <div className="grid gap-3">
           <div className="font-semibold">Order Details</div>
           <ul className="grid gap-3">
-            {orders[current].items.map((item) => (
+            {orders[current].cart.items.map((item) => (
               <li className="flex items-center justify-between">
                 <span className="text-muted-foreground">
                   {item.product.title}{" "}
@@ -142,7 +146,7 @@ export default function OrderPreview({
             </li>
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Shipping</span>
-              <span>${orders[current].deliveryAmount}</span>
+              <span>${orders[current].shippingAmount}</span>
             </li>
             <li className="flex items-center justify-between font-semibold">
               <span className="text-muted-foreground">Total</span>
@@ -151,34 +155,35 @@ export default function OrderPreview({
           </ul>
         </div>
         <Separator className="my-4" />
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-3">
-            <div className="font-semibold">Shipping Information</div>
-            {/*<address className="grid gap-0.5 not-italic text-muted-foreground">*/}
-            {/*  <span>*/}
-            {/*    {orders[current].shippingDetails.firstName +*/}
-            {/*      " " +*/}
-            {/*      orders[current].shippingDetails.lastName}*/}
-            {/*  </span>*/}
-            {/*  <span>{orders[current].shippingDetails.phone}</span>*/}
-            {/*  <span>{orders[current].shippingDetails.email}</span>*/}
-            {/*  <span>{orders[current].shippingDetails.address}</span>*/}
-            {/*  <span>*/}
-            {/*    {orders[current].shippingDetails.city +*/}
-            {/*      ", " +*/}
-            {/*      orders[current].shippingDetails.province +*/}
-            {/*      " " +*/}
-            {/*      orders[current].shippingDetails.postcode}*/}
-            {/*  </span>*/}
-            {/*  <span>{orders[current].shippingDetails.country}</span>*/}
-            {/*</address>*/}
-          </div>
-          <div className="grid auto-rows-max gap-3">
-            <div className="font-semibold">Billing Information</div>
-            <div className="text-muted-foreground">
-              Same as shipping address
+        <div className="grid gap-3">
+          <div className="font-semibold">Shipping Information</div>
+          {orders[current].shipping.details ? (
+            <div
+              className={
+                "grid gap-0.5 not-italic text-muted-foreground text-sm"
+              }
+            >
+              <dd>
+                {orders[current].shipping.details?.firstName +
+                  " " +
+                  orders[current].shipping.details?.lastName}
+              </dd>
+              <dd>{orders[current].shipping.details?.phone}</dd>
+              <dd>{orders[current].shipping.details?.email}</dd>
+              <address
+                className="grid gap-0.5 not-italic text-muted-foreground">
+                <dd>{orders[current].shipping.details?.address}</dd>
+                <dd>{orders[current].shipping.details?.city || ""}</dd>
+                <dd>{orders[current].shipping.details?.province || ""}</dd>
+                <dd>{orders[current].shipping.details?.postcode || ""}</dd>
+                <dd>{orders[current].shipping.details?.country || ""}</dd>
+              </address>
             </div>
-          </div>
+          ) : (
+            <dd className={"my-4 text-muted-foreground"}>
+              No shipping information provided
+            </dd>
+          )}
         </div>
         <Separator className="my-4" />
         <div className="grid gap-3">
@@ -198,39 +203,35 @@ export default function OrderPreview({
                 <dd>@{orders[current].user?.username}</dd>
               </div>
             )}
-            {orders[current].user?.email && (
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">Email</dt>
-                <dd>
-                  <a href={`mailto:${orders[current].user?.email}`}>
-                    @{orders[current].user?.username}
-                  </a>
-                </dd>
-              </div>
-            )}
           </dl>
         </div>
         <Separator className="my-4" />
-        <div className="grid gap-3">
-          <div className="font-semibold">Payment Method</div>
-          <dl className="grid gap-3">
-            <div className="flex items-center justify-between">
-              <dt className="flex items-center gap-1 text-muted-foreground">
-                <CreditCard className="h-4 w-4" />
-                Requisites
-              </dt>
-              {/*<dd>**** **** **** 4532</dd>*/}
-            </div>
-          </dl>
-        </div>
+        {orders[current].payment && (
+          <div className="grid gap-3">
+            <div className="font-semibold">Payment Method</div>
+            <dl className="grid gap-3">
+              <div className="flex items-center justify-between">
+                <dt className="flex items-center gap-1 text-muted-foreground">
+                  <CreditCard className="h-4 w-4" />
+                  {orders[current].payment
+                    ? orders[current].payment?.paymentMethod.name
+                    : "N/A"}
+                </dt>
+              </div>
+            </dl>
+          </div>
+        )}
       </CardContent>
-      <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-        <div className="text-xs text-muted-foreground">
-          Updated{" "}
-          <time dateTime="2023-11-23">
-            {formatDate(orders[current].updated)}
-          </time>
-        </div>
+      <CardFooter
+        className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+        {orders[current].fulfilmentDate && (
+          <div className="text-xs text-muted-foreground">
+            Fulfilled on{" "}
+            <time dateTime="2023-11-23">
+              {formatDate(orders[current].fulfilmentDate || "")}
+            </time>
+          </div>
+        )}
         <Pagination className="ml-auto mr-0 w-auto">
           <PaginationContent>
             <PaginationItem>
