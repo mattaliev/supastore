@@ -12,7 +12,9 @@ __all__ = [
 
 
 class FulfillmentStatusChoices(models.TextChoices):
-    UNFULFILLED = "PENDING", "pending"
+    OPEN = "OPEN", "open"
+    PENDING = "PENDING", "pending"
+    UNFULFILLED = "UNFULFILLED", "unfulfilled"
     FULFILLED = "FULFILLED", "fulfilled"
     TRACKING = "TRACKING", "tracking"
     CANCELLED = "CANCELLED", "cancelled"
@@ -27,12 +29,10 @@ class Order(BaseEntity):
         blank=True,
         null=True
     )
-    cart = models.ForeignKey(
+    cart = models.OneToOneField(
         "cart.Cart",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="orders"
+        on_delete=models.CASCADE,
+        related_name="order"
     )
     shipping = models.OneToOneField(
         "shipping.Shipping",
@@ -44,7 +44,7 @@ class Order(BaseEntity):
     fulfilment_status = models.CharField(
         max_length=20,
         choices=FulfillmentStatusChoices.choices,
-        default=FulfillmentStatusChoices.UNFULFILLED
+        default=FulfillmentStatusChoices.OPEN
     )
     fulfilment_date = models.DateTimeField(null=True, blank=True)
 
