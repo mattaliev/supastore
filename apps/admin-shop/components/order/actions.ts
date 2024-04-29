@@ -49,8 +49,6 @@ export const updateOrderStatus = async (
     notifyCustomer: formData.get("notify-user") === "on",
   };
 
-  console.log(payload);
-
   try {
     await orderStatusUpdate(payload);
   } catch (e) {

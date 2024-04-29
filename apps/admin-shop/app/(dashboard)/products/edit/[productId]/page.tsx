@@ -16,8 +16,6 @@ export default async function ProductEditPage({
 }: ProductEditPageProps) {
   const product = await productDetail(params.productId);
 
-  console.log("Loading a product");
-
   if (!product) {
     notFound();
   }

@@ -16,8 +16,7 @@ export default function PaymentSuccess({ order }: { order: Order }) {
   }, []);
 
   return (
-    <div
-      className="flex flex-col items-center justify-center py-12 space-y-6 md:space-y-10 px-4 text-center md:px-6">
+    <div className="flex flex-col items-center justify-center py-12 space-y-6 md:space-y-10 px-4 text-center md:px-6">
       <div className="flex flex-col items-center space-y-2">
         <PaymentSuccessIcon
           className="h-12 w-12 rounded-full text-telegram-text-color"
@@ -27,12 +26,10 @@ export default function PaymentSuccess({ order }: { order: Order }) {
           className="space-y-2 opacity-0 animate-fade-in"
           style={{ animationDelay: "1.5s" }}
         >
-          <h1
-            className="font-bold text-3xl tracking-tighter text-telegram-text-color">
+          <h1 className="font-bold text-3xl tracking-tighter text-telegram-text-color">
             Payment successful
           </h1>
-          <p
-            className="text-gray-500 dark:text-gray-400 text-telegram-text-color">
+          <p className="text-gray-500 dark:text-gray-400 text-telegram-text-color">
             Thank you for your purchase
           </p>
         </div>
