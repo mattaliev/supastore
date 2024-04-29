@@ -5,12 +5,17 @@ import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 
 import {
+  EntityState,
   orderCreate,
+  orderGetByCartId,
+  orderGetById,
+  paymentCreate,
+  PaymentProvider,
+  ShippingDetails,
   shippingDetailsCreate,
   shippingDetailsUpdate,
   TAGS,
-} from "@/lib/api";
-import { ShippingDetails } from "@/lib/api/types";
+} from "@ditch/lib";
 
 import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
 
@@ -25,7 +30,20 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
   let redirectPath = "/checkout/shipping";
 
   try {
-    const order = await orderCreate(cartId, userId);
+    let order;
+    const orderId = cookies().get("orderId")?.value;
+
+    if (orderId) {
+      order = await orderGetById(orderId, EntityState.ACTIVE);
+    }
+
+    if (!order) {
+      order = await orderGetByCartId(cartId, EntityState.ACTIVE);
+    }
+
+    if (!order) {
+      order = await orderCreate(cartId, userId);
+    }
 
     cookies().set("orderId", order.id);
     redirectPath = `/checkout/shipping?shippingId=${order.shipping.id}`;
@@ -101,3 +119,51 @@ export const createOrUpdateShippingDetails = async (
   revalidateTag(TAGS.ORDER);
   redirect("/checkout/payment", RedirectType.push);
 };
+
+export const createPayment = async (
+  prevState: any,
+  payload: {
+    paymentMethodId: string;
+    currency?: string;
+  },
+): Promise<{ success: boolean; paymentLink?: string; error?: string }> => {
+  const orderId = cookies().get("orderId")?.value;
+  const { paymentMethodId, currency = "USD" } = payload;
+  if (!orderId) {
+    return { success: false, error: "No order found" };
+  }
+
+  const result = await paymentCreate({
+    orderId,
+    paymentMethodId,
+    currency,
+  });
+
+  if (!result) {
+    return { success: false, error: "Could not create payment" };
+  }
+
+  const { paymentInfo, provider } = result;
+
+  if (
+    provider === PaymentProvider.BANK_TRANSFER ||
+    provider === PaymentProvider.CRYPTO_TRANSFER
+  ) {
+    return { success: true };
+  }
+
+  const parsedPaymentInfo = JSON.parse(paymentInfo);
+
+  if (provider === PaymentProvider.TELEGRAM_INVOICE) {
+    return {
+      success: true,
+      paymentLink: parsedPaymentInfo.payment_link,
+    };
+  }
+
+  return {
+    success: true,
+    paymentLink: parsedPaymentInfo.direct_payment_link,
+  };
+};
+
