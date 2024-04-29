@@ -16,10 +16,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import environ
-from google.cloud import secretmanager
 import google.auth
 import google.cloud.logging
-
+from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,10 +46,12 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
 
     client = secretmanager.SecretManagerServiceClient()
     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+    payload = client.access_secret_version(name=name).payload.data.decode(
+        "UTF-8")
     env.read_env(io.StringIO(payload))
 else:
-    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+    raise Exception(
+        "No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
 
 DEBUG = env("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
@@ -258,3 +259,6 @@ TELEGRAM_WALLET_PAY_URL = env("TELEGRAM_WALLET_PAY_URL")
 TELEGRAM_WALLET_API_KEY = env("TELEGRAM_WALLET_API_KEY")
 TELEGRAM_PAYMENT_RETURN_URL = env("TELEGRAM_PAYMENT_RETURN_URL")
 
+# ------------------- ENCRYPTION -------------------
+AES_SECRET_KEY = env("AES_SECRET_KEY")
+AES_IV = env("AES_IV")
