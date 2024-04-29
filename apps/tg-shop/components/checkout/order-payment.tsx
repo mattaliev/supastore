@@ -1,5 +1,3 @@
-import PayWithWalletButton from "@/components/checkout/pay-with-wallet-button";
-import USPaymentOption from "@/components/checkout/us-payment-option";
 import {
   Card,
   CardContent,
@@ -8,9 +6,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Order } from "@/lib/api/types";
+import { EntityState, Order, paymentMethodsList } from "@ditch/lib";
+import PaymentButton from "@/components/checkout/payment-button";
 
-export default function OrderPayment({ order }: { order: Order }) {
+export default async function OrderPayment({ order }: { order: Order }) {
+  const paymentMethods = await paymentMethodsList(EntityState.ACTIVE);
   return (
     <Card>
       <CardHeader>
@@ -26,7 +26,7 @@ export default function OrderPayment({ order }: { order: Order }) {
         <div className="flex items-center">
           <div className="text-telegram-hint-color">Shipping</div>
           <div className="ml-auto text-telegram-hint-color">
-            ${order.deliveryAmount}
+            ${order.shippingAmount}
           </div>
         </div>
         <Separator />
@@ -37,13 +37,12 @@ export default function OrderPayment({ order }: { order: Order }) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="">
-        {/*<PayWithCardButton />*/}
-        {order.shipping.details?.country !== "United States" ? (
-          <PayWithWalletButton order={order} />
-        ) : (
-          <USPaymentOption order={order} />
-        )}
+      <CardFooter>
+        <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
+          {paymentMethods.map((paymentMethod) => (
+            <PaymentButton paymentMethod={paymentMethod} />
+          ))}
+        </div>
       </CardFooter>
     </Card>
   );
