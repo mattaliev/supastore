@@ -49,9 +49,9 @@ class Query(graphene.ObjectType):
             limit=10,
             **kwargs
     ):
-        products = order_list(
+        orders = order_list(
             payment_status=payment_status,
             fulfilment_status=fulfilment_status,
             state=state
         )
-        return get_paginator(products, limit, page, OrderPaginatedType)
+        return get_paginator(orders, limit, page, OrderPaginatedType)
