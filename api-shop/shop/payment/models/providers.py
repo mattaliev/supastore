@@ -6,7 +6,7 @@ from payment.services.wallet_pay import wallet_pay_invoice_get
 from telegram.services import telegram_shop_message_send, \
     telegram_shop_create_invoice_link
 from telegram.services.shop.inline_buttons import (
-    PayWithWalletPayButton, PayWithTelegramInvoiceButton
+    PayWithWalletPayButton, PayWithTelegramInvoiceButton, OpenOrderButton
 )
 
 __all__ = [
@@ -48,8 +48,6 @@ class WalletPayProvider(PaymentProvider):
         payment.payment_expiry = wallet_pay_invoice.get("expirationDateTime")
         payment.save()
 
-        self.send_payment_message(payment=payment)
-
         return self.provider, payment.additional_info
 
     def send_payment_message(self, payment: Payment, *args, **kwargs):
@@ -60,7 +58,8 @@ class WalletPayProvider(PaymentProvider):
                 direct_payment_link=payment.additional_info.get(
                     "direct_payment_link"
                 )
-            ).as_json()]
+            ).as_json()],
+            [OpenOrderButton(order_id=payment.order.id).as_json()]
         ]
 
         telegram_shop_message_send(
@@ -87,7 +86,6 @@ class TelegramPaymentsProvider(PaymentProvider):
         }
 
         payment.save()
-        self.send_payment_message(payment=payment)
 
         return self.provider, payment.additional_info
 
@@ -101,7 +99,8 @@ class TelegramPaymentsProvider(PaymentProvider):
             [PayWithTelegramInvoiceButton(
                 payment_link=payment.additional_info.get("payment_link"),
                 name=payment.payment_method.name
-            ).as_json()]
+            ).as_json()],
+            [OpenOrderButton(order_id=payment.order.id).as_json()]
         ]
 
         telegram_shop_message_send(
@@ -122,8 +121,6 @@ class CryptoPaymentProvider(PaymentProvider):
             *args,
             **kwargs
     ) -> Tuple[str, dict]:
-        self.send_payment_message(payment=payment)
-
         return (
             payment.payment_method.provider,
             payment.payment_method.other_info
@@ -141,9 +138,14 @@ class CryptoPaymentProvider(PaymentProvider):
             f"\nComment: {payment.order.order_number}"
         )
 
+        reply_markup = [
+            [OpenOrderButton(order_id=payment.order.id).as_json()]
+        ]
+
         telegram_shop_message_send(
             chat_id=payment.order.user.telegram_id,
             text=message,
+            reply_markup=reply_markup,
             parse_mode=None
         )
 
@@ -158,8 +160,6 @@ class BankTransferPaymentProvider(PaymentProvider):
             *args,
             **kwargs
     ) -> Tuple[str, dict]:
-        self.send_payment_message(payment=payment)
-
         return (
             payment.payment_method.provider,
             payment.payment_method.other_info
@@ -174,9 +174,14 @@ class BankTransferPaymentProvider(PaymentProvider):
             f"\n\nComment: {payment.order.order_number}"
         )
 
+        reply_markup = [
+            [OpenOrderButton(order_id=payment.order.id).as_json()]
+        ]
+
         telegram_shop_message_send(
             chat_id=payment.order.user.telegram_id,
             text=message,
+            reply_markup=reply_markup,
             parse_mode=None
         )
 
