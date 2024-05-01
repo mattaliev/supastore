@@ -1,3 +1,14 @@
+export const shopPaymentMethodFragment = /* GraphQL */ `
+  fragment ShopPaymentMethodFields on PaymentMethodType {
+    id
+    name
+    provider
+    buttonText
+    state
+    created
+  }
+`;
+
 export const paymentMethodFragment = /* GraphQL */ `
   fragment PaymentMethodFields on PaymentMethodType {
     id

@@ -503,6 +503,15 @@ export type BackendSalesAnalyticsOperation = {
   };
 };
 
+export type BackendShopPaymentMethodsListOperation = {
+  data: {
+    paymentMethodsList: SafePaymentMethod[];
+  };
+  variables: {
+    state?: EntityState;
+  };
+};
+
 export type BackendPaymentMethodsListOperations = {
   data: {
     paymentMethodsList: PaymentMethod[];

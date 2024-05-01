@@ -1,4 +1,4 @@
-import { paymentMethodFragment } from "../fragments";
+import { paymentMethodFragment, shopPaymentMethodFragment } from "../fragments";
 
 export const paymentMethodsListQuery = /* GraphQL */ `
   query PaymentMethodsList($state: String) {
@@ -7,4 +7,13 @@ export const paymentMethodsListQuery = /* GraphQL */ `
     }
   }
   ${paymentMethodFragment}
+`;
+
+export const shopPaymentMethodsListQuery = /* GraphQL */ `
+  query ShopPaymentMethodsList($state: String) {
+    paymentMethodsList(state: $state) {
+      ...ShopPaymentMethodFields
+    }
+  }
+  ${shopPaymentMethodFragment}
 `;

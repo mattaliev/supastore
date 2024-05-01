@@ -29,6 +29,7 @@ import {
   productsGetQuery,
   productsPaginatedGetQuery,
   salesAnalyticsGetQuery,
+  shopPaymentMethodsListQuery,
 } from "./queries";
 import {
   BackendCartAddItemOperation,
@@ -59,6 +60,7 @@ import {
   BackendShippingAddTrackingOperation,
   BackendShippingDetailsCreateOperation,
   BackendShippingDetailsUpdateOperation,
+  BackendShopPaymentMethodsListOperation,
   Cart,
   EntityState,
   FulfilmentStatus,
@@ -71,6 +73,7 @@ import {
   ProductCreateInput,
   ProductUpdateInput,
   RegisterUserInput,
+  SafePaymentMethod,
   SalesAnalytics,
   Shipping,
   ShippingDetails,
@@ -546,6 +549,21 @@ export const paymentMethodsList = async (
       provider: paymentMethod.provider as PaymentProvider,
     };
   });
+};
+
+export const shopPaymentMethodsList = async (
+  state?: EntityState,
+): Promise<SafePaymentMethod[]> => {
+  const { body } = await backendFetch<BackendShopPaymentMethodsListOperation>({
+    query: shopPaymentMethodsListQuery,
+    cache: "no-store",
+    variables: {
+      state,
+    },
+    tags: [TAGS.PAYMENT],
+  });
+
+  return body.data.paymentMethodsList;
 };
 
 export const paymentMethodCreate = async (input: {
