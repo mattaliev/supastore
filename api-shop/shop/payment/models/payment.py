@@ -69,6 +69,7 @@ class PaymentMethod(BaseEntity):
     # }
 
     other_info = models.JSONField(null=True, blank=True)
+    button_text = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         db_table = "payment_method"

@@ -112,7 +112,7 @@ class PayWithTelegramInvoiceButton(InlineButton):
 
 
 class PayWithWalletPayButton(InlineButton):
-    def __init__(self, direct_payment_link, text: str = "💳Pay via Wallet"):
+    def __init__(self, direct_payment_link, text: str = "👛Pay via Wallet"):
         self.direct_payment_link = direct_payment_link
         super().__init__(InlineButtonType.PAY_WITH_WALLET_PAY, text)
 

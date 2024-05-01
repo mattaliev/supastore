@@ -1,7 +1,8 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from payment.models import PaymentMethod, Payment
+from core.utils.encryption import decrypt
+from payment.models import PaymentMethod, Payment, PaymentProviderChoices
 
 __all__ = [
     "PaymentMethodType",
@@ -13,12 +14,27 @@ __all__ = [
 
 
 class PaymentMethodType(DjangoObjectType):
+    other_info = graphene.JSONString()
     state = graphene.String()
 
     class Meta:
         model = PaymentMethod
         fields = "__all__"
         description = "Payment method"
+
+    def resolve_state(self, info):
+        return self.state
+
+    def resolve_other_info(self, info):
+        other_info = self.other_info
+
+        if self.provider == PaymentProviderChoices.WALLET_PAY:
+            other_info["api_key"] = decrypt(other_info.get("api_key"))
+
+        if self.provider == PaymentProviderChoices.TELEGRAM_INVOICE:
+            other_info["provider_token"] = decrypt(other_info.get("provider_token"))
+
+        return other_info
 
 
 class PaymentType(DjangoObjectType):
@@ -37,7 +53,9 @@ class PaymentType(DjangoObjectType):
 class PaymentMethodCreateInput(graphene.InputObjectType):
     name = graphene.String(required=True)
     provider = graphene.String(required=True)
+    button_text = graphene.String()
     other_info = graphene.JSONString()
+    state = graphene.String()
 
 
 class PaymentMethodUpdateInput(PaymentMethodCreateInput):
