@@ -130,7 +130,7 @@ class PayWithWalletPayButton(InlineButton):
 
 
 class OpenOrderButton(InlineButton):
-    def __init__(self, order_id: str, text: str = "📦Open order"):
+    def __init__(self, order_id: str, text: str = "📦View order"):
         self.order_id = order_id
         super().__init__(InlineButtonType.OPEN_ORDER, text)
 
