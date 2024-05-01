@@ -1,11 +1,22 @@
 "use server";
 import {
+  EntityState,
   paymentCreate,
+  paymentMethodCreate,
+  paymentMethodDelete,
+  paymentMethodUpdate,
+  PaymentProvider,
   PaymentStatus,
   paymentStatusUpdate,
   TAGS,
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
+
+import {
+  BasePaymentMethodScheme,
+  PaymentFieldErrors,
+  PaymentSchemes,
+} from "@/components/payment/schemes";
 
 export const updatePaymentStatus = async (
   prevState: any,
@@ -62,4 +73,117 @@ export const createPaymentManually = async (
     return { orderId, error: "Could not create payment" };
   }
   revalidateTag(TAGS.ORDER);
+};
+
+export const createPaymentMethod = async (
+  prevState: any,
+  formData: FormData
+): Promise<
+  | {
+      success?: boolean;
+      fieldErrors?: PaymentFieldErrors;
+      formError?: string;
+    }
+  | undefined
+> => {
+  const validationResults = validatePaymentMethodForm(formData);
+
+  if (validationResults.error) {
+    return validationResults.error;
+  }
+
+  try {
+    await paymentMethodCreate({
+      ...validationResults.data,
+    });
+  } catch (e) {
+    return { formError: "Could not create payment method" };
+  }
+
+  revalidateTag(TAGS.PAYMENT);
+  return { success: true };
+};
+
+export const updatePaymentMethod = async (
+  prevState: any,
+  formData: FormData
+): Promise<
+  | {
+      success?: boolean;
+      fieldErrors?: PaymentFieldErrors;
+      formError?: string;
+    }
+  | undefined
+> => {
+  const paymentMethodId = formData.get("id") as string;
+
+  if (!paymentMethodId) {
+    return { formError: "Invalid payment method" };
+  }
+
+  const validationResults = validatePaymentMethodForm(formData);
+
+  if (validationResults.error) {
+    return validationResults.error;
+  }
+
+  try {
+    await paymentMethodUpdate({
+      paymentMethodId,
+      ...validationResults.data,
+    });
+  } catch (e) {
+    return { formError: "Could not create payment method" };
+  }
+
+  revalidateTag(TAGS.PAYMENT);
+  return { success: true };
+};
+
+export const deletePaymentMethod = async (
+  prevState: any,
+  paymentMethodId: string
+) => {
+  try {
+    await paymentMethodDelete(paymentMethodId);
+  } catch (e) {
+    return { success: false, error: "Could not delete payment method" };
+  }
+
+  revalidateTag(TAGS.PAYMENT);
+  return { success: true };
+};
+
+const validatePaymentMethodForm = (formData: FormData) => {
+  const formEntries = Object.fromEntries(formData);
+  const baseData = BasePaymentMethodScheme.safeParse(formEntries);
+
+  if (!baseData.success) {
+    return { error: { fieldErrors: baseData.error.flatten().fieldErrors } };
+  }
+
+  const scheme = PaymentSchemes[baseData.data.provider as PaymentProvider];
+
+  const validatedData = scheme.safeParse({
+    ...formEntries,
+  });
+
+  if (!validatedData.success) {
+    return {
+      error: { fieldErrors: validatedData.error.flatten().fieldErrors },
+    };
+  }
+
+  const { name, provider, buttonText, state } = baseData.data;
+  const otherInfo = JSON.stringify(validatedData.data);
+
+  return {
+    data: {
+      name,
+      provider: provider as PaymentProvider,
+      buttonText,
+      state: state as EntityState,
+      otherInfo,
+    },
+  };
 };
