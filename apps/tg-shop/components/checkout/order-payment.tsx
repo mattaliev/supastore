@@ -1,4 +1,4 @@
-import { EntityState, Order, paymentMethodsList } from "@ditch/lib";
+import { EntityState, Order, shopPaymentMethodsList } from "@ditch/lib";
 
 import PaymentButton from "@/components/checkout/payment-button";
 import {
@@ -11,7 +11,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export default async function OrderPayment({ order }: { order: Order }) {
-  const paymentMethods = await paymentMethodsList(EntityState.ACTIVE);
+  const paymentMethods = await shopPaymentMethodsList(EntityState.ACTIVE);
   return (
     <Card>
       <CardHeader>
