@@ -3,12 +3,14 @@ export const paymentMethodFragment = /* GraphQL */ `
     id
     name
     provider
+    buttonText
     state
     created
+    otherInfo
   }
 `;
 
-export const paymentFragment =  /* GraphQL */ `
+export const paymentFragment = /* GraphQL */ `
   fragment PaymentFields on PaymentType {
     id
     paymentMethod {

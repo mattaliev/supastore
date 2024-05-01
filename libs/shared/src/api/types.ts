@@ -31,7 +31,7 @@ export enum FulfilmentStatus {
   UNFULFILLED = "UNFULFILLED",
   FULFILLED = "FULFILLED",
   TRACKING = "TRACKING",
-  CANCELLED = "CANCELLED"
+  CANCELLED = "CANCELLED",
 }
 
 export enum PaymentProvider {
@@ -64,7 +64,6 @@ export type Shipping = {
   carrier?: string;
   trackingNumber?: string;
 } & BaseEntity;
-
 
 export type ShippingDetails = {
   id: string;
@@ -167,11 +166,62 @@ export type SalesAnalytics = {
   salesIncreaseThisMonth: number;
 };
 
+export type TelegramPaymentOtherInfo = {
+  provider_token: string;
+  paymentGateway: string;
+};
+
+export type CryptoTransferOtherInfo = {
+  network: string;
+  address: string;
+};
+
+export type BankTransferOtherInfo = {
+  message: string;
+};
+
+export type WalletPayOtherInfo = {
+  api_key: string;
+  autoConversionCurrency: string;
+};
+
 export type PaymentMethod = {
   id: string;
   name: string;
   provider: PaymentProvider;
+  buttonText?: string;
+  otherInfo?: string;
 } & BaseEntity;
+
+export type SafePaymentMethod = Omit<PaymentMethod, "otherInfo">;
+
+export type TelegramPaymentMethod = PaymentMethod & {
+  provider: PaymentProvider.TELEGRAM_INVOICE;
+  otherInfo: TelegramPaymentOtherInfo;
+};
+
+export type CryptoTransferPaymentMethod = PaymentMethod & {
+  provider: PaymentProvider.CRYPTO_TRANSFER;
+  otherInfo: CryptoTransferOtherInfo;
+};
+
+export type BankTransferPaymentMethod = PaymentMethod & {
+  provider: PaymentProvider.BANK_TRANSFER;
+  otherInfo: BankTransferOtherInfo;
+};
+
+export type WalletPayPaymentMethod = PaymentMethod & {
+  provider: PaymentProvider.WALLET_PAY;
+  otherInfo: WalletPayOtherInfo;
+};
+
+export type ParsedPaymentMethod = PaymentMethod & {
+  otherInfo?:
+    | TelegramPaymentOtherInfo
+    | CryptoTransferOtherInfo
+    | BankTransferOtherInfo
+    | WalletPayOtherInfo;
+};
 
 export type Payment = {
   id: string;
@@ -472,6 +522,26 @@ export type BackendPaymentMethodCreateOperation = {
     input: {
       name: string;
       provider: PaymentProvider;
+      buttonText?: string;
+      state?: EntityState;
+      otherInfo?: string;
+    };
+  };
+};
+
+export type BackendPaymentMethodUpdateOperation = {
+  data: {
+    paymentMethodUpdate: {
+      paymentMethod: PaymentMethod;
+    };
+  };
+  variables: {
+    input: {
+      paymentMethodId: string;
+      name: string;
+      provider: PaymentProvider;
+      buttonText?: string;
+      state?: EntityState;
       otherInfo?: string;
     };
   };
@@ -508,7 +578,7 @@ export type BackendPaymentCreateOperation = {
 export type BackendPaymentStatusUpdateOperation = {
   data: {
     paymentStatusUpdate: {
-      success: boolean
+      success: boolean;
     };
   };
   variables: {
@@ -516,6 +586,6 @@ export type BackendPaymentStatusUpdateOperation = {
       paymentId: string;
       paymentStatus: PaymentStatus;
       notifyCustomer?: boolean;
-    }
+    };
   };
 };
