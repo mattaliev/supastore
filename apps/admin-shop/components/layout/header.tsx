@@ -1,11 +1,12 @@
 "use client";
 import {
+  CreditCard,
   Home,
-  LineChart,
   Package,
   Package2,
   PanelLeft,
   Search,
+  Settings,
   ShoppingCart,
   Users2,
 } from "lucide-react";
@@ -96,6 +97,17 @@ export default function Header() {
                 Customers
               </Link>
               <Link
+                href="/payment-systems"
+                className={
+                  pathname.startsWith("/payment-systems")
+                    ? sheetItemSelectedClass
+                    : sheetItemClass
+                }
+              >
+                <CreditCard className="h-5 w-5" />
+                Payment Systems
+              </Link>
+              <Link
                 href="#"
                 className={
                   pathname.startsWith("/analytics")
@@ -103,7 +115,7 @@ export default function Header() {
                     : sheetItemClass
                 }
               >
-                <LineChart className="h-5 w-5" />
+                <Settings className="h-5 w-5" />
                 Settings
               </Link>
             </nav>
