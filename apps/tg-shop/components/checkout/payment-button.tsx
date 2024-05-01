@@ -1,5 +1,5 @@
 "use client";
-import { PaymentMethod } from "@ditch/lib";
+import { SafePaymentMethod } from "@ditch/lib";
 import { useHapticFeedback, useMiniApp, useUtils } from "@tma.js/sdk-react";
 import { clsx } from "clsx";
 import { useEffect } from "react";
@@ -20,7 +20,13 @@ const buttonClasses: Record<string, string> = {
     "bg-telegram-bg-color text-telegram-text-color hover:bg-telegram-button-color border border-telegram-text-color hover:text-telegram-button-text-color hover:border-none",
 };
 
-function SubmitButton({ name }: { name: string }) {
+function SubmitButton({
+  name,
+  buttonText,
+}: {
+  name: string;
+  buttonText?: string;
+}) {
   const { pending } = useFormStatus();
   const hapticFeedback = useHapticFeedback();
   const buttonClass = clsx("w-full", buttonClasses[name]);
@@ -41,7 +47,7 @@ function SubmitButton({ name }: { name: string }) {
       type="submit"
       onClick={() => hapticFeedback.impactOccurred("heavy")}
     >
-      Pay with {name}
+      {buttonText || "Pay with " + name}
     </Button>
   );
 }
@@ -49,9 +55,9 @@ function SubmitButton({ name }: { name: string }) {
 export default function PaymentButton({
   paymentMethod,
 }: {
-  paymentMethod: PaymentMethod;
+  paymentMethod: SafePaymentMethod;
 }) {
-  const { id, name, provider } = paymentMethod;
+  const { id, name, provider, buttonText } = paymentMethod;
 
   const utils = useUtils();
   const miniApp = useMiniApp();
@@ -74,7 +80,7 @@ export default function PaymentButton({
 
   return (
     <form action={actionWithPaymentMethod} className={"w-full"}>
-      <SubmitButton name={name} />
+      <SubmitButton name={name} buttonText={buttonText} />
       {formState?.error && (
         <p className={"text-telegram-text-color text-center mt-2 text-xs"}>
           {formState.error}

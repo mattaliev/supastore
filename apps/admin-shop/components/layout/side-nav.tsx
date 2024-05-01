@@ -1,5 +1,6 @@
 "use client";
 import {
+  CreditCard,
   Home,
   LineChart,
   Package,
@@ -98,6 +99,22 @@ export default function SideNav() {
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">Customers</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/payment-systems"
+              className={
+                pathname.startsWith("/payment-systems")
+                  ? twMerge(navItemClass, navItemSelectedClass)
+                  : navItemClass
+              }
+            >
+              <CreditCard className="h-5 w-5" />
+              <span className="sr-only">Payment Systems</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Payment Systems</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>

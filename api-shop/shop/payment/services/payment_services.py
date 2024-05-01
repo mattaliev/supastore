@@ -33,39 +33,55 @@ def payment_method_create(
         *,
         name: str,
         provider: PaymentProviderChoices,
-        other_info: dict
+        button_text: str,
+        other_info: dict,
+        state: EntityStateChoices = EntityStateChoices.ACTIVE
 ) -> PaymentMethod:
-    if provider == PaymentProviderChoices.WALLET_PAY:
-        other_info["api_key"] = encrypt(other_info.get("api_key"))
+    try:
+        if provider == PaymentProviderChoices.WALLET_PAY:
+            other_info["api_key"] = encrypt(other_info.get("apiKey"))
+            del other_info["apiKey"]
 
-    if provider == PaymentProviderChoices.TELEGRAM_INVOICE:
-        other_info["provider_token"] = encrypt(other_info.get("provider_token"))
+        if provider == PaymentProviderChoices.TELEGRAM_INVOICE:
+            other_info["provider_token"] = encrypt(other_info.get("providerToken"))
+            del other_info["providerToken"]
 
-    return PaymentMethod.objects.create(
-        name=name,
-        provider=provider,
-        other_info=other_info
-    )
+        return PaymentMethod.objects.create(
+            name=name,
+            provider=provider,
+            other_info=other_info,
+            button_text=button_text,
+            state=state
+        )
+    except Exception as e:
+        print(e)
+        raise e
 
 
 def payment_method_update(
         *,
         payment_method_id: UUID,
         name: str,
+        button_text: str,
         provider: PaymentProviderChoices,
-        other_info: dict
+        other_info: dict,
+        state: EntityStateChoices = EntityStateChoices.ACTIVE
 ):
     payment_method = PaymentMethod.objects.get(pk=payment_method_id)
 
     if provider == PaymentProviderChoices.WALLET_PAY:
-        other_info["api_key"] = encrypt(other_info.get("api_key"))
+        other_info["api_key"] = encrypt(other_info.get("apiKey"))
+        del other_info["apiKey"]
 
     if provider == PaymentProviderChoices.TELEGRAM_INVOICE:
-        other_info["provider_token"] = encrypt(other_info.get("provider_token"))
+        other_info["provider_token"] = encrypt(other_info.get("providerToken"))
+        del other_info["providerToken"]
 
     payment_method.name = name
     payment_method.provider = provider
     payment_method.other_info = other_info
+    payment_method.button_text = button_text
+    payment_method.state = state
     payment_method.save()
     return payment_method
 

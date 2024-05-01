@@ -18,6 +18,7 @@ const pathnames: Record<string, string[]> = {
   "/products/create": ["Dashboard", "Products", "Create"],
   "/products/edit": ["Dashboard", "Products", "Edit"],
   "/customers": ["Dashboard", "Customers"],
+  "/payment-systems": ["Dashboard", "Payment Systems"],
   "/analytics": ["Settings"],
 };
 

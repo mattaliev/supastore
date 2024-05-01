@@ -1,49 +1,4 @@
 import {
-  BackendCartAddItemOperation,
-  BackendCartCreateOperation,
-  BackendCartGetOperation,
-  BackendCartRemoveItemOperation,
-  BackendCartUpdateItemOperation,
-  BackendOrderCreateOperation,
-  BackendOrderDeleteOperation,
-  BackendOrderGetByCartIdOperation,
-  BackendOrderGetByIdOperation,
-  BackendOrderPaginatedGetOperation,
-  BackendOrderStatusUpdateOperation,
-  BackendPaymentCreateOperation,
-  BackendPaymentMethodCreateOperation,
-  BackendPaymentMethodDeleteOperation,
-  BackendPaymentMethodsListOperations,
-  BackendPaymentStatusUpdateOperation,
-  BackendProductCreateOperation,
-  BackendProductDeleteOperation,
-  BackendProductDetailOperation,
-  BackendProductsGetOperation,
-  BackendProductsPaginatedGetOperation,
-  BackendProductUpdateOperation,
-  BackendRegisterUserOperation,
-  BackendSalesAnalyticsOperation,
-  BackendShippingAddTrackingOperation,
-  BackendShippingDetailsCreateOperation,
-  BackendShippingDetailsUpdateOperation,
-  Cart,
-  EntityState,
-  FulfilmentStatus,
-  Order,
-  Paginated,
-  PaymentMethod,
-  PaymentProvider,
-  PaymentStatus,
-  Product,
-  ProductCreateInput,
-  ProductUpdateInput,
-  RegisterUserInput,
-  SalesAnalytics,
-  Shipping,
-  ShippingDetails,
-  TelegramUser,
-} from "./types";
-import {
   cartAddItemMutation,
   cartCreateMutation,
   cartRemoveItemMutation,
@@ -54,6 +9,7 @@ import {
   paymentCreateMutation,
   paymentMethodCreateMutation,
   paymentMethodDeleteMutation,
+  paymentMethodUpdateMutation,
   paymentStatusUpdateMutation,
   productCreateMutation,
   productDeleteMutation,
@@ -73,7 +29,56 @@ import {
   productsGetQuery,
   productsPaginatedGetQuery,
   salesAnalyticsGetQuery,
+  shopPaymentMethodsListQuery,
 } from "./queries";
+import {
+  BackendCartAddItemOperation,
+  BackendCartCreateOperation,
+  BackendCartGetOperation,
+  BackendCartRemoveItemOperation,
+  BackendCartUpdateItemOperation,
+  BackendOrderCreateOperation,
+  BackendOrderDeleteOperation,
+  BackendOrderGetByCartIdOperation,
+  BackendOrderGetByIdOperation,
+  BackendOrderPaginatedGetOperation,
+  BackendOrderStatusUpdateOperation,
+  BackendPaymentCreateOperation,
+  BackendPaymentMethodCreateOperation,
+  BackendPaymentMethodDeleteOperation,
+  BackendPaymentMethodsListOperations,
+  BackendPaymentMethodUpdateOperation,
+  BackendPaymentStatusUpdateOperation,
+  BackendProductCreateOperation,
+  BackendProductDeleteOperation,
+  BackendProductDetailOperation,
+  BackendProductsGetOperation,
+  BackendProductsPaginatedGetOperation,
+  BackendProductUpdateOperation,
+  BackendRegisterUserOperation,
+  BackendSalesAnalyticsOperation,
+  BackendShippingAddTrackingOperation,
+  BackendShippingDetailsCreateOperation,
+  BackendShippingDetailsUpdateOperation,
+  BackendShopPaymentMethodsListOperation,
+  Cart,
+  EntityState,
+  FulfilmentStatus,
+  Order,
+  Paginated,
+  ParsedPaymentMethod,
+  PaymentProvider,
+  PaymentStatus,
+  Product,
+  ProductCreateInput,
+  ProductUpdateInput,
+  RegisterUserInput,
+  SafePaymentMethod,
+  SalesAnalytics,
+  Shipping,
+  ShippingDetails,
+  TelegramUser,
+} from "./types";
 
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
@@ -85,15 +90,16 @@ export const TAGS = {
   CART: "cart",
   PRODUCT: "product",
   ORDER: "order",
+  PAYMENT: "payment",
 };
 
 export const backendFetch = async <T>({
-                                        query,
-                                        variables,
-                                        cache,
-                                        tags,
-                                        headers,
-                                      }: {
+  query,
+  variables,
+  cache,
+  tags,
+  headers,
+}: {
   query: string;
   variables?: ExtractVariables<T>;
   cache?: RequestCache;
@@ -148,8 +154,8 @@ export const registerUser = async (
 };
 
 export const productsGet = async ({
-                                    state,
-                                  }: {
+  state,
+}: {
   state?: EntityState;
 }): Promise<Product[]> => {
   const { body } = await backendFetch<BackendProductsGetOperation>({
@@ -168,10 +174,10 @@ export const productsGet = async ({
 };
 
 export const productsPaginatedGet = async ({
-                                             state,
-                                             page,
-                                             limit,
-                                           }: {
+  state,
+  page,
+  limit,
+}: {
   state?: EntityState;
   page?: number;
   limit?: number;
@@ -379,12 +385,12 @@ export const orderGetByCartId = async (
 };
 
 export const ordersPaginatedGet = async ({
-                                           state,
-                                           page,
-                                           limit,
-                                           paymentStatus,
-                                           fulfilmentStatus,
-                                         }: {
+  state,
+  page,
+  limit,
+  paymentStatus,
+  fulfilmentStatus,
+}: {
   state?: EntityState;
   paymentStatus?: PaymentStatus;
   fulfilmentStatus?: FulfilmentStatus;
@@ -414,7 +420,6 @@ export const orderCreate = async (
     cache: "no-store",
     tags: [TAGS.ORDER],
   });
-  console.log(body.data.orderCreate.order);
 
   return body.data.orderCreate.order;
 };
@@ -525,14 +530,37 @@ export const salesAnalyticsGet = async (): Promise<SalesAnalytics> => {
 
 export const paymentMethodsList = async (
   state?: EntityState,
-): Promise<PaymentMethod[]> => {
+): Promise<ParsedPaymentMethod[]> => {
   const { body } = await backendFetch<BackendPaymentMethodsListOperations>({
     query: paymentMethodsListQuery,
     cache: "no-store",
     variables: {
       state,
     },
-    tags: [TAGS.ORDER],
+    tags: [TAGS.PAYMENT],
+  });
+
+  return body.data.paymentMethodsList.map((paymentMethod) => {
+    return {
+      ...paymentMethod,
+      otherInfo: paymentMethod.otherInfo
+        ? JSON.parse(paymentMethod.otherInfo)
+        : undefined,
+      provider: paymentMethod.provider as PaymentProvider,
+    };
+  });
+};
+
+export const shopPaymentMethodsList = async (
+  state?: EntityState,
+): Promise<SafePaymentMethod[]> => {
+  const { body } = await backendFetch<BackendShopPaymentMethodsListOperation>({
+    query: shopPaymentMethodsListQuery,
+    cache: "no-store",
+    variables: {
+      state,
+    },
+    tags: [TAGS.PAYMENT],
   });
 
   return body.data.paymentMethodsList;
@@ -542,6 +570,8 @@ export const paymentMethodCreate = async (input: {
   name: string;
   provider: PaymentProvider;
   otherInfo?: string;
+  buttonText?: string;
+  state?: EntityState;
 }) => {
   const { body } = await backendFetch<BackendPaymentMethodCreateOperation>({
     query: paymentMethodCreateMutation,
@@ -549,10 +579,30 @@ export const paymentMethodCreate = async (input: {
       input,
     },
     cache: "no-store",
-    tags: [TAGS.ORDER],
+    tags: [TAGS.PAYMENT],
   });
 
   return body.data.paymentMethodCreate.paymentMethod;
+};
+
+export const paymentMethodUpdate = async (input: {
+  paymentMethodId: string;
+  name: string;
+  provider: PaymentProvider;
+  otherInfo?: string;
+  buttonText?: string;
+  state?: EntityState;
+}) => {
+  const { body } = await backendFetch<BackendPaymentMethodUpdateOperation>({
+    query: paymentMethodUpdateMutation,
+    variables: {
+      input,
+    },
+    cache: "no-store",
+    tags: [TAGS.PAYMENT],
+  });
+
+  return body.data.paymentMethodUpdate.paymentMethod;
 };
 
 export const paymentMethodDelete = async (
@@ -564,7 +614,7 @@ export const paymentMethodDelete = async (
       paymentMethodId,
     },
     cache: "no-store",
-    tags: [TAGS.ORDER],
+    tags: [TAGS.PAYMENT],
   });
 
   return body.data.paymentMethodDelete.success;
@@ -582,7 +632,7 @@ export const paymentCreate = async (input: {
       input,
     },
     cache: "no-store",
-    tags: [TAGS.ORDER],
+    tags: [TAGS.PAYMENT, TAGS.ORDER],
   });
 
   return body.data.paymentCreate;
@@ -599,7 +649,7 @@ export const paymentStatusUpdate = async (input: {
       input,
     },
     cache: "no-store",
-    tags: [TAGS.ORDER],
+    tags: [TAGS.PAYMENT, TAGS.ORDER],
   });
 
   return body.data.paymentStatusUpdate.success;
