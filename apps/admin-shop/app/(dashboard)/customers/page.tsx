@@ -9,8 +9,8 @@ import TopCustomers from "@/components/customer/top-customers";
 
 type CustomersPageProps = {
   searchParams: {
-    page?: number;
-    limit?: number;
+    page?: string;
+    limit?: string;
     sortByTop?: "TOTAL_SALES" | "TOTAL_VISITS";
   };
 };
@@ -32,9 +32,9 @@ export default async function CustomersPage({
     session.user.accessToken,
     customersPaginated,
     {
-      page: selectedPage,
-      limit,
-    }
+      page: selectedPage ? parseInt(selectedPage) : 1,
+      limit: limit ? parseInt(limit) : defaultLimit,
+    },
   );
 
   if (!paginatedCustomers) {

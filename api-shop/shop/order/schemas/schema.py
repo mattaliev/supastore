@@ -49,10 +49,10 @@ class OrderType(DjangoObjectType):
         ]
 
     def resolve_has_default_shipping_details(self, info):
-        if not hasattr(self, "user") or self.user is None:
-            return False
+        if hasattr(self, "shipping"):
+            return self.shipping.details is not None
 
-        return self.user.has_default_shipping_details
+        return False
 
     def resolve_shipping(self, info):
         if hasattr(self, "shipping"):

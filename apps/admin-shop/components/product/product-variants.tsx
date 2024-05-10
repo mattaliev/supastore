@@ -151,7 +151,7 @@ function ProductVariantDisplay({
           id={"variant-quantity-" + index}
           name={"variant-quantity-" + index}
           type="number"
-          defaultValue={variant?.material || ""}
+          defaultValue={variant?.quantity || ""}
         />
       </TableCell>
       <TableCell>
