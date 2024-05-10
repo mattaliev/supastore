@@ -41,6 +41,22 @@ export enum PaymentProvider {
   CRYPTO_TRANSFER = "CRYPTO_TRANSFER",
 }
 
+export enum EventType {
+  PAGE_VIEWED = "PAGE_VIEWED",
+  USER_REGISTERED = "USER_REGISTERED",
+  USER_VISITED = "USER_VISITED",
+  ADDED_TO_CART = "ADDED_TO_CART",
+  REMOVED_FROM_CART = "REMOVED_FROM_CART",
+  CHECKOUT_STARTED = "CHECKOUT_STARTED",
+  PAYMENT_STARTED = "PAYMENT_STARTED",
+  PAYMENT_COMPLETED = "PAYMENT_COMPLETED",
+}
+
+export enum UserRole {
+  USER = "USER",
+  ADMIN = "ADMIN",
+}
+
 export type TelegramUser = {
   id: string;
   telegramId: number;
@@ -55,7 +71,37 @@ export type TelegramUser = {
   photoUrl?: string | null;
   allowsNotifications?: boolean;
   chatId?: number;
+  role?: UserRole;
 } & BaseEntity;
+
+export type TelegramUserDetail = {
+  lastVisit: string;
+  amountSpent: string;
+  orders: Order[];
+  orderCount: number;
+  completedPaymentCount: number;
+  cartCount: number;
+  totalCartAmount: string;
+  addedToCartCount: number;
+  favoriteProducts: Product[];
+  events: UnparsedAnalyticsEvent[];
+} & TelegramUser;
+
+export type TelegramUserDetailParsed = TelegramUserDetail & {
+  events: AnalyticsEvent[];
+};
+
+export type TelegramUserList = {
+  lastVisit: string;
+  orderCount: number;
+  amountSpent: number;
+  isNew: boolean;
+} & TelegramUser;
+
+export type TelegramUserTopList = {
+  amountSpent: string;
+  totalVisitCount: number;
+} & TelegramUser;
 
 export type Shipping = {
   id: string;
@@ -159,6 +205,95 @@ export type ProductUpdateInput = ProductCreateInput & {
   productId: string;
 };
 
+export type AnalyticsEvent =
+  | PageViewedEvent
+  | UserRegisteredEvent
+  | UserVisitedEvent
+  | AddedToCartEvent
+  | RemovedFromCartEvent
+  | CheckoutStartedEvent
+  | PaymentStartedEvent
+  | PaymentCompletedEvent;
+
+export type UnparsedAnalyticsEvent = {
+  id: string;
+  user: TelegramUser;
+  eventType: EventType;
+  eventData?: string;
+} & BaseEntity;
+
+export type PageViewedEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.PAGE_VIEWED;
+  eventData: {
+    page: string;
+  };
+};
+
+export type UserRegisteredEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.USER_REGISTERED;
+  eventData: undefined;
+};
+
+export type UserVisitedEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.USER_VISITED;
+  eventData: undefined;
+};
+
+export type AddedToCartEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.ADDED_TO_CART;
+  eventData: {
+    product_id: string;
+    cart_id: string;
+    cart_total: number;
+    quantity: number;
+    product_name: string;
+  };
+};
+
+export type RemovedFromCartEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.REMOVED_FROM_CART;
+  eventData: {
+    product_id: string;
+    cart_id: string;
+    cart_total: number;
+    product_name: string;
+  };
+};
+
+export type CheckoutStartedEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.CHECKOUT_STARTED;
+  eventData: {
+    cart_id: string;
+    cart_total: string;
+    order_id: string;
+    order_number: number;
+  };
+};
+
+export type PaymentStartedEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.PAYMENT_STARTED;
+  eventData: {
+    order_id: string;
+    order_number: string;
+    payment_id: string;
+    payment_method_id: string;
+    payment_method_name: string;
+    payment_amount: string;
+  };
+};
+
+export type PaymentCompletedEvent = UnparsedAnalyticsEvent & {
+  eventType: EventType.PAYMENT_COMPLETED;
+  eventData: {
+    order_id: string;
+    order_number: string;
+    payment_id: string;
+    payment_method_id: string;
+    payment_method_name: string;
+    payment_amount: string;
+  };
+};
+
 export type SalesAnalytics = {
   salesThisWeek: number;
   salesThisMonth: number;
@@ -237,15 +372,15 @@ export type Payment = {
   additionalInfo?: string;
 } & BaseEntity;
 
-export type BackendRegisterUserOperation = {
+export type BackendSignInShopUserOperation = {
   data: {
-    register: {
+    signInShopUser: {
       user: TelegramUser;
       cart: Cart;
     };
   };
   variables: {
-    input: RegisterUserInput;
+    initDataRaw: string;
     cartId?: string;
   };
 };
@@ -415,7 +550,6 @@ export type BackendOrderCreateOperation = {
     };
   };
   variables: {
-    userId?: string;
     cartId: string;
   };
 };
@@ -470,7 +604,6 @@ export type BackendShippingDetailsCreateOperation = {
   variables: {
     input: ShippingDetails & {
       shippingId: string;
-      userId?: string;
       isDefault: boolean;
     };
   };
@@ -486,7 +619,6 @@ export type BackendShippingDetailsUpdateOperation = {
     input: ShippingDetails & {
       shippingDetailsId: string;
       shippingId: string;
-      userId?: string;
       isDefault: boolean;
     };
   };
@@ -596,5 +728,59 @@ export type BackendPaymentStatusUpdateOperation = {
       paymentStatus: PaymentStatus;
       notifyCustomer?: boolean;
     };
+  };
+};
+
+export type BackendCustomerDetailOperation = {
+  data: {
+    customerDetail: TelegramUserDetail;
+  };
+  variables: {
+    userId: string;
+  };
+};
+
+export type BackendCustomersPaginatedGetOperation = {
+  data: {
+    customersPaginated: Paginated<TelegramUserList>;
+  };
+  variables: {
+    page?: number;
+    limit?: number;
+    sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
+  };
+};
+
+export type BackendCustomersTopOperation = {
+  data: {
+    customersTop: Paginated<TelegramUserTopList>;
+  };
+  variables: {
+    page?: number;
+    limit?: number;
+    sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
+  };
+};
+
+export type BackendSignInAdminOperation = {
+  data: {
+    signInAdmin: {
+      user: TelegramUser;
+      accessToken: string;
+    };
+  };
+  variables: {
+    dataCheckString: string;
+  };
+};
+
+export type BackendSignOutAdminOperation = {
+  data: {
+    signOutAdmin: {
+      success: boolean;
+    };
+  };
+  variables: {
+    token: string;
   };
 };
