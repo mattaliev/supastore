@@ -18,7 +18,7 @@ export function SignInWithTelegramButton({ status }: { status: string }) {
           signIn(
             "telegram",
             { callbackUrl: "https://tg.ditch.ngrok.app/" },
-            authData as any,
+            authData as any
           );
         }}
         buttonSize="large" // "large" | "medium" | "small"

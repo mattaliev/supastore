@@ -29,7 +29,7 @@ export default async function OrderPayment({
   const paymentMethods = await tmaAuthenticated(
     initDataRaw,
     shopPaymentMethodsList,
-    { state: EntityState.ACTIVE },
+    { state: EntityState.ACTIVE }
   );
   return (
     <Card>
