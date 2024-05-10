@@ -1,0 +1,30 @@
+name: Run API Tests
+
+on:
+  pull_request:
+    paths:
+      - 'api-shop/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        cd api-shop/shop
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Django tests
+      run: |
+        python manage.py test
