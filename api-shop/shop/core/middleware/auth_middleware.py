@@ -3,9 +3,12 @@ import json
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 
-from authentication.services.auth import validate_init_data, \
-    parse_init_data, \
-    session_update, decode_jwt
+from authentication.services import (
+    validate_init_data,
+    parse_init_data,
+    session_update,
+    decode_jwt
+)
 
 User = get_user_model()
 

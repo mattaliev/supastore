@@ -6,13 +6,9 @@ from uuid import UUID
 from django.conf import settings
 
 from authentication.models.token import TokenBlacklist
-from authentication.services import (
-    session_create,
-    validate_init_data,
-    parse_init_data,
-    encode_jwt,
-    decode_jwt,
-)
+from .session import session_create
+from .providers import validate_init_data, parse_init_data
+from .jwt import encode_jwt, decode_jwt
 from cart.models import Cart
 from cart.services import cart_get_or_create
 from core.exceptions import UNAUTHORIZED
