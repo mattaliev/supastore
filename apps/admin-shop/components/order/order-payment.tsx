@@ -74,8 +74,13 @@ async function PaymentActions({ order }: { order: Order }) {
     const paymentMethods = await authenticated(
       session.user.accessToken,
       paymentMethodsList,
-      {}
+      {},
     );
+
+    if (!paymentMethods) {
+      return null;
+    }
+
     return (
       <CardFooter>
         <div className="flex ml-auto">
