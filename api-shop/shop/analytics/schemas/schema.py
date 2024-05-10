@@ -1,8 +1,21 @@
 import graphene
+from graphene_django import DjangoObjectType
+
+from analytics.models import Event
 
 __all__ = [
+    "EventType",
     "SalesAnalytics",
 ]
+
+
+class EventType(DjangoObjectType):
+    event_data = graphene.JSONString()
+    state = graphene.String()
+
+    class Meta:
+        model = Event
+        fields = "__all__"
 
 
 class SalesAnalytics(graphene.ObjectType):
