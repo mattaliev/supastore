@@ -144,17 +144,6 @@ class Payment(BaseEntity):
         verbose_name_plural = "payments"
         ordering = ["-created"]
 
-    def save(self, *args, **kwargs):
-        if self.order:
-            self.subtotal_amount = self.order.cart.get_total_price()
-
-            if self.order.shipping:
-                self.shipping_amount = self.order.shipping.shipping_amount
-
-            self.total_amount = self.subtotal_amount + self.shipping_amount
-
-        super().save(*args, **kwargs)
-
     def is_expired(self):
         return self.payment_expiry < timezone.now() if self.payment_expiry else False
 
