@@ -70,6 +70,7 @@ jobs:
             EDGE_STORE_SECRET_KEY=${{ secrets.EDGE_STORE_SECRET_KEY }}
             NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXT_PUBLIC_BOT_USERNAME=${{ secrets.BOT_USERNAME }}
             
 
       - name: Deploy to Cloud Run
