@@ -1,5 +1,6 @@
 import graphene
 
+from core.exceptions import UNAUTHORIZED, UNAUTHENTICATED
 from core.utils import get_paginator
 from order.schemas.schema import OrderType, OrderPaginatedType
 from order.services import order_list, order_get_by_id, order_get_by_cart_id
@@ -7,6 +8,8 @@ from order.services import order_list, order_get_by_id, order_get_by_cart_id
 __all__ = [
     "Query"
 ]
+
+from user.models import UserRoleChoices
 
 
 class Query(graphene.ObjectType):
@@ -34,10 +37,27 @@ class Query(graphene.ObjectType):
         return order_list()
 
     def resolve_order_get_by_id(self, info, order_id, state=None):
-        return order_get_by_id(order_id=order_id, state=state)
+        user = info.context.user
+        if not user.is_authenticated:
+            raise UNAUTHENTICATED()
+
+        order = order_get_by_id(order_id=order_id, state=state)
+        if not user.can_access_resource(order):
+            raise UNAUTHORIZED()
+
+        return order
 
     def resolve_order_get_by_cart_id(self, info, cart_id, state=None):
-        return order_get_by_cart_id(cart_id=cart_id, state=state)
+        user = info.context.user
+        if not user.is_authenticated:
+            raise UNAUTHENTICATED()
+
+        order = order_get_by_cart_id(cart_id=cart_id, state=state)
+
+        if not user.can_access_resource(order):
+            raise UNAUTHORIZED()
+
+        return order
 
     def resolve_orders_paginated_get(
             self,
@@ -49,6 +69,12 @@ class Query(graphene.ObjectType):
             limit=10,
             **kwargs
     ):
+        if not info.context.user.is_authenticated:
+            raise UNAUTHENTICATED()
+
+        if info.context.user.role != UserRoleChoices.ADMIN:
+            raise UNAUTHORIZED()
+
         orders = order_list(
             payment_status=payment_status,
             fulfilment_status=fulfilment_status,
