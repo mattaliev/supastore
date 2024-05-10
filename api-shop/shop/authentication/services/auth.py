@@ -6,14 +6,14 @@ from uuid import UUID
 from django.conf import settings
 
 from authentication.models.token import TokenBlacklist
-from .session import session_create
-from .providers import validate_init_data, parse_init_data
-from .jwt import encode_jwt, decode_jwt
 from cart.models import Cart
 from cart.services import cart_get_or_create
 from core.exceptions import UNAUTHORIZED
 from user.models import TelegramUser, UserRoleChoices
 from user.services import user_create_or_update
+from .jwt import encode_jwt, decode_jwt
+from .providers import validate_init_data, parse_init_data
+from .session import session_create
 
 token = settings.TELEGRAM_SHOP_TOKEN
 
@@ -51,7 +51,6 @@ def sign_in_shop_user(
         is_bot=telegram_user.get("is_bot", None),
         photo_url=telegram_user.get("photo_url", None),
         allows_notifications=telegram_user.get("allows_write_to_pm", None),
-        role=UserRoleChoices.USER,
     )
 
     # Create new session for the user

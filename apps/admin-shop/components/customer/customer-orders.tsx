@@ -68,7 +68,7 @@ export default function CustomerOrders({
                 Total
               </TableCell>
               <TableCell className="hidden sm:table-cell"></TableCell>
-              <TableCell>${customer.totalCartAmount}</TableCell>
+              <TableCell>${customer.amountSpent}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>

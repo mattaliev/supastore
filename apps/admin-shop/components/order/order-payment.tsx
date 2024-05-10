@@ -1,6 +1,8 @@
 import { Order, paymentMethodsList, PaymentStatus } from "@ditch/lib";
 import { CreditCard } from "lucide-react";
+import { getServerSession } from "next-auth";
 
+import { authenticated, authOptions } from "@/auth";
 import CreatePaymentDrawerDialog from "@/components/order/create-payment-drawer-dialog";
 import MarkAsPaidDrawerDialog from "@/components/order/mark-as-paid-drawer-dialog";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
@@ -63,7 +65,17 @@ export default function OrderPayment({ order }: { order: Order }) {
 
 async function PaymentActions({ order }: { order: Order }) {
   if (!order.payment) {
-    const paymentMethods = await paymentMethodsList({});
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user.accessToken) {
+      return null;
+    }
+
+    const paymentMethods = await authenticated(
+      session.user.accessToken,
+      paymentMethodsList,
+      {}
+    );
     return (
       <CardFooter>
         <div className="flex ml-auto">

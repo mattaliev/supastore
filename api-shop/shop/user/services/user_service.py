@@ -130,7 +130,7 @@ def customer_added_to_cart_count(*, user: User):
 def customer_total_cart_amount(*, user: User):
     if not user.carts.exists():
         return Decimal("0.00")
-    return sum([cart.get_total_price() for cart in user.carts.all()])
+    return Decimal(sum([cart.get_total_price() for cart in user.carts.all()]))
 
 
 def customer_favorite_products(*, user: User) -> QuerySet[Product]:
