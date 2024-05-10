@@ -8,7 +8,7 @@ export default async function CartIcon() {
   let cart;
 
   if (cartId) {
-    cart = await cartGet(cartId);
+    cart = await cartGet({ cartId });
   }
 
   return (

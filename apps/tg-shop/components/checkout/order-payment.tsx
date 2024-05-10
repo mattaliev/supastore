@@ -1,4 +1,5 @@
 import { EntityState, Order, shopPaymentMethodsList } from "@ditch/lib";
+import { cookies } from "next/headers";
 
 import PaymentButton from "@/components/checkout/payment-button";
 import {
@@ -9,9 +10,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { tmaAuthenticated } from "@/lib/auth";
 
-export default async function OrderPayment({ order }: { order: Order }) {
-  const paymentMethods = await shopPaymentMethodsList(EntityState.ACTIVE);
+export default async function OrderPayment({
+  order,
+  mutable,
+}: {
+  order: Order;
+  mutable: boolean;
+}) {
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+
+  const paymentMethods = await tmaAuthenticated(
+    initDataRaw,
+    shopPaymentMethodsList,
+    { state: EntityState.ACTIVE }
+  );
   return (
     <Card>
       <CardHeader>
@@ -38,13 +52,15 @@ export default async function OrderPayment({ order }: { order: Order }) {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
-          {paymentMethods.map((paymentMethod) => (
-            <PaymentButton paymentMethod={paymentMethod} />
-          ))}
-        </div>
-      </CardFooter>
+      {mutable && (
+        <CardFooter>
+          <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
+            {paymentMethods.map((paymentMethod) => (
+              <PaymentButton paymentMethod={paymentMethod} />
+            ))}
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 }

@@ -17,7 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default async function Cart(): Promise<JSX.Element> {
   const cartId = cookies().get("cartId")?.value;
 
-  const cart = await cartGet(cartId);
+  const cart = await cartGet({ cartId });
 
   if (!cart || cart.totalQuantity === 0) {
     return <EmptyCart />;

@@ -16,11 +16,18 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 
+import { tmaAuthenticated } from "@/lib/auth";
+
 import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
 
 export const createOrder = async (prevState: any): Promise<string | void> => {
   const cartId = cookies().get("cartId")?.value;
-  const userId = cookies().get("userId")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+  const orderId = cookies().get("orderId")?.value;
+
+  if (!initDataRaw) {
+    redirect("/unauthenticated");
+  }
 
   if (!cartId) {
     return "No cart found";
@@ -30,18 +37,25 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
 
   try {
     let order;
-    const orderId = cookies().get("orderId")?.value;
 
     if (orderId) {
-      order = await orderGetById(orderId, EntityState.ACTIVE);
+      order = await tmaAuthenticated(initDataRaw, orderGetById, {
+        orderId,
+        state: EntityState.ACTIVE,
+      });
     }
 
     if (!order) {
-      order = await orderGetByCartId(cartId, EntityState.ACTIVE);
+      order = await tmaAuthenticated(initDataRaw, orderGetByCartId, {
+        cartId,
+        state: EntityState.ACTIVE,
+      });
     }
 
     if (!order) {
-      order = await orderCreate(cartId, userId);
+      order = await tmaAuthenticated(initDataRaw, orderCreate, {
+        cartId,
+      });
     }
 
     cookies().set("orderId", order.id);
@@ -66,11 +80,14 @@ export type FormErrorResponse = {
 
 export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormErrorResponse> => {
-  const orderId = cookies().get("orderId")?.value;
-  const userId = cookies().get("userId")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
   const shippingId = formData.get("shipping-id") as string;
+
+  if (!initDataRaw) {
+    redirect("/unauthenticated");
+  }
 
   if (!shippingId) {
     return { formError: "No shipping found" };
@@ -96,19 +113,21 @@ export const createOrUpdateShippingDetails = async (
 
   try {
     if (shippingDetailsId) {
-      await shippingDetailsUpdate({
-        ...(validatedData.data as ShippingDetails),
-        shippingId,
-        shippingDetailsId,
-        userId,
-        isDefault: Boolean(formData.get("is-default")),
+      await tmaAuthenticated(initDataRaw, shippingDetailsUpdate, {
+        input: {
+          ...(validatedData.data as ShippingDetails),
+          shippingId,
+          shippingDetailsId,
+          isDefault: Boolean(formData.get("is-default")),
+        },
       });
     } else {
-      await shippingDetailsCreate({
-        ...(validatedData.data as ShippingDetails),
-        shippingId,
-        userId,
-        isDefault: Boolean(formData.get("is-default")),
+      await tmaAuthenticated(initDataRaw, shippingDetailsCreate, {
+        input: {
+          ...(validatedData.data as ShippingDetails),
+          shippingId,
+          isDefault: Boolean(formData.get("is-default")),
+        },
       });
     }
   } catch (e) {
@@ -124,18 +143,26 @@ export const createPayment = async (
   payload: {
     paymentMethodId: string;
     currency?: string;
-  }
+  },
 ): Promise<{ success: boolean; paymentLink?: string; error?: string }> => {
   const orderId = cookies().get("orderId")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+
+  if (!initDataRaw) {
+    redirect("/unauthenticated");
+  }
+
   const { paymentMethodId, currency = "USD" } = payload;
   if (!orderId) {
     return { success: false, error: "No order found" };
   }
 
-  const result = await paymentCreate({
-    orderId,
-    paymentMethodId,
-    currency,
+  const result = await tmaAuthenticated(initDataRaw, paymentCreate, {
+    input: {
+      orderId,
+      paymentMethodId,
+      currency,
+    },
   });
 
   if (!result) {

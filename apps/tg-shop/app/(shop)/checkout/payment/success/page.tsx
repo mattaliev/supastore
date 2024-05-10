@@ -1,7 +1,9 @@
 import { orderGetById } from "@ditch/lib";
-import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 
 import PaymentSuccess from "@/components/invoice/payment-success";
+import { tmaAuthenticated } from "@/lib/auth";
 
 type Props = {
   params: {};
@@ -13,7 +15,15 @@ type Props = {
 export default async function Success({ params, searchParams }: Props) {
   const orderId = searchParams.orderId;
 
-  const order = await orderGetById(orderId);
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+
+  if (!initDataRaw) {
+    redirect("/unauthenticated");
+  }
+
+  const order = await tmaAuthenticated(initDataRaw, orderGetById, {
+    orderId,
+  });
 
   if (!order) {
     return notFound();
