@@ -1,1 +1,3 @@
+from .auth_middleware import AuthMiddleware
 from .graphql_log_error_middleware import GraphqlErrorLogMiddleware
+
