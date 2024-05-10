@@ -1,5 +1,6 @@
 import { EntityState, Order, shopPaymentMethodsList } from "@ditch/lib";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import PaymentButton from "@/components/checkout/payment-button";
 import {
@@ -21,10 +22,14 @@ export default async function OrderPayment({
 }) {
   const initDataRaw = cookies().get("initDataRaw")?.value;
 
+  if (!initDataRaw) {
+    redirect("/unauthenticated");
+  }
+
   const paymentMethods = await tmaAuthenticated(
     initDataRaw,
     shopPaymentMethodsList,
-    { state: EntityState.ACTIVE }
+    { state: EntityState.ACTIVE },
   );
   return (
     <Card>
