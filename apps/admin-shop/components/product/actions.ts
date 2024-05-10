@@ -2,8 +2,12 @@
 
 import { productCreate, productDelete, productUpdate, TAGS } from "@ditch/lib";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect, RedirectType } from "next/navigation";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
+import { authenticated } from "@/auth";
 import {
   ProductFieldErrors,
   ProductScheme,
@@ -18,6 +22,12 @@ export const createProduct = async (
   prevState: any,
   formData: FormData
 ): Promise<ProductFormErrorResponse> => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/products", RedirectType.push);
+  }
+
   const rawFormData = Object.fromEntries(formData.entries());
 
   const validatedData = ProductScheme.safeParse({
@@ -35,8 +45,16 @@ export const createProduct = async (
   }
 
   try {
-    await productCreate(validatedData.data);
+    await authenticated(session.user.accessToken, productCreate, {
+      input: {
+        ...validatedData.data,
+      },
+    });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { formError: "Could not create product" };
   }
 
@@ -48,6 +66,12 @@ export const updateProduct = async (
   prevState: any,
   formData: FormData
 ): Promise<ProductFormErrorResponse> => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/products", RedirectType.push);
+  }
+
   const rawFormData = Object.fromEntries(formData.entries());
 
   const productId = rawFormData["id"];
@@ -71,11 +95,17 @@ export const updateProduct = async (
   }
 
   try {
-    await productUpdate({
-      ...validatedData.data,
-      productId,
+    await authenticated(session.user.accessToken, productUpdate, {
+      input: {
+        ...validatedData.data,
+        productId,
+      },
     });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { formError: "Could not edit product" };
   }
 
@@ -93,11 +123,23 @@ export const deleteProduct = async (
   success?: boolean;
   formError?: string;
 }> => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/products", RedirectType.push);
+  }
+
   const { productId, isProductsPage } = payload;
 
   try {
-    await productDelete(productId);
+    await authenticated(session.user.accessToken, productDelete, {
+      id: productId,
+    });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { formError: "Could not delete product" };
   }
 
@@ -116,11 +158,12 @@ const productVariantsGetFromFormData = (rawFormData: any) => {
   const variantKeys = Object.keys(rawFormData).filter((key) =>
     key.startsWith("variant")
   );
+  console.log(variantKeys);
 
-  for (let i = 0; i < variantKeys.length; i += 4) {
+  for (let i = 0; i < variantKeys.length / 3; i += 1) {
     if (
-      rawFormData[`variant-color-${i}`] !== "" &&
-      rawFormData[`variant-size-${i}`] !== "" &&
+      rawFormData[`variant-color-${i}`] !== "" ||
+      rawFormData[`variant-size-${i}`] !== "" ||
       rawFormData[`variant-material-${i}`] !== ""
     ) {
       const variant = {
@@ -133,6 +176,7 @@ const productVariantsGetFromFormData = (rawFormData: any) => {
       variants.push(variant);
     }
   }
+  console.log(variants);
 
   return variants;
 };

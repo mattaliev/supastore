@@ -1,5 +1,9 @@
 import { paymentMethodsList } from "@ditch/lib";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
+import { authenticated } from "@/auth";
 import PaymentMethodCreate from "@/components/payment/payment-method-create";
 import PaymentMethodDelete from "@/components/payment/payment-method-delete";
 import PaymentMethodUpdateDialogDrawer from "@/components/payment/payment-method-update";
@@ -23,7 +27,17 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function PaymentSystemsPage() {
-  const paymentMethods = await paymentMethodsList();
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/payment-systems");
+  }
+
+  const paymentMethods = await authenticated(
+    session.user.accessToken,
+    paymentMethodsList,
+    {}
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] auto-rows-max gap-4">
@@ -48,7 +62,7 @@ export default async function PaymentSystemsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paymentMethods.map((paymentMethod) => (
+                {paymentMethods?.map((paymentMethod) => (
                   <TableRow key={paymentMethod.id}>
                     <TableCell>{paymentMethod.name}</TableCell>
                     <TableCell className="hidden sm:table-cell">

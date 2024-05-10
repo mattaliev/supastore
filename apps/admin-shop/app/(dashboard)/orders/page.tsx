@@ -4,7 +4,11 @@ import {
   ordersPaginatedGet,
   PaymentStatus,
 } from "@ditch/lib";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
+import { authenticated } from "@/auth";
 import OrderAnalytics from "@/components/order/order-analytics";
 import OrderList from "@/components/order/order-list";
 import OrderPreview from "@/components/order/order-preview";
@@ -27,6 +31,28 @@ const defaultLimit = 10;
 export default async function OrderListPage({
   searchParams,
 }: OrderListPageProps) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/orders");
+  }
+
+  const paginatedOrders = await authenticated(
+    session.user.accessToken,
+    ordersPaginatedGet,
+    {
+      paymentStatus: searchParams.payment_status,
+      fulfilmentStatus: searchParams.fulfilment_status,
+      state: searchParams.state,
+      page: searchParams.page ? parseInt(searchParams.page) : 1,
+      limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
+    }
+  );
+
+  if (!paginatedOrders) {
+    redirect("/error");
+  }
+
   const {
     objects: orders,
     hasNext,
@@ -34,13 +60,7 @@ export default async function OrderListPage({
     pages,
     totalItems,
     page,
-  } = await ordersPaginatedGet({
-    paymentStatus: searchParams.payment_status,
-    fulfilmentStatus: searchParams.fulfilment_status,
-    state: searchParams.state,
-    page: searchParams.page ? parseInt(searchParams.page) : 1,
-    limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
-  });
+  } = paginatedOrders;
 
   return (
     <div className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3 ">
