@@ -1,16 +1,23 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 from core.models.core import BaseEntity
 
 __all__ = [
     "TelegramUser",
     "UserRoleChoices",
+    "CustomerSortChoices",
 ]
 
 
 class UserRoleChoices(models.TextChoices):
     ADMIN = "ADMIN", "ADMIN"
     USER = "USER", "USER"
+
+
+class CustomerSortChoices(models.TextChoices):
+    TOTAL_SALES = "TOTAL_SALES", "TOTAL_SALES"
+    TOTAL_VISITS = "TOTAL_VISITS", "TOTAL_VISITS"
 
 
 class TelegramUser(AbstractUser, BaseEntity):
@@ -48,3 +55,9 @@ class TelegramUser(AbstractUser, BaseEntity):
 
     def __str__(self):
         return str(self.username)
+
+    def can_access_resource(self, resource):
+        if self.role == UserRoleChoices.ADMIN or resource.user == self:
+            return True
+        return False
+
