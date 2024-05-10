@@ -117,7 +117,8 @@ INSTALLED_APPS = [
     'invoice.apps.InvoiceConfig',
     'telegram.apps.TelegramConfig',
     'shipping.apps.ShippingConfig',
-    'payment.apps.PaymentConfig'
+    'payment.apps.PaymentConfig',
+    'authentication.apps.AuthenticationConfig'
 ]
 
 MIDDLEWARE = [
@@ -129,6 +130,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.GraphqlErrorLogMiddleware',
+    'core.middleware.AuthMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
 
@@ -175,16 +177,16 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.authentication.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.authentication.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.authentication.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.authentication.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -262,3 +264,5 @@ TELEGRAM_PAYMENT_RETURN_URL = env("TELEGRAM_PAYMENT_RETURN_URL")
 # ------------------- ENCRYPTION -------------------
 AES_SECRET_KEY = env("AES_SECRET_KEY")
 AES_IV = env("AES_IV")
+
+JWT_SECRET_KEY = env("JWT_SECRET_KEY")
