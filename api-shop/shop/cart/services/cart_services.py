@@ -1,14 +1,27 @@
 import logging
 from typing import Tuple
-
-from django.http import Http404
 from uuid import UUID
-from cart.models.cart import Cart, CartItem
-from django.contrib.auth import get_user_model
 
-from analytics.services import register_added_to_cart
+from django.contrib.auth import get_user_model
+from django.http import Http404
+
+from analytics.models import Event
+from cart.models.cart import Cart, CartItem
+from core.models import EntityStateChoices
 
 User = get_user_model()
+
+
+def cart_get(*, cart_id: UUID) -> Cart:
+    logger = logging.getLogger(__name__)
+    logger.debug("Getting cart detail for id: %s", cart_id)
+
+    try:
+        cart = Cart.objects.get(pk=cart_id, state=EntityStateChoices.ACTIVE)
+    except Cart.DoesNotExist:
+        cart = None
+
+    return cart
 
 
 def cart_get_or_create(*, cart_id: UUID | None, user: User | None) -> Tuple[Cart, bool]:
@@ -82,12 +95,7 @@ def cart_add_to(*, cart_id: UUID, product_id: UUID, variant_id: UUID | None, qua
         cart_item.quantity += quantity
         cart_item.save()
 
-        register_added_to_cart(
-            cart_id=cart_id,
-            product_id=product_id,
-            variant_id=variant_id,
-            quantity=quantity
-        )
+        Event.register_added_to_cart(cart=cart, cart_item=cart_item)
     except Cart.DoesNotExist:
         logger.warning("Cart not found for cart_id: %s", cart_id)
         raise Http404("Cart was not found for cart_id: %s" % cart_id)
@@ -109,11 +117,14 @@ def cart_remove_from(*, cart_id: UUID, cart_item_id: UUID, quantity: int) -> Car
             cart=cart,
             pk=cart_item_id
         )
+        product = cart_item.product
         if cart_item.quantity > quantity:
             cart_item.quantity -= quantity
             cart_item.save()
         else:
             cart_item.delete()
+
+        Event.register_removed_from_cart(cart=cart, product=product)
     except Cart.DoesNotExist:
         logger.warning("Cart not found for cart_id: %s", cart_id)
         raise Http404("Cart was not found for cart_id: %s" % cart_id)
