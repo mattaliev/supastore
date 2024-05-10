@@ -13,12 +13,12 @@ export function SignInWithTelegramButton({ status }: { status: string }) {
   return (
     <div>
       <LoginButton
-        botUsername={"ditch_dev_bot"}
+        botUsername={process.env.NEXT_PUBLIC_BOT_USERNAME as string}
         onAuthCallback={(authData) => {
           signIn(
             "telegram",
             { callbackUrl: "https://tg.ditch.ngrok.app/" },
-            authData as any
+            authData as any,
           );
         }}
         buttonSize="large" // "large" | "medium" | "small"
