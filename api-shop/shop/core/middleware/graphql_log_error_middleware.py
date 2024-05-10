@@ -1,7 +1,6 @@
-import json
 import logging
 
-from django.utils.log import log_response
+from graphql import GraphQLError
 
 
 class GraphqlErrorLogMiddleware(object):
@@ -13,19 +12,15 @@ class GraphqlErrorLogMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        response = self.get_response(request)
+        logger = logging.getLogger(__name__)
 
         try:
-            if 400 >= response.status_code and "graphql" in request.path.lower():
-                response_json = json.loads(response.content)
-
-                if "errors" in response_json:
-                    log_response(
-                        message=f"Graphql Error: {response_json['errors']}",
-                        response=response,
-                        level="error",
-                    )
-        except Exception as e:
-            logging.debug(f"Error logging Graphql Error: {e}")
+            response = self.get_response(request)
+        except ValueError as e:
+            logger.error(str(e))
+            raise GraphQLError(str(e), extensions={"code": 500})
+        except GraphQLError as e:
+            logger.error(e.message)
+            raise e
 
         return response
