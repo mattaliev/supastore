@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import ShippingDetailsForm from "@/components/checkout/shipping-details-form";
+import { tmaAuthenticated } from "@/lib/auth";
 
 export default async function ShippingDetailsPage() {
   const orderId = cookies().get("orderId")?.value;
@@ -11,7 +12,9 @@ export default async function ShippingDetailsPage() {
     return notFound();
   }
 
-  const order = await orderGetById(orderId);
+  const order = await tmaAuthenticated(initDataRaw, orderGetById, {
+    orderId,
+  });
 
   if (!order) {
     return notFound();

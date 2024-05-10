@@ -30,12 +30,6 @@ export default function AuthProvider({
         router.push(path);
       }
 
-      if (!initData) return;
-
-      if (!initData.user?.id) {
-        throw new Error("Telegram user id is required to authenticate user");
-      }
-
       if (authenticated) return;
 
       try {
@@ -45,15 +39,7 @@ export default function AuthProvider({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            telegramId: initData.user.id,
-            username: initData.user.username,
-            firstName: initData.user.firstName,
-            lastName: initData.user.lastName,
-            isBot: initData.user.isBot,
-            allowsNotifications: initData.user.allowsWriteToPm,
-            photoUrl: initData.user.photoUrl,
-            languageCode: initData.user.languageCode,
-            chatId: initData.chat?.id,
+            initDataRaw: launchParams.initDataRaw,
           }),
         });
 

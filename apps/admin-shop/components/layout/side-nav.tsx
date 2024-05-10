@@ -87,7 +87,7 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href="/customers"
               className={
                 pathname.startsWith("/customers")
                   ? twMerge(navItemClass, navItemSelectedClass)

@@ -10,6 +10,9 @@ import {
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+import { tmaAuthenticated } from "@/lib/auth";
 
 export const addToCart = async (
   prevState: any,
@@ -21,6 +24,11 @@ export const addToCart = async (
   }
 ): Promise<string | void> => {
   let cartId = cookies().get("cartId")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+
+  if (!initDataRaw) {
+    redirect("/unathenticated");
+  }
 
   const { productId, selectedVariantId, doesProductHaveVariants, quantity } =
     payload;
@@ -36,17 +44,19 @@ export const addToCart = async (
   }
 
   if (!cartId) {
-    cart = await cartCreate();
+    cart = await tmaAuthenticated(initDataRaw, cartCreate, {});
     cartId = cart.id;
     cookies().set("cartId", cartId);
   }
 
   try {
-    await cartAddItem({
-      cartId,
-      productId,
-      variantId: selectedVariantId || null,
-      quantity: quantity || 1,
+    await tmaAuthenticated(initDataRaw, cartAddItem, {
+      input: {
+        cartId,
+        productId,
+        variantId: selectedVariantId || null,
+        quantity: quantity || 1,
+      },
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
@@ -64,6 +74,11 @@ export const removeFromCart = async (
   const { cartItemId, quantity } = payload;
 
   const cartId = cookies().get("cartId")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+
+  if (!initDataRaw) {
+    redirect("/unathenticated");
+  }
 
   if (!cartId) {
     return "No cart found";
@@ -74,10 +89,12 @@ export const removeFromCart = async (
   }
 
   try {
-    await cartRemoveItem({
-      cartId,
-      cartItemId,
-      quantity: quantity || 1,
+    await tmaAuthenticated(initDataRaw, cartRemoveItem, {
+      input: {
+        cartId,
+        cartItemId,
+        quantity: quantity || 1,
+      },
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
@@ -93,6 +110,11 @@ export const updateCartItem = async (
   const quantity = Number(formData.get("quantity"));
 
   const cartId = cookies().get("cartId")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+
+  if (!initDataRaw) {
+    redirect("/unathenticated");
+  }
 
   if (!cartId) {
     return "No cart found";
@@ -103,10 +125,12 @@ export const updateCartItem = async (
   }
 
   try {
-    await cartUpdateItem({
-      cartId,
-      cartItemId,
-      quantity: quantity || 1,
+    await tmaAuthenticated(initDataRaw, cartUpdateItem, {
+      input: {
+        cartId,
+        cartItemId,
+        quantity: quantity || 1,
+      },
     });
     revalidateTag(TAGS.CART);
   } catch (e) {

@@ -57,7 +57,7 @@ export default function OrderList({
               <strong>
                 {firstProductIndex} - {lastProductIndex}
               </strong>{" "}
-              of <strong>{totalOrderCount}</strong> products
+              of <strong>{totalOrderCount}</strong> orders
             </div>
           </CardFooter>
         </CardContent>

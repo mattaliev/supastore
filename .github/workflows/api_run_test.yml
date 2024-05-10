@@ -1,0 +1,47 @@
+name: Run API Tests
+
+on:
+  pull_request:
+    paths:
+      - 'api-shop/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        cd api-shop/shop
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Django tests
+      run: |
+        cd api-shop/shop
+        python manage.py test
+      env:
+        SETTINGS_NAME: api-shop-test-settings
+

@@ -11,7 +11,12 @@ import {
   TAGS,
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
+import { authenticated } from "@/auth";
 import {
   BasePaymentMethodScheme,
   PaymentFieldErrors,
@@ -29,6 +34,12 @@ export const updatePaymentStatus = async (
     }
   | undefined
 > => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/payment-systems");
+  }
+
   const { paymentId, paymentStatus } = prevState;
   const payload = {
     paymentId,
@@ -37,8 +48,16 @@ export const updatePaymentStatus = async (
   };
 
   try {
-    await paymentStatusUpdate(payload);
+    await authenticated(session.user.accessToken, paymentStatusUpdate, {
+      input: {
+        ...payload,
+      },
+    });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return {
       paymentId,
       paymentStatus,
@@ -59,6 +78,12 @@ export const createPaymentManually = async (
     }
   | undefined
 > => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/payment-systems");
+  }
+
   const { orderId } = prevState;
   const paymentMethodId = formData.get("payment-method") as string;
   const notifyCustomer = formData.get("notify-customer") === "on";
@@ -68,8 +93,18 @@ export const createPaymentManually = async (
   }
 
   try {
-    await paymentCreate({ orderId, paymentMethodId, notifyCustomer });
+    await authenticated(session.user.accessToken, paymentCreate, {
+      input: {
+        orderId,
+        paymentMethodId,
+        notifyCustomer,
+      },
+    });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { orderId, error: "Could not create payment" };
   }
   revalidateTag(TAGS.ORDER);
@@ -86,6 +121,12 @@ export const createPaymentMethod = async (
     }
   | undefined
 > => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/payment-systems");
+  }
+
   const validationResults = validatePaymentMethodForm(formData);
 
   if (validationResults.error) {
@@ -93,10 +134,16 @@ export const createPaymentMethod = async (
   }
 
   try {
-    await paymentMethodCreate({
-      ...validationResults.data,
+    await authenticated(session.user.accessToken, paymentMethodCreate, {
+      input: {
+        ...validationResults.data,
+      },
     });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { formError: "Could not create payment method" };
   }
 
@@ -115,6 +162,12 @@ export const updatePaymentMethod = async (
     }
   | undefined
 > => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/payment-systems");
+  }
+
   const paymentMethodId = formData.get("id") as string;
 
   if (!paymentMethodId) {
@@ -128,11 +181,17 @@ export const updatePaymentMethod = async (
   }
 
   try {
-    await paymentMethodUpdate({
-      paymentMethodId,
-      ...validationResults.data,
+    await authenticated(session.user.accessToken, paymentMethodUpdate, {
+      input: {
+        paymentMethodId,
+        ...validationResults.data,
+      },
     });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { formError: "Could not create payment method" };
   }
 
@@ -144,8 +203,16 @@ export const deletePaymentMethod = async (
   prevState: any,
   paymentMethodId: string
 ) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/payment-systems");
+  }
+
   try {
-    await paymentMethodDelete(paymentMethodId);
+    await authenticated(session.user.accessToken, paymentMethodDelete, {
+      paymentMethodId,
+    });
   } catch (e) {
     return { success: false, error: "Could not delete payment method" };
   }

@@ -68,7 +68,9 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}
             EDGE_STORE_ACCESS_KEY=${{ secrets.EDGE_STORE_ACCESS_KEY }}
             EDGE_STORE_SECRET_KEY=${{ secrets.EDGE_STORE_SECRET_KEY }}
-
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            
 
       - name: Deploy to Cloud Run
         run: |

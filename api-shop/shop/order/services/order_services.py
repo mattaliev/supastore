@@ -4,7 +4,7 @@ from uuid import UUID
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from analytics.services import order_created_register
+from analytics.models import Event
 from cart.models import Cart
 from core.models import EntityStateChoices
 from order.models import (
@@ -106,7 +106,7 @@ def order_create(*, user_id: UUID, cart_id: UUID) -> Order:
 
         order.save()
 
-        order_created_register(order=order)
+        Event.register_checkout_started(order=order)
         return order
     except Exception as e:
         print(e)

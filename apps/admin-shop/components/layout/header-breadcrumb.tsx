@@ -18,6 +18,7 @@ const pathnames: Record<string, string[]> = {
   "/products/create": ["Dashboard", "Products", "Create"],
   "/products/edit": ["Dashboard", "Products", "Edit"],
   "/customers": ["Dashboard", "Customers"],
+  "/customers/detail": ["Dashboard", "Customers", "Detail"],
   "/payment-systems": ["Dashboard", "Payment Systems"],
   "/analytics": ["Settings"],
 };
@@ -31,9 +32,9 @@ export default function HeaderBreadcrumb({ pathname }: { pathname: string }) {
           .split("/")
           .slice(0, 3)
           .map((path, index) => (
-            <>
+            <div key={index} className={"inline-flex items-center gap-3"}>
               {index < formattedPathname.split("/").length - 1 ? (
-                <div key={path} className="inline-flex items-center gap-3">
+                <>
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild>
                       <Link href={`/${path}`}>
@@ -42,15 +43,15 @@ export default function HeaderBreadcrumb({ pathname }: { pathname: string }) {
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
-                </div>
+                </>
               ) : (
-                <BreadcrumbItem key={path}>
+                <BreadcrumbItem>
                   <BreadcrumbPage>
                     {pathnames[formattedPathname][index]}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               )}
-            </>
+            </div>
           ))}
       </BreadcrumbList>
     </Breadcrumb>

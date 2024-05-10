@@ -1,6 +1,9 @@
 import { orderGetById } from "@ditch/lib";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
+import { authenticated } from "@/auth";
 import OrderCustomer from "@/components/order/order-customer";
 import OrderDeleteDrawerDialog from "@/components/order/order-delete-drawer-dialog";
 import OrderDetailHeader from "@/components/order/order-detail-header";
@@ -17,14 +20,22 @@ type OrderDetailsPageProps = {
 export default async function OrderDetailsPage({
   params,
 }: OrderDetailsPageProps) {
-  const order = await orderGetById(params.orderId);
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/orders");
+  }
+
+  const order = await authenticated(session.user.accessToken, orderGetById, {
+    orderId: params.orderId,
+  });
 
   if (!order) {
     notFound();
   }
 
   return (
-    <div className="grid flex-1 auto-rows-max gap-4">
+    <div className="grid flex-1 auto-rows-max gap-4 max-w-[59rem] mx-auto">
       <OrderDetailHeader orderId={order.id} orderNumber={order.orderNumber} />
       <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg-gap-8">
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">

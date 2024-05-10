@@ -1,19 +1,15 @@
+from graphql import GraphQLError
 
 
-class UNAUTHENTICATED(Exception):
-    def __init__(self, message="User not authenticated", user_id=None):
-        self.user_id = user_id
-        self.message = message
-        self.status = 401
-        super().__init__(self.message)
+def UNAUTHENTICATED(message="User not authenticated"):
+    raise GraphQLError(message, extensions={"code": 401})
 
 
-class UNAUTHORIZED(Exception):
-    def __init__(self, message="User not authorized", user_id=None):
-        self.user_id = user_id
-        self.message = message
-        self.status = 401
-        super().__init__(self.message)
+def UNAUTHORIZED(message="User not authorized", user_id=None):
+    raise GraphQLError(
+        f"{message}. User_id: {user_id}",
+        extensions={"code": 403}
+    )
 
 
 class TelegramResponseError(Exception):

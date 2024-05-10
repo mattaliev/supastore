@@ -8,8 +8,12 @@ import {
   TAGS,
 } from "@ditch/lib";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect, RedirectType } from "next/navigation";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
+import { authenticated } from "@/auth";
 import {
   ShippingTrackingFieldErrors,
   ShippingTrackingScheme,
@@ -21,9 +25,21 @@ export const deleteOrder = async (
 ): Promise<{
   error?: string;
 }> => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/orders", RedirectType.push);
+  }
+
   try {
-    await orderDelete(orderId);
+    await authenticated(session.user.accessToken, orderDelete, {
+      orderId,
+    });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return { error: "Could not delete order" };
   }
 
@@ -42,6 +58,12 @@ export const updateOrderStatus = async (
     }
   | undefined
 > => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/orders", RedirectType.push);
+  }
+
   const { orderId, fulfilmentStatus } = prevState;
   const payload = {
     orderId,
@@ -50,8 +72,14 @@ export const updateOrderStatus = async (
   };
 
   try {
-    await orderStatusUpdate(payload);
+    await authenticated(session.user.accessToken, orderStatusUpdate, {
+      input: payload,
+    });
   } catch (e) {
+    if (isRedirectError(e)) {
+      throw e;
+    }
+
     return {
       orderId,
       fulfilmentStatus,
@@ -73,6 +101,12 @@ export const addShippingTracking = async (
     }
   | undefined
 > => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.accessToken) {
+    redirect("/auth/signIn?callbackUrl=/orders", RedirectType.push);
+  }
+
   const validatedData = ShippingTrackingScheme.safeParse({
     shippingId: prevState.shippingId,
     trackingNumber: formData.get("tracking-number") as string,
@@ -87,7 +121,9 @@ export const addShippingTracking = async (
   }
 
   try {
-    await shippingAddTracking(validatedData.data);
+    await authenticated(session.user.accessToken, shippingAddTracking, {
+      input: validatedData.data,
+    });
   } catch (e) {
     return {
       shippingId: prevState.shippingId,

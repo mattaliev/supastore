@@ -1,4 +1,4 @@
-import { registerUser, RegisterUserInput, TAGS } from "@ditch/lib";
+import { signInShopUser, TAGS } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,13 +7,16 @@ export const revalidate = 0;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const authData: RegisterUserInput = await req.json();
+    const authData: { initDataRaw: string } = await req.json();
 
     const cartId = cookies().get("cartId")?.value;
 
-    const { user, cart } = await registerUser({ ...authData }, cartId);
+    const { user, cart } = await signInShopUser({
+      initDataRaw: authData.initDataRaw,
+      cartId,
+    });
 
-    cookies().set("userId", user.id);
+    cookies().set("initDataRaw", authData.initDataRaw);
     cookies().set("cartId", cart.id);
 
     revalidateTag(TAGS.CART);

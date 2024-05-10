@@ -14,13 +14,17 @@ import {
   productCreateMutation,
   productDeleteMutation,
   productUpdateMutation,
-  registerUserMutation,
   shippingAddTrackingMutation,
   shippingDetailsCreateMutation,
   shippingDetailsUpdateMutation,
+  signInShopUserMutation,
+  signOutAdminMutation,
+  singInAdminMutation,
 } from "./mutations";
 import {
   cartGetQuery,
+  customerDetailQuery,
+  customerPaginatedQuery,
   orderGetByCartIdQuery,
   orderGetByIdQuery,
   ordersPaginatedGetQuery,
@@ -37,6 +41,8 @@ import {
   BackendCartGetOperation,
   BackendCartRemoveItemOperation,
   BackendCartUpdateItemOperation,
+  BackendCustomerDetailOperation,
+  BackendCustomersPaginatedGetOperation,
   BackendOrderCreateOperation,
   BackendOrderDeleteOperation,
   BackendOrderGetByCartIdOperation,
@@ -55,12 +61,14 @@ import {
   BackendProductsGetOperation,
   BackendProductsPaginatedGetOperation,
   BackendProductUpdateOperation,
-  BackendRegisterUserOperation,
   BackendSalesAnalyticsOperation,
   BackendShippingAddTrackingOperation,
   BackendShippingDetailsCreateOperation,
   BackendShippingDetailsUpdateOperation,
   BackendShopPaymentMethodsListOperation,
+  BackendSignInAdminOperation,
+  BackendSignInShopUserOperation,
+  BackendSignOutAdminOperation,
   Cart,
   EntityState,
   FulfilmentStatus,
@@ -72,17 +80,23 @@ import {
   Product,
   ProductCreateInput,
   ProductUpdateInput,
-  RegisterUserInput,
   SafePaymentMethod,
   SalesAnalytics,
   Shipping,
   ShippingDetails,
   TelegramUser,
+  TelegramUserDetailParsed,
+  TelegramUserList,
 } from "./types";
 
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
   : undefined;
+
+export type APIFunction<T, U> = (
+  body: T,
+  headers: { Authorization: string },
+) => Promise<U>;
 
 const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/graphql/`;
 
@@ -91,6 +105,7 @@ export const TAGS = {
   PRODUCT: "product",
   ORDER: "order",
   PAYMENT: "payment",
+  USER: "user",
 };
 
 export const backendFetch = async <T>({
@@ -127,390 +142,468 @@ export const backendFetch = async <T>({
       };
     }
     return { status: result.status, body };
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
 
+    const error = e.errors ? e.errors.message : e;
+    const errorCode =
+      e.errors && e.errors.extensions && e.errors.extensions.code
+        ? e.errors.extensions.code
+        : "UNKNOWN";
+
     throw {
-      error: e,
+      message: error,
+      errorCode,
       query,
     };
   }
 };
 
-export const registerUser = async (
-  input: RegisterUserInput,
-  cartId?: string,
+export const signInShopUser = async (
+  body: {
+    initDataRaw: string;
+    cartId?: string;
+  },
+  headers?: HeadersInit,
 ): Promise<{ user: TelegramUser; cart: Cart }> => {
-  const { body } = await backendFetch<BackendRegisterUserOperation>({
-    query: registerUserMutation,
-    variables: {
-      input,
-      cartId,
-    },
-    cache: "no-store",
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendSignInShopUserOperation>({
+      query: signInShopUserMutation,
+      variables: body,
+      cache: "no-store",
+      headers,
+    });
 
-  return body.data.register;
+  return responseBody.data.signInShopUser;
 };
 
-export const productsGet = async ({
-  state,
-}: {
-  state?: EntityState;
-}): Promise<Product[]> => {
-  const { body } = await backendFetch<BackendProductsGetOperation>({
-    query: productsGetQuery,
-    tags: [TAGS.PRODUCT],
-    variables: {
-      state,
-    },
-  });
+export const productsGet = async (
+  body: {
+    state?: EntityState;
+  },
+  headers?: HeadersInit,
+): Promise<Product[]> => {
+  const { body: responseBody } =
+    await backendFetch<BackendProductsGetOperation>({
+      query: productsGetQuery,
+      tags: [TAGS.PRODUCT],
+      variables: body,
+      headers,
+    });
 
-  if (!body.data.productsGet) {
+  if (!responseBody.data.productsGet) {
     return [];
   }
 
-  return body.data.productsGet;
+  return responseBody.data.productsGet;
 };
 
-export const productsPaginatedGet = async ({
-  state,
-  page,
-  limit,
-}: {
-  state?: EntityState;
-  page?: number;
-  limit?: number;
-}): Promise<Paginated<Product>> => {
-  const { body } = await backendFetch<BackendProductsPaginatedGetOperation>({
-    query: productsPaginatedGetQuery,
-    variables: { state, page, limit },
-    tags: [TAGS.PRODUCT],
-  });
+export const productsPaginatedGet = async (
+  body: {
+    state?: EntityState;
+    page?: number;
+    limit?: number;
+  },
+  headers?: HeadersInit,
+): Promise<Paginated<Product>> => {
+  const { body: responseBody } =
+    await backendFetch<BackendProductsPaginatedGetOperation>({
+      query: productsPaginatedGetQuery,
+      variables: body,
+      tags: [TAGS.PRODUCT],
+      headers,
+    });
 
-  return body.data.productsPaginatedGet;
+  return responseBody.data.productsPaginatedGet;
 };
 
 export const productDetail = async (
-  id: string,
+  body: {
+    id: string;
+  },
+  headers?: HeadersInit,
 ): Promise<Product | undefined> => {
-  const { body } = await backendFetch<BackendProductDetailOperation>({
-    query: productDetailQuery,
-    variables: { id },
-    tags: [TAGS.PRODUCT],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendProductDetailOperation>({
+      query: productDetailQuery,
+      variables: body,
+      tags: [TAGS.PRODUCT],
+      headers,
+    });
 
-  if (!body.data.productDetail) {
+  if (!responseBody.data.productDetail) {
     return undefined;
   }
 
-  return body.data.productDetail;
+  return responseBody.data.productDetail;
 };
 
 export const productCreate = async (
-  input: ProductCreateInput,
+  body: {
+    input: ProductCreateInput;
+  },
+  headers?: HeadersInit,
 ): Promise<Product | undefined> => {
-  const { body } = await backendFetch<BackendProductCreateOperation>({
-    query: productCreateMutation,
-    tags: [TAGS.PRODUCT],
-    variables: {
-      input,
-    },
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendProductCreateOperation>({
+      query: productCreateMutation,
+      tags: [TAGS.PRODUCT],
+      variables: body,
+      headers,
+    });
 
-  if (!body.data.productCreate.product) {
+  if (!responseBody.data.productCreate.product) {
     return undefined;
   }
 
-  return body.data.productCreate.product;
+  return responseBody.data.productCreate.product;
 };
 
 export const productUpdate = async (
-  input: ProductUpdateInput,
+  body: {
+    input: ProductUpdateInput;
+  },
+  headers?: HeadersInit,
 ): Promise<Product | undefined> => {
-  const { body } = await backendFetch<BackendProductUpdateOperation>({
-    query: productUpdateMutation,
-    tags: [TAGS.PRODUCT],
-    variables: {
-      input,
-    },
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendProductUpdateOperation>({
+      query: productUpdateMutation,
+      tags: [TAGS.PRODUCT],
+      variables: body,
+      headers,
+    });
 
-  if (!body.data.productUpdate.product) {
+  if (!responseBody.data.productUpdate.product) {
     return undefined;
   }
 
-  return body.data.productUpdate.product;
+  return responseBody.data.productUpdate.product;
 };
 
-export const productDelete = async (id: string): Promise<boolean> => {
-  const { body } = await backendFetch<BackendProductDeleteOperation>({
-    query: productDeleteMutation,
-    tags: [TAGS.PRODUCT],
-    variables: {
-      id,
-    },
-  });
+export const productDelete = async (
+  body: { id: string },
+  headers?: HeadersInit,
+): Promise<boolean> => {
+  const { body: responseBody } =
+    await backendFetch<BackendProductDeleteOperation>({
+      query: productDeleteMutation,
+      tags: [TAGS.PRODUCT],
+      variables: body,
+      headers,
+    });
 
-  return body.data.productDelete.success;
+  return responseBody.data.productDelete.success;
 };
 
-export const cartGet = async (cartId?: string): Promise<Cart | undefined> => {
-  const { body } = await backendFetch<BackendCartGetOperation>({
+export const cartGet = async (
+  body: { cartId?: string },
+  headers?: HeadersInit,
+): Promise<Cart | undefined> => {
+  const { body: responseBody } = await backendFetch<BackendCartGetOperation>({
     query: cartGetQuery,
-    variables: {
-      cartId,
-    },
-    cache: "no-store",
+    variables: body,
     tags: [TAGS.CART],
+    headers,
   });
 
-  if (!body.data.cartGet) {
+  if (!responseBody.data.cartGet) {
     return undefined;
   }
 
-  return body.data.cartGet;
+  return responseBody.data.cartGet;
 };
 
-export const cartCreate = async (): Promise<Cart> => {
+export const cartCreate = async (headers?: HeadersInit): Promise<Cart> => {
   const { body } = await backendFetch<BackendCartCreateOperation>({
     query: cartCreateMutation,
     cache: "no-store",
     tags: [TAGS.CART],
+    headers,
   });
 
   return body.data.cartCreate.cart;
 };
 
-export const cartAddItem = async (input: {
-  cartId: string;
-  productId: string;
-  variantId: string | null;
-  quantity: number;
-}): Promise<Cart | undefined> => {
-  const { body } = await backendFetch<BackendCartAddItemOperation>({
-    query: cartAddItemMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.CART],
-  });
+export const cartAddItem = async (
+  body: {
+    input: {
+      cartId: string;
+      productId: string;
+      variantId: string | null;
+      quantity: number;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<Cart | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendCartAddItemOperation>({
+      query: cartAddItemMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.CART],
+      headers,
+    });
 
-  if (!body.data.addToCart.cart) {
+  if (!responseBody.data.addToCart.cart) {
     return undefined;
   }
 
-  return body.data.addToCart.cart;
+  return responseBody.data.addToCart.cart;
 };
 
-export const cartRemoveItem = async (input: {
-  cartId: string;
-  cartItemId: string;
-  quantity: number;
-}): Promise<Cart | undefined> => {
-  const { body } = await backendFetch<BackendCartRemoveItemOperation>({
-    query: cartRemoveItemMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.CART],
-  });
+export const cartRemoveItem = async (
+  body: {
+    input: {
+      cartId: string;
+      cartItemId: string;
+      quantity: number;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<Cart | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendCartRemoveItemOperation>({
+      query: cartRemoveItemMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.CART],
+      headers,
+    });
 
-  if (!body.data.removeFromCart.cart) {
+  if (!responseBody.data.removeFromCart.cart) {
     return undefined;
   }
 
-  return body.data.removeFromCart.cart;
+  return responseBody.data.removeFromCart.cart;
 };
 
-export const cartUpdateItem = async (input: {
-  cartId: string;
-  cartItemId: string;
-  quantity: number;
-}): Promise<Cart | undefined> => {
-  const { body } = await backendFetch<BackendCartUpdateItemOperation>({
-    query: cartUpdateItemMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.CART],
-  });
+export const cartUpdateItem = async (
+  body: {
+    input: {
+      cartId: string;
+      cartItemId: string;
+      quantity: number;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<Cart | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendCartUpdateItemOperation>({
+      query: cartUpdateItemMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.CART],
+      headers,
+    });
 
-  if (!body.data.cartItemUpdate.cart) {
+  if (!responseBody.data.cartItemUpdate.cart) {
     return undefined;
   }
 
-  return body.data.cartItemUpdate.cart;
+  return responseBody.data.cartItemUpdate.cart;
 };
 
 export const orderGetById = async (
-  orderId: string,
-  state?: string,
+  body: {
+    orderId: string;
+    state?: string;
+  },
+  headers?: HeadersInit,
 ): Promise<Order | undefined> => {
-  const { body } = await backendFetch<BackendOrderGetByIdOperation>({
-    query: orderGetByIdQuery,
-    variables: {
-      orderId,
-      state,
-    },
-    cache: "no-store",
-    tags: [TAGS.ORDER],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendOrderGetByIdOperation>({
+      query: orderGetByIdQuery,
+      variables: body,
+      tags: [TAGS.ORDER],
+      headers,
+    });
 
-  if (!body.data.orderGetById) {
+  if (!responseBody.data.orderGetById) {
     return undefined;
   }
 
-  return body.data.orderGetById;
+  return responseBody.data.orderGetById;
 };
 
 export const orderGetByCartId = async (
-  cartId: string,
-  state?: string,
+  body: {
+    cartId: string;
+    state?: string;
+  },
+  headers?: HeadersInit,
 ): Promise<Order | undefined> => {
-  const { body } = await backendFetch<BackendOrderGetByCartIdOperation>({
-    query: orderGetByCartIdQuery,
-    variables: {
-      cartId,
-      state,
-    },
-    cache: "no-store",
-    tags: [TAGS.ORDER],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendOrderGetByCartIdOperation>({
+      query: orderGetByCartIdQuery,
+      variables: {
+        ...body,
+      },
+      tags: [TAGS.ORDER],
+      headers,
+    });
 
-  return body.data.orderGetByCartId;
+  return responseBody.data.orderGetByCartId;
 };
 
-export const ordersPaginatedGet = async ({
-  state,
-  page,
-  limit,
-  paymentStatus,
-  fulfilmentStatus,
-}: {
-  state?: EntityState;
-  paymentStatus?: PaymentStatus;
-  fulfilmentStatus?: FulfilmentStatus;
-  page?: number;
-  limit?: number;
-}): Promise<Paginated<Order>> => {
-  const { body } = await backendFetch<BackendOrderPaginatedGetOperation>({
-    query: ordersPaginatedGetQuery,
-    variables: { paymentStatus, fulfilmentStatus, state, page, limit },
-    tags: [TAGS.ORDER],
-    cache: "no-store",
-  });
+export const ordersPaginatedGet = async (
+  body: {
+    state?: EntityState;
+    paymentStatus?: PaymentStatus;
+    fulfilmentStatus?: FulfilmentStatus;
+    page?: number;
+    limit?: number;
+  },
+  headers?: HeadersInit,
+): Promise<Paginated<Order>> => {
+  const { body: responseBody } =
+    await backendFetch<BackendOrderPaginatedGetOperation>({
+      query: ordersPaginatedGetQuery,
+      variables: body,
+      tags: [TAGS.ORDER],
+      cache: "no-store",
+      headers,
+    });
 
-  return body.data.ordersPaginatedGet;
+  return responseBody.data.ordersPaginatedGet;
 };
 
 export const orderCreate = async (
-  cartId: string,
-  userId?: string,
+  body: {
+    cartId: string;
+  },
+  headers?: HeadersInit,
 ): Promise<Order> => {
-  const { body } = await backendFetch<BackendOrderCreateOperation>({
-    query: orderCreateMutation,
-    variables: {
-      userId,
-      cartId,
-    },
-    cache: "no-store",
-    tags: [TAGS.ORDER],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendOrderCreateOperation>({
+      query: orderCreateMutation,
+      variables: {
+        ...body,
+      },
+      cache: "no-store",
+      tags: [TAGS.ORDER],
+      headers,
+    });
 
-  return body.data.orderCreate.order;
+  return responseBody.data.orderCreate.order;
 };
 
-export const orderStatusUpdate = async (input: {
-  orderId: string;
-  fulfilmentStatus: FulfilmentStatus;
-  notifyCustomer?: boolean;
-}): Promise<Order> => {
-  const { body } = await backendFetch<BackendOrderStatusUpdateOperation>({
-    query: orderStatusUpdateMutation,
-    tags: [TAGS.ORDER],
-    variables: { input },
-  });
+export const orderStatusUpdate = async (
+  body: {
+    input: {
+      orderId: string;
+      fulfilmentStatus: FulfilmentStatus;
+      notifyCustomer?: boolean;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<Order> => {
+  const { body: responseBody } =
+    await backendFetch<BackendOrderStatusUpdateOperation>({
+      query: orderStatusUpdateMutation,
+      tags: [TAGS.ORDER],
+      variables: body,
+      cache: "no-store",
+      headers,
+    });
 
-  return body.data.orderStatusUpdate.order;
+  return responseBody.data.orderStatusUpdate.order;
 };
 
 export const orderDelete = async (
-  orderId: string,
+  body: {
+    orderId: string;
+  },
+  headers?: HeadersInit,
 ): Promise<{
   success: boolean;
 }> => {
-  const { body } = await backendFetch<BackendOrderDeleteOperation>({
-    query: orderDeleteMutation,
-    tags: [TAGS.ORDER],
-    variables: {
-      orderId,
-    },
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendOrderDeleteOperation>({
+      query: orderDeleteMutation,
+      tags: [TAGS.ORDER],
+      variables: body,
+      cache: "no-store",
+      headers,
+    });
 
-  return body.data.orderDelete;
+  return responseBody.data.orderDelete;
 };
 
-export const shippingAddTracking = async (input: {
-  shippingId: string;
-  trackingNumber: string;
-  carrier: string;
-}): Promise<Shipping> => {
-  const { body } = await backendFetch<BackendShippingAddTrackingOperation>({
-    query: shippingAddTrackingMutation,
-    tags: [TAGS.ORDER],
-    variables: { input },
-  });
+export const shippingAddTracking = async (
+  body: {
+    input: {
+      shippingId: string;
+      trackingNumber: string;
+      carrier: string;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<Shipping> => {
+  const { body: responseBody } =
+    await backendFetch<BackendShippingAddTrackingOperation>({
+      query: shippingAddTrackingMutation,
+      tags: [TAGS.ORDER],
+      variables: body,
+      cache: "no-store",
+      headers,
+    });
 
-  return body.data.shippingAddTracking.shipping;
+  return responseBody.data.shippingAddTracking.shipping;
 };
 
 export const shippingDetailsCreate = async (
-  input: ShippingDetails & {
-    shippingId: string;
-    userId?: string;
-    isDefault: boolean;
+  body: {
+    input: ShippingDetails & {
+      shippingId: string;
+      userId?: string;
+      isDefault: boolean;
+    };
   },
+  headers?: HeadersInit,
 ): Promise<ShippingDetails> => {
-  const { body } = await backendFetch<BackendShippingDetailsCreateOperation>({
-    query: shippingDetailsCreateMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.ORDER],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendShippingDetailsCreateOperation>({
+      query: shippingDetailsCreateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER],
+      headers,
+    });
 
-  return body.data.shippingDetailsCreate.shippingDetails;
+  return responseBody.data.shippingDetailsCreate.shippingDetails;
 };
 
 export const shippingDetailsUpdate = async (
-  input: ShippingDetails & {
-    shippingDetailsId: string;
-    shippingId: string;
-    userId?: string;
-    isDefault: boolean;
+  body: {
+    input: ShippingDetails & {
+      shippingDetailsId: string;
+      shippingId: string;
+      userId?: string;
+      isDefault: boolean;
+    };
   },
+  headers?: HeadersInit,
 ): Promise<ShippingDetails> => {
-  const { body } = await backendFetch<BackendShippingDetailsUpdateOperation>({
-    query: shippingDetailsUpdateMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.ORDER],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendShippingDetailsUpdateOperation>({
+      query: shippingDetailsUpdateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER],
+      headers,
+    });
 
-  return body.data.shippingDetailsUpdate.shippingDetails;
+  return responseBody.data.shippingDetailsUpdate.shippingDetails;
 };
 
-export const salesAnalyticsGet = async (): Promise<SalesAnalytics> => {
+export const salesAnalyticsGet = async (
+  headers?: HeadersInit,
+): Promise<SalesAnalytics> => {
   const { body } = await backendFetch<BackendSalesAnalyticsOperation>({
     query: salesAnalyticsGetQuery,
     tags: [TAGS.ORDER],
+    cache: "no-store",
+    headers,
   });
 
   const {
@@ -529,18 +622,20 @@ export const salesAnalyticsGet = async (): Promise<SalesAnalytics> => {
 };
 
 export const paymentMethodsList = async (
-  state?: EntityState,
+  body: {
+    state?: EntityState;
+  },
+  headers?: HeadersInit,
 ): Promise<ParsedPaymentMethod[]> => {
-  const { body } = await backendFetch<BackendPaymentMethodsListOperations>({
-    query: paymentMethodsListQuery,
-    cache: "no-store",
-    variables: {
-      state,
-    },
-    tags: [TAGS.PAYMENT],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendPaymentMethodsListOperations>({
+      query: paymentMethodsListQuery,
+      variables: body,
+      tags: [TAGS.PAYMENT],
+      headers,
+    });
 
-  return body.data.paymentMethodsList.map((paymentMethod) => {
+  return responseBody.data.paymentMethodsList.map((paymentMethod) => {
     return {
       ...paymentMethod,
       otherInfo: paymentMethod.otherInfo
@@ -552,105 +647,217 @@ export const paymentMethodsList = async (
 };
 
 export const shopPaymentMethodsList = async (
-  state?: EntityState,
+  body: {
+    state?: EntityState;
+  },
+  headers?: HeadersInit,
 ): Promise<SafePaymentMethod[]> => {
-  const { body } = await backendFetch<BackendShopPaymentMethodsListOperation>({
-    query: shopPaymentMethodsListQuery,
-    cache: "no-store",
-    variables: {
-      state,
-    },
-    tags: [TAGS.PAYMENT],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendShopPaymentMethodsListOperation>({
+      query: shopPaymentMethodsListQuery,
+      variables: body,
+      tags: [TAGS.PAYMENT],
+      headers,
+    });
 
-  return body.data.paymentMethodsList;
+  return responseBody.data.paymentMethodsList;
 };
 
-export const paymentMethodCreate = async (input: {
-  name: string;
-  provider: PaymentProvider;
-  otherInfo?: string;
-  buttonText?: string;
-  state?: EntityState;
-}) => {
-  const { body } = await backendFetch<BackendPaymentMethodCreateOperation>({
-    query: paymentMethodCreateMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.PAYMENT],
-  });
+export const paymentMethodCreate = async (
+  body: {
+    input: {
+      name: string;
+      provider: PaymentProvider;
+      otherInfo?: string;
+      buttonText?: string;
+      state?: EntityState;
+    };
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendPaymentMethodCreateOperation>({
+      query: paymentMethodCreateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.PAYMENT],
+      headers,
+    });
 
-  return body.data.paymentMethodCreate.paymentMethod;
+  return responseBody.data.paymentMethodCreate.paymentMethod;
 };
 
-export const paymentMethodUpdate = async (input: {
-  paymentMethodId: string;
-  name: string;
-  provider: PaymentProvider;
-  otherInfo?: string;
-  buttonText?: string;
-  state?: EntityState;
-}) => {
-  const { body } = await backendFetch<BackendPaymentMethodUpdateOperation>({
-    query: paymentMethodUpdateMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.PAYMENT],
-  });
+export const paymentMethodUpdate = async (
+  body: {
+    input: {
+      paymentMethodId: string;
+      name: string;
+      provider: PaymentProvider;
+      otherInfo?: string;
+      buttonText?: string;
+      state?: EntityState;
+    };
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendPaymentMethodUpdateOperation>({
+      query: paymentMethodUpdateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.PAYMENT],
+      headers,
+    });
 
-  return body.data.paymentMethodUpdate.paymentMethod;
+  return responseBody.data.paymentMethodUpdate.paymentMethod;
 };
 
 export const paymentMethodDelete = async (
-  paymentMethodId: string,
+  body: {
+    paymentMethodId: string;
+  },
+  headers?: HeadersInit,
 ): Promise<boolean> => {
-  const { body } = await backendFetch<BackendPaymentMethodDeleteOperation>({
-    query: paymentMethodDeleteMutation,
-    variables: {
-      paymentMethodId,
-    },
-    cache: "no-store",
-    tags: [TAGS.PAYMENT],
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendPaymentMethodDeleteOperation>({
+      query: paymentMethodDeleteMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.PAYMENT],
+      headers,
+    });
 
-  return body.data.paymentMethodDelete.success;
+  return responseBody.data.paymentMethodDelete.success;
 };
 
-export const paymentCreate = async (input: {
-  orderId: string;
-  paymentMethodId: string;
-  currency?: string;
-  notifyCustomer?: boolean;
-}): Promise<{ paymentInfo: string; provider: PaymentProvider } | undefined> => {
-  const { body } = await backendFetch<BackendPaymentCreateOperation>({
-    query: paymentCreateMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.PAYMENT, TAGS.ORDER],
-  });
+export const paymentCreate = async (
+  body: {
+    input: {
+      orderId: string;
+      paymentMethodId: string;
+      currency?: string;
+      notifyCustomer?: boolean;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<{ paymentInfo: string; provider: PaymentProvider } | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendPaymentCreateOperation>({
+      query: paymentCreateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.PAYMENT, TAGS.ORDER],
+      headers,
+    });
 
-  return body.data.paymentCreate;
+  return responseBody.data.paymentCreate;
 };
 
-export const paymentStatusUpdate = async (input: {
-  paymentId: string;
-  paymentStatus: PaymentStatus;
-  notifyCustomer?: boolean;
-}): Promise<boolean> => {
-  const { body } = await backendFetch<BackendPaymentStatusUpdateOperation>({
-    query: paymentStatusUpdateMutation,
-    variables: {
-      input,
-    },
-    cache: "no-store",
-    tags: [TAGS.PAYMENT, TAGS.ORDER],
+export const paymentStatusUpdate = async (
+  body: {
+    input: {
+      paymentId: string;
+      paymentStatus: PaymentStatus;
+      notifyCustomer?: boolean;
+    };
+  },
+  headers?: HeadersInit,
+): Promise<boolean> => {
+  const { body: responseBody } =
+    await backendFetch<BackendPaymentStatusUpdateOperation>({
+      query: paymentStatusUpdateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.PAYMENT, TAGS.ORDER],
+      headers,
+    });
+
+  return responseBody.data.paymentStatusUpdate.success;
+};
+
+export const customerDetail = async (
+  body: {
+    userId: string;
+  },
+  headers?: HeadersInit,
+): Promise<TelegramUserDetailParsed> => {
+  const { body: responseBody } =
+    await backendFetch<BackendCustomerDetailOperation>({
+      query: customerDetailQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.USER],
+      headers,
+    });
+
+  const parsedEvents = responseBody.data.customerDetail.events.map((event) => {
+    return {
+      ...event,
+      eventData: event.eventData ? JSON.parse(event.eventData) : undefined,
+    };
   });
 
-  return body.data.paymentStatusUpdate.success;
+  return {
+    ...responseBody.data.customerDetail,
+    events: parsedEvents,
+  };
+};
+
+export const customersPaginated = async (
+  body: {
+    page?: number;
+    limit?: number;
+    sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
+  },
+  headers?: HeadersInit,
+): Promise<Paginated<TelegramUserList>> => {
+  const { body: responseBody } =
+    await backendFetch<BackendCustomersPaginatedGetOperation>({
+      query: customerPaginatedQuery,
+      variables: body,
+      tags: [TAGS.USER],
+      cache: "no-store",
+      headers,
+    });
+
+  return responseBody.data.customersPaginated;
+};
+
+export const signInAdmin = async (
+  {
+    dataCheckString,
+  }: {
+    dataCheckString: string;
+  },
+  headers?: HeadersInit,
+): Promise<{ user: TelegramUser; accessToken: string } | undefined> => {
+  const { body } = await backendFetch<BackendSignInAdminOperation>({
+    query: singInAdminMutation,
+    variables: {
+      dataCheckString,
+    },
+    cache: "no-store",
+    tags: [TAGS.USER],
+    headers,
+  });
+
+  return body.data.signInAdmin;
+};
+
+export const signOutAdmin = async (
+  body: {
+    token: string;
+  },
+  headers?: HeadersInit,
+): Promise<boolean> => {
+  const { body: responseBody } =
+    await backendFetch<BackendSignOutAdminOperation>({
+      query: signOutAdminMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.USER],
+      headers,
+    });
+
+  return responseBody.data.signOutAdmin.success;
 };
