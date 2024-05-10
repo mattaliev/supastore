@@ -32,7 +32,7 @@ const Timeline = React.forwardRef<HTMLUListElement, TimelineProps>(
         {children}
       </ul>
     );
-  },
+  }
 );
 Timeline.displayName = "Timeline";
 
@@ -59,7 +59,7 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
       ref={ref}
       {...props}
     />
-  ),
+  )
 );
 TimelineItem.displayName = "TimelineItem";
 
@@ -80,7 +80,7 @@ const timelineDotVariants = cva(
     defaultVariants: {
       status: "default",
     },
-  },
+  }
 );
 
 interface TimelineDotProps
@@ -102,7 +102,7 @@ const TimelineDot = React.forwardRef<HTMLDivElement, TimelineDotProps>(
       <X className="size-3" />
       {customIcon}
     </div>
-  ),
+  )
 );
 TimelineDot.displayName = "TimelineDot";
 
@@ -118,7 +118,7 @@ const timelineContentVariants = cva(
     defaultVariants: {
       side: "right",
     },
-  },
+  }
 );
 
 interface TimelineContentProps
@@ -154,7 +154,7 @@ const timelineHeadingVariants = cva(
       side: "right",
       variant: "primary",
     },
-  },
+  }
 );
 
 interface TimelineHeadingProps
@@ -188,13 +188,13 @@ const TimelineLine = React.forwardRef<HTMLHRElement, TimelineLineProps>(
         className={cn(
           "col-start-2 col-end-3 row-start-2 row-end-2 mx-auto flex h-full min-h-16 w-0.5 justify-center rounded-full",
           done ? "bg-primary" : "bg-muted",
-          className,
+          className
         )}
         ref={ref}
         {...props}
       />
     );
-  },
+  }
 );
 TimelineLine.displayName = "TimelineLine";
 
