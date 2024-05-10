@@ -43,10 +43,5 @@ jobs:
         cd api-shop/shop
         python manage.py test
       env:
-        DATABASE_NAME: postgres
-        DATABASE_USER: postgres
-        DATABASE_PASS: postgres
-        DATABASE_HOST: postgres
-        DATABASE_PORT: 5432
-        DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ditch
+        SETTINGS_NAME: api-shop-test-settings
 
