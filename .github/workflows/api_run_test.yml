@@ -27,4 +27,5 @@ jobs:
 
     - name: Run Django tests
       run: |
+        cd api-shop/shop
         python manage.py test
