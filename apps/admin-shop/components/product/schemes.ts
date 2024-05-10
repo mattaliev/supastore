@@ -27,15 +27,21 @@ export const ProductScheme = z.object({
     .min(1, { message: "SKU is required" }),
   variants: z.array(
     z.object({
-      color: z.string({
-        invalid_type_error: "Invalid color",
-      }),
-      size: z.string({
-        invalid_type_error: "Invalid size",
-      }),
-      material: z.string({
-        invalid_type_error: "Invalid material",
-      }),
+      color: z
+        .string({
+          invalid_type_error: "Invalid color",
+        })
+        .optional(),
+      size: z
+        .string({
+          invalid_type_error: "Invalid size",
+        })
+        .optional(),
+      material: z
+        .string({
+          invalid_type_error: "Invalid material",
+        })
+        .optional(),
       quantity: z.number({
         invalid_type_error: "Invalid quantity",
         required_error: "Quantity is required",
