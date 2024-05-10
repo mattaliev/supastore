@@ -1,7 +1,7 @@
-import { userFragment } from "./user";
-import { shippingFragment } from "./shipping";
 import { cartFragment } from "./cart";
 import { paymentFragment } from "./payment";
+import { shippingFragment } from "./shipping";
+import { customerFragment } from "./user";
 
 export const orderFragment = /* GraphQL */ `
   fragment OrderFields on OrderType {
@@ -28,7 +28,7 @@ export const orderFragment = /* GraphQL */ `
     updated
     state
   }
-  ${userFragment}
+  ${customerFragment}
   ${shippingFragment}
   ${cartFragment}
   ${paymentFragment}
