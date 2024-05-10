@@ -14,7 +14,7 @@ export default function ProductCreateForm() {
 
   return (
     <form action={formAction}>
-      <div className="grid flex-1 auto-rows-max gap-4">
+      <div className="grid flex-1 auto-rows-max gap-4 max-w-[59rem] mx-auto">
         <div className="flex items-center gap-4">
           <Button
             variant="outline"
