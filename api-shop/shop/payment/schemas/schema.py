@@ -9,7 +9,8 @@ __all__ = [
     "PaymentType",
     "PaymentMethodCreateInput",
     "PaymentMethodUpdateInput",
-    "PaymentCreateInput"
+    "PaymentCreateInput",
+    "PaymentStatusUpdateInput"
 ]
 
 
