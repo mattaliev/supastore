@@ -24,7 +24,7 @@ import {
 
 export const updatePaymentStatus = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<
   | {
       paymentId: string;
@@ -69,7 +69,7 @@ export const updatePaymentStatus = async (
 
 export const createPaymentManually = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<
   | {
       orderId: string;
@@ -111,7 +111,7 @@ export const createPaymentManually = async (
 
 export const createPaymentMethod = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<
   | {
       success?: boolean;
@@ -152,7 +152,7 @@ export const createPaymentMethod = async (
 
 export const updatePaymentMethod = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<
   | {
       success?: boolean;
@@ -200,7 +200,7 @@ export const updatePaymentMethod = async (
 
 export const deletePaymentMethod = async (
   prevState: any,
-  paymentMethodId: string,
+  paymentMethodId: string
 ) => {
   const session = await getServerSession(authOptions);
 

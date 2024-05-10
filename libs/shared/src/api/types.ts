@@ -96,6 +96,7 @@ export type TelegramUserList = {
   orderCount: number;
   amountSpent: number;
   isNew: boolean;
+  totalVisitCount: number;
 } & TelegramUser;
 
 export type TelegramUserTopList = {

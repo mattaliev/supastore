@@ -19,7 +19,7 @@ export type ProductFormErrorResponse = {
 
 export const createProduct = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<ProductFormErrorResponse> => {
   const session = await getServerSession(authOptions);
 
@@ -63,7 +63,7 @@ export const createProduct = async (
 
 export const updateProduct = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<ProductFormErrorResponse> => {
   const session = await getServerSession(authOptions);
 
@@ -117,7 +117,7 @@ export const deleteProduct = async (
   payload: {
     productId: string;
     isProductsPage: boolean;
-  },
+  }
 ): Promise<{
   success?: boolean;
   formError?: string;
@@ -155,7 +155,7 @@ const productVariantsGetFromFormData = (rawFormData: any) => {
   const variants = [];
 
   const variantKeys = Object.keys(rawFormData).filter((key) =>
-    key.startsWith("variant"),
+    key.startsWith("variant")
   );
   console.log(variantKeys);
 
@@ -184,7 +184,7 @@ const productImagesGetFromFormData = (rawFormData: any) => {
   const images = [];
 
   const imageKeys = Object.keys(rawFormData).filter((key) =>
-    key.startsWith("image"),
+    key.startsWith("image")
   );
 
   for (let i = 0; i < imageKeys.length; i++) {

@@ -35,7 +35,7 @@ export default async function PaymentSystemsPage() {
   const paymentMethods = await authenticated(
     session.user.accessToken,
     paymentMethodsList,
-    {},
+    {}
   );
 
   return (

@@ -34,7 +34,7 @@ export default async function CustomerDetailPage({
   const customer = await authenticated(
     session.user.accessToken,
     customerDetail,
-    { userId: customerId },
+    { userId: customerId }
   );
 
   if (!customer) {

@@ -34,7 +34,7 @@ export default async function CustomersPage({
     {
       page: selectedPage,
       limit,
-    },
+    }
   );
 
   if (!paginatedCustomers) {

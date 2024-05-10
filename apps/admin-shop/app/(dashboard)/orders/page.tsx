@@ -45,7 +45,7 @@ export default async function OrderListPage({
       state: searchParams.state,
       page: searchParams.page ? parseInt(searchParams.page) : 1,
       limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
-    },
+    }
   );
 
   if (!paginatedOrders) {

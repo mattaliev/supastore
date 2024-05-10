@@ -38,7 +38,7 @@ export default async function TopCustomers({
       page: 1,
       limit: 5,
       sortBy,
-    },
+    }
   );
 
   if (!topCustomersResponse) {
