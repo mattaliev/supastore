@@ -74,7 +74,7 @@ async function PaymentActions({ order }: { order: Order }) {
     const paymentMethods = await authenticated(
       session.user.accessToken,
       paymentMethodsList,
-      {},
+      {}
     );
     return (
       <CardFooter>

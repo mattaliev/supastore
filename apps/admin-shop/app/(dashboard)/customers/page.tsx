@@ -34,7 +34,7 @@ export default async function CustomersPage({
     {
       page: selectedPage ? parseInt(selectedPage) : 1,
       limit: limit ? parseInt(limit) : defaultLimit,
-    },
+    }
   );
 
   if (!paginatedCustomers) {
