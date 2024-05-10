@@ -12,8 +12,7 @@ import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect, RedirectType } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import {
   ShippingTrackingFieldErrors,
   ShippingTrackingScheme,
@@ -21,7 +20,7 @@ import {
 
 export const deleteOrder = async (
   prevState: any,
-  orderId: string
+  orderId: string,
 ): Promise<{
   error?: string;
 }> => {
@@ -49,7 +48,7 @@ export const deleteOrder = async (
 
 export const updateOrderStatus = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       orderId: string;
@@ -92,7 +91,7 @@ export const updateOrderStatus = async (
 
 export const addShippingTracking = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       shippingId: string;

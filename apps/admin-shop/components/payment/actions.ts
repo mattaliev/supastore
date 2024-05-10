@@ -15,8 +15,7 @@ import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import {
   BasePaymentMethodScheme,
   PaymentFieldErrors,
@@ -25,7 +24,7 @@ import {
 
 export const updatePaymentStatus = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       paymentId: string;
@@ -70,7 +69,7 @@ export const updatePaymentStatus = async (
 
 export const createPaymentManually = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       orderId: string;
@@ -112,7 +111,7 @@ export const createPaymentManually = async (
 
 export const createPaymentMethod = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       success?: boolean;
@@ -153,7 +152,7 @@ export const createPaymentMethod = async (
 
 export const updatePaymentMethod = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       success?: boolean;
@@ -201,7 +200,7 @@ export const updatePaymentMethod = async (
 
 export const deletePaymentMethod = async (
   prevState: any,
-  paymentMethodId: string
+  paymentMethodId: string,
 ) => {
   const session = await getServerSession(authOptions);
 

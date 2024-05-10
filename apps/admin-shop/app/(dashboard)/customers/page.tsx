@@ -2,8 +2,7 @@ import { customersPaginated } from "@ditch/lib";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import CustomerList from "@/components/customer/customer-list";
 import CustomerListHeader from "@/components/customer/customer-list-header";
 import TopCustomers from "@/components/customer/top-customers";
@@ -35,7 +34,7 @@ export default async function CustomersPage({
     {
       page: selectedPage,
       limit,
-    }
+    },
   );
 
   if (!paginatedCustomers) {

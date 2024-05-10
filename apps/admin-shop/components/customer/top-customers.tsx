@@ -2,8 +2,7 @@ import { customersPaginated } from "@ditch/lib";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import TopCustomerSort from "@/components/customer/top-customer-sort";
 import {
   Card,
@@ -32,15 +31,21 @@ export default async function TopCustomers({
     redirect("/auth/signIn?callbackUrl=/customers");
   }
 
-  const { objects: topCustomers } = await authenticated(
+  const topCustomersResponse = await authenticated(
     session.user.accessToken,
     customersPaginated,
     {
       page: 1,
       limit: 5,
       sortBy,
-    }
+    },
   );
+
+  if (!topCustomersResponse) {
+    return null;
+  }
+
+  const { objects: topCustomers } = topCustomersResponse;
 
   return (
     <Card>

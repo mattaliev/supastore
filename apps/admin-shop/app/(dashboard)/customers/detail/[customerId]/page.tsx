@@ -2,8 +2,7 @@ import { customerDetail } from "@ditch/lib";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import CustomerDetailHeader from "@/components/customer/customer-detail-header";
 import CustomerEvents from "@/components/customer/customer-events";
 import CustomerFavoriteProducts from "@/components/customer/customer-favorite-products";
@@ -35,7 +34,7 @@ export default async function CustomerDetailPage({
   const customer = await authenticated(
     session.user.accessToken,
     customerDetail,
-    { userId: customerId }
+    { userId: customerId },
   );
 
   if (!customer) {
