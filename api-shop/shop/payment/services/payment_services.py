@@ -3,6 +3,7 @@ from uuid import UUID
 
 from django.utils import timezone
 
+from analytics.models import Event
 from core.models import EntityStateChoices
 from core.utils.encryption import encrypt
 from order.models import Order, FulfillmentStatusChoices
@@ -18,6 +19,7 @@ __all__ = [
     "payment_method_update",
     "payment_method_delete",
     "payment_create",
+    "payment_status_update"
 ]
 
 
@@ -115,7 +117,10 @@ def payment_create(
     payment = Payment.objects.create(
         order=order,
         payment_method=payment_method,
-        currency=currency
+        currency=currency,
+        subtotal_amount=order.cart.get_total_price(),
+        shipping_amount=order.shipping.shipping_amount,
+        total_amount=order.cart.get_total_price() + order.shipping.shipping_amount
     )
 
     payment_info = None
@@ -126,6 +131,9 @@ def payment_create(
             if notify_customer:
                 provider.send_payment_message(payment=payment)
 
+    if not payment_info:
+        raise ValueError("Payment provider not found")
+
     # Make order immutable. Once user creates and order it should not be changed
     order.state = EntityStateChoices.INACTIVE
     order.cart.state = EntityStateChoices.INACTIVE
@@ -134,8 +142,7 @@ def payment_create(
     order.save()
     order.cart.save()
 
-    if not payment_info:
-        raise ValueError("Payment provider not found")
+    Event.register_payment_started(payment=payment)
 
     return payment_info
 
@@ -166,6 +173,7 @@ def payment_status_update(
         payment.save()
         payment.order.save()
         telegram_order_confirmation_to_admin_send(order=payment.order)
+        Event.register_payment_completed(payment=payment)
 
     payment.payment_status = payment_status
     payment.save()
