@@ -21,7 +21,7 @@ export const addToCart = async (
     selectedVariantId?: string | null;
     doesProductHaveVariants?: boolean;
     quantity?: number;
-  },
+  }
 ): Promise<string | void> => {
   let cartId = cookies().get("cartId")?.value;
   const initDataRaw = cookies().get("initDataRaw")?.value;
@@ -69,7 +69,7 @@ export const removeFromCart = async (
   payload: {
     cartItemId?: string;
     quantity?: number;
-  },
+  }
 ): Promise<string | void> => {
   const { cartItemId, quantity } = payload;
 
@@ -104,7 +104,7 @@ export const removeFromCart = async (
 
 export const updateCartItem = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<string | void> => {
   const cartItemId = String(formData.get("cartItemId"));
   const quantity = Number(formData.get("quantity"));
