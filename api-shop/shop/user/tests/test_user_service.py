@@ -186,6 +186,8 @@ class CustomerTotalCartAmountTests(TestCase):
         self.user.carts.last().items.create(product=self.product, quantity=2)
 
         total_cart_amount = customer_total_cart_amount(user=self.user)
+
+        self.assertIsInstance(total_cart_amount, Decimal)
         self.assertEqual(total_cart_amount, Decimal("300.00"))
 
     def test_customer_total_cart_amount_without_carts(self):

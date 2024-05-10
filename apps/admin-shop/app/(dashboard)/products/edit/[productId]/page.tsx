@@ -2,8 +2,7 @@ import { productDetail } from "@ditch/lib";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import ProductUpdateForm from "@/components/product/product-update-form";
 
 export const dynamic = "force-dynamic";

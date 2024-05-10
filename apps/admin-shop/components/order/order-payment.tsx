@@ -63,7 +63,7 @@ export default function OrderPayment({ order }: { order: Order }) {
 
 async function PaymentActions({ order }: { order: Order }) {
   if (!order.payment) {
-    const paymentMethods = await paymentMethodsList();
+    const paymentMethods = await paymentMethodsList({});
     return (
       <CardFooter>
         <div className="flex ml-auto">

@@ -3,8 +3,8 @@ import graphene
 from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
 from core.utils import get_paginator
 from user.models import UserRoleChoices
-from user.schemas import TelegramUserType, TelegramUserPaginatedType
 from user.services import customer_list_get, customer_detail_get
+from .schema import TelegramUserType, TelegramUserPaginatedType
 
 __all__ = [
     "Query"

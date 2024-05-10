@@ -2,8 +2,7 @@ import { paymentMethodsList } from "@ditch/lib";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import PaymentMethodCreate from "@/components/payment/payment-method-create";
 import PaymentMethodDelete from "@/components/payment/payment-method-delete";
 import PaymentMethodUpdateDialogDrawer from "@/components/payment/payment-method-update";

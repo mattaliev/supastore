@@ -2,8 +2,7 @@ import { orderGetById } from "@ditch/lib";
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import OrderCustomer from "@/components/order/order-customer";
 import OrderDeleteDrawerDialog from "@/components/order/order-delete-drawer-dialog";
 import OrderDetailHeader from "@/components/order/order-detail-header";

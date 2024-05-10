@@ -6,8 +6,7 @@ import { isRedirectError } from "next/dist/client/components/redirect";
 import { redirect, RedirectType } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import {
   ProductFieldErrors,
   ProductScheme,

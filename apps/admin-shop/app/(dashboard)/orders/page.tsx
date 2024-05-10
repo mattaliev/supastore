@@ -7,8 +7,7 @@ import {
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { authOptions } from "@/app/(auth)/api/auth/[...nextauth]/route";
-import { authenticated } from "@/auth";
+import { authenticated, authOptions } from "@/auth";
 import OrderAnalytics from "@/components/order/order-analytics";
 import OrderList from "@/components/order/order-list";
 import OrderPreview from "@/components/order/order-preview";

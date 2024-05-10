@@ -189,6 +189,7 @@ export const productsGet = async (
       tags: [TAGS.PRODUCT],
       variables: body,
       headers,
+      cache: "no-store",
     });
 
   if (!responseBody.data.productsGet) {
