@@ -34,7 +34,6 @@ class ShippingAddTrackingInput(graphene.InputObjectType):
 
 
 class ShippingDetailsInput(graphene.InputObjectType):
-    user_id = graphene.UUID()
     is_default = graphene.Boolean(required=True)
     first_name = graphene.String(required=True)
     last_name = graphene.String(required=True)
