@@ -76,7 +76,7 @@ def cart_create(*, user_id: UUID) -> Cart:
     return cart
 
 
-def cart_add_to(*, cart_id: UUID, product_id: UUID, variant_id: UUID | None, quantity: int) -> Cart:
+def cart_add_to(*, cart_id: UUID, product_id: UUID, variant_id: UUID | None = None, quantity: int = 1) -> Cart:
     logger = logging.getLogger(__name__)
     logger.debug("Adding to cart with input: %s", {
         "cart_id": cart_id,

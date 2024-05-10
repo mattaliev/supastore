@@ -42,6 +42,10 @@ class Query(graphene.ObjectType):
             raise UNAUTHENTICATED()
 
         order = order_get_by_id(order_id=order_id, state=state)
+
+        if not order:
+            return None
+
         if not user.can_access_resource(order):
             raise UNAUTHORIZED()
 
@@ -53,6 +57,9 @@ class Query(graphene.ObjectType):
             raise UNAUTHENTICATED()
 
         order = order_get_by_cart_id(cart_id=cart_id, state=state)
+
+        if not order:
+            return None
 
         if not user.can_access_resource(order):
             raise UNAUTHORIZED()
