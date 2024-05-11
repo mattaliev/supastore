@@ -21,7 +21,7 @@
         "useTabs": false,
         "semi": true,
         "jsxSingleQuote": false,
-        "trailingComma": "es5",
+        "trailingComma": "none",
         "bracketSpacing": true,
         "jsxBracketSameLine": false,
         "arrowParens": "always",
