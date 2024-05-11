@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function OrderDetailHeader({
   orderNumber,
-  orderId,
+  orderId
 }: {
   orderNumber: string;
   orderId: string;

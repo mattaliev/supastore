@@ -8,7 +8,7 @@ import { ProductFieldErrors } from "@/components/product/schemes";
 
 export default function ProductInputFields({
   product,
-  fieldErrors,
+  fieldErrors
 }: {
   product?: Product;
   fieldErrors?: ProductFieldErrors;

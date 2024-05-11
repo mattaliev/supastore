@@ -13,7 +13,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const { user, cart } = await signInShopUser({
       initDataRaw: authData.initDataRaw,
-      cartId,
+      cartId
     });
 
     cookies().set("initDataRaw", authData.initDataRaw);

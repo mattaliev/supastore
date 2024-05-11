@@ -12,7 +12,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Table,
@@ -20,13 +20,13 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default function OrderDetails({ order }: { order: Order }) {
   function formatDate(date: string) {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL, {
-      locale: "en-US",
+      locale: "en-US"
     });
   }
 

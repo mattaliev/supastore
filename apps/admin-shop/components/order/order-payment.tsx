@@ -11,7 +11,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
@@ -74,7 +74,7 @@ async function PaymentActions({ order }: { order: Order }) {
     const paymentMethods = await authenticated(
       session.user.accessToken,
       paymentMethodsList,
-      {},
+      {}
     );
 
     if (!paymentMethods) {

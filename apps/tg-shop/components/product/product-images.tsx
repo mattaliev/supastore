@@ -6,7 +6,7 @@ import {
   Carousel,
   CarouselApi,
   CarouselContent,
-  CarouselItem,
+  CarouselItem
 } from "@/components/ui/carousel";
 
 export default function ProductImages({ images }: { images: ProductImage[] }) {
@@ -34,7 +34,7 @@ export default function ProductImages({ images }: { images: ProductImage[] }) {
         setApi={setApi}
         opts={{
           align: "start",
-          loop: true,
+          loop: true
         }}
       >
         <CarouselContent>

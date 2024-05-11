@@ -12,7 +12,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -21,7 +21,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { formatDateMedium } from "@/lib/utils";
 
@@ -62,7 +62,7 @@ export default function ProductList({
   products,
   page,
   limit,
-  totalProductCount,
+  totalProductCount
 }: {
   products: Product[];
   page: number;

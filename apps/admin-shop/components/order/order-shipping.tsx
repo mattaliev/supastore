@@ -8,12 +8,12 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 export default function OrderShipping({
   shipping,
-  fulfilmentStatus,
+  fulfilmentStatus
 }: {
   shipping: Shipping;
   fulfilmentStatus: FulfilmentStatus;

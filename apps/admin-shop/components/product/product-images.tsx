@@ -8,12 +8,12 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 export default function ProductImages({
   images,
-  imagesFieldError,
+  imagesFieldError
 }: {
   images?: ProductImage[];
   imagesFieldError?: ProductFieldErrors["imageUrls"];
@@ -29,7 +29,7 @@ export default function ProductImages({
           initialFileStates={images?.map((image) => ({
             key: image.id,
             file: image.url,
-            progress: "COMPLETE",
+            progress: "COMPLETE"
           }))}
         />
       </CardContent>

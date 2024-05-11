@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import {
   FulfilmentStatusBadge,
-  PaymentStatusBadge,
+  PaymentStatusBadge
 } from "@/components/order/order-badges";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,12 +18,12 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
-  PaginationItem,
+  PaginationItem
 } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 
@@ -33,7 +33,7 @@ export default function OrderPreview({
   hasPrev,
   limit,
   totalItems,
-  page,
+  page
 }: {
   orders: Order[];
   hasNext: boolean;
@@ -54,7 +54,7 @@ export default function OrderPreview({
 
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATETIME_MED, {
-      locale: "en-US",
+      locale: "en-US"
     });
   };
 

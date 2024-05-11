@@ -10,7 +10,7 @@ import {
   ShippingDetails,
   shippingDetailsCreate,
   shippingDetailsUpdate,
-  TAGS,
+  TAGS
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -41,20 +41,20 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
     if (orderId) {
       order = await tmaAuthenticated(initDataRaw, orderGetById, {
         orderId,
-        state: EntityState.ACTIVE,
+        state: EntityState.ACTIVE
       });
     }
 
     if (!order) {
       order = await tmaAuthenticated(initDataRaw, orderGetByCartId, {
         cartId,
-        state: EntityState.ACTIVE,
+        state: EntityState.ACTIVE
       });
     }
 
     if (!order) {
       order = await tmaAuthenticated(initDataRaw, orderCreate, {
-        cartId,
+        cartId
       });
     }
 
@@ -102,7 +102,7 @@ export const createOrUpdateShippingDetails = async (
     country: formData.get("country") || "",
     city: formData.get("city") || "",
     province: formData.get("province") || "",
-    postcode: formData.get("postcode") || "",
+    postcode: formData.get("postcode") || ""
   });
 
   if (!validatedData.success) {
@@ -118,16 +118,16 @@ export const createOrUpdateShippingDetails = async (
           ...(validatedData.data as ShippingDetails),
           shippingId,
           shippingDetailsId,
-          isDefault: Boolean(formData.get("is-default")),
-        },
+          isDefault: Boolean(formData.get("is-default"))
+        }
       });
     } else {
       await tmaAuthenticated(initDataRaw, shippingDetailsCreate, {
         input: {
           ...(validatedData.data as ShippingDetails),
           shippingId,
-          isDefault: Boolean(formData.get("is-default")),
-        },
+          isDefault: Boolean(formData.get("is-default"))
+        }
       });
     }
   } catch (e) {
@@ -161,8 +161,8 @@ export const createPayment = async (
     input: {
       orderId,
       paymentMethodId,
-      currency,
-    },
+      currency
+    }
   });
 
   if (!result) {
@@ -186,12 +186,12 @@ export const createPayment = async (
   if (provider === PaymentProvider.TELEGRAM_INVOICE) {
     return {
       success: true,
-      paymentLink: parsedPaymentInfo.payment_link,
+      paymentLink: parsedPaymentInfo.payment_link
     };
   }
 
   return {
     success: true,
-    paymentLink: parsedPaymentInfo.direct_payment_link,
+    paymentLink: parsedPaymentInfo.direct_payment_link
   };
 };

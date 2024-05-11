@@ -22,7 +22,7 @@ export default async function Success({ params, searchParams }: Props) {
   }
 
   const order = await tmaAuthenticated(initDataRaw, orderGetById, {
-    orderId,
+    orderId
   });
 
   if (!order) {

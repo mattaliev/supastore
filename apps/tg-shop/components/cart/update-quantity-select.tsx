@@ -10,7 +10,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 
 function SelectTriggerAndContent({ quantity }: { quantity: number }) {
@@ -52,7 +52,7 @@ function SelectTriggerAndContent({ quantity }: { quantity: number }) {
 
 export default function UpdateItemQuantitySelect({
   itemId,
-  quantity,
+  quantity
 }: {
   itemId: string;
   quantity: number;

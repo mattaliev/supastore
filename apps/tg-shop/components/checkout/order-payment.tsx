@@ -8,14 +8,14 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { tmaAuthenticated } from "@/lib/auth";
 
 export default async function OrderPayment({
   order,
-  mutable,
+  mutable
 }: {
   order: Order;
   mutable: boolean;

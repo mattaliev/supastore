@@ -11,12 +11,12 @@ const es = initEdgeStore.create();
 const edgeStoreRouter = es.router({
   publicFiles: es.fileBucket(),
   publicImages: es.imageBucket({
-    maxSize: 1024 * 1024, // 1 MB limit for images
-  }),
+    maxSize: 1024 * 1024 // 1 MB limit for images
+  })
 });
 
 const handler = createEdgeStoreNextHandler({
-  router: edgeStoreRouter,
+  router: edgeStoreRouter
 });
 
 export { handler as GET, handler as POST };

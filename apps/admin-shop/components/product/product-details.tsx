@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function ProductDetails({
   product,
-  productDetailsFieldErrors,
+  productDetailsFieldErrors
 }: {
   product?: Product;
   productDetailsFieldErrors?: {

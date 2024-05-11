@@ -3,7 +3,7 @@
 import { useMiniApp } from "@tma.js/sdk-react";
 
 export default function ThemeProvider({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {

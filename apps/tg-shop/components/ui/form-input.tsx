@@ -21,7 +21,7 @@ export default function FormInput({
   type,
   value,
   defaultValue,
-  onChange,
+  onChange
 }: FormInputProps) {
   return (
     <div className="space-y-2">

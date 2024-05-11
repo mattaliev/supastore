@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -25,7 +25,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 import {
@@ -33,12 +33,12 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 
 export default function CreatePaymentDrawerDialog({
   orderId,
-  paymentMethods,
+  paymentMethods
 }: {
   orderId: string;
   paymentMethods: PaymentMethod[];
@@ -104,14 +104,14 @@ export default function CreatePaymentDrawerDialog({
 function CreatePaymentForm({
   orderId,
   paymentMethods,
-  className,
+  className
 }: {
   orderId: string;
   paymentMethods: PaymentMethod[];
   className?: string;
 }) {
   const [formState, formAction] = useFormState(createPaymentManually, {
-    orderId,
+    orderId
   });
 
   const [paymentMethod, setPaymentMethod] = useState<string>("");

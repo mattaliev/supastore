@@ -6,7 +6,7 @@ import {
   cartCreate,
   cartRemoveItem,
   cartUpdateItem,
-  TAGS,
+  TAGS
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -55,8 +55,8 @@ export const addToCart = async (
         cartId,
         productId,
         variantId: selectedVariantId || null,
-        quantity: quantity || 1,
-      },
+        quantity: quantity || 1
+      }
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
@@ -93,8 +93,8 @@ export const removeFromCart = async (
       input: {
         cartId,
         cartItemId,
-        quantity: quantity || 1,
-      },
+        quantity: quantity || 1
+      }
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
@@ -129,8 +129,8 @@ export const updateCartItem = async (
       input: {
         cartId,
         cartItemId,
-        quantity: quantity || 1,
-      },
+        quantity: quantity || 1
+      }
     });
     revalidateTag(TAGS.CART);
   } catch (e) {

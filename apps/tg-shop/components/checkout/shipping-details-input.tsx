@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import {
   AddressAutocomplete,
-  AddressAutocompleteSelectedResult,
+  AddressAutocompleteSelectedResult
 } from "@/components/checkout/address-autocomplete";
 import { ShippingDetailsFieldErrors } from "@/components/checkout/schemes";
 import {
@@ -12,7 +12,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import FormCheckbox from "@/components/ui/form-checkbox";
 import FormInput from "@/components/ui/form-input";
@@ -24,7 +24,7 @@ type ShippingAddress = Omit<
 
 export default function ShippingDetailsInput({
   shippingDetails,
-  formErrors,
+  formErrors
 }: {
   shippingDetails?: ShippingDetails;
   formErrors?: ShippingDetailsFieldErrors;
@@ -37,7 +37,7 @@ export default function ShippingDetailsInput({
     city: shippingDetails?.city || "",
     province: shippingDetails?.province || "",
     postcode: shippingDetails?.postcode || "",
-    country: shippingDetails?.country || "",
+    country: shippingDetails?.country || ""
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ export default function ShippingDetailsInput({
 
     setShippingAddress((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -56,7 +56,7 @@ export default function ShippingDetailsInput({
       city: "",
       province: "",
       postcode: "",
-      country: "",
+      country: ""
     };
 
     places.address_components.forEach((component) => {

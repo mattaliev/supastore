@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 function SubmitButton({
   selectedVariantId,
-  doesProductHaveVariants,
+  doesProductHaveVariants
 }: {
   selectedVariantId?: string;
   doesProductHaveVariants: boolean;
@@ -54,7 +54,7 @@ function SubmitButton({
 export default function AddToCartButton({
   productId,
   selectedVariantId,
-  doesProductHaveVariants,
+  doesProductHaveVariants
 }: {
   productId: string;
   selectedVariantId?: string;
@@ -66,7 +66,7 @@ export default function AddToCartButton({
     productId,
     selectedVariantId,
     doesProductHaveVariants,
-    quantity: 1,
+    quantity: 1
   };
 
   const actionWithProductVariant = formAction.bind(null, payload);

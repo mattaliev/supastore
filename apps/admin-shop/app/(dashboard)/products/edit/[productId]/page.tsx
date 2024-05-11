@@ -14,7 +14,7 @@ type ProductEditPageProps = {
 };
 
 export default async function ProductEditPage({
-  params,
+  params
 }: ProductEditPageProps) {
   const session = await getServerSession(authOptions);
 
@@ -23,7 +23,7 @@ export default async function ProductEditPage({
   }
 
   const product = await authenticated(session.user.accessToken, productDetail, {
-    id: params.productId,
+    id: params.productId
   });
 
   if (!product) {

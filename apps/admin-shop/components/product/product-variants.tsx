@@ -10,7 +10,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,12 +20,12 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default function ProductVariants({
   variants,
-  variantsFieldError,
+  variantsFieldError
 }: {
   variants?: ProductVariant[];
   variantsFieldError?: ProductFieldErrors["variants"];
@@ -41,8 +41,8 @@ export default function ProductVariants({
         size: "",
         color: "",
         material: "",
-        quantity: 0,
-      },
+        quantity: 0
+      }
     ]);
   };
 
@@ -102,7 +102,7 @@ export default function ProductVariants({
 function ProductVariantDisplay({
   variant,
   index,
-  removeVariant,
+  removeVariant
 }: {
   variant?: StrippedProductVariant;
   index: number;

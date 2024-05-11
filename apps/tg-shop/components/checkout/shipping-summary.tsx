@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const ShippingSummary = ({
   shippingDetails,
-  mutable = true,
+  mutable = true
 }: {
   shippingDetails?: ShippingDetails;
   mutable?: boolean;

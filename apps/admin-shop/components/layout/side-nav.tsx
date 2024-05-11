@@ -7,7 +7,7 @@ import {
   Package2,
   Settings,
   ShoppingCart,
-  Users2,
+  Users2
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,7 @@ import { twMerge } from "tailwind-merge";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
+  TooltipTrigger
 } from "@/components/ui/tooltip";
 
 export default function SideNav() {

@@ -3,43 +3,43 @@ import { z } from "zod";
 export const BasePaymentMethodScheme = z.object({
   provider: z
     .string({
-      required_error: "Please select a provider",
+      required_error: "Please select a provider"
     })
     .min(1, {
-      message: "Please select a provider",
+      message: "Please select a provider"
     }),
   name: z
     .string({
-      required_error: "Please provide a name",
+      required_error: "Please provide a name"
     })
     .min(1, {
-      message: "Please enter a name",
+      message: "Please enter a name"
     }),
   buttonText: z
     .string({
-      required_error: "Please enter button text",
+      required_error: "Please enter button text"
     })
     .min(1, {
-      message: "Please enter button text",
+      message: "Please enter button text"
     }),
-  state: z.string().optional(),
+  state: z.string().optional()
 });
 
 export const TelegramPaymentsScheme = z.object({
   paymentGateway: z
     .string({
-      required_error: "Please select a payment gateway",
+      required_error: "Please select a payment gateway"
     })
     .min(1, {
-      message: "Please select a payment gateway",
+      message: "Please select a payment gateway"
     }),
   providerToken: z
     .string({
-      required_error: "Please enter provider token",
+      required_error: "Please enter provider token"
     })
     .min(1, {
-      message: "Please enter provider token",
-    }),
+      message: "Please enter provider token"
+    })
   // .refine((value) => !value.includes("TEST"), {
   //   message: "Please provide a live provider token",
   // }),
@@ -48,46 +48,46 @@ export const TelegramPaymentsScheme = z.object({
 export const CryptoTransferScheme = z.object({
   network: z
     .string({
-      required_error: "Please enter network",
+      required_error: "Please enter network"
     })
     .min(1, {
-      message: "Please enter network",
+      message: "Please enter network"
     }),
   address: z
     .string({
-      required_error: "Please enter address",
+      required_error: "Please enter address"
     })
     .min(1, {
-      message: "Please enter address",
-    }),
+      message: "Please enter address"
+    })
 });
 
 export const BankTransferScheme = z.object({
   message: z
     .string({
-      required_error: "Please enter message",
+      required_error: "Please enter message"
     })
     .min(1, {
-      message: "Please enter message",
-    }),
+      message: "Please enter message"
+    })
 });
 
 export const WalletPayScheme = z.object({
   apiKey: z
     .string({
-      required_error: "Please enter API key",
+      required_error: "Please enter API key"
     })
     .min(1, {
-      message: "Please enter API key",
+      message: "Please enter API key"
     }),
-  autoConversionCurrency: z.string(),
+  autoConversionCurrency: z.string()
 });
 
 export const PaymentSchemes = {
   TELEGRAM_INVOICE: TelegramPaymentsScheme,
   CRYPTO_TRANSFER: CryptoTransferScheme,
   BANK_TRANSFER: BankTransferScheme,
-  WALLET_PAY: WalletPayScheme,
+  WALLET_PAY: WalletPayScheme
 };
 
 export type BasePaymentFieldErrors = z.inferFlattenedErrors<

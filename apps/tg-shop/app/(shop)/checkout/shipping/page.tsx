@@ -12,7 +12,7 @@ type ShippingDetailsPageProps = {
 };
 
 export default async function ShippingDetailsPage({
-  searchParams,
+  searchParams
 }: ShippingDetailsPageProps) {
   const orderId = cookies().get("orderId")?.value;
   const initDataRaw = cookies().get("initDataRaw")?.value;
@@ -27,7 +27,7 @@ export default async function ShippingDetailsPage({
   }
 
   const order = await tmaAuthenticated(initDataRaw, orderGetById, {
-    orderId,
+    orderId
   });
 
   if (!order) {

@@ -16,7 +16,7 @@ const CatalogPage = async ({ searchParams }: CatalogPageProps) => {
   const paginatedProducts = await productsPaginatedGet({
     state: EntityState[searchParams.state as keyof typeof EntityState],
     page: searchParams.page ? parseInt(searchParams.page) : 1,
-    limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
+    limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit
   });
 
   return <Catalog paginatedProducts={paginatedProducts} limit={defaultLimit} />;

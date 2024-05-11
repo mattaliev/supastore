@@ -10,16 +10,16 @@ import { EdgeStoreProvider } from "@/lib/edgestore";
 const rethink_sans = Rethink_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-rethink_sans",
+  variable: "--font-rethink_sans"
 });
 
 export const metadata: Metadata = {
   title: "DITCH Admin Dashboard",
-  description: "View and manage your DITCH store",
+  description: "View and manage your DITCH store"
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {

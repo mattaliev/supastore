@@ -13,7 +13,7 @@ const variants = {
   disabled:
     "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700",
   accept: "border border-blue-500 bg-blue-500 bg-opacity-10",
-  reject: "border border-red-700 bg-red-700 bg-opacity-10",
+  reject: "border border-red-700 bg-red-700 bg-opacity-10"
 };
 
 type InputProps = {
@@ -38,7 +38,7 @@ const ERROR_MESSAGES = {
   },
   fileNotSupported() {
     return "The file is not supported.";
-  },
+  }
 };
 
 const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
@@ -65,7 +65,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
       fileRejections,
       isFocused,
       isDragAccept,
-      isDragReject,
+      isDragReject
     } = useDropzone({
       accept: { "image/*": [] },
       multiple: false,
@@ -76,7 +76,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           void onChange?.(file);
         }
       },
-      ...dropzoneOptions,
+      ...dropzoneOptions
     });
 
     // styling
@@ -98,7 +98,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
         isDragAccept,
         isDragReject,
         disabled,
-        className,
+        className
       ]
     );
 
@@ -126,8 +126,8 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
             className: dropZoneClassName,
             style: {
               width,
-              height,
-            },
+              height
+            }
           })}
         >
           {/* Main File Input */}

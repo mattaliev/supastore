@@ -18,7 +18,7 @@ type CustomersPageProps = {
 const defaultLimit = 10;
 
 export default async function CustomersPage({
-  searchParams,
+  searchParams
 }: CustomersPageProps) {
   const { page: selectedPage, limit, sortByTop } = searchParams;
 
@@ -33,7 +33,7 @@ export default async function CustomersPage({
     customersPaginated,
     {
       page: selectedPage ? parseInt(selectedPage) : 1,
-      limit: limit ? parseInt(limit) : defaultLimit,
+      limit: limit ? parseInt(limit) : defaultLimit
     }
   );
 

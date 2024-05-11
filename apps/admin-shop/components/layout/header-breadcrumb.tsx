@@ -7,7 +7,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
+  BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 
 const pathnames: Record<string, string[]> = {
@@ -20,7 +20,7 @@ const pathnames: Record<string, string[]> = {
   "/customers": ["Dashboard", "Customers"],
   "/customers/detail": ["Dashboard", "Customers", "Detail"],
   "/payment-systems": ["Dashboard", "Payment Systems"],
-  "/analytics": ["Settings"],
+  "/analytics": ["Settings"]
 };
 
 export default function HeaderBreadcrumb({ pathname }: { pathname: string }) {

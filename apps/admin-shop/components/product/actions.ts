@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 import { authenticated, authOptions } from "@/auth";
 import {
   ProductFieldErrors,
-  ProductScheme,
+  ProductScheme
 } from "@/components/product/schemes";
 
 export type ProductFormErrorResponse = {
@@ -36,7 +36,7 @@ export const createProduct = async (
     sku: rawFormData["sku"],
     variants: productVariantsGetFromFormData(rawFormData),
     imageUrls: productImagesGetFromFormData(rawFormData),
-    state: rawFormData["state"],
+    state: rawFormData["state"]
   });
 
   if (!validatedData.success) {
@@ -46,8 +46,8 @@ export const createProduct = async (
   try {
     await authenticated(session.user.accessToken, productCreate, {
       input: {
-        ...validatedData.data,
-      },
+        ...validatedData.data
+      }
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -86,7 +86,7 @@ export const updateProduct = async (
     sku: rawFormData["sku"],
     variants: productVariantsGetFromFormData(rawFormData),
     imageUrls: productImagesGetFromFormData(rawFormData),
-    state: rawFormData["state"],
+    state: rawFormData["state"]
   });
 
   if (!validatedData.success) {
@@ -97,8 +97,8 @@ export const updateProduct = async (
     await authenticated(session.user.accessToken, productUpdate, {
       input: {
         ...validatedData.data,
-        productId,
-      },
+        productId
+      }
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -132,7 +132,7 @@ export const deleteProduct = async (
 
   try {
     await authenticated(session.user.accessToken, productDelete, {
-      id: productId,
+      id: productId
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -157,7 +157,6 @@ const productVariantsGetFromFormData = (rawFormData: any) => {
   const variantKeys = Object.keys(rawFormData).filter((key) =>
     key.startsWith("variant")
   );
-  console.log(variantKeys);
 
   for (let i = 0; i < variantKeys.length / 3; i += 1) {
     if (
@@ -169,13 +168,12 @@ const productVariantsGetFromFormData = (rawFormData: any) => {
         color: rawFormData[`variant-color-${i}`],
         size: rawFormData[`variant-size-${i}`],
         material: rawFormData[`variant-material-${i}`],
-        quantity: parseInt(rawFormData[`variant-quantity-${i}`]),
+        quantity: parseInt(rawFormData[`variant-quantity-${i}`])
       };
 
       variants.push(variant);
     }
   }
-  console.log(variants);
 
   return variants;
 };

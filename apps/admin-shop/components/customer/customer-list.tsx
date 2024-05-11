@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Table,
@@ -18,20 +18,20 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CustomerList({
   customersPaginated,
-  limit,
+  limit
 }: {
   customersPaginated: Paginated<TelegramUserList>;
   limit: number;
 }) {
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_SHORT, {
-      locale: "en-US",
+      locale: "en-US"
     });
   };
 
@@ -41,7 +41,7 @@ export default function CustomerList({
     pages,
     hasPrev,
     hasNext,
-    totalItems,
+    totalItems
   } = customersPaginated;
 
   const firstProductIndex = (page - 1) * limit + 1;

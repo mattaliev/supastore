@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default async function Failed({
-  searchParams,
+  searchParams
 }: Props): Promise<JSX.Element> {
   const orderId = searchParams.orderId;
   //

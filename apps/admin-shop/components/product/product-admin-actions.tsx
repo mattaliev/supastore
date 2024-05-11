@@ -11,12 +11,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 export default function ProductAdminActions({
   id,
-  title,
+  title
 }: {
   id: string;
   title: string;

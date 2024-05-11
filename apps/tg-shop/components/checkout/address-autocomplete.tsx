@@ -24,7 +24,7 @@ export function AddressAutocomplete({
   type,
   defaultValue,
   error,
-  onPlaceSelected,
+  onPlaceSelected
 }: AddressAutocompleteProps) {
   const { ref } = usePlacesWidget({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY,
@@ -33,8 +33,8 @@ export function AddressAutocomplete({
       types: ["address"],
       fields: ["address_components", "formatted_address"],
       defaultValue: "Bali",
-      language: "en",
-    },
+      language: "en"
+    }
   });
 
   return (

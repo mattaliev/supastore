@@ -17,7 +17,7 @@ type OrderDetailsPageProps = {
 };
 
 export default async function OrderDetailsPage({
-  params,
+  params
 }: OrderDetailsPageProps) {
   const session = await getServerSession(authOptions);
 
@@ -26,7 +26,7 @@ export default async function OrderDetailsPage({
   }
 
   const order = await authenticated(session.user.accessToken, orderGetById, {
-    orderId: params.orderId,
+    orderId: params.orderId
   });
 
   if (!order) {
