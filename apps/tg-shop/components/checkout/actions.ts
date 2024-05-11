@@ -169,6 +169,9 @@ export const createPayment = async (
     return { success: false, error: "Could not create payment" };
   }
 
+  revalidateTag(TAGS.ORDER);
+  revalidateTag(TAGS.CART);
+
   const { paymentInfo, provider } = result;
 
   if (

@@ -102,8 +102,9 @@ def order_create(*, user_id: UUID, cart_id: UUID) -> Order:
 
             if user.has_default_shipping_details:
                 logger.debug("User has shipping details")
-                order.shipping.details = user.shipping_details
+                shipping.details = user.shipping_details
 
+        shipping.save()
         order.save()
 
         Event.register_checkout_started(order=order)
