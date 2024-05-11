@@ -92,7 +92,7 @@ export type FormErrorResponse = {
 
 export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData,
+  formData: FormData
 ): Promise<FormErrorResponse> => {
   const initDataRaw = cookies().get("initDataRaw")?.value;
   const shippingId = formData.get("shipping-id") as string;
@@ -155,7 +155,7 @@ export const createPayment = async (
   payload: {
     paymentMethodId: string;
     currency?: string;
-  },
+  }
 ): Promise<{ success: boolean; paymentLink?: string; error?: string }> => {
   const orderId = cookies().get("orderId")?.value;
   const initDataRaw = cookies().get("initDataRaw")?.value;
