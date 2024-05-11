@@ -22,8 +22,6 @@ export default async function ShippingDetailsPage({
     redirect("/unauthenticated");
   }
 
-  console.log(orderId, initDataRaw);
-
   if (!orderId) {
     return notFound();
   }

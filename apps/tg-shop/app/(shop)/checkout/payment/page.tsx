@@ -48,9 +48,6 @@ export default async function OrderSummaryPage({
     return notFound();
   }
 
-  console.log(order);
-  console.log(order.shipping.details);
-
   return (
     <div>
       <ShippingSummary
