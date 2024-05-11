@@ -25,11 +25,15 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
   const initDataRaw = cookies().get("initDataRaw")?.value;
   const orderId = cookies().get("orderId")?.value;
 
+  console.log("Creating order", cartId, initDataRaw, orderId);
+
   if (!initDataRaw) {
+    console.log("User Unauthenticated");
     redirect("/unauthenticated");
   }
 
   if (!cartId) {
+    console.log("No cart found");
     return "No cart found";
   }
 
@@ -39,29 +43,37 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
     let order;
 
     if (orderId) {
+      console.log("Getting order by id");
       order = await tmaAuthenticated(initDataRaw, orderGetById, {
         orderId,
         state: EntityState.ACTIVE,
       });
+      console.log("Got order by id", order);
     }
 
     if (!order) {
+      console.log("Getting order by cart id");
       order = await tmaAuthenticated(initDataRaw, orderGetByCartId, {
         cartId,
         state: EntityState.ACTIVE,
       });
+      console.log("Got order by cart id", order);
     }
 
     if (!order) {
+      console.log("Creating new order");
       order = await tmaAuthenticated(initDataRaw, orderCreate, {
         cartId,
       });
+      console.log("Created new order", order);
     }
 
     cookies().set("orderId", order.id);
     redirectPath = `/checkout/shipping?shippingId=${order.shipping.id}`;
+    console.log("Redirecting to", redirectPath);
 
     if (order.hasDefaultShippingDetails) {
+      console.log("Order has shipping details, redirecting to payment");
       redirectPath = "/checkout/payment";
     }
   } catch (e) {
@@ -80,7 +92,7 @@ export type FormErrorResponse = {
 
 export const createOrUpdateShippingDetails = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormErrorResponse> => {
   const initDataRaw = cookies().get("initDataRaw")?.value;
   const shippingId = formData.get("shipping-id") as string;
@@ -143,7 +155,7 @@ export const createPayment = async (
   payload: {
     paymentMethodId: string;
     currency?: string;
-  }
+  },
 ): Promise<{ success: boolean; paymentLink?: string; error?: string }> => {
   const orderId = cookies().get("orderId")?.value;
   const initDataRaw = cookies().get("initDataRaw")?.value;
@@ -168,6 +180,9 @@ export const createPayment = async (
   if (!result) {
     return { success: false, error: "Could not create payment" };
   }
+
+  revalidateTag(TAGS.ORDER);
+  revalidateTag(TAGS.CART);
 
   const { paymentInfo, provider } = result;
 

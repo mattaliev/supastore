@@ -5,13 +5,24 @@ import { notFound, redirect } from "next/navigation";
 import ShippingDetailsForm from "@/components/checkout/shipping-details-form";
 import { tmaAuthenticated } from "@/lib/auth";
 
-export default async function ShippingDetailsPage() {
+type ShippingDetailsPageProps = {
+  searchParams: {
+    shippingId: string;
+  };
+};
+
+export default async function ShippingDetailsPage({
+  searchParams,
+}: ShippingDetailsPageProps) {
   const orderId = cookies().get("orderId")?.value;
-  const initDataRaw = cookies().get("initData")?.value;
+  const initDataRaw = cookies().get("initDataRaw")?.value;
+  const shippingId = searchParams.shippingId;
 
   if (!initDataRaw) {
     redirect("/unauthenticated");
   }
+
+  console.log(orderId, initDataRaw);
 
   if (!orderId) {
     return notFound();
