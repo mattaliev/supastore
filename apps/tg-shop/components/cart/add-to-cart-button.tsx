@@ -18,7 +18,7 @@ function SubmitButton({
   const { pending } = useFormStatus();
   const hapticFeedback = useHapticFeedback();
   const buttonClass =
-    "mt-4 w-full bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color";
+    "w-full bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color";
   const disabledClass =
     "bg-telegram-hint-color text-telegram-text-color cursor-not-allowed";
 
@@ -72,7 +72,7 @@ export default function AddToCartButton({
   const actionWithProductVariant = formAction.bind(null, payload);
 
   return (
-    <form action={actionWithProductVariant}>
+    <form action={actionWithProductVariant} className="w-full">
       <SubmitButton
         selectedVariantId={selectedVariantId}
         doesProductHaveVariants={doesProductHaveVariants}
