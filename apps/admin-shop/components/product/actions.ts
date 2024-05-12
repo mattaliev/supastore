@@ -31,6 +31,7 @@ export const createProduct = async (
 
   const validatedData = ProductScheme.safeParse({
     title: rawFormData["title"],
+    shortDescription: rawFormData["short-description"],
     description: rawFormData["description"],
     price: rawFormData["price"],
     sku: rawFormData["sku"],
@@ -81,6 +82,7 @@ export const updateProduct = async (
 
   const validatedData = ProductScheme.safeParse({
     title: rawFormData["title"],
+    shortDescription: rawFormData["short-description"],
     description: rawFormData["description"],
     price: rawFormData["price"],
     sku: rawFormData["sku"],

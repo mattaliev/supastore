@@ -8,6 +8,9 @@ export const ProductScheme = z.object({
       invalid_type_error: "Invalid title"
     })
     .min(1, { message: "Title is required" }),
+  shortDescription: z.string({
+    invalid_type_error: "Invalid description"
+  }),
   description: z.string({
     invalid_type_error: "Invalid description"
   }),

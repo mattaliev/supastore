@@ -16,6 +16,7 @@ export default function ProductDetails({
     description?: ProductFieldErrors["description"];
     sku?: ProductFieldErrors["sku"];
     price?: ProductFieldErrors["price"];
+    shortDescription?: ProductFieldErrors["shortDescription"];
   };
 }) {
   return (
@@ -42,7 +43,22 @@ export default function ProductDetails({
             />
           </div>
           <div className="grid gap-3">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="short-description">Short Description</Label>
+            {productDetailsFieldErrors?.shortDescription && (
+              <p className="text-destructive text-start text-xs">
+                {productDetailsFieldErrors.shortDescription[0]}
+              </p>
+            )}
+            <Textarea
+              id="short-description"
+              name="short-description"
+              defaultValue={product?.shortDescription || ""}
+              placeholder="Enter short description (optional)"
+              className="min-h-16"
+            />
+          </div>
+          <div className="grid gap-3">
+            <Label htmlFor="description">Long Description</Label>
             {productDetailsFieldErrors?.description && (
               <p className="text-destructive text-start text-xs">
                 {productDetailsFieldErrors.description[0]}
