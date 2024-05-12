@@ -143,6 +143,7 @@ export type CartItem = {
 export type Product = {
   id: string;
   title: string;
+  shortDescription: string;
   description: string;
   price: number;
   sku: string;
@@ -194,6 +195,7 @@ export type Order = {
 
 export type ProductCreateInput = {
   title: string;
+  shortDescription?: string;
   description?: string;
   price: string;
   sku?: string;

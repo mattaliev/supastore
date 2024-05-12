@@ -56,6 +56,7 @@ export const productDetailFragment = /* GraphQL */ `
     title
     price
     description
+    shortDescription
     sku
     images {
       order
