@@ -1,9 +1,11 @@
 from django.db import models
+
 from core.models.core import BaseEntity, BaseModel
 
 
 class Product(BaseEntity):
     title = models.CharField(max_length=50)
+    short_description = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     sku = models.CharField(max_length=50, null=True, blank=True)

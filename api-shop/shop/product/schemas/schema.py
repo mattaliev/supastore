@@ -4,7 +4,6 @@ from graphene_django import DjangoObjectType
 from core.schemas import PaginatedType
 from product.models.product import Product, ProductVariant, ProductImage
 
-
 __all__ = [
     "ProductType",
     "ProductPaginatedType",
@@ -50,6 +49,7 @@ class ProductImageType(DjangoObjectType):
 
 class ProductInput(graphene.InputObjectType):
     title = graphene.String(required=True)
+    short_description = graphene.String()
     description = graphene.String()
     price = graphene.String(required=True)
     sku = graphene.String(required=True)
