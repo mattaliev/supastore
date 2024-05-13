@@ -43,6 +43,7 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
     print("Pulling secrets from Google Cloud Secret Manager")
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
     settings_name = os.environ.get("SETTINGS_NAME", "api-shop-settings")
+    print("Settings name", settings_name)
 
     client = secretmanager.SecretManagerServiceClient()
     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
