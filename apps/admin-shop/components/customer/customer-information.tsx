@@ -5,13 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export default function CustomerInformation({
-  customer,
+  customer
 }: {
   customer: TelegramUserDetailParsed;
 }) {
   const formatDateMed = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED, {
-      locale: "en-US",
+      locale: "en-US"
     });
   };
 

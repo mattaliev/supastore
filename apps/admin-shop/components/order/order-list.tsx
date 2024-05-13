@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Table,
@@ -18,7 +18,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { formatDateShort } from "@/lib/utils";
 
@@ -26,7 +26,7 @@ export default function OrderList({
   orders,
   page,
   limit,
-  totalOrderCount,
+  totalOrderCount
 }: {
   orders?: Order[];
   page: number;

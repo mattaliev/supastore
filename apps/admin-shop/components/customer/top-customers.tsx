@@ -9,7 +9,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Table,
@@ -17,11 +17,11 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default async function TopCustomers({
-  sortBy,
+  sortBy
 }: {
   sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
 }) {
@@ -37,7 +37,7 @@ export default async function TopCustomers({
     {
       page: 1,
       limit: 5,
-      sortBy,
+      sortBy
     }
   );
 

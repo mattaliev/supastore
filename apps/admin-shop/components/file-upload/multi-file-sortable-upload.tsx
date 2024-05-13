@@ -6,12 +6,12 @@ import * as React from "react";
 
 import {
   FileState,
-  MultiImageSortableDropzone,
+  MultiImageSortableDropzone
 } from "@/components/file-upload/multi-file-sortable-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 
 export default function MultiFileSortableUpload({
-  initialFileStates,
+  initialFileStates
 }: {
   initialFileStates?: FileState[];
 }) {
@@ -66,7 +66,7 @@ export default function MultiFileSortableUpload({
       className="aspect-square rounded-md object-cover"
       value={fileStates}
       dropzoneOptions={{
-        maxFiles: 6,
+        maxFiles: 6
       }}
       onChange={(files) => {
         setFileStates(files);
@@ -86,7 +86,7 @@ export default function MultiFileSortableUpload({
                     await new Promise((resolve) => setTimeout(resolve, 1000));
                     updateFileProgress(addedFileState.key, "COMPLETE");
                   }
-                },
+                }
               });
               onFileUploaded(addedFileState.key, res.url);
               addedFileState.file = res.url;

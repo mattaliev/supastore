@@ -1,25 +1,24 @@
-name: Build and Deploy Telegram Frontend to Google Cloud Run
-
+name: Build API
 on:
   push:
     branches:
       - main
     paths:
-      - "apps/tg-shop/**"
-      - ".github/workflows/build_and_deploy_client.yml"
-  workflow_dispatch:
+      - "api-shop/**"
+      - ".github/workflows/build_and_deploy_api.yml"
 
 env:
   PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
   GOOGLE_CLOUD_SA_KEY: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
-  SERVICE_NAME: ditch-tg # Change to your service name
-  IMAGE: asia-southeast1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT }}/ditch/ditch-tg # Change to your image name
+  SERVICE_NAME: ditch-api-stage # Change to your Cloud Run service name
+  IMAGE: asia-southeast1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT }}/ditch/ditch-api # Change to your image name
   REGION: asia-southeast1 # Change to your Google Cloud region
 
+
 jobs:
-  setup-build-and-deploy-frontend:
-    environment: deployment
-    name: Setup, Build, Publish and Deploy Frontend
+  build-and-publish-api:
+    environment: Staging
+    name: Build and Publish API
     runs-on: ubuntu-latest
 
     steps:
@@ -59,23 +58,38 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./
-          file: ./apps/tg-shop/Dockerfile
+          context: ./api-shop/shop
           tags: |
             ${{ env.IMAGE }}:${{ env.SHA }}
             ${{ env.IMAGE }}:latest
-          build-args: |
-            NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}
-            NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}
 
+  deploy-to-staging:
+    needs: build-and-publish-api
+    environment: Staging
+    name: Deploy API to Google Cloud Run Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
 
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --quiet \
-            --image ${{ env.IMAGE }}:latest \
-            --region ${{ env.REGION }} \
-            --platform managed \
-            --format json \
-            --allow-unauthenticated \
-            --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }} 
+              --image ${{ env.IMAGE }}:latest \
+              --region ${{ env.REGION }} \
+              --platform managed \
+              --format json \
+              --allow-unauthenticated \
+              --service-account ${{ secrets.GOOGLE_CLOUD_SA_EMAIL }} \
+              --set-env-vars "SETTINGS_NAME=${{ secrets.SETTINGS_NAME }}" 

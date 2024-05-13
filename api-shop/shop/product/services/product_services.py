@@ -1,10 +1,9 @@
+import logging
 from decimal import Decimal
 from uuid import UUID
-import logging
 
 from core.models import Image, EntityStateChoices
 from product.models.product import Product, ProductImage, ProductVariant
-
 
 __all__ = [
     "product_list",
@@ -36,6 +35,7 @@ def product_detail(id: UUID) -> Product:
 def product_create(
     *,
     title: str,
+    short_description: str = None,
     description: str = None,
     price: str,
     sku: str,
@@ -49,6 +49,7 @@ def product_create(
 
     product = Product.objects.create(
         title=title,
+        short_description=short_description,
         description=description,
         price=Decimal(price),
         sku=sku,
@@ -67,6 +68,7 @@ def product_update(
     *,
     product_id: UUID,
     title: str,
+    short_description: str = None,
     description: str = None,
     price: str,
     sku: str,
@@ -81,6 +83,7 @@ def product_update(
     product = Product.objects.get(pk=product_id)
 
     product.title = title
+    product.short_description = short_description
     product.description = description
     product.price = Decimal(price)
     product.sku = sku

@@ -8,7 +8,7 @@ import {
   PaymentProvider,
   PaymentStatus,
   paymentStatusUpdate,
-  TAGS,
+  TAGS
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
@@ -19,7 +19,7 @@ import { authenticated, authOptions } from "@/auth";
 import {
   BasePaymentMethodScheme,
   PaymentFieldErrors,
-  PaymentSchemes,
+  PaymentSchemes
 } from "@/components/payment/schemes";
 
 export const updatePaymentStatus = async (
@@ -43,14 +43,14 @@ export const updatePaymentStatus = async (
   const payload = {
     paymentId,
     paymentStatus,
-    notifyCustomer: formData.get("notify-user") === "on",
+    notifyCustomer: formData.get("notify-user") === "on"
   };
 
   try {
     await authenticated(session.user.accessToken, paymentStatusUpdate, {
       input: {
-        ...payload,
-      },
+        ...payload
+      }
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -60,7 +60,7 @@ export const updatePaymentStatus = async (
     return {
       paymentId,
       paymentStatus,
-      error: "Could not update order status",
+      error: "Could not update order status"
     };
   }
 
@@ -96,8 +96,8 @@ export const createPaymentManually = async (
       input: {
         orderId,
         paymentMethodId,
-        notifyCustomer,
-      },
+        notifyCustomer
+      }
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -135,8 +135,8 @@ export const createPaymentMethod = async (
   try {
     await authenticated(session.user.accessToken, paymentMethodCreate, {
       input: {
-        ...validationResults.data,
-      },
+        ...validationResults.data
+      }
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -183,8 +183,8 @@ export const updatePaymentMethod = async (
     await authenticated(session.user.accessToken, paymentMethodUpdate, {
       input: {
         paymentMethodId,
-        ...validationResults.data,
-      },
+        ...validationResults.data
+      }
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -210,7 +210,7 @@ export const deletePaymentMethod = async (
 
   try {
     await authenticated(session.user.accessToken, paymentMethodDelete, {
-      paymentMethodId,
+      paymentMethodId
     });
   } catch (e) {
     return { success: false, error: "Could not delete payment method" };
@@ -231,12 +231,12 @@ const validatePaymentMethodForm = (formData: FormData) => {
   const scheme = PaymentSchemes[baseData.data.provider as PaymentProvider];
 
   const validatedData = scheme.safeParse({
-    ...formEntries,
+    ...formEntries
   });
 
   if (!validatedData.success) {
     return {
-      error: { fieldErrors: validatedData.error.flatten().fieldErrors },
+      error: { fieldErrors: validatedData.error.flatten().fieldErrors }
     };
   }
 
@@ -249,7 +249,7 @@ const validatePaymentMethodForm = (formData: FormData) => {
       provider: provider as PaymentProvider,
       buttonText,
       state: state as EntityState,
-      otherInfo,
-    },
+      otherInfo
+    }
   };
 };

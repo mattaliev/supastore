@@ -8,12 +8,12 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 
 export default function ProductStatus({
   productState,
-  stateFieldError,
+  stateFieldError
 }: {
   productState?: EntityState;
   stateFieldError?: ProductFieldErrors["state"];

@@ -5,7 +5,7 @@ import {
   orderDelete,
   orderStatusUpdate,
   shippingAddTracking,
-  TAGS,
+  TAGS
 } from "@ditch/lib";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
@@ -15,7 +15,7 @@ import { getServerSession } from "next-auth";
 import { authenticated, authOptions } from "@/auth";
 import {
   ShippingTrackingFieldErrors,
-  ShippingTrackingScheme,
+  ShippingTrackingScheme
 } from "@/components/order/schemes";
 
 export const deleteOrder = async (
@@ -32,7 +32,7 @@ export const deleteOrder = async (
 
   try {
     await authenticated(session.user.accessToken, orderDelete, {
-      orderId,
+      orderId
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -67,12 +67,12 @@ export const updateOrderStatus = async (
   const payload = {
     orderId,
     fulfilmentStatus,
-    notifyCustomer: formData.get("notify-user") === "on",
+    notifyCustomer: formData.get("notify-user") === "on"
   };
 
   try {
     await authenticated(session.user.accessToken, orderStatusUpdate, {
-      input: payload,
+      input: payload
     });
   } catch (e) {
     if (isRedirectError(e)) {
@@ -82,7 +82,7 @@ export const updateOrderStatus = async (
     return {
       orderId,
       fulfilmentStatus,
-      error: "Could not update order status",
+      error: "Could not update order status"
     };
   }
 
@@ -109,24 +109,24 @@ export const addShippingTracking = async (
   const validatedData = ShippingTrackingScheme.safeParse({
     shippingId: prevState.shippingId,
     trackingNumber: formData.get("tracking-number") as string,
-    carrier: formData.get("carrier") as string,
+    carrier: formData.get("carrier") as string
   });
 
   if (!validatedData.success) {
     return {
       shippingId: prevState.shippingId,
-      fieldErrors: validatedData.error.flatten().fieldErrors,
+      fieldErrors: validatedData.error.flatten().fieldErrors
     };
   }
 
   try {
     await authenticated(session.user.accessToken, shippingAddTracking, {
-      input: validatedData.data,
+      input: validatedData.data
     });
   } catch (e) {
     return {
       shippingId: prevState.shippingId,
-      formError: "Could not add tracking number",
+      formError: "Could not add tracking number"
     };
   }
 

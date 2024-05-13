@@ -5,7 +5,7 @@ import {
   MouseSensor,
   TouchSensor,
   useSensor,
-  useSensors,
+  useSensors
 } from "@dnd-kit/core";
 import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
@@ -25,7 +25,7 @@ const variants = {
   disabled:
     "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700",
   accept: "border border-blue-500 bg-blue-500 bg-opacity-10",
-  reject: "border border-red-700 bg-red-700 bg-opacity-10",
+  reject: "border border-red-700 bg-red-700 bg-opacity-10"
 };
 
 export type FileState = {
@@ -56,7 +56,7 @@ const ERROR_MESSAGES = {
   },
   fileNotSupported() {
     return "The file is not supported.";
-  },
+  }
 };
 
 const MultiImageSortableDropzone = React.forwardRef<
@@ -71,7 +71,7 @@ const MultiImageSortableDropzone = React.forwardRef<
       disabled,
       onChange,
       onFilesAdded,
-      handleDrag,
+      handleDrag
     },
     ref
   ) => {
@@ -103,7 +103,7 @@ const MultiImageSortableDropzone = React.forwardRef<
       fileRejections,
       isFocused,
       isDragAccept,
-      isDragReject,
+      isDragReject
     } = useDropzone({
       accept: { "image/*": [] },
       disabled,
@@ -114,13 +114,13 @@ const MultiImageSortableDropzone = React.forwardRef<
           const addedFiles = files.map<FileState>((file) => ({
             file,
             key: Math.random().toString(36).slice(2),
-            progress: "PENDING",
+            progress: "PENDING"
           }));
           void onFilesAdded?.(addedFiles);
           void onChange?.([...(value ?? []), ...addedFiles]);
         }
       },
-      ...dropzoneOptions,
+      ...dropzoneOptions
     });
 
     // styling
@@ -140,7 +140,7 @@ const MultiImageSortableDropzone = React.forwardRef<
         isDragAccept,
         isDragReject,
         disabled,
-        className,
+        className
       ]
     );
 
@@ -163,8 +163,8 @@ const MultiImageSortableDropzone = React.forwardRef<
 
     const mouseSensor = useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 25,
-      },
+        distance: 25
+      }
     });
 
     const sensors = useSensors(mouseSensor, useSensor(TouchSensor));
@@ -175,7 +175,7 @@ const MultiImageSortableDropzone = React.forwardRef<
           fileStates={value}
           dropzoneOptions={dropzoneOptions}
           rootProps={getRootProps({
-            className: dropZoneClassName,
+            className: dropZoneClassName
           })}
           ref={ref}
           inputProps={getInputProps()}
@@ -214,7 +214,7 @@ const MultiImageSortableDropzone = React.forwardRef<
                 fileStates={value}
                 dropzoneOptions={dropzoneOptions}
                 rootProps={getRootProps({
-                  className: twMerge(dropZoneClassName, "first:col-span-3"),
+                  className: twMerge(dropZoneClassName, "first:col-span-3")
                 })}
                 ref={ref}
                 inputProps={getInputProps()}

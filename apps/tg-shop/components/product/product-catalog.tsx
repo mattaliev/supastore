@@ -7,7 +7,7 @@ export const revalidate = 5;
 
 export default function Catalog({
   paginatedProducts,
-  limit,
+  limit
 }: { paginatedProducts: Paginated<Product> } & {
   limit: number;
 }) {
@@ -16,7 +16,7 @@ export default function Catalog({
     hasNext,
     hasPrev,
     pages,
-    page,
+    page
   } = paginatedProducts;
   return (
     products && (

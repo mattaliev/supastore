@@ -3,7 +3,7 @@ import { ProductVariant } from "@ditch/lib";
 export default function ProductVariants({
   variants,
   selectedVariant,
-  setSelectedVariant,
+  setSelectedVariant
 }: {
   variants: ProductVariant[] | null | undefined;
   selectedVariant: string | undefined;

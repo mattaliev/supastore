@@ -17,12 +17,12 @@ const buttonClasses: Record<string, string> = {
   Crypto:
     "bg-telegram-bg-color text-telegram-text-color hover:bg-telegram-button-color border border-telegram-text-color hover:text-telegram-button-text-color hover:border-none",
   "Bank Transfer":
-    "bg-telegram-bg-color text-telegram-text-color hover:bg-telegram-button-color border border-telegram-text-color hover:text-telegram-button-text-color hover:border-none",
+    "bg-telegram-bg-color text-telegram-text-color hover:bg-telegram-button-color border border-telegram-text-color hover:text-telegram-button-text-color hover:border-none"
 };
 
 function SubmitButton({
   name,
-  buttonText,
+  buttonText
 }: {
   name: string;
   buttonText?: string;
@@ -53,7 +53,7 @@ function SubmitButton({
 }
 
 export default function PaymentButton({
-  paymentMethod,
+  paymentMethod
 }: {
   paymentMethod: SafePaymentMethod;
 }) {
@@ -63,7 +63,7 @@ export default function PaymentButton({
   const miniApp = useMiniApp();
   const [formState, formAction] = useFormState(createPayment, null);
   const actionWithPaymentMethod = formAction.bind(null, {
-    paymentMethodId: id,
+    paymentMethodId: id
   });
 
   useEffect(() => {

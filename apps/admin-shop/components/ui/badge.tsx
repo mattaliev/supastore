@@ -17,12 +17,12 @@ const badgeVariants = cva(
         outline: "text-foreground",
         success: "bg-green-300 text-opacity-80 text-black border-transparent",
         warning: "bg-yellow-100 text-opacity-80 text-black border-transparent",
-        danger: "bg-red-400 text-opacity-80 text-black border-transparent",
-      },
+        danger: "bg-red-400 text-opacity-80 text-black border-transparent"
+      }
     },
     defaultVariants: {
-      variant: "default",
-    },
+      variant: "default"
+    }
   }
 );
 

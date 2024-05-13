@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 export default function CustomerDetailHeader({
-  customer,
+  customer
 }: {
   customer: TelegramUserDetailParsed;
 }) {

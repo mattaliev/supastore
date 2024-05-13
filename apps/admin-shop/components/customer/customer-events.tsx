@@ -11,23 +11,23 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default function CustomerEvents({
-  events,
+  events
 }: {
   events: AnalyticsEvent[];
 }) {
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED, {
-      locale: "en-US",
+      locale: "en-US"
     });
   };
 
   const formatTime = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.TIME_24_SIMPLE, {
-      locale: "en-US",
+      locale: "en-US"
     });
   };
 

@@ -11,17 +11,17 @@ import {
   TableFooter,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default function CustomerOrders({
-  customer,
+  customer
 }: {
   customer: TelegramUserDetailParsed;
 }) {
   const formatDateMed = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED, {
-      locale: "en-US",
+      locale: "en-US"
     });
   };
 

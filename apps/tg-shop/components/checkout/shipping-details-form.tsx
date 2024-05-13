@@ -12,7 +12,7 @@ import ContactDetails from "./contact-details";
 
 export default function ShippingDetailsForm({
   shippingDetails,
-  shippingId,
+  shippingId
 }: {
   shippingDetails?: ShippingDetails;
   shippingId: string;

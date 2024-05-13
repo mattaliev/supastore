@@ -7,11 +7,11 @@ import { createContext, useEffect, useState } from "react";
 import { getPath } from "@/lib/path";
 
 const AuthContext = createContext<{ authenticated: boolean }>({
-  authenticated: false,
+  authenticated: false
 });
 
 export default function AuthProvider({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -36,11 +36,11 @@ export default function AuthProvider({
         const register = await fetch("/api/register", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            initDataRaw: launchParams.initDataRaw,
-          }),
+            initDataRaw: launchParams.initDataRaw
+          })
         });
 
         if (register.status !== 200) {

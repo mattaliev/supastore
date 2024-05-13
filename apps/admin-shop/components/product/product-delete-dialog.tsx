@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
 
 function SubmitButton() {
@@ -45,7 +45,7 @@ export default function ProductDeleteDialog({
   productId,
   dialogOpen,
   setDialogOpen,
-  isProductsPage,
+  isProductsPage
 }: {
   title: string;
   productId: string;
@@ -56,7 +56,7 @@ export default function ProductDeleteDialog({
   const [formStatus, formAction] = useFormState(deleteProduct, null);
   const actionWithProductId = formAction.bind(null, {
     productId,
-    isProductsPage,
+    isProductsPage
   });
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function ProductDeleteDialog({
 
 function ProductDeleteForm({
   productId,
-  isProductsPage,
+  isProductsPage
 }: {
   productId: string;
   isProductsPage: boolean;
@@ -93,7 +93,7 @@ function ProductDeleteForm({
   const [formStatus, formAction] = useFormState(deleteProduct, null);
   const actionWithProductId = formAction.bind(null, {
     productId,
-    isProductsPage,
+    isProductsPage
   });
 
   return (

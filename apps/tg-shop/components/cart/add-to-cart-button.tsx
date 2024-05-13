@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 function SubmitButton({
   selectedVariantId,
-  doesProductHaveVariants,
+  doesProductHaveVariants
 }: {
   selectedVariantId?: string;
   doesProductHaveVariants: boolean;
@@ -18,7 +18,7 @@ function SubmitButton({
   const { pending } = useFormStatus();
   const hapticFeedback = useHapticFeedback();
   const buttonClass =
-    "mt-4 w-full bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color";
+    "w-full bg-telegram-button-color text-telegram-button-text-color hover:bg-telegram-button-color";
   const disabledClass =
     "bg-telegram-hint-color text-telegram-text-color cursor-not-allowed";
 
@@ -54,7 +54,7 @@ function SubmitButton({
 export default function AddToCartButton({
   productId,
   selectedVariantId,
-  doesProductHaveVariants,
+  doesProductHaveVariants
 }: {
   productId: string;
   selectedVariantId?: string;
@@ -66,13 +66,13 @@ export default function AddToCartButton({
     productId,
     selectedVariantId,
     doesProductHaveVariants,
-    quantity: 1,
+    quantity: 1
   };
 
   const actionWithProductVariant = formAction.bind(null, payload);
 
   return (
-    <form action={actionWithProductVariant}>
+    <form action={actionWithProductVariant} className="w-full">
       <SubmitButton
         selectedVariantId={selectedVariantId}
         doesProductHaveVariants={doesProductHaveVariants}

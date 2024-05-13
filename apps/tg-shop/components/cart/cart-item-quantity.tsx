@@ -4,7 +4,7 @@ import RemoveFromCartButton from "@/components/cart/remove-from-cart-button";
 import UpdateItemQuantitySelect from "@/components/cart/update-quantity-select";
 
 export default function CartItemQuantity({
-  item,
+  item
 }: {
   item: CartItem;
 }): JSX.Element {

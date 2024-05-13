@@ -1,12 +1,11 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Timeline,
@@ -14,7 +13,7 @@ import {
   TimelineDot,
   TimelineHeading,
   TimelineItem,
-  TimelineLine,
+  TimelineLine
 } from "@/components/ui/timeline";
 
 export const dynamic = "force-dynamic";
@@ -91,15 +90,15 @@ export default function DashboardPage() {
               <TimelineDot status="done" />
               <TimelineLine done />
               <TimelineContent className="text-sm ">
-                <div className="flex flex-col space-y-3 justify-center items-start">
-                  <div>
-                    Connect your store to Telegram to enable clients to access
-                    it. Once you've connected your store you can attach to the
-                    menu button in your bot, pin it in your telegram channel,
-                    and start receiving orders.
-                  </div>
-                  <Button size={"sm"}>Mark as Done</Button>
-                </div>
+                {/*<div className="flex flex-col space-y-3 justify-center items-start">*/}
+                {/*  <div>*/}
+                Connect your store to Telegram to enable clients to access it.
+                Once you've connected your store you can attach to the menu
+                button in your bot, pin it in your telegram channel, and start
+                receiving orders.
+                {/*  </div>*/}
+                {/*  <Button size={"sm"}>Mark as Done</Button>*/}
+                {/*</div>*/}
               </TimelineContent>
             </TimelineItem>
             <TimelineItem status="done">

@@ -4,7 +4,7 @@ import {
   ParsedPaymentMethod,
   PaymentProvider,
   TelegramPaymentMethod,
-  WalletPayPaymentMethod,
+  WalletPayPaymentMethod
 } from "@ditch/lib";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -17,7 +17,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -25,7 +25,7 @@ export default function PaymentMethodFields({
   paymentMethod,
   provider,
   setProvider,
-  fieldErrors,
+  fieldErrors
 }: {
   paymentMethod?: ParsedPaymentMethod;
   provider: string | null;
@@ -145,7 +145,7 @@ export default function PaymentMethodFields({
 
 function TelegramPaymentsFields({
   fieldErrors,
-  paymentMethod,
+  paymentMethod
 }: {
   paymentMethod: TelegramPaymentMethod;
   fieldErrors?: PaymentFieldErrors;
@@ -227,7 +227,7 @@ function TelegramPaymentsFields({
 
 function CryptoTransferFields({
   fieldErrors,
-  paymentMethod,
+  paymentMethod
 }: {
   paymentMethod?: CryptoTransferPaymentMethod;
   fieldErrors?: PaymentFieldErrors;
@@ -267,7 +267,7 @@ function CryptoTransferFields({
 
 function BankTransferFields({
   fieldErrors,
-  paymentMethod,
+  paymentMethod
 }: {
   paymentMethod?: BankTransferPaymentMethod;
   fieldErrors?: PaymentFieldErrors;
@@ -299,7 +299,7 @@ function BankTransferFields({
 
 function WalletPayFields({
   fieldErrors,
-  paymentMethod,
+  paymentMethod
 }: {
   paymentMethod?: WalletPayPaymentMethod;
   fieldErrors?: PaymentFieldErrors;
@@ -399,5 +399,5 @@ const telegramPaymentProviders = [
   "PayBox.money",
   "Freedom Pay",
   "bill_line",
-  "Chapa",
+  "Chapa"
 ];

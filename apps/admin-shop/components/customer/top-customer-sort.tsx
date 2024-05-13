@@ -9,12 +9,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
 export default function TopCustomerSort({
-  sortBy,
+  sortBy
 }: {
   sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
 }) {

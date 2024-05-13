@@ -6,7 +6,7 @@ import * as React from "react";
 export function Sortable({
   id,
   children,
-  className,
+  className
 }: {
   id: UniqueIdentifier;
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export function Sortable({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition
   };
 
   return (

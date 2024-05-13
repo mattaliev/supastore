@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 const defaultLimit = 10;
 
 export default async function ProductListPage({
-  searchParams,
+  searchParams
 }: ProductListPageProps) {
   const {
     objects: products,
@@ -25,11 +25,11 @@ export default async function ProductListPage({
     hasPrev,
     pages,
     totalItems,
-    page,
+    page
   } = await productsPaginatedGet({
     state: EntityState[searchParams.state as keyof typeof EntityState],
     page: searchParams.page ? parseInt(searchParams.page) : 1,
-    limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
+    limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit
   });
 
   return (

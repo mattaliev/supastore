@@ -3,7 +3,7 @@ import { EventType } from "@ditch/lib";
 import { Badge } from "@/components/ui/badge";
 
 export default function AnalyticsEventBadge({
-  eventType,
+  eventType
 }: {
   eventType: EventType;
 }) {

@@ -14,7 +14,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -24,7 +24,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 
@@ -84,14 +84,14 @@ export function CancelOrderDrawerDialog({ orderId }: { orderId: string }) {
 
 function CancelOrderForm({
   orderId,
-  className,
+  className
 }: {
   orderId: string;
   className?: string;
 }) {
   const [formStatus, formAction] = useFormState(updateOrderStatus, {
     orderId,
-    fulfilmentStatus: FulfilmentStatus.CANCELLED,
+    fulfilmentStatus: FulfilmentStatus.CANCELLED
   });
   return (
     <form

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export default function FulfillItemsButton({ orderId }: { orderId: string }) {
   const [formState, formAction] = useFormState(updateOrderStatus, {
     orderId,
-    fulfilmentStatus: FulfilmentStatus.FULFILLED,
+    fulfilmentStatus: FulfilmentStatus.FULFILLED
   });
 
   return (

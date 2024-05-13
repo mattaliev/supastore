@@ -14,7 +14,7 @@ import {
   DrawerFooter,
   DrawerClose,
   DrawerHeader,
-  DrawerTitle,
+  DrawerTitle
 } from "@/components/ui/drawer";
 import { TrashIcon } from "@/components/ui/icons";
 
@@ -85,7 +85,7 @@ export function SubmitButton() {
 
 export default function RemoveFromCartButton({
   itemId,
-  quantity,
+  quantity
 }: {
   itemId: string;
   quantity: number;
@@ -95,7 +95,7 @@ export default function RemoveFromCartButton({
 
   const actionWithPayload = formAction.bind(null, {
     cartItemId: itemId,
-    quantity,
+    quantity
   });
 
   return (

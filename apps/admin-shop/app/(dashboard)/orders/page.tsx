@@ -2,7 +2,7 @@ import {
   EntityState,
   FulfilmentStatus,
   ordersPaginatedGet,
-  PaymentStatus,
+  PaymentStatus
 } from "@ditch/lib";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -28,7 +28,7 @@ export const dynamic = "force-dynamic";
 const defaultLimit = 10;
 
 export default async function OrderListPage({
-  searchParams,
+  searchParams
 }: OrderListPageProps) {
   const session = await getServerSession(authOptions);
 
@@ -44,7 +44,7 @@ export default async function OrderListPage({
       fulfilmentStatus: searchParams.fulfilment_status,
       state: searchParams.state,
       page: searchParams.page ? parseInt(searchParams.page) : 1,
-      limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit,
+      limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit
     }
   );
 
@@ -58,7 +58,7 @@ export default async function OrderListPage({
     hasPrev,
     pages,
     totalItems,
-    page,
+    page
   } = paginatedOrders;
 
   return (

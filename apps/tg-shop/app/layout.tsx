@@ -6,13 +6,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "DITCH SHOP",
-  description: "Ditch the basics; Wear personality.",
+  description: "Ditch the basics; Wear personality."
 };
 
 export const revalidate = 0;
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {

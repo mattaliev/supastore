@@ -7,7 +7,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 export default function OrderCustomer({ user }: { user?: TelegramUser }) {

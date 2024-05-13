@@ -1,5 +1,6 @@
 "use client";
 import { Product } from "@ditch/lib";
+import Link from "next/link";
 import { useState } from "react";
 
 import AddToCartButton from "@/components/cart/add-to-cart-button";
@@ -25,11 +26,14 @@ export default function CatalogProduct({ product }: { product: Product }) {
   return (
     <div className="shadow-lg group transform transition-transform duration-300 rounded-xl bg-telegram-secondary-bg-color">
       <ProductImages images={product.images || []} />
-      <div className="p-4 bg-telegram-secondary-bg-color rounded-b-lg">
-        <h3 className="font-semibold text-telegram-text-color text-lg">
-          {product.title}
-        </h3>
+      <div className="p-4 grid grid-cols-1 gap-2 bg-telegram-secondary-bg-color rounded-b-lg">
+        <Link href={`/product/${product.id}`}>
+          <h3 className="font-semibold text-telegram-text-color text-lg hover:underline">
+            {product.title}
+          </h3>
+        </Link>
         <p className="text-telegram-hint-color">${product.price}</p>
+
         <ProductVariants
           variants={product.variants}
           selectedVariant={selectedVariant}

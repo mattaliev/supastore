@@ -2,7 +2,7 @@ import { AnalyticsEvent, EventType } from "@ditch/lib";
 import Link from "next/link";
 
 export default function AnalyticsEventData({
-  event,
+  event
 }: {
   event: AnalyticsEvent;
 }) {

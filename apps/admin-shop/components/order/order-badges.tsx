@@ -3,7 +3,7 @@ import { FulfilmentStatus, PaymentStatus } from "@ditch/lib";
 import { Badge } from "@/components/ui/badge";
 
 export function PaymentStatusBadge({
-  paymentStatus,
+  paymentStatus
 }: {
   paymentStatus: PaymentStatus;
 }) {
@@ -25,7 +25,7 @@ export function PaymentStatusBadge({
 }
 
 export function FulfilmentStatusBadge({
-  fulfilmentStatus,
+  fulfilmentStatus
 }: {
   fulfilmentStatus: FulfilmentStatus;
 }) {

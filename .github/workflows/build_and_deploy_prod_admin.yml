@@ -1,12 +1,6 @@
 name: Build and Deploy Admin Client to Google Cloud Run
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "apps/admin-shop/**"
-      - ".github/workflows/build_and_deploy_admin.yml"
   workflow_dispatch:
 
 env:

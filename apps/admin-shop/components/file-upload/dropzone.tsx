@@ -3,7 +3,7 @@ import * as React from "react";
 import {
   DropzoneInputProps,
   DropzoneOptions,
-  DropzoneRootProps,
+  DropzoneRootProps
 } from "react-dropzone";
 
 import { FileState } from "@/components/file-upload/multi-file-sortable-dropzone";

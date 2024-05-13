@@ -9,12 +9,12 @@ const timelineVariants = cva("flex flex-col items-stretch", {
     positions: {
       left: "[&>li]:grid-cols-[0_min-content_1fr]",
       right: "[&>li]:grid-cols-[1fr_min-content]",
-      center: "[&>li]:grid-cols-[1fr_min-content_1fr]",
-    },
+      center: "[&>li]:grid-cols-[1fr_min-content_1fr]"
+    }
   },
   defaultVariants: {
-    positions: "left",
-  },
+    positions: "left"
+  }
 });
 
 interface TimelineProps
@@ -40,12 +40,12 @@ const timelineItemVariants = cva("grid items-center gap-x-2", {
   variants: {
     status: {
       done: "text-primary",
-      default: "text-muted-foreground",
-    },
+      default: "text-muted-foreground"
+    }
   },
   defaultVariants: {
-    status: "default",
-  },
+    status: "default"
+  }
 });
 
 interface TimelineItemProps
@@ -74,12 +74,12 @@ const timelineDotVariants = cva(
         done: "bg-primary [&>*:not(.lucide-check)]:hidden [&>.lucide-check]:text-background",
         error:
           "border-destructive bg-destructive [&>*:not(.lucide-x)]:hidden [&>.lucide-x]:text-background",
-        custom: "[&>*:not(:nth-child(4))]:hidden [&>*:nth-child(4)]:block",
-      },
+        custom: "[&>*:not(:nth-child(4))]:hidden [&>*:nth-child(4)]:block"
+      }
     },
     defaultVariants: {
-      status: "default",
-    },
+      status: "default"
+    }
   }
 );
 
@@ -112,12 +112,12 @@ const timelineContentVariants = cva(
     variants: {
       side: {
         right: "col-start-3 col-end-4 mr-auto text-left",
-        left: "col-start-1 col-end-2 ml-auto text-right",
-      },
+        left: "col-start-1 col-end-2 ml-auto text-right"
+      }
     },
     defaultVariants: {
-      side: "right",
-    },
+      side: "right"
+    }
   }
 );
 
@@ -129,7 +129,7 @@ const TimelineContent = React.forwardRef<
   HTMLParagraphElement,
   TimelineContentProps
 >(({ className, side, ...props }, ref) => (
-  <div
+  <p
     className={cn(timelineContentVariants({ side }), className)}
     ref={ref}
     {...props}
@@ -143,17 +143,17 @@ const timelineHeadingVariants = cva(
     variants: {
       side: {
         right: "col-start-3 col-end-4 mr-auto text-left",
-        left: "col-start-1 col-end-2 ml-auto text-right",
+        left: "col-start-1 col-end-2 ml-auto text-right"
       },
       variant: {
         primary: "text-base font-medium text-primary",
-        secondary: "text-sm font-light text-muted-foreground",
-      },
+        secondary: "text-sm font-light text-muted-foreground"
+      }
     },
     defaultVariants: {
       side: "right",
-      variant: "primary",
-    },
+      variant: "primary"
+    }
   }
 );
 
@@ -204,5 +204,5 @@ export {
   TimelineItem,
   TimelineContent,
   TimelineHeading,
-  TimelineLine,
+  TimelineLine
 };

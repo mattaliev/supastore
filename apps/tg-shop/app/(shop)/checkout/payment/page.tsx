@@ -16,7 +16,7 @@ type OrderSummaryPageProps = {
 };
 
 export default async function OrderSummaryPage({
-  searchParams,
+  searchParams
 }: OrderSummaryPageProps) {
   let orderId;
   let order;
@@ -30,7 +30,7 @@ export default async function OrderSummaryPage({
   if (searchParams.orderId) {
     orderId = searchParams.orderId;
     order = await tmaAuthenticated(initDataRaw, orderGetById, {
-      orderId,
+      orderId
     });
     mutable = false;
   } else {
@@ -40,7 +40,7 @@ export default async function OrderSummaryPage({
       return notFound();
     }
     order = await tmaAuthenticated(initDataRaw, orderGetById, {
-      orderId,
+      orderId
     });
   }
 

@@ -9,7 +9,7 @@ import { createOrder } from "@/components/checkout/actions";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton({
-  formRef,
+  formRef
 }: {
   formRef: RefObject<HTMLFormElement>;
 }): JSX.Element {

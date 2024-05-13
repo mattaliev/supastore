@@ -8,7 +8,7 @@ import {
   PaginationItem,
   PaginationLink,
   PaginationNext,
-  PaginationPrevious,
+  PaginationPrevious
 } from "@/components/ui/pagination";
 
 export default function Pagination({
@@ -16,7 +16,7 @@ export default function Pagination({
   hasNext,
   hasPrev,
   page,
-  limit,
+  limit
 }: {
   totalPages: number;
   hasNext: boolean;

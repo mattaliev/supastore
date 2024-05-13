@@ -17,7 +17,7 @@ type CustomerDetailPageProps = {
 };
 
 export default async function CustomerDetailPage({
-  params,
+  params
 }: CustomerDetailPageProps) {
   const session = await getServerSession(authOptions);
 

@@ -6,13 +6,13 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import FormInput from "@/components/ui/form-input";
 
 export default function ContactDetails({
   shippingDetails,
-  formErrors,
+  formErrors
 }: {
   shippingDetails?: ShippingDetails;
   formErrors?: ShippingDetailsFieldErrors;
