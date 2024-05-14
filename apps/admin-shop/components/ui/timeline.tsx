@@ -4,17 +4,17 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 
-const timelineVariants = cva("flex flex-col items-stretch", {
+const timelineVariants = cva("flex flex-col items-center", {
   variants: {
     positions: {
       left: "[&>li]:grid-cols-[0_min-content_1fr]",
       right: "[&>li]:grid-cols-[1fr_min-content]",
-      center: "[&>li]:grid-cols-[1fr_min-content_1fr]"
-    }
+      center: "[&>li]:grid-cols-[1fr_min-content_1fr]",
+    },
   },
   defaultVariants: {
-    positions: "left"
-  }
+    positions: "left",
+  },
 });
 
 interface TimelineProps
@@ -32,7 +32,7 @@ const Timeline = React.forwardRef<HTMLUListElement, TimelineProps>(
         {children}
       </ul>
     );
-  }
+  },
 );
 Timeline.displayName = "Timeline";
 
@@ -40,12 +40,12 @@ const timelineItemVariants = cva("grid items-center gap-x-2", {
   variants: {
     status: {
       done: "text-primary",
-      default: "text-muted-foreground"
-    }
+      default: "text-muted-foreground",
+    },
   },
   defaultVariants: {
-    status: "default"
-  }
+    status: "default",
+  },
 });
 
 interface TimelineItemProps
@@ -59,7 +59,7 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
       ref={ref}
       {...props}
     />
-  )
+  ),
 );
 TimelineItem.displayName = "TimelineItem";
 
@@ -68,19 +68,19 @@ const timelineDotVariants = cva(
   {
     variants: {
       status: {
-        default: "[&>*]:hidden",
+        default: "[&>*]:hidden bg-background",
         current:
           "[&>*:not(.lucide-circle)]:hidden [&>.lucide-circle]:fill-current [&>.lucide-circle]:text-current",
         done: "bg-primary [&>*:not(.lucide-check)]:hidden [&>.lucide-check]:text-background",
         error:
           "border-destructive bg-destructive [&>*:not(.lucide-x)]:hidden [&>.lucide-x]:text-background",
-        custom: "[&>*:not(:nth-child(4))]:hidden [&>*:nth-child(4)]:block"
-      }
+        custom: "[&>*:not(:nth-child(4))]:hidden [&>*:nth-child(4)]:block",
+      },
     },
     defaultVariants: {
-      status: "default"
-    }
-  }
+      status: "default",
+    },
+  },
 );
 
 interface TimelineDotProps
@@ -97,12 +97,12 @@ const TimelineDot = React.forwardRef<HTMLDivElement, TimelineDotProps>(
       ref={ref}
       {...props}
     >
-      <Circle className="size-2.5" />
+      <Circle className="size-3" />
       <Check className="size-3" />
       <X className="size-3" />
       {customIcon}
     </div>
-  )
+  ),
 );
 TimelineDot.displayName = "TimelineDot";
 
@@ -112,13 +112,13 @@ const timelineContentVariants = cva(
     variants: {
       side: {
         right: "col-start-3 col-end-4 mr-auto text-left",
-        left: "col-start-1 col-end-2 ml-auto text-right"
-      }
+        left: "col-start-1 col-end-2 ml-auto text-right",
+      },
     },
     defaultVariants: {
-      side: "right"
-    }
-  }
+      side: "right",
+    },
+  },
 );
 
 interface TimelineContentProps
@@ -143,18 +143,18 @@ const timelineHeadingVariants = cva(
     variants: {
       side: {
         right: "col-start-3 col-end-4 mr-auto text-left",
-        left: "col-start-1 col-end-2 ml-auto text-right"
+        left: "col-start-1 col-end-2 ml-auto text-right",
       },
       variant: {
         primary: "text-base font-medium text-primary",
-        secondary: "text-sm font-light text-muted-foreground"
-      }
+        secondary: "text-sm font-light text-muted-foreground",
+      },
     },
     defaultVariants: {
       side: "right",
-      variant: "primary"
-    }
-  }
+      variant: "primary",
+    },
+  },
 );
 
 interface TimelineHeadingProps
@@ -186,15 +186,15 @@ const TimelineLine = React.forwardRef<HTMLHRElement, TimelineLineProps>(
         role="separator"
         aria-orientation="vertical"
         className={cn(
-          "col-start-2 col-end-3 row-start-2 row-end-2 mx-auto flex h-full min-h-16 w-0.5 justify-center rounded-full",
+          "w-0.5 min-h-16 h-full border-none",
           done ? "bg-primary" : "bg-muted",
-          className
+          className,
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 TimelineLine.displayName = "TimelineLine";
 
@@ -204,5 +204,5 @@ export {
   TimelineItem,
   TimelineContent,
   TimelineHeading,
-  TimelineLine
+  TimelineLine,
 };
