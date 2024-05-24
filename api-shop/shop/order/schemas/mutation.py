@@ -4,13 +4,12 @@ from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
 from order.schemas.schema import OrderStatusUpdateInput
 from order.services import order_create, order_delete, \
     order_fulfilment_status_update
+from store.services import can_manage_store
 
 __all__ = [
     "OrderCreateMutation",
     "Mutation"
 ]
-
-from user.models import UserRoleChoices
 
 
 class OrderCreateMutation(graphene.Mutation):
@@ -18,13 +17,14 @@ class OrderCreateMutation(graphene.Mutation):
 
     class Arguments:
         cart_id = graphene.UUID(required=True)
+        store_id = graphene.UUID(required=True)
 
-    def mutate(self, info, cart_id, **kwargs):
+    def mutate(self, info, cart_id, store_id, **kwargs):
         user = info.context.user
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        order = order_create(user_id=user.id, cart_id=cart_id)
+        order = order_create(user_id=user.id, cart_id=cart_id, store_id=store_id)
         return OrderCreateMutation(order=order)
 
 
@@ -40,7 +40,7 @@ class OrderUpdateMutation(graphene.Mutation):
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        if not can_manage_store(user=user, store_id=input.store_id):
             raise UNAUTHORIZED()
 
         order = order_fulfilment_status_update(**input)
@@ -52,14 +52,15 @@ class OrderDeleteMutation(graphene.Mutation):
 
     class Arguments:
         order_id = graphene.UUID(required=True)
+        store_id = graphene.UUID(required=True)
 
-    def mutate(self, info, order_id, **kwargs):
+    def mutate(self, info, order_id, store_id, **kwargs):
         user = info.context.user
 
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        if not can_manage_store(user=user, store_id=store_id):
             raise UNAUTHORIZED()
 
         success = order_delete(order_id=order_id)

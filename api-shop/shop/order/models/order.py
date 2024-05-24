@@ -29,6 +29,11 @@ class Order(BaseEntity):
         blank=True,
         null=True
     )
+    store = models.ForeignKey(
+        "store.Store",
+        on_delete=models.CASCADE,
+        related_name="orders",
+    )
     cart = models.OneToOneField(
         "cart.Cart",
         on_delete=models.CASCADE,
