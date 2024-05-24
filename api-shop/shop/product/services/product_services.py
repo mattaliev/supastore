@@ -16,14 +16,14 @@ __all__ = [
 ]
 
 
-def product_list(*, state: EntityStateChoices = None):
+def product_list(*, store_id: UUID, state: EntityStateChoices = None):
     logger = logging.getLogger(__name__)
     logger.debug("Fetching all products. State: %s", state if state else "All")
 
     if state:
-        return Product.objects.filter(state=state)
+        return Product.objects.filter(store_id=store_id, state=state)
 
-    return Product.objects.all()
+    return Product.objects.filter(store_id=store_id)
 
 
 def product_detail(id: UUID) -> Product:
@@ -34,6 +34,7 @@ def product_detail(id: UUID) -> Product:
 
 def product_create(
     *,
+    store_id: UUID,
     title: str,
     short_description: str = None,
     description: str = None,
@@ -48,6 +49,7 @@ def product_create(
     logger.debug("Creating product with title: %s", title)
 
     product = Product.objects.create(
+        store_id=store_id,
         title=title,
         short_description=short_description,
         description=description,

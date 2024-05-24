@@ -18,6 +18,7 @@ __all__ = [
 
 class ProductType(DjangoObjectType):
     state = graphene.Field('core.schemas.EntityState')
+    store = graphene.Field('store.schemas.StoreType')
 
     class Meta:
         model = Product
@@ -67,9 +68,9 @@ class ProductVariantInput(graphene.InputObjectType):
 
 
 class ProductCreateInput(ProductInput):
-    pass
+    store_id = graphene.UUID(required=True)
 
 
-class ProductUpdateInput(ProductInput):
+class ProductUpdateInput(ProductCreateInput):
     product_id = graphene.UUID(required=True)
 

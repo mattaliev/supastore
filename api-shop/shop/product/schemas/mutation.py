@@ -1,5 +1,6 @@
 import graphene
 
+from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
 from product.schemas.schema import ProductCreateInput, ProductUpdateInput
 from product.services import product_create, product_update, product_delete
 
@@ -10,6 +11,8 @@ __all__ = [
     "ProductDeleteMutation"
 ]
 
+from store.services import can_manage_store
+
 
 class ProductCreateMutation(graphene.Mutation):
     class Arguments:
@@ -18,6 +21,14 @@ class ProductCreateMutation(graphene.Mutation):
     product = graphene.Field("product.schemas.schema.ProductType")
 
     def mutate(self, info, input, **kwargs):
+        user = info.context.user
+
+        if not user.is_authenticated:
+            raise UNAUTHENTICATED()
+
+        if not can_manage_store(user=user, store_id=input.store_id):
+            raise UNAUTHORIZED()
+
         product = product_create(**input)
         return ProductCreateMutation(product=product)
 
@@ -29,6 +40,15 @@ class ProductUpdateMutation(graphene.Mutation):
     product = graphene.Field("product.schemas.schema.ProductType")
 
     def mutate(self, info, input, **kwargs):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise UNAUTHENTICATED()
+
+        store_id = input.pop('store_id')
+
+        if not can_manage_store(user=user, store_id=store_id):
+            raise UNAUTHORIZED()
+
         product = product_update(**input)
         return ProductUpdateMutation(product=product)
 
@@ -36,10 +56,18 @@ class ProductUpdateMutation(graphene.Mutation):
 class ProductDeleteMutation(graphene.Mutation):
     class Arguments:
         id = graphene.UUID(required=True)
+        store_id = graphene.UUID(required=True)
 
     success = graphene.Boolean()
 
-    def mutate(self, info, id, **kwargs):
+    def mutate(self, info, id, store_id, **kwargs):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise UNAUTHENTICATED()
+
+        if not can_manage_store(user=user, store_id=store_id):
+            raise UNAUTHORIZED()
+
         product_delete(id=id)
         return ProductDeleteMutation(success=True)
 
