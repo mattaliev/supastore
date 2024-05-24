@@ -9,6 +9,8 @@ from authentication.services import (
     session_update,
     decode_jwt
 )
+from store.models import Store
+from store.services import store_bot_token_get
 
 User = get_user_model()
 
@@ -25,8 +27,13 @@ class AuthMiddleware(object):
         if "Authorization" in headers:
             method, token = headers["Authorization"].split(" ")
             if method == "TWA":
+                store_id = headers.get("Store-Id")
+                store = Store.objects.get(pk=store_id)
+                bot_token = store_bot_token_get(store=store)
+
                 # Validate init data
-                validate_init_data(token)
+                if bot_token:
+                    validate_init_data(token, bot_token=bot_token)
 
                 # Parse init data
                 data = parse_init_data(token)

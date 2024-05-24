@@ -7,6 +7,7 @@ from order.schemas import Query as OrderQuery, Mutation as OrderMutation
 from payment.schemas import Query as PaymentQuery, Mutation as PaymentMutation
 from product.schemas import Query as ProductQuery, Mutation as ProductMutation
 from shipping.schemas import Mutation as ShippingDetailsMutation
+from store.schemas import Mutation as StoreMutation, Query as StoreQuery
 from user.schemas import Query as UserQuery
 
 
@@ -17,6 +18,7 @@ class Query(
     UserQuery,
     AnalyticsQuery,
     PaymentQuery,
+    StoreQuery,
     graphene.ObjectType
 ):
     pass
@@ -29,6 +31,7 @@ class Mutation(
     ShippingDetailsMutation,
     PaymentMutation,
     AuthMutation,
+    StoreMutation,
     graphene.ObjectType
 ):
     pass
