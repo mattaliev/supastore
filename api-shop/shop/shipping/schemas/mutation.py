@@ -12,7 +12,7 @@ __all__ = [
     "Mutation"
 ]
 
-from user.models import UserRoleChoices
+from store.services import can_manage_store
 
 
 class ShippingAddTrackingMutation(graphene.Mutation):
@@ -26,7 +26,7 @@ class ShippingAddTrackingMutation(graphene.Mutation):
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        if not can_manage_store(user=user, store_id=input.store_id):
             raise UNAUTHORIZED()
 
         shipping = shipping_add_tracking(**input)

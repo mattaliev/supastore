@@ -28,6 +28,7 @@ class ShippingDetailsType(DjangoObjectType):
 
 
 class ShippingAddTrackingInput(graphene.InputObjectType):
+    store_id = graphene.UUID(required=True)
     shipping_id = graphene.UUID(required=True)
     carrier = graphene.String(required=True)
     tracking_number = graphene.String(required=True)
