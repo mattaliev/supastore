@@ -47,9 +47,9 @@ class TelegramUserType(DjangoObjectType):
         return self.carts.all()
 
     def resolve_payments(self, info):
-        payments = Payment.objects.filter(order__user=self)
-
-        return payments
+        return Payment.objects.filter(
+            order__user=self,
+        )
 
     def resolve_events(self, info):
         return self.events.all().order_by("-created")
@@ -91,6 +91,17 @@ class TelegramUserType(DjangoObjectType):
         model = TelegramUser
         fields = "__all__"
 
+
+class StoreUserType(DjangoObjectType):
+    user = graphene.Field("user.schemas.TelegramUserType")
+
+    def resolve_user(self, info):
+        return self.user
+
+    class Meta:
+        model = TelegramUser
+        fields = "__all__"
+        
 
 class TelegramUserPaginatedType(PaginatedType):
     objects = graphene.List(TelegramUserType)

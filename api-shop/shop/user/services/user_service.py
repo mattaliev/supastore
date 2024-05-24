@@ -3,12 +3,14 @@ from decimal import Decimal
 from uuid import UUID
 
 from django.contrib.auth import get_user_model
-from django.db.models import Q, Count, Sum, QuerySet, Case, When
+from django.db.models import Q, Count, Sum, QuerySet, Case, When, Prefetch
 
 from analytics.models import Event, EventTypeChoices
+from cart.models import Cart
+from order.models import Order
 from payment.models import PaymentStatusChoices
 from product.models import Product
-from user.models.user import CustomerSortChoices
+from user.models.user import CustomerSortChoices, StoreUser
 
 User = get_user_model()
 
@@ -28,11 +30,13 @@ __all__ = [
 ]
 
 
-def customer_list_get(*, sort_by: CustomerSortChoices = None):
+def customer_list_get(*, store_id: UUID, sort_by: CustomerSortChoices = None):
     logger = logging.getLogger(__name__)
     logger.debug("Getting customer list")
 
-    customers = User.objects.all().order_by("-updated")
+    customers = User.objects.filter(store_users__store_id=store_id).order_by("-updated")
+
+    customers = customer_prefetch_related(customers=customers, store_id=store_id)
 
     logger.debug("Got %(count)s customers", {"count": customers.count()})
 
@@ -41,19 +45,23 @@ def customer_list_get(*, sort_by: CustomerSortChoices = None):
 
     if sort_by == CustomerSortChoices.TOTAL_SALES:
         customers = (
-            User.objects.all()
-            .filter(orders__payment__payment_status="PAID")
-            .annotate(total_sales=Sum("orders__payment__total_amount"))
-            .order_by("-total_sales")
+            customers.annotate(
+                total_sales=Sum(
+                    "orders__payment__total_amount",
+                    filter=Q(orders__store_id=store_id, orders__payment_status="PAID")
+                )
+            ).order_by("-total_sales")
         )
     elif sort_by == CustomerSortChoices.TOTAL_VISITS:
         customers = (
-            User.objects.annotate(
+            customers.annotate(
                 visits_count=Count(
                     'events__event_type',
                     filter=Q(
+                        events__store_id=store_id,
                         events__event_type=EventTypeChoices.USER_VISITED,
                     ) | Q(
+                        events__store_id=store_id,
                         events__event_type=EventTypeChoices.USER_REGISTERED
                     )
                 )
@@ -63,14 +71,26 @@ def customer_list_get(*, sort_by: CustomerSortChoices = None):
     return customers
 
 
-def customer_detail_get(*, user_id: UUID):
+def customer_detail_get(*, store_id: UUID, user_id: UUID):
     logger = logging.getLogger(__name__)
     logger.debug("Getting customer detail", {"user_id": user_id})
 
-    customer = User.objects.get(id=user_id)
+    customer = User.objects.filter(id=user_id)
+
+    customer = (
+        customer_prefetch_related(customers=customer, store_id=store_id).first()
+    )
 
     logger.debug("Got customer", {"customer": customer.id})
     return customer
+
+
+def customer_prefetch_related(*, customers: QuerySet[User], store_id: UUID) -> QuerySet[User]:
+    orders_prefetch = Prefetch("orders", queryset=Order.objects.filter(store_id=store_id))
+    carts_prefetch = Prefetch("carts", queryset=Cart.objects.filter(store_id=store_id))
+    events_prefetch = Prefetch("events", queryset=Event.objects.filter(store_id=store_id))
+
+    return customers.prefetch_related(orders_prefetch, carts_prefetch, events_prefetch)
 
 
 def customer_completed_payment_count(*, user: User):
@@ -87,27 +107,28 @@ def customer_is_new(*, user: User):
     :param user:
     :return:
     """
-    return user.events.filter(event_type=EventTypeChoices.USER_VISITED).count() == 0
+    return not user.events.filter(
+        event_type=EventTypeChoices.USER_VISITED
+    ).exists()
+
+
+def customer_visits_get(*, user: User) -> QuerySet[Event]:
+    return user.events.filter(
+        Q(event_type=EventTypeChoices.USER_VISITED) | Q(event_type=EventTypeChoices.USER_REGISTERED)
+    )
 
 
 def customer_last_visit(*, user: User):
-    last_visit = user.events.filter(
-        event_type=EventTypeChoices.USER_VISITED
-    ).order_by("-created").first()
+    last_visit = customer_visits_get(user=user).order_by("-created").first()
 
     if last_visit:
         return last_visit.created
-    return user.created
+    return None
+
 
 
 def customer_total_visit_count(*, user: User):
-    user_visit_count = user.events.filter(
-        event_type=EventTypeChoices.USER_VISITED
-    ).count()
-
-    if user_visit_count == 0:
-        return 1
-    return user_visit_count
+    return customer_visits_get(user=user).count()
 
 
 def customer_amount_spent(*, user: User):
@@ -151,8 +172,9 @@ def customer_favorite_products(*, user: User) -> QuerySet[Product]:
     # return Product.objects.filter(id__in=favorite_products)
 
     product_counts = (
-        user.events.filter(event_type=EventTypeChoices.ADDED_TO_CART)
-        .values("event_data__product_id")
+        user.events.filter(
+            event_type=EventTypeChoices.ADDED_TO_CART
+        ).values("event_data__product_id")
         .annotate(count=Count("event_data__product_id"))
         .order_by("-count")
     )
@@ -171,6 +193,7 @@ def customer_favorite_products(*, user: User) -> QuerySet[Product]:
 def user_create_or_update(
     *,
     telegram_id: int,
+    store_id: UUID = None,
     username: str = None,
     first_name: str = None,
     last_name: str = None,
@@ -178,11 +201,12 @@ def user_create_or_update(
     is_bot: bool = None,
     photo_url: str = None,
     allows_notifications: bool = None,
-    role: str = None,
     chat_id: int = None
 ):
     logger = logging.getLogger(__name__)
-    logger.debug("Creating or updating user", {"telegram_id": telegram_id})
+    logger.debug("Creating or updating user %(telegram_id)s", {
+        "telegram_id": telegram_id
+    })
 
     fields = {
         'username': username,
@@ -192,7 +216,6 @@ def user_create_or_update(
         'is_bot': is_bot,
         'photo_url': photo_url,
         'allows_notifications': allows_notifications,
-        'role': role,
         'chat_id': chat_id
     }
 
@@ -203,11 +226,17 @@ def user_create_or_update(
         telegram_id=telegram_id,
         defaults=defaults
     )
-    logger.debug("Got user", {"user": user.id, "created": created})
 
-    if created:
-        Event.register_user_register(user=user)
+    if not store_id:
+        return user, created
+
+    store_user, store_user_created = StoreUser.objects.update_or_create(
+        store_id=store_id, user=user
+    )
+
+    if store_user_created:
+        Event.register_user_register(user=user, store_id=store_id)
     else:
-        Event.register_user_visited(user=user)
+        Event.register_user_visited(user=user, store_id=store_id)
 
     return user, created
