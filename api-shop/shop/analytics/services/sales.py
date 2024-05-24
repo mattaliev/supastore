@@ -2,6 +2,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.utils import timezone
+from graphene import UUID
 
 from payment.models import Payment, PaymentStatusChoices
 
@@ -10,8 +11,11 @@ __all__ = [
 ]
 
 
-def sales_analytics_get():
-    payments = Payment.objects.filter(payment_status=PaymentStatusChoices.PAID)
+def sales_analytics_get(*, store_id: UUID):
+    payments = Payment.objects.filter(
+        payment_status=PaymentStatusChoices.PAID,
+        order__store__id=store_id
+    )
 
     # Get today's date
     today = timezone.now()
