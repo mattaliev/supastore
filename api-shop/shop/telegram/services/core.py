@@ -11,12 +11,9 @@ __all__ = [
     "telegram_message_send",
     "telegram_webhook_set",
     "telegram_message_forward",
-    "telegram_shop_message_send",
+    "telegram_create_invoice_link",
     "telegram_support_message_send",
-    "telegram_shop_webhook_set",
-    "telegram_support_webhook_set",
     "telegram_support_message_forward",
-    "telegram_shop_create_invoice_link"
 ]
 
 from core.utils.encryption import decrypt
@@ -166,24 +163,6 @@ def telegram_create_invoice_link(
                      {"error": e.message})
 
 
-def telegram_shop_message_send(
-        *,
-        chat_id: int,
-        text: str,
-        reply_markup: [dict] = None,
-        parse_mode: str | None = "MarkdownV2"
-) -> None:
-    logger = logging.getLogger(__name__)
-    logger.debug("Sending telegram shop message")
-    telegram_message_send(
-        bot_token=settings.TELEGRAM_SHOP_TOKEN,
-        chat_id=chat_id,
-        text=text,
-        reply_markup=reply_markup,
-        parse_mode=parse_mode
-    )
-
-
 def telegram_support_message_send(*, chat_id: int, text: str,
                                   reply_markup: [dict] = None) -> None:
     logger = logging.getLogger(__name__)
@@ -194,40 +173,6 @@ def telegram_support_message_send(*, chat_id: int, text: str,
         text=text,
         reply_markup=reply_markup,
         parse_mode=None
-    )
-
-
-def telegram_shop_webhook_set() -> None:
-    logger = logging.getLogger(__name__)
-    logger.debug("Setting telegram shop webhook...")
-
-    if not settings.SERVICE_URL:
-        logger.warning(
-            "Couldn't set telegram shop webhook URL, SERVICE_URL is not provided")
-        return
-
-    url = f"{settings.SERVICE_URL}/telegram/webhooks/shop/sendUpdate/"
-
-    telegram_webhook_set(
-        bot_token=settings.TELEGRAM_SHOP_TOKEN,
-        url=url
-    )
-
-
-def telegram_support_webhook_set() -> None:
-    logger = logging.getLogger(__name__)
-    logger.debug("Setting telegram support webhook...")
-
-    if not settings.SERVICE_URL:
-        logger.warning(
-            "Couldn't set telegram support webhook URL, SERVICE_URL is not provided")
-        return
-
-    url = f"{settings.SERVICE_URL}/telegram/webhooks/support/sendUpdate/"
-
-    telegram_webhook_set(
-        bot_token=settings.TELEGRAM_SUPPORT_TOKEN,
-        url=url
     )
 
 
@@ -249,12 +194,3 @@ def telegram_support_message_forward(*, chat_id: int, from_chat_id: int,
         message_id=message_id
     )
 
-
-def telegram_shop_create_invoice_link(
-        *,
-        payment: Payment
-) -> str:
-    return telegram_create_invoice_link(
-        bot_token=settings.TELEGRAM_SHOP_TOKEN,
-        payment=payment
-    )
