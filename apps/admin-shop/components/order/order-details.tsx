@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CancelOrderDrawerDialog } from "@/components/order/cancel-order-drawer-dialog";
 import FulfillItemsButton from "@/components/order/fulfill-items-button";
 import { FulfilmentStatusBadge } from "@/components/order/order-badges";
+import { StoreProvider } from "@/components/store/store-context";
 import {
   Card,
   CardContent,
@@ -23,7 +24,13 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-export default function OrderDetails({ order }: { order: Order }) {
+export default function OrderDetails({
+  order,
+  storeId
+}: {
+  order: Order;
+  storeId: string;
+}) {
   function formatDate(date: string) {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL, {
       locale: "en-US"
@@ -73,7 +80,7 @@ export default function OrderDetails({ order }: { order: Order }) {
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/products/edit/${item.product.id}`}
+                    href={`/store/${storeId}/products/edit/${item.product.id}`}
                     className="hover:underline"
                   >
                     {item.product.title}
@@ -93,10 +100,12 @@ export default function OrderDetails({ order }: { order: Order }) {
       </CardContent>
       {order.fulfilmentStatus === FulfilmentStatus.UNFULFILLED && (
         <CardFooter>
-          <div className="flex ml-auto items-end space-x-2">
-            <CancelOrderDrawerDialog orderId={order.id} />
-            <FulfillItemsButton orderId={order.id} />
-          </div>
+          <StoreProvider storeId={storeId}>
+            <div className="flex ml-auto items-end space-x-2">
+              <CancelOrderDrawerDialog orderId={order.id} />
+              <FulfillItemsButton orderId={order.id} />
+            </div>
+          </StoreProvider>
         </CardFooter>
       )}
     </Card>

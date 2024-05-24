@@ -10,13 +10,20 @@ import { twMerge } from "tailwind-merge";
 import { updateProduct } from "@/components/product/actions";
 import ProductDeleteDialog from "@/components/product/product-delete-dialog";
 import ProductInputFields from "@/components/product/product-input-fields";
+import { StoreProvider } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-export default function ProductUpdateForm({ product }: { product: Product }) {
+export default function ProductUpdateForm({
+  product,
+  storeId
+}: {
+  product: Product;
+  storeId: string;
+}) {
   const { back } = useRouter();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [formErrors, formAction] = useFormState(updateProduct, null);
+  const [formErrors, formAction] = useFormState(updateProduct, { storeId });
 
   return (
     <Dialog>
@@ -45,7 +52,11 @@ export default function ProductUpdateForm({ product }: { product: Product }) {
               <UpdateProductButton className={""} />
 
               <DialogTrigger asChild>
-                <Button variant="destructive" size={"sm"} type={"button"}>
+                <Button
+                  variant="destructive-outline"
+                  size={"sm"}
+                  type={"button"}
+                >
                   Delete
                 </Button>
               </DialogTrigger>
@@ -62,27 +73,33 @@ export default function ProductUpdateForm({ product }: { product: Product }) {
             </p>
           )}
           <div className={"items-center gap-2 flex"}>
-            <Link href={"/products"}>
+            <Link href={`/store/${storeId}/products`}>
               <Button size={"sm"} type={"button"} variant="outline">
                 Discard
               </Button>
             </Link>
             <UpdateProductButton className={"flex"} />
             <DialogTrigger asChild>
-              <Button size={"sm"} type={"button"} variant={"destructive"}>
+              <Button
+                size={"sm"}
+                type={"button"}
+                variant={"destructive-outline"}
+              >
                 Delete
               </Button>
             </DialogTrigger>
           </div>
         </div>
       </form>
-      <ProductDeleteDialog
-        title={product.title}
-        productId={product.id}
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        isProductsPage={false}
-      />
+      <StoreProvider storeId={storeId}>
+        <ProductDeleteDialog
+          title={product.title}
+          productId={product.id}
+          dialogOpen={dialogOpen}
+          setDialogOpen={setDialogOpen}
+          isProductsPage={false}
+        />
+      </StoreProvider>
     </Dialog>
   );
 }

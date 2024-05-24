@@ -7,6 +7,7 @@ import PaymentMethodCreate from "@/components/payment/payment-method-create";
 import PaymentMethodDelete from "@/components/payment/payment-method-delete";
 import PaymentMethodUpdateDialogDrawer from "@/components/payment/payment-method-update";
 import { ProductBadge } from "@/components/product/product-badges";
+import { StoreProvider } from "@/components/store/store-context";
 import {
   Card,
   CardContent,
@@ -25,21 +26,32 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default async function PaymentSystemsPage() {
+type PaymentSystemsPageProps = {
+  params: {
+    storeId: string;
+  };
+};
+
+export default async function PaymentSystemsPage({
+  params
+}: PaymentSystemsPageProps) {
+  const { storeId } = params;
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/payment-systems");
+    redirect(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/payment-systems`)}`
+    );
   }
 
   const paymentMethods = await authenticated(
     session.user.accessToken,
     paymentMethodsList,
-    {}
+    { storeId }
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] auto-rows-max gap-4">
+    <div className="grid grid-cols-1 max-w-[59rem] mx-auto w-full auto-rows-max gap-4">
       <div className="grid gap-4">
         <Card>
           <CardHeader>
@@ -68,14 +80,16 @@ export default async function PaymentSystemsPage() {
                       <ProductBadge state={paymentMethod.state} />
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-2">
-                        <PaymentMethodUpdateDialogDrawer
-                          paymentMethod={paymentMethod}
-                        />
-                        <PaymentMethodDelete
-                          paymentMethodId={paymentMethod.id}
-                        />
-                      </div>
+                      <StoreProvider storeId={storeId}>
+                        <div className="flex gap-2">
+                          <PaymentMethodUpdateDialogDrawer
+                            paymentMethod={paymentMethod}
+                          />
+                          <PaymentMethodDelete
+                            paymentMethodId={paymentMethod.id}
+                          />
+                        </div>
+                      </StoreProvider>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -83,7 +97,9 @@ export default async function PaymentSystemsPage() {
             </Table>
           </CardContent>
         </Card>
-        <PaymentMethodCreate />
+        <StoreProvider storeId={storeId}>
+          <PaymentMethodCreate />
+        </StoreProvider>
       </div>
     </div>
   );

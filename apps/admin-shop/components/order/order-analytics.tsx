@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
-export default async function OrderAnalytics() {
+export default async function OrderAnalytics({ storeId }: { storeId: string }) {
   const {
     salesThisWeek,
     salesThisMonth,
     salesIncreaseThisWeek,
     salesIncreaseThisMonth
-  } = await salesAnalyticsGet();
+  } = await salesAnalyticsGet({ storeId });
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">

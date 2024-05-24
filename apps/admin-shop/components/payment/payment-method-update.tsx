@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge";
 
 import { updatePaymentMethod } from "@/components/payment/actions";
 import PaymentMethodFields from "@/components/payment/payment-method-fields";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -93,8 +94,11 @@ function PaymentMethodUpdateForm({
   setOpen: (open: boolean) => void;
   className?: string;
 }) {
+  const storeId = useStore();
   const [provider, setProvider] = useState<string>(paymentMethod.provider);
-  const [formState, formAction] = useFormState(updatePaymentMethod, null);
+  const [formState, formAction] = useFormState(updatePaymentMethod, {
+    storeId
+  });
 
   useEffect(() => {
     if (formState?.success) {

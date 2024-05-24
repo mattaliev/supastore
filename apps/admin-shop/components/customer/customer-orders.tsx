@@ -15,8 +15,10 @@ import {
 } from "@/components/ui/table";
 
 export default function CustomerOrders({
+  storeId,
   customer
 }: {
+  storeId: string;
   customer: TelegramUserDetailParsed;
 }) {
   const formatDateMed = (date: string) => {
@@ -44,7 +46,7 @@ export default function CustomerOrders({
             {customer.orders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell className="text-muted-foreground hover:underline">
-                  <Link href={`/orders/edit/${order.id}`}>
+                  <Link href={`/store/${storeId}/orders/edit/${order.id}`}>
                     {order.orderNumber}
                   </Link>
                 </TableCell>

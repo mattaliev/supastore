@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 type ProductEditPageProps = {
   params: {
+    storeId: string;
     productId: string;
   };
 };
@@ -16,6 +17,7 @@ type ProductEditPageProps = {
 export default async function ProductEditPage({
   params
 }: ProductEditPageProps) {
+  const { storeId, productId } = params;
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
@@ -23,12 +25,12 @@ export default async function ProductEditPage({
   }
 
   const product = await authenticated(session.user.accessToken, productDetail, {
-    id: params.productId
+    id: productId
   });
 
   if (!product) {
     notFound();
   }
 
-  return <ProductUpdateForm product={product} />;
+  return <ProductUpdateForm product={product} storeId={storeId} />;
 }

@@ -21,6 +21,7 @@ import {
 
 export default function SideNav() {
   const pathname = usePathname();
+  const storeId = pathname.split("/")[2];
 
   const navItemClass =
     "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8";
@@ -39,9 +40,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/"
+              href={`/store/${storeId}`}
               className={
-                pathname === "/"
+                pathname === `/store/${storeId}`
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -55,9 +56,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/orders"
+              href={`/store/${storeId}/orders`}
               className={
-                pathname.startsWith("/orders")
+                pathname.startsWith(`/store/${storeId}/orders`)
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -71,9 +72,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/products"
+              href={`/store/${storeId}/products`}
               className={
-                pathname.startsWith("/products")
+                pathname.startsWith(`/store/${storeId}/products`)
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -87,9 +88,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/customers"
+              href={`/store/${storeId}/customers`}
               className={
-                pathname.startsWith("/customers")
+                pathname.startsWith(`/store/${storeId}/customers`)
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -103,9 +104,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/payment-systems"
+              href={`/store/${storeId}/payment-systems`}
               className={
-                pathname.startsWith("/payment-systems")
+                pathname.startsWith(`/store/${storeId}/payment-systems`)
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -121,7 +122,7 @@ export default function SideNav() {
             <Link
               href="#"
               className={
-                pathname.startsWith("/analytics")
+                pathname.startsWith(`/store/${storeId}/analytics`)
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }
@@ -137,9 +138,9 @@ export default function SideNav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href={`/store/${storeId}/settings`}
               className={
-                pathname.startsWith("/settings")
+                pathname.startsWith(`/store/${storeId}/settings`)
                   ? twMerge(navItemClass, navItemSelectedClass)
                   : navItemClass
               }

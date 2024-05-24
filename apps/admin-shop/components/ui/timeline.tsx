@@ -129,7 +129,7 @@ const TimelineContent = React.forwardRef<
   HTMLParagraphElement,
   TimelineContentProps
 >(({ className, side, ...props }, ref) => (
-  <p
+  <div
     className={cn(timelineContentVariants({ side }), className)}
     ref={ref}
     {...props}

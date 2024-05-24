@@ -1,4 +1,5 @@
 import { customersPaginated } from "@ditch/lib";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
@@ -21,20 +22,25 @@ import {
 } from "@/components/ui/table";
 
 export default async function TopCustomers({
+  storeId,
   sortBy
 }: {
+  storeId: string;
   sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
 }) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/customers");
+    redirect(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/customers`)}`
+    );
   }
 
   const topCustomersResponse = await authenticated(
     session.user.accessToken,
     customersPaginated,
     {
+      storeId,
       page: 1,
       limit: 5,
       sortBy
@@ -71,9 +77,11 @@ export default async function TopCustomers({
                 <TableRow key={customer.id}>
                   <TableCell className="h-8 py-2">
                     <div className="flex flex-col items-start text-sm">
-                      <div>
-                        {customer.firstName} {customer.lastName}
-                      </div>
+                      <Link href={`/store/${storeId}/customers/${customer.id}`}>
+                        <div>
+                          {customer.firstName} {customer.lastName}
+                        </div>
+                      </Link>
                       <div className="text-muted-foreground hidden md:block">
                         {customer.username ? "@" + customer.username : ""}
                       </div>

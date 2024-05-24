@@ -5,6 +5,9 @@ import ProductFilters from "@/components/product/product-filters";
 import ProductList from "@/components/product/product-list";
 
 type ProductListPageProps = {
+  params: {
+    storeId: string;
+  };
   searchParams: {
     state?: "ACTIVE" | "INACTIVE";
     page?: string;
@@ -17,8 +20,11 @@ export const dynamic = "force-dynamic";
 const defaultLimit = 10;
 
 export default async function ProductListPage({
+  params,
   searchParams
 }: ProductListPageProps) {
+  const storeId = params.storeId;
+
   const {
     objects: products,
     hasNext,
@@ -27,6 +33,7 @@ export default async function ProductListPage({
     totalItems,
     page
   } = await productsPaginatedGet({
+    storeId,
     state: EntityState[searchParams.state as keyof typeof EntityState],
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit
@@ -34,8 +41,9 @@ export default async function ProductListPage({
 
   return (
     <>
-      <ProductFilters />
+      <ProductFilters storeId={storeId} />
       <ProductList
+        storeId={storeId}
         products={products}
         page={page}
         limit={defaultLimit}

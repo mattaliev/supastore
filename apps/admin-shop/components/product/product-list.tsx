@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import ProductAdminActions from "@/components/product/product-admin-actions";
 import { ProductBadge } from "@/components/product/product-badges";
+import { StoreProvider } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,7 +26,7 @@ import {
 } from "@/components/ui/table";
 import { formatDateMedium } from "@/lib/utils";
 
-function NoProducts() {
+function NoProducts({ storeId }: { storeId: string }) {
   return (
     <Card className="min-h-[60vh]">
       <CardHeader>
@@ -44,7 +45,7 @@ function NoProducts() {
               <p className="text-sm text-muted-foreground">
                 You can start selling as soon as you add a product.
               </p>
-              <Link href="/products/create">
+              <Link href={`/store/${storeId}/products/create`}>
                 <Button size="sm" className="h-8 gap-1 mt-4">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sm:whitespace-nowrap">Add Product</span>
@@ -59,11 +60,13 @@ function NoProducts() {
 }
 
 export default function ProductList({
+  storeId,
   products,
   page,
   limit,
   totalProductCount
 }: {
+  storeId: string;
   products: Product[];
   page: number;
   totalProductCount: number;
@@ -73,7 +76,7 @@ export default function ProductList({
   const lastProductIndex = Math.min(page * limit, totalProductCount);
 
   if (totalProductCount === 0) {
-    return <NoProducts />;
+    return <NoProducts storeId={storeId} />;
   }
 
   return (
@@ -120,7 +123,7 @@ export default function ProductList({
                   )}
                 </TableCell>
                 <TableCell className="font-medium hover:underline">
-                  <Link href={`/products/edit/${product.id}`}>
+                  <Link href={`/store/${storeId}/products/edit/${product.id}`}>
                     {product.title}
                   </Link>
                 </TableCell>
@@ -142,7 +145,12 @@ export default function ProductList({
                   {product.created && formatDateMedium(product.created)}
                 </TableCell>
                 <TableCell>
-                  <ProductAdminActions id={product.id} title={product.title} />
+                  <StoreProvider storeId={storeId}>
+                    <ProductAdminActions
+                      id={product.id}
+                      title={product.title}
+                    />
+                  </StoreProvider>
                 </TableCell>
               </TableRow>
             ))}

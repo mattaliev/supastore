@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 
 type CustomerDetailPageProps = {
   params: {
+    storeId: string;
     customerId: string;
   };
 };
@@ -22,10 +23,12 @@ export default async function CustomerDetailPage({
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/customers");
+    redirect(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${params.storeId}/customers`)}`
+    );
   }
 
-  const { customerId } = params;
+  const { customerId, storeId } = params;
 
   if (!customerId) {
     notFound();
@@ -34,7 +37,7 @@ export default async function CustomerDetailPage({
   const customer = await authenticated(
     session.user.accessToken,
     customerDetail,
-    { userId: customerId }
+    { userId: customerId, storeId }
   );
 
   if (!customer) {
@@ -42,16 +45,17 @@ export default async function CustomerDetailPage({
   }
 
   return (
-    <div className="grid flex-1 auto-rows-max gap-4 max-w-[59rem] mx-auto">
+    <div className="grid flex-1 auto-rows-max gap-4 max-w-[59rem] mx-auto w-full">
       <CustomerDetailHeader customer={customer} />
       <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg-gap-8">
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 md:order-first order-last">
-          <CustomerOrders customer={customer} />
-          <CustomerEvents events={customer.events} />
+          <CustomerOrders customer={customer} storeId={params.storeId} />
+          <CustomerEvents events={customer.events} storeId={params.storeId} />
         </div>
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8 order-first md:order-last">
           <CustomerInformation customer={customer} />
           <CustomerFavoriteProducts
+            storeId={params.storeId}
             favoriteProducts={customer.favoriteProducts}
           />
         </div>

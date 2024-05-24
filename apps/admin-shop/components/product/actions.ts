@@ -13,6 +13,7 @@ import {
 } from "@/components/product/schemes";
 
 export type ProductFormErrorResponse = {
+  storeId: string;
   fieldErrors?: ProductFieldErrors;
   formError?: string;
 };
@@ -21,10 +22,14 @@ export const createProduct = async (
   prevState: any,
   formData: FormData
 ): Promise<ProductFormErrorResponse> => {
+  const storeId = prevState.storeId;
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/products", RedirectType.push);
+    redirect(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/products`)}`,
+      RedirectType.push
+    );
   }
 
   const rawFormData = Object.fromEntries(formData.entries());
@@ -41,12 +46,13 @@ export const createProduct = async (
   });
 
   if (!validatedData.success) {
-    return { fieldErrors: validatedData.error.flatten().fieldErrors };
+    return { storeId, fieldErrors: validatedData.error.flatten().fieldErrors };
   }
 
   try {
     await authenticated(session.user.accessToken, productCreate, {
       input: {
+        storeId,
         ...validatedData.data
       }
     });
@@ -55,21 +61,25 @@ export const createProduct = async (
       throw e;
     }
 
-    return { formError: "Could not create product" };
+    return { storeId, formError: "Could not create product" };
   }
 
   revalidateTag(TAGS.PRODUCT);
-  redirect("/products", RedirectType.push);
+  redirect(`/store/${storeId}/products`, RedirectType.push);
 };
 
 export const updateProduct = async (
   prevState: any,
   formData: FormData
 ): Promise<ProductFormErrorResponse> => {
+  const storeId = prevState.storeId;
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/products", RedirectType.push);
+    redirect(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/products`)}`,
+      RedirectType.push
+    );
   }
 
   const rawFormData = Object.fromEntries(formData.entries());
@@ -77,7 +87,7 @@ export const updateProduct = async (
   const productId = rawFormData["id"];
 
   if (!productId || typeof productId !== "string") {
-    return { formError: "Product not found. Try reloading the page" };
+    return { storeId, formError: "Product not found. Try reloading the page" };
   }
 
   const validatedData = ProductScheme.safeParse({
@@ -92,12 +102,13 @@ export const updateProduct = async (
   });
 
   if (!validatedData.success) {
-    return { fieldErrors: validatedData.error.flatten().fieldErrors };
+    return { storeId, fieldErrors: validatedData.error.flatten().fieldErrors };
   }
 
   try {
     await authenticated(session.user.accessToken, productUpdate, {
       input: {
+        storeId,
         ...validatedData.data,
         productId
       }
@@ -107,16 +118,17 @@ export const updateProduct = async (
       throw e;
     }
 
-    return { formError: "Could not edit product" };
+    return { storeId, formError: "Could not edit product" };
   }
 
   revalidateTag(TAGS.PRODUCT);
-  redirect("/products", RedirectType.push);
+  redirect(`/store/${storeId}/products`, RedirectType.push);
 };
 
 export const deleteProduct = async (
   prevState: any,
   payload: {
+    storeId: string;
     productId: string;
     isProductsPage: boolean;
   }
@@ -124,16 +136,19 @@ export const deleteProduct = async (
   success?: boolean;
   formError?: string;
 }> => {
+  const { productId, isProductsPage, storeId } = payload;
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/products", RedirectType.push);
+    redirect(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/products`)}`,
+      RedirectType.push
+    );
   }
-
-  const { productId, isProductsPage } = payload;
 
   try {
     await authenticated(session.user.accessToken, productDelete, {
+      storeId,
       id: productId
     });
   } catch (e) {
@@ -144,13 +159,13 @@ export const deleteProduct = async (
     return { formError: "Could not delete product" };
   }
 
-  revalidatePath("/products");
+  revalidatePath(`/store/${storeId}/products`);
 
   if (isProductsPage) {
     return { success: true };
   }
 
-  redirect("/products");
+  redirect(`/store/${storeId}/products`);
 };
 
 const productVariantsGetFromFormData = (rawFormData: any) => {
