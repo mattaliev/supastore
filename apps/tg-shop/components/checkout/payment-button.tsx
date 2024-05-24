@@ -53,8 +53,10 @@ function SubmitButton({
 }
 
 export default function PaymentButton({
+  storeId,
   paymentMethod
 }: {
+  storeId: string;
   paymentMethod: SafePaymentMethod;
 }) {
   const { id, name, provider, buttonText } = paymentMethod;
@@ -63,6 +65,7 @@ export default function PaymentButton({
   const miniApp = useMiniApp();
   const [formState, formAction] = useFormState(createPayment, null);
   const actionWithPaymentMethod = formAction.bind(null, {
+    storeId,
     paymentMethodId: id
   });
 

@@ -20,7 +20,6 @@ export default function ProductDetailImages({
   const [current, setCurrent] = useState(1);
   const [count, setCount] = useState(0);
 
-  console.log(count);
   useEffect(() => {
     if (!api) {
       return;

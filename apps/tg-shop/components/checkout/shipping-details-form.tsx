@@ -11,9 +11,11 @@ import ShippingDetailsInput from "@/components/checkout/shipping-details-input";
 import ContactDetails from "./contact-details";
 
 export default function ShippingDetailsForm({
+  storeId,
   shippingDetails,
   shippingId
 }: {
+  storeId: string;
   shippingDetails?: ShippingDetails;
   shippingId: string;
 }) {
@@ -31,6 +33,7 @@ export default function ShippingDetailsForm({
 
   return (
     <form action={formAction}>
+      <input type="hidden" name="storeId" value={storeId} />
       <input type="hidden" name="shipping-id" value={shippingId} />
       <input type="hidden" name="id" value={shippingDetails?.id} />
       <ContactDetails

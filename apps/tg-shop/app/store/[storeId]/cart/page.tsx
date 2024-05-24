@@ -13,14 +13,21 @@ import { Card, CardContent } from "@/components/ui/card";
  *
  * @constructor
  */
+type CartPageProps = {
+  params: {
+    storeId: string;
+  };
+};
 
-export default async function Cart(): Promise<JSX.Element> {
+export default async function Cart({
+  params: { storeId }
+}: CartPageProps): Promise<JSX.Element> {
   const cartId = cookies().get("cartId")?.value;
 
-  const cart = await cartGet({ cartId });
+  const cart = await cartGet({ cartId, storeId });
 
   if (!cart || cart.totalQuantity === 0) {
-    return <EmptyCart />;
+    return <EmptyCart storeId={storeId} />;
   }
 
   return (
@@ -31,9 +38,9 @@ export default async function Cart(): Promise<JSX.Element> {
             totalQuantity={cart.totalQuantity}
             totalPrice={cart.totalPrice}
           />
-          <CartItems items={cart.items} />
+          <CartItems items={cart.items} storeId={storeId} />
         </div>
-        <CheckoutButton />
+        <CheckoutButton storeId={storeId} />
       </CardContent>
     </Card>
   );

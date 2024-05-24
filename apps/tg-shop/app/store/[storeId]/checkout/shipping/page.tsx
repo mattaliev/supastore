@@ -6,12 +6,16 @@ import ShippingDetailsForm from "@/components/checkout/shipping-details-form";
 import { tmaAuthenticated } from "@/lib/auth";
 
 type ShippingDetailsPageProps = {
+  params: {
+    storeId: string;
+  };
   searchParams: {
     shippingId: string;
   };
 };
 
 export default async function ShippingDetailsPage({
+  params: { storeId },
   searchParams
 }: ShippingDetailsPageProps) {
   const orderId = cookies().get("orderId")?.value;
@@ -26,7 +30,8 @@ export default async function ShippingDetailsPage({
     return notFound();
   }
 
-  const order = await tmaAuthenticated(initDataRaw, orderGetById, {
+  const order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
+    storeId,
     orderId
   });
 
@@ -36,6 +41,7 @@ export default async function ShippingDetailsPage({
 
   return (
     <ShippingDetailsForm
+      storeId={storeId}
       shippingDetails={order.shipping.details}
       shippingId={order.shipping.id}
     />

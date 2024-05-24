@@ -6,13 +6,16 @@ import PaymentSuccess from "@/components/invoice/payment-success";
 import { tmaAuthenticated } from "@/lib/auth";
 
 type Props = {
-  params: {};
+  params: { storeId: string };
   searchParams: {
     orderId: string;
   };
 };
 
-export default async function Success({ params, searchParams }: Props) {
+export default async function Success({
+  params: { storeId },
+  searchParams
+}: Props) {
   const orderId = searchParams.orderId;
 
   const initDataRaw = cookies().get("initDataRaw")?.value;
@@ -21,7 +24,8 @@ export default async function Success({ params, searchParams }: Props) {
     redirect("/unauthenticated");
   }
 
-  const order = await tmaAuthenticated(initDataRaw, orderGetById, {
+  const order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
+    storeId,
     orderId
   });
 

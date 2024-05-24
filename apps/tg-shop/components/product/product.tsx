@@ -7,7 +7,13 @@ import AddToCartButton from "@/components/cart/add-to-cart-button";
 import ProductImages from "@/components/product/product-images";
 import ProductVariants from "@/components/product/product-variants";
 
-export default function CatalogProduct({ product }: { product: Product }) {
+export default function CatalogProduct({
+  product,
+  storeId
+}: {
+  product: Product;
+  storeId: string;
+}) {
   /**
    *  Need to check if the product has more than one variant
    *  If it does, we need to make sure the user selects a variant before adding to cart
@@ -27,7 +33,7 @@ export default function CatalogProduct({ product }: { product: Product }) {
     <div className="shadow-lg group transform transition-transform duration-300 rounded-xl bg-telegram-secondary-bg-color">
       <ProductImages images={product.images || []} />
       <div className="p-4 grid grid-cols-1 gap-2 bg-telegram-secondary-bg-color rounded-b-lg">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/store/${storeId}/product/${product.id}`}>
           <h3 className="font-semibold text-telegram-text-color text-lg hover:underline">
             {product.title}
           </h3>
@@ -40,6 +46,7 @@ export default function CatalogProduct({ product }: { product: Product }) {
           setSelectedVariant={setSelectedVariant}
         />
         <AddToCartButton
+          storeId={storeId}
           productId={product.id}
           doesProductHaveVariants={doesProductHaveVariants}
           selectedVariantId={selectedVariant}

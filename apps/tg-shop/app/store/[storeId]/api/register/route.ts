@@ -5,13 +5,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const revalidate = 0;
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function POST(
+  req: NextRequest,
+  { params: { storeId } }: { params: { storeId: string } }
+): Promise<NextResponse> {
   try {
     const authData: { initDataRaw: string } = await req.json();
 
     const cartId = cookies().get("cartId")?.value;
 
     const { user, cart } = await signInShopUser({
+      storeId,
       initDataRaw: authData.initDataRaw,
       cartId
     });

@@ -6,15 +6,16 @@ import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { removeFromCart } from "@/components/cart/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerContent,
-  DrawerTrigger,
-  DrawerFooter,
   DrawerClose,
+  DrawerContent,
+  DrawerFooter,
   DrawerHeader,
-  DrawerTitle
+  DrawerTitle,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { TrashIcon } from "@/components/ui/icons";
 
@@ -90,10 +91,12 @@ export default function RemoveFromCartButton({
   itemId: string;
   quantity: number;
 }) {
+  const storeId = useStore();
   const [message, formAction] = useFormState(removeFromCart, null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const actionWithPayload = formAction.bind(null, {
+    storeId,
     cartItemId: itemId,
     quantity
   });

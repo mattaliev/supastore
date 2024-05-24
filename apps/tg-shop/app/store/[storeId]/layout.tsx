@@ -5,14 +5,17 @@ import TmaSdkLoader from "@/components/telegram/tma-sdk-loader";
 import ThemeProvider from "@/components/theme/theme-provider";
 import AuthProvider from "@/components/user/user-register";
 
-const ShopLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const ShopLayout = ({
+  children,
+  params
+}: Readonly<{ children: React.ReactNode; params: { storeId: string } }>) => {
   return (
     <>
       <TmaSdkLoader>
         <ThemeProvider>
           <AuthProvider>
             <TelegramBackButton />
-            <Nav />
+            <Nav storeId={params.storeId} />
             <div className="min-h-screen pb-10">{children}</div>
             <Footer />
           </AuthProvider>

@@ -3,15 +3,18 @@ import { redirect } from "next/navigation";
 
 export const tmaAuthenticated = async <T, U>(
   initDataRaw: string,
+  storeId: string,
   fn: APIFunction<T, U>,
   body: T
 ): Promise<U> => {
-  const headers = { Authorization: `TWA ${initDataRaw}` };
+  const headers = {
+    Authorization: `TWA ${initDataRaw}`,
+    "Store-Id": storeId
+  };
 
   try {
     return fn(body, headers);
   } catch (error: any) {
-    console.log(error);
     if (error.errorCode === 401) {
       redirect("/unauthenticated");
     }
@@ -19,7 +22,8 @@ export const tmaAuthenticated = async <T, U>(
     if (error.errorCode === 403) {
       redirect("/unauthorized");
     }
-
-    throw error;
+    //
+    // throw error;
+    redirect("/error");
   }
 };

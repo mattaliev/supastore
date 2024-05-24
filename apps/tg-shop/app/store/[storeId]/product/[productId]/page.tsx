@@ -5,6 +5,7 @@ import ProductDetail from "@/components/product/product-detail";
 
 type ProductDetailPageProps = {
   params: {
+    storeId: string;
     productId: string;
   };
 };
@@ -12,7 +13,9 @@ type ProductDetailPageProps = {
 export default async function ProductDetailPage({
   params
 }: ProductDetailPageProps) {
-  const product = await productDetail({ id: params.productId });
+  const { storeId, productId } = params;
+
+  const product = await productDetail({ id: productId });
 
   if (!product) {
     notFound();
@@ -20,7 +23,7 @@ export default async function ProductDetailPage({
 
   return (
     <>
-      <ProductDetail product={product} />
+      <ProductDetail product={product} storeId={storeId} />
     </>
   );
 }

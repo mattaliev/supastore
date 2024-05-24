@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const ShippingSummary = ({
   shippingDetails,
-  mutable = true
+  mutable = true,
+  storeId
 }: {
   shippingDetails?: ShippingDetails;
   mutable?: boolean;
+  storeId: string;
 }) => {
   return (
     <>
@@ -27,7 +29,7 @@ export const ShippingSummary = ({
             {shippingDetails?.email && <dd>{shippingDetails.email || ""}</dd>}
             {shippingDetails?.phone && <dd>{shippingDetails.phone || ""}</dd>}
           </dt>
-          {mutable && <UpdateShippingDetailsButton />}
+          {mutable && <UpdateShippingDetailsButton storeId={storeId} />}
         </CardContent>
       </Card>
       <Card>
@@ -42,7 +44,7 @@ export const ShippingSummary = ({
             <dd>{shippingDetails?.postcode}</dd>
             <dd>{shippingDetails?.country}</dd>
           </address>
-          {mutable && <UpdateShippingDetailsButton />}
+          {mutable && <UpdateShippingDetailsButton storeId={storeId} />}
         </CardContent>
       </Card>
     </>

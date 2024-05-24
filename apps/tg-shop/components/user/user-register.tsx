@@ -1,7 +1,7 @@
 "use client";
 import { isPageReload } from "@tma.js/sdk";
 import { useInitData, useLaunchParams } from "@tma.js/sdk-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 
 import { getPath } from "@/lib/path";
@@ -20,6 +20,8 @@ export default function AuthProvider({
   const launchParams = useLaunchParams();
   const isReload = isPageReload();
   const router = useRouter();
+  const pathname = usePathname();
+  const storeId = pathname.split("/")[2];
 
   useEffect(() => {
     const authenticate = async () => {
@@ -33,7 +35,7 @@ export default function AuthProvider({
       if (authenticated) return;
 
       try {
-        const register = await fetch("/api/register", {
+        const register = await fetch(`/store/${storeId}/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

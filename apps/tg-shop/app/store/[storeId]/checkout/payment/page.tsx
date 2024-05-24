@@ -10,12 +10,16 @@ import { ShippingSummary } from "@/components/checkout/shipping-summary";
 import { tmaAuthenticated } from "@/lib/auth";
 
 type OrderSummaryPageProps = {
+  params: {
+    storeId: string;
+  };
   searchParams: {
     orderId?: string;
   };
 };
 
 export default async function OrderSummaryPage({
+  params: { storeId },
   searchParams
 }: OrderSummaryPageProps) {
   let orderId;
@@ -29,7 +33,8 @@ export default async function OrderSummaryPage({
 
   if (searchParams.orderId) {
     orderId = searchParams.orderId;
-    order = await tmaAuthenticated(initDataRaw, orderGetById, {
+    order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
+      storeId,
       orderId
     });
     mutable = false;
@@ -39,7 +44,8 @@ export default async function OrderSummaryPage({
     if (!orderId) {
       return notFound();
     }
-    order = await tmaAuthenticated(initDataRaw, orderGetById, {
+    order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
+      storeId,
       orderId
     });
   }
@@ -53,10 +59,11 @@ export default async function OrderSummaryPage({
       <ShippingSummary
         shippingDetails={order.shipping.details}
         mutable={mutable}
+        storeId={storeId}
       />
       <OrderItems items={order.cart.items} />
       <DeliverySummary shippingDetails={order.shipping.details} />
-      <OrderPayment order={order} mutable={mutable} />
+      <OrderPayment order={order} mutable={mutable} storeId={storeId} />
     </div>
   );
 }
