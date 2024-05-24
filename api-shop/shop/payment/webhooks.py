@@ -3,12 +3,13 @@ import hashlib
 import hmac
 import json
 import logging
+from uuid import UUID
 
-from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from payment.models import PaymentStatusChoices
+from core.utils.encryption import decrypt
+from payment.models import PaymentStatusChoices, Payment
 from payment.services.payment_services import payment_status_update
 
 
@@ -41,11 +42,15 @@ def wallet_pay_webhook_process(
         body,
         signature
 ):
+    payment = Payment.objects.get(pk=UUID(body[0]["payload"]["externalId"]))
+    api_key = decrypt(payment.payment_method.other_info.get("api_key"))
+
     computed_signature = compute_signature(
         http_method,
         uri_path,
         timestamp,
-        body
+        body,
+        api_key
     )
 
     if not hmac.compare_digest(signature, computed_signature):
@@ -68,11 +73,11 @@ def wallet_pay_webhook_process(
             )
 
 
-def compute_signature(http_method, uri_path, timestamp, body):
+def compute_signature(http_method, uri_path, timestamp, body, api_key):
     base64_body = base64.b64encode(body.encode()).decode()
     string_to_sign = f"{http_method}.{uri_path}.{timestamp}.{base64_body}"
     signature = hmac.new(
-        settings.TELEGRAM_WALLET_API_KEY.encode(),
+        api_key.encode(),
         string_to_sign.encode(), hashlib.sha256
     )
     return base64.b64encode(signature.digest()).decode()

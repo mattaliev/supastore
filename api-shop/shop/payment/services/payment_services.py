@@ -10,6 +10,7 @@ from order.models import Order, FulfillmentStatusChoices
 from payment.models import PaymentMethod, Payment, PaymentProviderChoices
 from payment.models import PaymentStatusChoices
 from payment.models.providers import payment_providers
+from store.services import store_bot_token_get
 from telegram.services.shop.marketing import \
     telegram_order_confirmation_to_admin_send
 
@@ -24,16 +25,21 @@ __all__ = [
 
 
 def payment_method_list(
+        store_id: UUID,
         state: EntityStateChoices = None
 ) -> list[PaymentMethod]:
+    payment_methods = PaymentMethod.objects.filter(store_id=store_id)
+
     if state:
-        return PaymentMethod.objects.filter(state=state)
-    return PaymentMethod.objects.all()
+        return payment_methods.filter(state=state)
+
+    return payment_methods
 
 
 def payment_method_create(
         *,
         name: str,
+        store_id: UUID,
         provider: PaymentProviderChoices,
         button_text: str,
         other_info: dict,
@@ -50,13 +56,13 @@ def payment_method_create(
 
         return PaymentMethod.objects.create(
             name=name,
+            store_id=store_id,
             provider=provider,
             other_info=other_info,
             button_text=button_text,
             state=state
         )
     except Exception as e:
-        print(e)
         raise e
 
 
@@ -129,7 +135,8 @@ def payment_create(
         if provider.provider == payment_method.provider:
             payment_info = provider.create_payment(payment=payment)
             if notify_customer:
-                provider.send_payment_message(payment=payment)
+                bot_token = store_bot_token_get(store=order.store)
+                provider.send_payment_message(payment=payment, bot_token=bot_token)
 
     if not payment_info:
         raise ValueError("Payment provider not found")
@@ -142,7 +149,7 @@ def payment_create(
     order.save()
     order.cart.save()
 
-    Event.register_payment_started(payment=payment)
+    Event.register_payment_started(payment=payment, store_id=order.store.id)
 
     return payment_info
 
@@ -173,7 +180,7 @@ def payment_status_update(
         payment.save()
         payment.order.save()
         telegram_order_confirmation_to_admin_send(order=payment.order)
-        Event.register_payment_completed(payment=payment)
+        Event.register_payment_completed(payment=payment, store_id=payment.order.store.id)
 
     payment.payment_status = payment_status
     payment.save()
