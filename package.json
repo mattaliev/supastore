@@ -9,6 +9,7 @@
   "scripts": {
     "build:tg": "yarn workspace @ditch/tg-shop build",
     "build:admin": "yarn workspace @ditch/admin-shop build",
+    "build:lib": "yarn workspace @ditch/lib build",
     "lint:tg": "yarn workspace @ditch/tg-shop lint",
     "lint:admin": "yarn workspace @ditch/admin-shop lint",
     "lint": "yarn workspace @ditch/tg-shop lint && yarn workspace @ditch/admin-shop lint",
