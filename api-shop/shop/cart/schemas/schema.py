@@ -15,6 +15,7 @@ __all__ = [
 class CartType(DjangoObjectType):
     items = graphene.List('cart.schemas.CartItemType', required=True)
     state = graphene.Field("core.schemas.EntityState")
+    store = graphene.Field("store.schemas.StoreType")
     total_price = graphene.Float()
     total_quantity = graphene.Int()
 
@@ -24,6 +25,9 @@ class CartType(DjangoObjectType):
 
     def resolve_items(self, info):
         return self.items.all()
+
+    def resolve_store(self):
+        return self.store
 
     def resolve_total_price(self, info):
         return self.get_total_price()

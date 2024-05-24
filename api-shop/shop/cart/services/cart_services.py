@@ -12,19 +12,20 @@ from core.models import EntityStateChoices
 User = get_user_model()
 
 
-def cart_get(*, cart_id: UUID) -> Cart:
+def cart_get(*, cart_id: UUID, store_id: UUID) -> Cart:
     logger = logging.getLogger(__name__)
-    logger.debug("Getting cart detail for id: %s", cart_id)
+    logger.debug("Getting cart detail for id: %s in store: %s", cart_id, store_id)
 
-    try:
-        cart = Cart.objects.get(pk=cart_id, state=EntityStateChoices.ACTIVE)
-    except Cart.DoesNotExist:
-        cart = None
+    cart = Cart.objects.filter(
+        id=cart_id,
+        state=EntityStateChoices.ACTIVE,
+        store_id=store_id
+    ).first()
 
     return cart
 
 
-def cart_get_or_create(*, cart_id: UUID | None, user: User | None) -> Tuple[Cart, bool]:
+def cart_get_or_create(*, cart_id: UUID | None, user: User | None, store_id: UUID) -> Tuple[Cart, bool]:
     logger = logging.getLogger(__name__)
     logger.debug("Getting or creating cart for user_id: %s", user.id)
 
@@ -34,17 +35,17 @@ def cart_get_or_create(*, cart_id: UUID | None, user: User | None) -> Tuple[Cart
 
         # First try to get cart by id
         if cart_id:
-            cart = Cart.objects.filter(pk=cart_id, state="ACTIVE").first()
+            cart = Cart.objects.filter(pk=cart_id, state="ACTIVE", store_id=store_id).first()
 
         # If no cart found by id, try to get active cart for user
         if cart is None:
             logger.debug("No cart found by id %s", cart_id)
-            cart = Cart.objects.filter(user=user, state="ACTIVE").first()
+            cart = Cart.objects.filter(user=user, state="ACTIVE", store_id=store_id).first()
 
         # Else create a new cart
         if cart is None:
             logger.debug("No active cart found for user_id: %s", user.id)
-            cart = Cart.objects.create()
+            cart = Cart.objects.create(store_id=store_id)
 
             if user is not None:
                 cart.user = user
@@ -58,12 +59,12 @@ def cart_get_or_create(*, cart_id: UUID | None, user: User | None) -> Tuple[Cart
     return cart, created
 
 
-def cart_create(*, user_id: UUID) -> Cart:
+def cart_create(*, user_id: UUID, store_id: UUID) -> Cart:
     logger = logging.getLogger(__name__)
     logger.debug("Creating cart for user_id: %s", user_id)
 
     try:
-        cart = Cart.objects.create()
+        cart = Cart.objects.create(store_id=store_id)
         user = User.objects.filter(pk=user_id).first()
 
         if user is not None:
@@ -95,7 +96,7 @@ def cart_add_to(*, cart_id: UUID, product_id: UUID, variant_id: UUID | None = No
         cart_item.quantity += quantity
         cart_item.save()
 
-        Event.register_added_to_cart(cart=cart, cart_item=cart_item)
+        Event.register_added_to_cart(cart=cart, cart_item=cart_item, store_id=cart.store_id)
     except Cart.DoesNotExist:
         logger.warning("Cart not found for cart_id: %s", cart_id)
         raise Http404("Cart was not found for cart_id: %s" % cart_id)
@@ -124,7 +125,7 @@ def cart_remove_from(*, cart_id: UUID, cart_item_id: UUID, quantity: int) -> Car
         else:
             cart_item.delete()
 
-        Event.register_removed_from_cart(cart=cart, product=product)
+        Event.register_removed_from_cart(cart=cart, product=product, store_id=cart.store_id)
     except Cart.DoesNotExist:
         logger.warning("Cart not found for cart_id: %s", cart_id)
         raise Http404("Cart was not found for cart_id: %s" % cart_id)

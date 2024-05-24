@@ -8,10 +8,13 @@ __all__ = [
 
 
 class Query(graphene.ObjectType):
-    cart_get = graphene.Field("cart.schemas.CartType",
-                              cart_id=graphene.UUID(required=True))
+    cart_get = graphene.Field(
+        "cart.schemas.CartType",
+        cart_id=graphene.UUID(required=True),
+        store_id=graphene.UUID(required=True)
+    )
 
-    def resolve_cart_get(self, info, cart_id, **kwargs):
-        cart = cart_get(cart_id=cart_id)
+    def resolve_cart_get(self, info, cart_id, store_id, **kwargs):
+        cart = cart_get(cart_id=cart_id, store_id=store_id)
         return cart
 

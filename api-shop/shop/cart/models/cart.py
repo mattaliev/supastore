@@ -13,6 +13,12 @@ class Cart(BaseEntity):
         blank=True
     )
 
+    store = models.ForeignKey(
+        "store.Store",
+        on_delete=models.CASCADE,
+        related_name="carts",
+    )
+
     class Meta:
         db_table = "carts"
         verbose_name = "cart"
