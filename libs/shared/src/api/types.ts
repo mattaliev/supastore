@@ -71,7 +71,6 @@ export type TelegramUser = {
   photoUrl?: string | null;
   allowsNotifications?: boolean;
   chatId?: number;
-  role?: UserRole;
 } & BaseEntity;
 
 export type TelegramUserDetail = {
@@ -194,6 +193,7 @@ export type Order = {
 } & BaseEntity;
 
 export type ProductCreateInput = {
+  storeId: string;
   title: string;
   shortDescription?: string;
   description?: string;
@@ -375,6 +375,54 @@ export type Payment = {
   additionalInfo?: string;
 } & BaseEntity;
 
+export type Store = {
+  id: string;
+  storeName: string;
+  storeDescription?: string;
+  logoDark?: string;
+  logoLight?: string;
+  botUsername?: string;
+  botToken?: string;
+  storeUrl: string;
+  owner: TelegramUser;
+  admins: TelegramUser[];
+  isConnectedToTelegram: boolean;
+} & BaseEntity;
+
+export type StoreCheckpoints = {
+  hasProducts: boolean;
+  isConnectedToTelegram: boolean;
+  hasBotToken: boolean;
+  hasConnectedPaymentSystem: boolean;
+  isDone: boolean;
+};
+
+export type StoreApplication = {
+  storeName: string;
+  storeDescription?: string;
+  channels?: string;
+  productCategory?: string;
+} & BaseEntity;
+
+export type StoreCreateInputType = {
+  storeName: string;
+  storeDescription?: string;
+  logoDark?: File;
+  logoLight?: File;
+  botUsername?: string;
+  botToken?: string;
+};
+
+export type StoreUpdateInputType = {
+  storeId: string;
+  storeName?: string | null;
+  storeDescription?: string | null;
+  logoDark?: File | null;
+  logoLight?: File | null;
+  botUsername?: string | null;
+  botToken?: string | null;
+};
+
 export type BackendSignInShopUserOperation = {
   data: {
     signInShopUser: {
@@ -383,6 +431,7 @@ export type BackendSignInShopUserOperation = {
     };
   };
   variables: {
+    storeId: string;
     initDataRaw: string;
     cartId?: string;
   };
@@ -402,6 +451,7 @@ export type BackendProductsGetOperation = {
     productsGet: Product[];
   };
   variables: {
+    storeId: string;
     state?: EntityState;
   };
 };
@@ -411,6 +461,7 @@ export type BackendProductsPaginatedGetOperation = {
     productsPaginatedGet: Paginated<Product>;
   };
   variables: {
+    storeId: string;
     state?: EntityState;
     page?: number;
     limit?: number;
@@ -446,6 +497,7 @@ export type BackendProductDeleteOperation = {
     };
   };
   variables: {
+    storeId: string;
     id: string;
   };
 };
@@ -456,6 +508,7 @@ export type BackendCartGetOperation = {
   };
   variables: {
     cartId?: string;
+    storeId: string;
   };
 };
 
@@ -464,6 +517,9 @@ export type BackendCartCreateOperation = {
     cartCreate: {
       cart: Cart;
     };
+  };
+  variables: {
+    storeId: string;
   };
 };
 
@@ -518,6 +574,7 @@ export type BackendOrderGetByIdOperation = {
     orderGetById: Order;
   };
   variables: {
+    storeId: string;
     orderId: string;
     state?: string;
   };
@@ -528,6 +585,7 @@ export type BackendOrderPaginatedGetOperation = {
     ordersPaginatedGet: Paginated<Order>;
   };
   variables: {
+    storeId: string;
     paymentStatus?: PaymentStatus;
     fulfilmentStatus?: FulfilmentStatus;
     state?: string;
@@ -541,6 +599,7 @@ export type BackendOrderGetByCartIdOperation = {
     orderGetByCartId: Order;
   };
   variables: {
+    storeId: string;
     cartId: string;
     state?: string;
   };
@@ -553,6 +612,7 @@ export type BackendOrderCreateOperation = {
     };
   };
   variables: {
+    storeId: string;
     cartId: string;
   };
 };
@@ -565,6 +625,7 @@ export type BackendOrderStatusUpdateOperation = {
   };
   variables: {
     input: {
+      storeId: string;
       orderId: string;
       fulfilmentStatus?: FulfilmentStatus;
       notifyUser?: boolean;
@@ -579,6 +640,7 @@ export type BackendOrderDeleteOperation = {
     };
   };
   variables: {
+    storeId: string;
     orderId: string;
   };
 };
@@ -591,6 +653,7 @@ export type BackendShippingAddTrackingOperation = {
   };
   variables: {
     input: {
+      storeId: string;
       shippingId: string;
       trackingNumber: string;
       carrier: string;
@@ -636,6 +699,9 @@ export type BackendSalesAnalyticsOperation = {
       salesIncreaseThisMonth: string;
     };
   };
+  variables: {
+    storeId: string;
+  };
 };
 
 export type BackendShopPaymentMethodsListOperation = {
@@ -643,6 +709,7 @@ export type BackendShopPaymentMethodsListOperation = {
     paymentMethodsList: SafePaymentMethod[];
   };
   variables: {
+    storeId: string;
     state?: EntityState;
   };
 };
@@ -652,6 +719,7 @@ export type BackendPaymentMethodsListOperations = {
     paymentMethodsList: PaymentMethod[];
   };
   variables: {
+    storeId: string;
     state?: EntityState;
   };
 };
@@ -664,6 +732,7 @@ export type BackendPaymentMethodCreateOperation = {
   };
   variables: {
     input: {
+      storeId: string;
       name: string;
       provider: PaymentProvider;
       buttonText?: string;
@@ -681,6 +750,7 @@ export type BackendPaymentMethodUpdateOperation = {
   };
   variables: {
     input: {
+      storeId: string;
       paymentMethodId: string;
       name: string;
       provider: PaymentProvider;
@@ -698,6 +768,7 @@ export type BackendPaymentMethodDeleteOperation = {
     };
   };
   variables: {
+    storeId: string;
     paymentMethodId: string;
   };
 };
@@ -727,6 +798,7 @@ export type BackendPaymentStatusUpdateOperation = {
   };
   variables: {
     input: {
+      storeId: string;
       paymentId: string;
       paymentStatus: PaymentStatus;
       notifyCustomer?: boolean;
@@ -739,6 +811,7 @@ export type BackendCustomerDetailOperation = {
     customerDetail: TelegramUserDetail;
   };
   variables: {
+    storeId: string;
     userId: string;
   };
 };
@@ -748,6 +821,7 @@ export type BackendCustomersPaginatedGetOperation = {
     customersPaginated: Paginated<TelegramUserList>;
   };
   variables: {
+    storeId: string;
     page?: number;
     limit?: number;
     sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
@@ -785,5 +859,94 @@ export type BackendSignOutAdminOperation = {
   };
   variables: {
     token: string;
+  };
+};
+
+export type BackendStoreListOperation = {
+  data: {
+    storeList: Store[];
+  };
+};
+
+export type BackendStoreGetOperation = {
+  data: {
+    storeGet: Store;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreCanManageOperation = {
+  data: {
+    canManageStore: boolean;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreCheckpointsOperation = {
+  data: {
+    storeGet: StoreCheckpoints;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreCreateOperation = {
+  data: {
+    storeCreate: {
+      store: Store;
+    };
+  };
+  variables: {
+    input: StoreCreateInputType;
+  };
+};
+
+export type BackendStoreUpdateOperation = {
+  data: {
+    storeUpdate: {
+      store: Store;
+    };
+  };
+  variables: {
+    input: StoreUpdateInputType;
+  };
+};
+
+export type BackendStoreConnectToTelegramOperation = {
+  data: {
+    storeConnectToTelegram: {
+      success: boolean;
+    };
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreApplicationCreateOperation = {
+  data: {
+    storeApplicationCreate: {
+      storeApplication: StoreApplication;
+    };
+  };
+  variables: {
+    input: Omit<StoreApplication, "id" | "created" | "updated" | "state">;
+  };
+};
+
+export type BackendStoreLogoGetOperation = {
+  data: {
+    storeLogoGet: {
+      logoDark: string;
+      logoLight: string;
+    };
+  };
+  variables: {
+    storeId: string;
   };
 };

@@ -23,8 +23,8 @@ export const paymentMethodUpdateMutation = /* GraphQL */ `
 `;
 
 export const paymentMethodDeleteMutation = /* GraphQL */ `
-  mutation PaymentMethodDelete($paymentMethodId: UUID!) {
-    paymentMethodDelete(paymentMethodId: $paymentMethodId) {
+  mutation PaymentMethodDelete($paymentMethodId: UUID!, $storeId: UUID!) {
+    paymentMethodDelete(paymentMethodId: $paymentMethodId, storeId: $storeId) {
       success
     }
   }

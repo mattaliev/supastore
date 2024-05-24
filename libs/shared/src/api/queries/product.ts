@@ -14,8 +14,8 @@ export const productDetailQuery = /* GraphQL */ `
 `;
 
 export const productsGetQuery = /* GraphQL */ `
-  query ProductsGet($state: String) {
-    productsGet(state: $state) {
+  query ProductsGet($storeId: UUID!, $state: String) {
+    productsGet(storeId: $storeId, state: $state) {
       ...CollectionProductFields
     }
   }
@@ -23,8 +23,18 @@ export const productsGetQuery = /* GraphQL */ `
 `;
 
 export const productsPaginatedGetQuery = /* GraphQL */ `
-  query ProductsPaginatedGet($state: String, $page: Int, $limit: Int) {
-    productsPaginatedGet(state: $state, page: $page, limit: $limit) {
+  query ProductsPaginatedGet(
+    $storeId: UUID!
+    $state: String
+    $page: Int
+    $limit: Int
+  ) {
+    productsPaginatedGet(
+      storeId: $storeId
+      state: $state
+      page: $page
+      limit: $limit
+    ) {
       ...PaginatedProductsFields
     }
   }

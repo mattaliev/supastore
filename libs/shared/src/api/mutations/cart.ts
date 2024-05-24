@@ -1,8 +1,8 @@
 import { cartFragment } from "../fragments";
 
 export const cartCreateMutation = /* GraphQL */ `
-  mutation CartCreate {
-    cartCreate {
+  mutation CartCreate($storeId: UUID!) {
+    cartCreate(storeId: $storeId) {
       cart {
         ...CartFields
       }

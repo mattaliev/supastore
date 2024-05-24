@@ -5,9 +5,10 @@ export const singInAdminMutation = /* GraphQL */ `
     signInAdmin(dataCheckString: $dataCheckString) {
       user {
         id
-        role
         firstName
         lastName
+        photoUrl
+        username
       }
       accessToken
     }
@@ -16,15 +17,23 @@ export const singInAdminMutation = /* GraphQL */ `
 
 export const signOutAdminMutation = /* GraphQL */ `
   mutation signOutAdmin($token: String!) {
-    signOut(token: $token) {
+    signOutAdmin(token: $token) {
       success
     }
   }
 `;
 
 export const signInShopUserMutation = /* GraphQL */ `
-  mutation SignInShopUser($initDataRaw: String!, $cartId: UUID) {
-    signInShopUser(initDataRaw: $initDataRaw, cartId: $cartId) {
+  mutation SignInShopUser(
+    $storeId: UUID!
+    $initDataRaw: String!
+    $cartId: UUID
+  ) {
+    signInShopUser(
+      storeId: $storeId
+      initDataRaw: $initDataRaw
+      cartId: $cartId
+    ) {
       user {
         ...UserFields
       }

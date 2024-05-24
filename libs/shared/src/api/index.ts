@@ -20,6 +20,9 @@ import {
   signInShopUserMutation,
   signOutAdminMutation,
   singInAdminMutation,
+  storeApplicationCreateMutation,
+  storeConnectToTelegramMutation,
+  storeUpdateMutation,
 } from "./mutations";
 import {
   cartGetQuery,
@@ -35,6 +38,13 @@ import {
   salesAnalyticsGetQuery,
   shopPaymentMethodsListQuery,
 } from "./queries";
+import {
+  storeCanManageQuery,
+  storeCheckpointsQuery,
+  storeGetQuery,
+  storeListQuery,
+  storeLogoGetQuery,
+} from "./queries/store";
 import {
   BackendCartAddItemOperation,
   BackendCartCreateOperation,
@@ -69,6 +79,14 @@ import {
   BackendSignInAdminOperation,
   BackendSignInShopUserOperation,
   BackendSignOutAdminOperation,
+  BackendStoreApplicationCreateOperation,
+  BackendStoreCanManageOperation,
+  BackendStoreCheckpointsOperation,
+  BackendStoreConnectToTelegramOperation,
+  BackendStoreGetOperation,
+  BackendStoreListOperation,
+  BackendStoreLogoGetOperation,
+  BackendStoreUpdateOperation,
   Cart,
   EntityState,
   FulfilmentStatus,
@@ -84,6 +102,10 @@ import {
   SalesAnalytics,
   Shipping,
   ShippingDetails,
+  Store,
+  StoreApplication,
+  StoreCheckpoints,
+  StoreUpdateInputType,
   TelegramUser,
   TelegramUserDetailParsed,
   TelegramUserList,
@@ -106,6 +128,7 @@ export const TAGS = {
   ORDER: "order",
   PAYMENT: "payment",
   USER: "user",
+  STORE: "store",
 };
 
 export const backendFetch = async <T>({
@@ -114,27 +137,38 @@ export const backendFetch = async <T>({
   cache,
   tags,
   headers,
+  formData,
 }: {
   query: string;
   variables?: ExtractVariables<T>;
   cache?: RequestCache;
   tags?: string[];
   headers?: HeadersInit;
+  formData?: FormData;
 }): Promise<{ status: number; body: T }> => {
   try {
+    const reqBody = JSON.stringify({ query, variables });
     const result = await fetch(endpoint, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        ...(!formData ? { "Content-Type": "application/json" } : {}),
         ...headers,
       },
-      body: JSON.stringify({ query, variables }),
+      body: formData || reqBody,
       cache,
       ...(tags && { next: { tags } }),
     });
 
-    const body = await result.json();
+    if (!result.ok) {
+      const responseText = await result.text();
+      console.error("Response Text: ", responseText);
+      throw {
+        errors: responseText,
+        query,
+      };
+    }
 
+    const body = await result.json();
     if (body.errors) {
       throw {
         errors: body.errors[0],
@@ -161,6 +195,7 @@ export const backendFetch = async <T>({
 
 export const signInShopUser = async (
   body: {
+    storeId: string;
     initDataRaw: string;
     cartId?: string;
   },
@@ -180,6 +215,7 @@ export const signInShopUser = async (
 export const productsGet = async (
   body: {
     state?: EntityState;
+    storeId: string;
   },
   headers?: HeadersInit,
 ): Promise<Product[]> => {
@@ -201,6 +237,7 @@ export const productsGet = async (
 
 export const productsPaginatedGet = async (
   body: {
+    storeId: string;
     state?: EntityState;
     page?: number;
     limit?: number;
@@ -282,7 +319,7 @@ export const productUpdate = async (
 };
 
 export const productDelete = async (
-  body: { id: string },
+  body: { id: string; storeId: string },
   headers?: HeadersInit,
 ): Promise<boolean> => {
   const { body: responseBody } =
@@ -297,7 +334,7 @@ export const productDelete = async (
 };
 
 export const cartGet = async (
-  body: { cartId?: string },
+  body: { cartId?: string; storeId: string },
   headers?: HeadersInit,
 ): Promise<Cart | undefined> => {
   const { body: responseBody } = await backendFetch<BackendCartGetOperation>({
@@ -314,15 +351,21 @@ export const cartGet = async (
   return responseBody.data.cartGet;
 };
 
-export const cartCreate = async (headers?: HeadersInit): Promise<Cart> => {
-  const { body } = await backendFetch<BackendCartCreateOperation>({
-    query: cartCreateMutation,
-    cache: "no-store",
-    tags: [TAGS.CART],
-    headers,
-  });
+export const cartCreate = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+): Promise<Cart> => {
+  const { body: responseBody } = await backendFetch<BackendCartCreateOperation>(
+    {
+      query: cartCreateMutation,
+      cache: "no-store",
+      tags: [TAGS.CART],
+      variables: body,
+      headers,
+    },
+  );
 
-  return body.data.cartCreate.cart;
+  return responseBody.data.cartCreate.cart;
 };
 
 export const cartAddItem = async (
@@ -408,6 +451,7 @@ export const orderGetById = async (
   body: {
     orderId: string;
     state?: string;
+    storeId: string;
   },
   headers?: HeadersInit,
 ): Promise<Order | undefined> => {
@@ -430,15 +474,14 @@ export const orderGetByCartId = async (
   body: {
     cartId: string;
     state?: string;
+    storeId: string;
   },
   headers?: HeadersInit,
 ): Promise<Order | undefined> => {
   const { body: responseBody } =
     await backendFetch<BackendOrderGetByCartIdOperation>({
       query: orderGetByCartIdQuery,
-      variables: {
-        ...body,
-      },
+      variables: body,
       tags: [TAGS.ORDER],
       headers,
     });
@@ -448,6 +491,7 @@ export const orderGetByCartId = async (
 
 export const ordersPaginatedGet = async (
   body: {
+    storeId: string;
     state?: EntityState;
     paymentStatus?: PaymentStatus;
     fulfilmentStatus?: FulfilmentStatus;
@@ -470,6 +514,7 @@ export const ordersPaginatedGet = async (
 
 export const orderCreate = async (
   body: {
+    storeId: string;
     cartId: string;
   },
   headers?: HeadersInit,
@@ -477,9 +522,7 @@ export const orderCreate = async (
   const { body: responseBody } =
     await backendFetch<BackendOrderCreateOperation>({
       query: orderCreateMutation,
-      variables: {
-        ...body,
-      },
+      variables: body,
       cache: "no-store",
       tags: [TAGS.ORDER],
       headers,
@@ -491,6 +534,7 @@ export const orderCreate = async (
 export const orderStatusUpdate = async (
   body: {
     input: {
+      storeId: string;
       orderId: string;
       fulfilmentStatus: FulfilmentStatus;
       notifyCustomer?: boolean;
@@ -512,6 +556,7 @@ export const orderStatusUpdate = async (
 
 export const orderDelete = async (
   body: {
+    storeId: string;
     orderId: string;
   },
   headers?: HeadersInit,
@@ -533,6 +578,7 @@ export const orderDelete = async (
 export const shippingAddTracking = async (
   body: {
     input: {
+      storeId: string;
       shippingId: string;
       trackingNumber: string;
       carrier: string;
@@ -598,21 +644,28 @@ export const shippingDetailsUpdate = async (
 };
 
 export const salesAnalyticsGet = async (
+  body: {
+    storeId: string;
+  },
   headers?: HeadersInit,
 ): Promise<SalesAnalytics> => {
-  const { body } = await backendFetch<BackendSalesAnalyticsOperation>({
-    query: salesAnalyticsGetQuery,
-    tags: [TAGS.ORDER],
-    cache: "no-store",
-    headers,
-  });
+  const { body: responseBody } =
+    await backendFetch<BackendSalesAnalyticsOperation>({
+      query: salesAnalyticsGetQuery,
+      tags: [TAGS.ORDER],
+      cache: "no-store",
+      headers,
+      variables: {
+        storeId: body.storeId,
+      },
+    });
 
   const {
     salesThisWeek,
     salesThisMonth,
     salesIncreaseThisWeek,
     salesIncreaseThisMonth,
-  } = body.data.salesAnalyticsGet;
+  } = responseBody.data.salesAnalyticsGet;
 
   return {
     salesThisWeek: parseInt(salesThisWeek),
@@ -624,6 +677,7 @@ export const salesAnalyticsGet = async (
 
 export const paymentMethodsList = async (
   body: {
+    storeId: string;
     state?: EntityState;
   },
   headers?: HeadersInit,
@@ -649,6 +703,7 @@ export const paymentMethodsList = async (
 
 export const shopPaymentMethodsList = async (
   body: {
+    storeId: string;
     state?: EntityState;
   },
   headers?: HeadersInit,
@@ -667,6 +722,7 @@ export const shopPaymentMethodsList = async (
 export const paymentMethodCreate = async (
   body: {
     input: {
+      storeId: string;
       name: string;
       provider: PaymentProvider;
       otherInfo?: string;
@@ -691,6 +747,7 @@ export const paymentMethodCreate = async (
 export const paymentMethodUpdate = async (
   body: {
     input: {
+      storeId: string;
       paymentMethodId: string;
       name: string;
       provider: PaymentProvider;
@@ -715,6 +772,7 @@ export const paymentMethodUpdate = async (
 
 export const paymentMethodDelete = async (
   body: {
+    storeId: string;
     paymentMethodId: string;
   },
   headers?: HeadersInit,
@@ -757,6 +815,7 @@ export const paymentCreate = async (
 export const paymentStatusUpdate = async (
   body: {
     input: {
+      storeId: string;
       paymentId: string;
       paymentStatus: PaymentStatus;
       notifyCustomer?: boolean;
@@ -778,6 +837,7 @@ export const paymentStatusUpdate = async (
 
 export const customerDetail = async (
   body: {
+    storeId: string;
     userId: string;
   },
   headers?: HeadersInit,
@@ -806,6 +866,7 @@ export const customerDetail = async (
 
 export const customersPaginated = async (
   body: {
+    storeId: string;
     page?: number;
     limit?: number;
     sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
@@ -861,4 +922,169 @@ export const signOutAdmin = async (
     });
 
   return responseBody.data.signOutAdmin.success;
+};
+
+export const storeList = async (
+  body: {},
+  headers?: HeadersInit,
+): Promise<Store[]> => {
+  const { body: responseBody } = await backendFetch<BackendStoreListOperation>({
+    query: storeListQuery,
+    cache: "no-store",
+    tags: [TAGS.STORE],
+    headers,
+  });
+
+  return responseBody.data.storeList;
+};
+
+export const storeGet = async (
+  body: {
+    storeId: string;
+  },
+  headers?: HeadersInit,
+): Promise<Store | undefined> => {
+  const { body: responseBody } = await backendFetch<BackendStoreGetOperation>({
+    query: storeGetQuery,
+    variables: body,
+    cache: "no-store",
+    tags: [TAGS.STORE],
+    headers,
+  });
+
+  return responseBody.data.storeGet;
+};
+
+export const storeCanManage = async (
+  body: {
+    storeId: string;
+  },
+  headers?: HeadersInit,
+): Promise<boolean> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreCanManageOperation>({
+      query: storeCanManageQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+      headers,
+    });
+
+  return responseBody.data.canManageStore;
+};
+
+export const storeCheckpointsGet = async (
+  body: {
+    storeId: string;
+  },
+  headers?: HeadersInit,
+): Promise<StoreCheckpoints | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreCheckpointsOperation>({
+      query: storeCheckpointsQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+      headers,
+    });
+
+  return responseBody.data.storeGet;
+};
+
+export const storeConnectToTelegram = async (
+  body: {
+    storeId: string;
+  },
+  headers: HeadersInit,
+): Promise<boolean> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreConnectToTelegramOperation>({
+      query: storeConnectToTelegramMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+      headers,
+    });
+
+  return responseBody.data.storeConnectToTelegram.success;
+};
+
+export const storeUpdate = async (
+  body: {
+    input: StoreUpdateInputType;
+  },
+  headers?: HeadersInit,
+): Promise<Store | undefined> => {
+  const { logoDark, logoLight, ...rest } = body.input;
+
+  const formData = new FormData();
+  formData.append(
+    "operations",
+    JSON.stringify({
+      query: storeUpdateMutation,
+      variables: { input: { logoDark: null, logoLight: null, ...rest } },
+    }),
+  );
+
+  if (logoDark && logoLight) {
+    formData.append(
+      "map",
+      JSON.stringify({
+        0: ["variables.input.logoDark"],
+        1: ["variables.input.logoLight"],
+      }),
+    );
+    formData.append("0", logoDark);
+    formData.append("1", logoLight);
+  }
+
+  const { body: responseBody } =
+    await backendFetch<BackendStoreUpdateOperation>({
+      cache: "no-store",
+      query: storeUpdateMutation,
+      tags: [TAGS.STORE],
+      headers,
+      formData,
+    });
+
+  return responseBody.data.storeUpdate.store;
+};
+
+export const storeApplicationCreate = async (
+  body: {
+    input: {
+      storeName: string;
+      storeDescription?: string;
+      channels?: string;
+      productCategory?: string;
+    };
+  },
+  headers: HeadersInit,
+): Promise<StoreApplication | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreApplicationCreateOperation>({
+      query: storeApplicationCreateMutation,
+      variables: body,
+      headers,
+      tags: [TAGS.STORE],
+      cache: "no-store",
+    });
+
+  return responseBody.data.storeApplicationCreate.storeApplication;
+};
+
+export const storeLogoGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+): Promise<{ logoDark?: string | null; logoLight?: string | null }> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreLogoGetOperation>({
+      query: storeLogoGetQuery,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.storeLogoGet;
 };

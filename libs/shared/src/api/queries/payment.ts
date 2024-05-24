@@ -1,8 +1,8 @@
 import { paymentMethodFragment, shopPaymentMethodFragment } from "../fragments";
 
 export const paymentMethodsListQuery = /* GraphQL */ `
-  query PaymentMethodsList($state: String) {
-    paymentMethodsList(state: $state) {
+  query PaymentMethodsList($storeId: UUID!, $state: String) {
+    paymentMethodsList(storeId: $storeId, state: $state) {
       ...PaymentMethodFields
     }
   }
@@ -10,8 +10,8 @@ export const paymentMethodsListQuery = /* GraphQL */ `
 `;
 
 export const shopPaymentMethodsListQuery = /* GraphQL */ `
-  query ShopPaymentMethodsList($state: String) {
-    paymentMethodsList(state: $state) {
+  query ShopPaymentMethodsList($storeId: UUID!, $state: String) {
+    paymentMethodsList(storeId: $storeId, state: $state) {
       ...ShopPaymentMethodFields
     }
   }
