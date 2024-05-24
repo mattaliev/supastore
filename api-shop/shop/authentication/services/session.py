@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-def session_create(*, user_id: UUID, hash: str):
+def session_create(*, user_id: UUID, store_id: UUID, hash: str):
     logger = logging.getLogger(__name__)
     logger.debug("Creating new session for user: %s", user_id)
 
@@ -22,9 +22,9 @@ def session_create(*, user_id: UUID, hash: str):
         'created': str(timezone.now()),
         'updated': str(timezone.now()),
         'user_id': str(user_id),
+        'store_id': str(store_id),
     }
     session_data_str = Session.objects.encode(session_data)
-    # session_data_dict = Session.objects.decode(session_data_str)
     session.session_data = session_data_str
 
     # Save the session object
