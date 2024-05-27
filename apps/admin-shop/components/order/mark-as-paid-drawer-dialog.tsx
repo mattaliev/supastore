@@ -16,7 +16,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -26,12 +26,12 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 
 export default function MarkAsPaidDrawerDialog({
-  paymentId,
+  paymentId
 }: {
   paymentId: string;
 }) {
@@ -91,7 +91,7 @@ export default function MarkAsPaidDrawerDialog({
 
 function MarkAsPaidForm({
   paymentId,
-  className,
+  className
 }: {
   paymentId: string;
   className?: string;
@@ -100,7 +100,7 @@ function MarkAsPaidForm({
   const [formState, formAction] = useFormState(updatePaymentStatus, {
     storeId,
     paymentId,
-    paymentStatus: PaymentStatus.PAID,
+    paymentStatus: PaymentStatus.PAID
   });
 
   return (

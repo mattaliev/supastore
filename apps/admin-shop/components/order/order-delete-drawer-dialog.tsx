@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -23,11 +23,11 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 
 export default function OrderDeleteDrawerDialog({
-  orderId,
+  orderId
 }: {
   orderId: string;
 }) {
@@ -89,7 +89,7 @@ export default function OrderDeleteDrawerDialog({
 
 function DeleteOrderForm({
   orderId,
-  className,
+  className
 }: {
   orderId: string;
   className?: string;

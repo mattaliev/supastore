@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -21,14 +21,14 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function AddTrackingDrawerDialog({
   storeId,
-  shippingId,
+  shippingId
 }: {
   storeId: string;
   shippingId: string;
@@ -86,7 +86,7 @@ export default function AddTrackingDrawerDialog({
 function AddTrackingForm({
   shippingId,
   className,
-  storeId,
+  storeId
 }: {
   storeId: string;
   shippingId: string;
@@ -94,7 +94,7 @@ function AddTrackingForm({
 }) {
   const [formState, formAction] = useFormState(addShippingTracking, {
     shippingId,
-    storeId,
+    storeId
   });
 
   return (
