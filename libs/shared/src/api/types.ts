@@ -705,7 +705,7 @@ export type BackendSalesAnalyticsOperation = {
 
 export type BackendShopPaymentMethodsListOperation = {
   data: {
-    paymentMethodsList: SafePaymentMethod[];
+    shopPaymentMethodsList: SafePaymentMethod[];
   };
   variables: {
     storeId: string;

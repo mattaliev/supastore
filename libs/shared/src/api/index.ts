@@ -718,7 +718,7 @@ export const shopPaymentMethodsList = async (
       headers,
     });
 
-  return responseBody.data.paymentMethodsList;
+  return responseBody.data.shopPaymentMethodsList;
 };
 
 export const paymentMethodCreate = async (
