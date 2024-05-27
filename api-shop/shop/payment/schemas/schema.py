@@ -48,7 +48,7 @@ class PaymentMethodSafeType(DjangoObjectType):
 
     class Meta:
         model = PaymentMethod
-        fields = ["id", "name", "provider", "button_text", "state"]
+        fields = ["id", "name", "provider", "button_text", "state", "created", "updated"]
         description = "Payment method"
 
     def resolve_state(self, info):
