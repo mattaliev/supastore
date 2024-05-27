@@ -33,7 +33,10 @@ export default function PaymentMethodDelete({
   paymentMethodId: string;
 }) {
   const [open, setOpen] = useState<boolean>(false);
-  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isDesktop =
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false;
 
   if (isDesktop) {
     return (
