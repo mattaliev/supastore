@@ -1,12 +1,14 @@
 import logging
 from typing import List
 
+from django.db.models import Q
+
 from order.models import Order
 from store.services import store_bot_token_get
 from telegram.services import telegram_message_send
 from telegram.services.shop.inline_buttons import ContactSupportInlineButton, \
     OpenShopInlineButton
-from user.models import TelegramUser
+from user.models import TelegramUser, UserRoleChoices
 
 __all__ = [
     "telegram_order_confirmation_to_user_send",
@@ -75,8 +77,9 @@ def telegram_order_confirmation_to_admin_send(order: Order):
 
     bot_token: str = store_bot_token_get(store=order.store)
 
-    store_admins: List[TelegramUser] = [store_admin.admin for store_admin in order.store.admins.all()]
-    store_admins.append(order.store.owner)
+    store_admins: List[TelegramUser] = [
+        store_admin.admin for store_admin in order.store.store_users.filter(Q(role=UserRoleChoices.ADMIN) | Q(role=UserRoleChoices.OWNER))
+    ]
 
     for admin in store_admins:
         telegram_message_send(
