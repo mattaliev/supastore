@@ -34,6 +34,9 @@ export default async function OrderPayment({
     shopPaymentMethodsList,
     { storeId, state: EntityState.ACTIVE }
   );
+
+  console.log(paymentMethods);
+
   return (
     <Card>
       <CardHeader>
@@ -60,7 +63,7 @@ export default async function OrderPayment({
           </div>
         </div>
       </CardContent>
-      {mutable && (
+      {mutable && paymentMethods && (
         <CardFooter>
           <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
             {paymentMethods.map((paymentMethod) => (
