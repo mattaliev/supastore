@@ -35,8 +35,6 @@ export default async function OrderPayment({
     { storeId, state: EntityState.ACTIVE }
   );
 
-  console.log(paymentMethods);
-
   return (
     <Card>
       <CardHeader>

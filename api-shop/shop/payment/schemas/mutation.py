@@ -56,6 +56,8 @@ class PaymentMethodUpdateMutation(graphene.Mutation):
         if not can_manage_store(user=user, store_id=input.store_id):
             raise UNAUTHORIZED()
 
+        del input.store_id
+
         payment_method = payment_method_update(**input)
         return PaymentMethodUpdateMutation(payment_method=payment_method)
 
