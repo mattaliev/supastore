@@ -1,17 +1,17 @@
 "use client";
 import { Store } from "@ditch/lib";
-import { Button } from "@ditch/tg-shop/components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { updateStore } from "@/components/store/actions";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
