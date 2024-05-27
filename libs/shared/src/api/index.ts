@@ -180,7 +180,7 @@ export const backendFetch = async <T>({
     return { status: result.status, body };
   } catch (e: any) {
     console.error(e);
-
+    console.error(e.errors);
     const error = e.errors ? e.errors.message : e;
     const errorCode =
       e.errors && e.errors.extensions && e.errors.extensions.code

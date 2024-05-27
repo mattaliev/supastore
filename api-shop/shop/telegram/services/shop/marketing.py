@@ -78,7 +78,7 @@ def telegram_order_confirmation_to_admin_send(order: Order):
     bot_token: str = store_bot_token_get(store=order.store)
 
     store_admins: List[TelegramUser] = [
-        store_admin.admin for store_admin in order.store.store_users.filter(Q(role=UserRoleChoices.ADMIN) | Q(role=UserRoleChoices.OWNER))
+        store_admin.user for store_admin in order.store.store_users.filter(Q(role=UserRoleChoices.ADMIN) | Q(role=UserRoleChoices.OWNER))
     ]
 
     for admin in store_admins:

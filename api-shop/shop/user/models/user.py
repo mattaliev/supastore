@@ -74,3 +74,8 @@ class StoreUser(BaseEntity):
         default=UserRoleChoices.USER
     )
 
+    class Meta:
+        db_table = "store_user"
+        verbose_name = "Store User"
+        verbose_name_plural = "Store Users"
+

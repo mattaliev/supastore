@@ -55,9 +55,6 @@ export const updateOrderStatus = async (
   formData: FormData
 ): Promise<
   | {
-      storeId: string;
-      orderId: string;
-      fulfilmentStatus?: FulfilmentStatus;
       error?: string;
     }
   | undefined
@@ -70,12 +67,16 @@ export const updateOrderStatus = async (
       RedirectType.push
     );
   }
+  const orderId = formData.get("order-id") as string;
+  const storeId = formData.get("store-id") as string;
+  const fulfilmentStatus = formData.get(
+    "fulfilment-status"
+  ) as FulfilmentStatus;
 
-  const { orderId, fulfilmentStatus, storeId } = prevState;
   const payload = {
     orderId,
     fulfilmentStatus,
-    notifyCustomer: formData.get("notify-user") === "on",
+    notifyCustomer: Boolean(formData.get("notify-user")),
     storeId
   };
 
@@ -89,9 +90,6 @@ export const updateOrderStatus = async (
     }
 
     return {
-      orderId,
-      storeId,
-      fulfilmentStatus,
       error: "Could not update order status"
     };
   }

@@ -40,7 +40,9 @@ class OrderUpdateMutation(graphene.Mutation):
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if not can_manage_store(user=user, store_id=input.store_id):
+        store_id = input.pop("store_id")
+
+        if not can_manage_store(user=user, store_id=store_id):
             raise UNAUTHORIZED()
 
         order = order_fulfilment_status_update(**input)

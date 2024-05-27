@@ -24,13 +24,6 @@ type DashboardPageProps = {
 export default async function DashboardPage({
   params: { storeId }
 }: DashboardPageProps) {
-  const checkpoints = {
-    hasProducts: true,
-    hasConnectedToTelegram: false,
-    hasSetBotToken: false,
-    hasConnectedPaymentSystem: false,
-    isDone: false
-  };
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {

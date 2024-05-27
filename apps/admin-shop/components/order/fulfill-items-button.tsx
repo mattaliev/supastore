@@ -9,17 +9,20 @@ import { Button } from "@/components/ui/button";
 
 export default function FulfillItemsButton({ orderId }: { orderId: string }) {
   const storeId = useStore();
-  const [formState, formAction] = useFormState(updateOrderStatus, {
-    storeId,
-    orderId,
-    fulfilmentStatus: FulfilmentStatus.FULFILLED
-  });
+  const [formState, formAction] = useFormState(updateOrderStatus, null);
 
   return (
     <form action={formAction}>
       {formState?.error && (
         <p className={"text-destructive text-end text-xs"}>{formState.error}</p>
       )}
+      <input type={"hidden"} name={"store-id"} value={storeId} />
+      <input type={"hidden"} name={"order-id"} value={orderId} />
+      <input
+        type={"hidden"}
+        name={"fulfilment-status"}
+        value={FulfilmentStatus.FULFILLED}
+      />
       <SubmitButton />
     </form>
   );

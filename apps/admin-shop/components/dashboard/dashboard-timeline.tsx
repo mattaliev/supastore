@@ -108,7 +108,7 @@ export default function DashboardTimeline({
         <div className={"grid"}>
           <Timeline>
             {checkpointFields.map((checkpointField, index) => (
-              <TimelineItem>
+              <TimelineItem key={index}>
                 <TimelineHeading>
                   {checkpointField.link ? (
                     <Link
@@ -122,7 +122,9 @@ export default function DashboardTimeline({
                   )}
                 </TimelineHeading>
                 <TimelineDot status={checkpointField.status || "default"} />
-                <TimelineLine done={checkpointField.status === "done"} />
+                {checkpointField.title !== "Done!" && (
+                  <TimelineLine done={checkpointField.status === "done"} />
+                )}
                 <TimelineContent className="flex flex-col items-start justify-start text-sm">
                   {checkpointField.description}
                   {checkpointField.status !== "done" && checkpointField.button}

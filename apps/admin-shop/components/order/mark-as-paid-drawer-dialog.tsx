@@ -35,7 +35,10 @@ export default function MarkAsPaidDrawerDialog({
 }: {
   paymentId: string;
 }) {
-  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isDesktop =
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false;
   const [open, setOpen] = useState<boolean>(false);
 
   if (isDesktop) {

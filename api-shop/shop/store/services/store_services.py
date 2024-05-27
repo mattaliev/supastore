@@ -144,6 +144,7 @@ def store_update(
 
     if bot_username:
         store.store_bot.bot_username = bot_username
+        store.store_bot.save()
 
     if bot_token:
         store_bot_token_create_or_update(store_id=store_id, token=bot_token)
