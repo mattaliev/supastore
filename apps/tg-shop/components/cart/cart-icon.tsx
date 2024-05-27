@@ -2,18 +2,18 @@ import { cartGet } from "@ditch/lib";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default async function CartIcon() {
+export default async function CartIcon({ storeId }: { storeId: string }) {
   const cartId = cookies().get("cartId")?.value;
 
   let cart;
 
   if (cartId) {
-    cart = await cartGet({ cartId });
+    cart = await cartGet({ cartId, storeId });
   }
 
   return (
     <div className="flex items-center space-x-4 mr-4 relative">
-      <Link href="/cart">
+      <Link href={`/store/${storeId}/cart`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

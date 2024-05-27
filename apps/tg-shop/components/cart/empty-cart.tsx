@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-export default function EmptyCart() {
+export default function EmptyCart({ storeId }: { storeId: string }) {
   return (
     <div className="bg-telegram-bg-color min-h-screen w-full pt-40">
       <div className="grid grid-cols-1 grid-rows-4 justify-items-center items-center gap-6">
@@ -11,7 +11,7 @@ export default function EmptyCart() {
           <br />
           Let&apos;s start with your cart
         </p>
-        <Link href="/">
+        <Link href={`/store/${storeId}`}>
           <Button
             className="bg-telegram-button-color text-telegram-button-text-color"
             size="lg"

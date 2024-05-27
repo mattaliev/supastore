@@ -1,7 +1,7 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
-import { useSession } from "next-auth/react";
-
+import { authOptions } from "@/auth";
 import { SignInWithTelegramButton } from "@/components/auth/sign-in-with-telegram";
 import {
   Card,
@@ -11,11 +11,15 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
-export default function SignInPage() {
-  const { status } = useSession();
+export default async function SignInPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session) {
+    redirect("/store");
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-[80vh]">
       <Card className="sm:mx-auto max-w-sm text-center mx-4 mb-40">
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
@@ -26,7 +30,7 @@ export default function SignInPage() {
         <CardContent>
           <div>
             <div className={"flex items-center justify-center my-2"}>
-              <SignInWithTelegramButton status={status} />
+              <SignInWithTelegramButton />
             </div>
           </div>
         </CardContent>

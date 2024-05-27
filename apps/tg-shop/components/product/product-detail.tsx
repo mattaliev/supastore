@@ -8,7 +8,13 @@ import AddToCartButton from "@/components/cart/add-to-cart-button";
 import ProductDetailImages from "@/components/product/product-detail-images";
 import ProductDetailVariants from "@/components/product/product-detail-variants";
 
-export default function ProductDetail({ product }: { product: Product }) {
+export default function ProductDetail({
+  product,
+  storeId
+}: {
+  product: Product;
+  storeId: string;
+}) {
   const [variant, setVariant] = useState(
     product.variants && product.variants[0]
   );
@@ -47,6 +53,7 @@ export default function ProductDetail({ product }: { product: Product }) {
               </span>
               <div className="flex items-center w-1/2 justify-stretch">
                 <AddToCartButton
+                  storeId={storeId}
                   productId={product.id}
                   doesProductHaveVariants={
                     (product.variants && product.variants.length > 0) as boolean

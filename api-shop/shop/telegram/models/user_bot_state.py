@@ -29,6 +29,11 @@ class UserBotState(models.Model):
         choices=States.choices,
         default=States.JOIN_PROMO_CODE
     )
+    store = models.ForeignKey(
+        "store.Store",
+        on_delete=models.CASCADE,
+        related_name="user_bot_states",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

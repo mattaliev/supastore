@@ -4,6 +4,7 @@ from core.models.core import BaseEntity, BaseModel
 
 
 class Product(BaseEntity):
+    store = models.ForeignKey("store.Store", on_delete=models.CASCADE, related_name="products")
     title = models.CharField(max_length=50)
     short_description = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)

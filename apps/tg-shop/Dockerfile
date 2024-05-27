@@ -54,7 +54,7 @@ ARG NEXT_PUBLIC_GOOGLE_PLACES_API_KEY
 ENV NODE_ENV production
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=$NEXT_PUBLIC_GOOGLE_PLACES_API_KEY
-ENV NEXT_SHARP_PATH=/node_modules/sharp
+ENV NEXT_SHARP_PATH=/app/node_modules/sharp
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 

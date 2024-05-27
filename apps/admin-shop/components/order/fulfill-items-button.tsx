@@ -4,10 +4,13 @@ import { LoaderCircle } from "lucide-react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { updateOrderStatus } from "@/components/order/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 
 export default function FulfillItemsButton({ orderId }: { orderId: string }) {
+  const storeId = useStore();
   const [formState, formAction] = useFormState(updateOrderStatus, {
+    storeId,
     orderId,
     fulfilmentStatus: FulfilmentStatus.FULFILLED
   });

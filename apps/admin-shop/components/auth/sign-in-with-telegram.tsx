@@ -1,15 +1,8 @@
 "use client";
 import { LoginButton } from "@telegram-auth/react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-export function SignInWithTelegramButton({ status }: { status: string }) {
-  const { push } = useRouter();
-
-  if (status === "authenticated") {
-    push("/");
-  }
-
+export function SignInWithTelegramButton() {
   return (
     <div>
       <LoginButton
@@ -17,7 +10,7 @@ export function SignInWithTelegramButton({ status }: { status: string }) {
         onAuthCallback={(authData) => {
           signIn(
             "telegram",
-            { callbackUrl: "https://tg.ditch.ngrok.app/" },
+            { callbackUrl: "https://tg.ditch.ngrok.app/store" },
             authData as any
           );
         }}

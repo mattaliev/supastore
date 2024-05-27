@@ -23,11 +23,13 @@ import {
 import { formatDateShort } from "@/lib/utils";
 
 export default function OrderList({
+  storeId,
   orders,
   page,
   limit,
   totalOrderCount
 }: {
+  storeId: string;
   orders?: Order[];
   page: number;
   totalOrderCount: number;
@@ -46,9 +48,9 @@ export default function OrderList({
         </CardHeader>
         <CardContent>
           {totalOrderCount === 0 ? (
-            <NoOrdersYet />
+            <NoOrdersYet storeId={storeId} />
           ) : (
-            <OrderTable orders={orders} />
+            <OrderTable orders={orders} storeId={storeId} />
           )}
 
           <CardFooter>
@@ -66,7 +68,13 @@ export default function OrderList({
   );
 }
 
-function OrderTable({ orders }: { orders?: Order[] }) {
+function OrderTable({
+  orders,
+  storeId
+}: {
+  orders?: Order[];
+  storeId: string;
+}) {
   return (
     <Table containerClassname={"w-full overflow-x-auto relative"}>
       <TableHeader>
@@ -82,7 +90,7 @@ function OrderTable({ orders }: { orders?: Order[] }) {
         {orders?.map((order) => (
           <TableRow key={order.id}>
             <TableCell>
-              <Link href={`/orders/edit/${order.id}`}>
+              <Link href={`/store/${storeId}/orders/edit/${order.id}`}>
                 <p className="text-gray-500 underline">{order.orderNumber}</p>
               </Link>
             </TableCell>
@@ -117,7 +125,7 @@ function OrderTable({ orders }: { orders?: Order[] }) {
   );
 }
 
-function NoOrdersYet() {
+function NoOrdersYet({ storeId }: { storeId: string }) {
   return (
     <div className="flex flex-1 items-center justify-center h-64">
       <div className="flex flex-col items-center gap-1 text-center">
@@ -125,7 +133,7 @@ function NoOrdersYet() {
         <p className="text-sm text-muted-foreground">
           Try changing the filters or view all orders
         </p>
-        <Link href={"/orders"}>
+        <Link href={`/store/${storeId}/orders`}>
           <Button className="mt-4" size="sm">
             View orders
           </Button>

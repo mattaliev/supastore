@@ -9,7 +9,7 @@ type AuthErrorPageProps = {
 export default function AuthErrorPage({ searchParams }: AuthErrorPageProps) {
   if (searchParams.error === "AccessDenied") {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-muted/50">
+      <div className="flex flex-col items-center justify-center h-[80vh] bg-muted/50">
         <div className="max-w-md px-4 space-y-4 text-center">
           <Image
             src={"/tiger.png"}

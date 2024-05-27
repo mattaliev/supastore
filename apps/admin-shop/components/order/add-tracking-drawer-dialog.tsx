@@ -27,8 +27,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function AddTrackingDrawerDialog({
+  storeId,
   shippingId
 }: {
+  storeId: string;
   shippingId: string;
 }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -46,7 +48,7 @@ export default function AddTrackingDrawerDialog({
           <DialogHeader>
             <DialogTitle>Add shipping tracking number</DialogTitle>
           </DialogHeader>
-          <AddTrackingForm shippingId={shippingId} />
+          <AddTrackingForm shippingId={shippingId} storeId={storeId} />
         </DialogContent>
       </Dialog>
     );
@@ -63,7 +65,11 @@ export default function AddTrackingDrawerDialog({
         <DrawerHeader className="text-left">
           <DrawerTitle>Add shipping tracking number</DrawerTitle>
         </DrawerHeader>
-        <AddTrackingForm shippingId={shippingId} className={"px-4"} />
+        <AddTrackingForm
+          shippingId={shippingId}
+          className={"px-4"}
+          storeId={storeId}
+        />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -76,13 +82,16 @@ export default function AddTrackingDrawerDialog({
 
 function AddTrackingForm({
   shippingId,
-  className
+  className,
+  storeId
 }: {
+  storeId: string;
   shippingId: string;
   className?: string;
 }) {
   const [formState, formAction] = useFormState(addShippingTracking, {
-    shippingId
+    shippingId,
+    storeId
   });
 
   return (

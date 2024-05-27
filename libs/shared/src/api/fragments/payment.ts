@@ -1,5 +1,5 @@
 export const shopPaymentMethodFragment = /* GraphQL */ `
-  fragment ShopPaymentMethodFields on PaymentMethodType {
+  fragment ShopPaymentMethodFields on PaymentMethodSafeType {
     id
     name
     provider
@@ -25,7 +25,7 @@ export const paymentFragment = /* GraphQL */ `
   fragment PaymentFields on PaymentType {
     id
     paymentMethod {
-      ...PaymentMethodFields
+      ...ShopPaymentMethodFields
     }
     paymentStatus
     subtotalAmount
@@ -40,5 +40,5 @@ export const paymentFragment = /* GraphQL */ `
     updated
     state
   }
-  ${paymentMethodFragment}
+  ${shopPaymentMethodFragment}
 `;

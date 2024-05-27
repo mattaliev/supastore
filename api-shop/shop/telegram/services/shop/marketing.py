@@ -1,11 +1,12 @@
 import logging
-
-from django.conf import settings
+from typing import List
 
 from order.models import Order
-from telegram.services import telegram_shop_message_send
+from store.services import store_bot_token_get
+from telegram.services import telegram_message_send
 from telegram.services.shop.inline_buttons import ContactSupportInlineButton, \
     OpenShopInlineButton
+from user.models import TelegramUser
 
 __all__ = [
     "telegram_order_confirmation_to_user_send",
@@ -33,7 +34,10 @@ def telegram_order_confirmation_to_user_send(order: Order):
             text="Contact Support About This Order").as_json()]
     ]
 
-    telegram_shop_message_send(
+    bot_token = store_bot_token_get(store=order.store)
+
+    telegram_message_send(
+        bot_token=bot_token,
         chat_id=order.user.telegram_id,
         text=message,
         reply_markup=reply_markup
@@ -42,7 +46,7 @@ def telegram_order_confirmation_to_user_send(order: Order):
 
 def telegram_order_confirmation_to_admin_send(order: Order):
     """
-    Send order confirmation to admin
+    Send order confirmation to admins and store owner
     """
     logger = logging.getLogger(__name__)
     logger.debug("Sending order confirmation to admin", {"order_id": order.id})
@@ -69,8 +73,15 @@ def telegram_order_confirmation_to_admin_send(order: Order):
     message += "\n"
     message += f"Total: {order.payment.total_amount}\n"
 
-    telegram_shop_message_send(
-        chat_id=settings.TELEGRAM_ADMIN_CHAT_ID,
-        text=message,
-        parse_mode=None
-    )
+    bot_token: str = store_bot_token_get(store=order.store)
+
+    store_admins: List[TelegramUser] = [store_admin.admin for store_admin in order.store.admins.all()]
+    store_admins.append(order.store.owner)
+
+    for admin in store_admins:
+        telegram_message_send(
+            bot_token=bot_token,
+            chat_id=admin.telegram_id,
+            text=message,
+            parse_mode=None
+        )

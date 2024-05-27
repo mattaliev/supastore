@@ -10,7 +10,13 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
-export default function OrderCustomer({ user }: { user?: TelegramUser }) {
+export default function OrderCustomer({
+  user,
+  storeId
+}: {
+  user?: TelegramUser;
+  storeId: string;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -35,7 +41,7 @@ export default function OrderCustomer({ user }: { user?: TelegramUser }) {
       </CardContent>
       <CardFooter>
         <div className="flex ml-auto">
-          <Link href={`/customers/edit/${user?.id}`}>
+          <Link href={`/store/${storeId}/customers/edit/${user?.id}`}>
             <Button variant="outline" size="sm" className="w-full">
               View Customer
             </Button>

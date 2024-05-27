@@ -7,6 +7,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 import { updatePaymentStatus } from "@/components/payment/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -92,7 +93,9 @@ function MarkAsPaidForm({
   paymentId: string;
   className?: string;
 }) {
+  const storeId = useStore();
   const [formState, formAction] = useFormState(updatePaymentStatus, {
+    storeId,
     paymentId,
     paymentStatus: PaymentStatus.PAID
   });

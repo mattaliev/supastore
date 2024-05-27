@@ -1,22 +1,8 @@
 import { orderFragment, orderPaginatedFragment } from "../fragments";
 
-export const orderListQuery = /* GraphQL */ `
-  query OrderListQuery($state: String) {
-    orders(state: $state) {
-      objects {
-        ...OrderFields
-      }
-      hasNext
-      hasPrev
-      pages
-      totalItems
-    }
-  }
-  ${orderFragment}
-`;
-
 export const ordersPaginatedGetQuery = /* GraphQL */ `
   query OrderPaginatedGet(
+    $storeId: UUID!
     $paymentStatus: String
     $fulfilmentStatus: String
     $state: String
@@ -24,6 +10,7 @@ export const ordersPaginatedGetQuery = /* GraphQL */ `
     $limit: Int
   ) {
     ordersPaginatedGet(
+      storeId: $storeId
       paymentStatus: $paymentStatus
       fulfilmentStatus: $fulfilmentStatus
       state: $state
@@ -37,8 +24,8 @@ export const ordersPaginatedGetQuery = /* GraphQL */ `
 `;
 
 export const orderGetByIdQuery = /* GraphQL */ `
-  query OrderGetByIdQuery($orderId: UUID!, $state: String) {
-    orderGetById(orderId: $orderId, state: $state) {
+  query OrderGetByIdQuery($orderId: UUID!, $storeId: UUID!, $state: String) {
+    orderGetById(orderId: $orderId, storeId: $storeId, state: $state) {
       ...OrderFields
     }
   }
@@ -46,8 +33,8 @@ export const orderGetByIdQuery = /* GraphQL */ `
 `;
 
 export const orderGetByCartIdQuery = /* GraphQL */ `
-  query orderGetByCartId($cartId: UUID!) {
-    orderGetByCartId(cartId: $cartId) {
+  query orderGetByCartId($cartId: UUID!, $storeId: UUID!, $state: String) {
+    orderGetByCartId(cartId: $cartId, storeId: $storeId, state: $state) {
       ...OrderFields
     }
   }

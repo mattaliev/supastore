@@ -1,8 +1,10 @@
+"use client";
 import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { deleteProduct } from "@/components/product/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -53,20 +55,6 @@ export default function ProductDeleteDialog({
   setDialogOpen: (open: boolean) => void;
   isProductsPage: boolean;
 }) {
-  const [formStatus, formAction] = useFormState(deleteProduct, null);
-  const actionWithProductId = formAction.bind(null, {
-    productId,
-    isProductsPage
-  });
-
-  useEffect(() => {
-    if (formStatus?.success) {
-      if (dialogOpen) {
-        setDialogOpen(false);
-      }
-    }
-  });
-
   return (
     <DialogContent>
       <DialogHeader>
@@ -76,6 +64,8 @@ export default function ProductDeleteDialog({
         </DialogDescription>
       </DialogHeader>
       <ProductDeleteForm
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
         productId={productId}
         isProductsPage={isProductsPage}
       />
@@ -85,15 +75,27 @@ export default function ProductDeleteDialog({
 
 function ProductDeleteForm({
   productId,
-  isProductsPage
+  isProductsPage,
+  dialogOpen,
+  setDialogOpen
 }: {
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
   productId: string;
   isProductsPage: boolean;
 }) {
+  const storeId = useStore();
   const [formStatus, formAction] = useFormState(deleteProduct, null);
   const actionWithProductId = formAction.bind(null, {
     productId,
-    isProductsPage
+    isProductsPage,
+    storeId
+  });
+
+  useEffect(() => {
+    if (formStatus?.success && dialogOpen) {
+      setDialogOpen(false);
+    }
   });
 
   return (

@@ -1,4 +1,4 @@
-import { APIFunction, signInAdmin, signOutAdmin, UserRole } from "@ditch/lib";
+import { APIFunction, signInAdmin, signOutAdmin } from "@ditch/lib";
 import { redirect } from "next/navigation";
 import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -54,24 +54,25 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      return user.role === UserRole.ADMIN;
+      return true;
     },
     async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
         token.accessToken = user.accessToken as string;
         token.photoUrl = user.photoUrl;
+        token.username = user.username;
       }
       return token;
     },
 
     async session({ session, user, token }) {
       session.user.id = token.id as string;
-      session.user.name = `${token.firstName} ${token.lastName}`;
-      session.user.role = token.role as string;
+      session.user.firstName = token.firstName as string;
+      session.user.lastName = token.lastName as string;
+      session.user.username = token.username as string;
       session.user.accessToken = token.accessToken as string;
       session.user.photoUrl = token.photoUrl as string;
       return session;
@@ -87,5 +88,16 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signIn",
     error: "/auth/error",
+  },
+  session: {
+    /**
+     * Next auth session is always being kept alive, meaning it does not
+     * have a fixed expiration time. This not true for the access token issued
+     * by the API. The access token expires after 24 hours. To avoid the situation
+     * where the user is logged in but the access token is expired, we set the
+     * maxAge to 4 hours. This means that the user will be logged out after 4 hours
+     * of inactivity.
+     */
+    maxAge: 60 * 60 * 4, // 4 hours
   },
 };

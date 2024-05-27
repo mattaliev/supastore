@@ -1,8 +1,8 @@
 import { orderFragment } from "../fragments";
 
 export const orderCreateMutation = /* GraphQL */ `
-  mutation orderCreate($cartId: UUID!) {
-    orderCreate(cartId: $cartId) {
+  mutation orderCreate($storeId: UUID!, $cartId: UUID!) {
+    orderCreate(storeId: $storeId, cartId: $cartId) {
       order {
         ...OrderFields
       }
@@ -12,8 +12,8 @@ export const orderCreateMutation = /* GraphQL */ `
 `;
 
 export const orderDeleteMutation = /* GraphQL */ `
-  mutation orderDelete($orderId: UUID!) {
-    orderDelete(orderId: $orderId) {
+  mutation orderDelete($orderId: UUID!, $storeId: UUID!) {
+    orderDelete(orderId: $orderId, storeId: $storeId) {
       success
     }
   }

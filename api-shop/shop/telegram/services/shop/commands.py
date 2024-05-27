@@ -2,8 +2,9 @@ import logging
 from abc import ABC, abstractmethod
 from enum import Enum
 
+from store.models import Store
 from telegram.models.user_bot_state import UserBotState, States
-from telegram.services import telegram_shop_message_send
+from telegram.services import telegram_message_send
 from telegram.services.shop.messages import (
     WELCOME_MESSAGE,
     WELCOME_BACK_JOIN_PROMO_CODE_MESSAGE,
@@ -12,7 +13,6 @@ from telegram.services.shop.messages import (
     UNRECOGNIZED_ACTION_MESSAGE
 )
 from user.services import user_create_or_update
-
 
 __all__ = [
     "telegram_command_process",
@@ -23,13 +23,26 @@ __all__ = [
 ]
 
 
-def telegram_command_process(*, user: dict, chat_id: int, command: str):
+def telegram_command_process(
+        *,
+        store: Store,
+        bot_token: str,
+        user: dict,
+        chat_id: int,
+        command: str
+):
     for bot_command in bot_commands:
         if bot_command.command.value == command:
-            bot_command.execute(telegram_user=user, chat_id=chat_id)
+            bot_command.execute(
+                store=store,
+                bot_token=bot_token,
+                telegram_user=user,
+                chat_id=chat_id
+            )
             return
 
-    telegram_shop_message_send(
+    telegram_message_send(
+        bot_token=bot_token,
         chat_id=chat_id,
         text=UNRECOGNIZED_ACTION_MESSAGE
     )
@@ -46,7 +59,7 @@ class BotCommand(ABC):
         self.command = command
 
     @abstractmethod
-    def execute(self, *args, **kwargs):
+    def execute(self, *, store: Store, bot_token: str, telegram_user: dict, chat_id: int, **kwargs):
         pass
 
 
@@ -54,11 +67,12 @@ class StartCommand(BotCommand):
     def __init__(self):
         super().__init__(BotCommandTypes.START)
 
-    def execute(self, telegram_user: dict, chat_id: int, *args, **kwargs):
+    def execute(self, *, store: Store, bot_token: str, telegram_user: dict, chat_id: int, **kwargs):
         logger = logging.getLogger(__name__)
         logger.debug("Processing start command")
         try:
             user, is_user_created = user_create_or_update(
+                store_id=store.id,
                 telegram_id=telegram_user['id'],
                 username=telegram_user.get('username'),
                 first_name=telegram_user.get('first_name'),
@@ -69,7 +83,10 @@ class StartCommand(BotCommand):
                 allows_notifications=telegram_user.get('allows_notifications'),
             )
 
-            bot_state, is_state_created = UserBotState.objects.get_or_create(user=user)
+            bot_state, is_state_created = UserBotState.objects.get_or_create(
+                user=user,
+                store=store,
+            )
 
             if is_state_created:
                 text = WELCOME_MESSAGE
@@ -78,7 +95,8 @@ class StartCommand(BotCommand):
             else:
                 text = WELCOME_BACK_MESSAGE
 
-            telegram_shop_message_send(
+            telegram_message_send(
+                bot_token=bot_token,
                 chat_id=chat_id,
                 text=text
             )
@@ -87,7 +105,8 @@ class StartCommand(BotCommand):
                 "telegram_id": telegram_user['id'],
                 "error": e
             })
-            telegram_shop_message_send(
+            telegram_message_send(
+                bot_token=bot_token,
                 chat_id=chat_id,
                 text=SOMETHING_WENT_WRONG_MESSAGE
             )

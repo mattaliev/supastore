@@ -23,8 +23,8 @@ export const productUpdateMutation = /* GraphQL */ `
 `;
 
 export const productDeleteMutation = /* GraphQL */ `
-  mutation ProductDelete($id: UUID!) {
-    productDelete(id: $id) {
+  mutation ProductDelete($id: UUID!, $storeId: UUID!) {
+    productDelete(id: $id, storeId: $storeId) {
       success
     }
   }

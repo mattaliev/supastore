@@ -43,6 +43,11 @@ class PaymentProviderChoices(models.TextChoices):
 # * Crypto Transfer
 class PaymentMethod(BaseEntity):
     name = models.CharField(max_length=50)
+    store = models.ForeignKey(
+        "store.Store",
+        on_delete=models.CASCADE,
+        related_name="payment_methods",
+    )
     provider = models.CharField(
         max_length=25,
         choices=PaymentProviderChoices.choices

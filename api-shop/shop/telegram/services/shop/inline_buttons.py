@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
+from uuid import UUID
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -12,33 +13,43 @@ __all__ = [
     "OpenShopInlineButton",
     "PayWithTelegramInvoiceButton",
     "PayWithWalletPayButton",
-    "inline_buttons",
+    "OpenOrderButton",
 ]
 
-from telegram.services import telegram_shop_message_send
+from store.models import Store
+from telegram.services import telegram_message_send
 
 User = get_user_model()
 
 
-def telegram_callback_query_process(*, user: User, chat_id: int,
-                                    callback_query: str):
+def telegram_callback_query_process(
+        *,
+        store: Store,
+        bot_token: str,
+        user: User,
+        chat_id: int,
+        callback_query: str
+):
     for inline_button in inline_buttons:
         if inline_button.type.value == callback_query:
-            inline_button.execute(user=user, chat_id=chat_id)
+            inline_button.execute(store=store, bot_token=bot_token, user=user, chat_id=chat_id)
             return
 
-    telegram_shop_message_send(
+    telegram_message_send(
+        bot_token=bot_token,
         chat_id=chat_id,
         text="I'm sorry, I don't understand what you're saying. Please look at the /help command"
     )
 
 
 class InlineButtonType(Enum):
+    APPROVE_STORE_APPLICATION = "APPROVE_STORE_APPLICATION"
     CONTACT_SUPPORT = "CONTACT_SUPPORT"
     START_SHOPPING = "START_SHOPPING"
     PAY_WITH_TELEGRAM_INVOICE = "PAY_WITH_TELEGRAM_INVOICE"
     PAY_WITH_WALLET_PAY = "PAY_WITH_WALLET_PAY"
     OPEN_ORDER = "OPEN_ORDER"
+    OPEN_STORE = "OPEN_STORE"
 
 
 class InlineButton(ABC):
@@ -74,14 +85,15 @@ class ContactSupportInlineButton(InlineButton):
 
 
 class OpenShopInlineButton(InlineButton):
-    def __init__(self, text: str = "🛍Start shopping"):
+    def __init__(self, store_id: UUID = None, text: str = "🛍Start shopping"):
+        self.store_id = store_id
         super().__init__(InlineButtonType.START_SHOPPING, text)
 
     def as_json(self):
         return {
             "text": self.text,
             "web_app": {
-                "url": settings.FRONTEND_CLIENT_URL
+                "url": f"{settings.FRONTEND_CLIENT_URL}/store/{self.store_id}"
             }
         }
 
@@ -130,7 +142,8 @@ class PayWithWalletPayButton(InlineButton):
 
 
 class OpenOrderButton(InlineButton):
-    def __init__(self, order_id: str, text: str = "📦View order"):
+    def __init__(self,  order_id: str, store_id: UUID, text: str = "📦View order"):
+        self.store_id = store_id
         self.order_id = order_id
         super().__init__(InlineButtonType.OPEN_ORDER, text)
 
@@ -138,7 +151,7 @@ class OpenOrderButton(InlineButton):
         return {
             "text": self.text,
             "web_app": {
-                "url": f"{settings.FRONTEND_CLIENT_URL}/checkout/payment?orderId={self.order_id}"
+                "url": f"{settings.FRONTEND_CLIENT_URL}/store/{self.store_id}/checkout/payment?orderId={self.order_id}"
             }
         }
 

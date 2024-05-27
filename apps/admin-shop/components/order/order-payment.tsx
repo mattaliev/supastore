@@ -6,6 +6,7 @@ import { authenticated, authOptions } from "@/auth";
 import CreatePaymentDrawerDialog from "@/components/order/create-payment-drawer-dialog";
 import MarkAsPaidDrawerDialog from "@/components/order/mark-as-paid-drawer-dialog";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
+import { StoreProvider } from "@/components/store/store-context";
 import {
   Card,
   CardContent,
@@ -15,7 +16,13 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function OrderPayment({ order }: { order: Order }) {
+export default function OrderPayment({
+  order,
+  storeId
+}: {
+  order: Order;
+  storeId: string;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -58,12 +65,18 @@ export default function OrderPayment({ order }: { order: Order }) {
           )}
         </div>
       </CardContent>
-      <PaymentActions order={order} />
+      <PaymentActions order={order} storeId={storeId} />
     </Card>
   );
 }
 
-async function PaymentActions({ order }: { order: Order }) {
+async function PaymentActions({
+  order,
+  storeId
+}: {
+  order: Order;
+  storeId: string;
+}) {
   if (!order.payment) {
     const session = await getServerSession(authOptions);
 
@@ -74,7 +87,7 @@ async function PaymentActions({ order }: { order: Order }) {
     const paymentMethods = await authenticated(
       session.user.accessToken,
       paymentMethodsList,
-      {}
+      { storeId }
     );
 
     if (!paymentMethods) {
@@ -96,9 +109,11 @@ async function PaymentActions({ order }: { order: Order }) {
   if (order.payment.paymentStatus === PaymentStatus.UNPAID) {
     return (
       <CardFooter>
-        <div className="flex ml-auto">
-          <MarkAsPaidDrawerDialog paymentId={order.payment.id} />
-        </div>
+        <StoreProvider storeId={storeId}>
+          <div className="flex ml-auto">
+            <MarkAsPaidDrawerDialog paymentId={order.payment.id} />
+          </div>
+        </StoreProvider>
       </CardFooter>
     );
   }

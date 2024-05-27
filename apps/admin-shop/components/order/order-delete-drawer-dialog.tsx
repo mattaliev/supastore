@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 import { deleteOrder } from "@/components/order/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +21,7 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
+  DrawerHeader,
   DrawerTitle,
   DrawerTrigger
 } from "@/components/ui/drawer";
@@ -63,12 +65,12 @@ export default function OrderDeleteDrawerDialog({
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DialogHeader>
+        <DrawerHeader>
           <DrawerTitle>Are you sure you want to delete this order?</DrawerTitle>
           <DrawerDescription>
             Once you delete the order, you want be able to see it again
           </DrawerDescription>
-        </DialogHeader>
+        </DrawerHeader>
         <DeleteOrderForm orderId={orderId} className="px-4 mt-4" />
         <DrawerFooter>
           <DrawerClose asChild>
@@ -89,9 +91,10 @@ function DeleteOrderForm({
   orderId: string;
   className?: string;
 }) {
+  const storeId = useStore();
   const [formStatus, formAction] = useFormState(deleteOrder, null);
 
-  const actionWithOrderId = formAction.bind(null, orderId);
+  const actionWithOrderId = formAction.bind(null, { orderId, storeId });
 
   return (
     <form

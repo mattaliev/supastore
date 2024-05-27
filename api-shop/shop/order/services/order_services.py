@@ -28,6 +28,7 @@ __all__ = [
 
 def order_list(
         *,
+        store_id: UUID,
         payment_status: PaymentStatusChoices = None,
         fulfilment_status: FulfillmentStatusChoices = None,
         state: EntityStateChoices = None
@@ -35,7 +36,7 @@ def order_list(
     logger = logging.getLogger(__name__)
     logger.debug("Listing orders...")
 
-    orders = Order.objects.all()
+    orders = Order.objects.filter(store_id=store_id)
 
     if state:
         orders = orders.filter(state=state)
@@ -49,11 +50,11 @@ def order_list(
     return orders
 
 
-def order_get_by_id(*, order_id: UUID, state: EntityStateChoices) -> Order:
+def order_get_by_id(*, order_id: UUID, store_id: UUID, state: EntityStateChoices) -> Order:
     logger = logging.getLogger(__name__)
     logger.debug("Getting order by id: %(order_id)s", {"order_id": order_id})
 
-    order_queryset = Order.objects.filter(pk=order_id)
+    order_queryset = Order.objects.filter(pk=order_id, store_id=store_id)
 
     if state:
         order_queryset = order_queryset.filter(state=state)
@@ -63,11 +64,11 @@ def order_get_by_id(*, order_id: UUID, state: EntityStateChoices) -> Order:
     return order
 
 
-def order_get_by_cart_id(*, cart_id: UUID, state: EntityStateChoices) -> Order:
+def order_get_by_cart_id(*, cart_id: UUID, store_id: UUID, state: EntityStateChoices) -> Order:
     logger = logging.getLogger(__name__)
     logger.debug("Getting order by cart id: %(cart_id)s", {"cart_id": cart_id})
 
-    order_queryset = Order.objects.filter(cart_id=cart_id)
+    order_queryset = Order.objects.filter(cart_id=cart_id, store_id=store_id)
 
     if state:
         order_queryset = order_queryset.filter(state=state)
@@ -77,7 +78,7 @@ def order_get_by_cart_id(*, cart_id: UUID, state: EntityStateChoices) -> Order:
     return order
 
 
-def order_create(*, user_id: UUID, cart_id: UUID) -> Order:
+def order_create(*, user_id: UUID, cart_id: UUID, store_id: UUID) -> Order:
     logger = logging.getLogger(__name__)
     logger.debug("Creating order", {"cart_id": cart_id, "user_id": user_id})
 
@@ -91,7 +92,8 @@ def order_create(*, user_id: UUID, cart_id: UUID) -> Order:
         shipping = Shipping.objects.create()
         order = Order.objects.create(
             cart=cart,
-            shipping=shipping
+            shipping=shipping,
+            store_id=store_id
         )
 
         user = User.objects.filter(pk=user_id).first()
@@ -107,10 +109,10 @@ def order_create(*, user_id: UUID, cart_id: UUID) -> Order:
         shipping.save()
         order.save()
 
-        Event.register_checkout_started(order=order)
+        Event.register_checkout_started(order=order, store_id=store_id)
         return order
     except Exception as e:
-        print(e)
+        logger.warning("Error creating order: %(error)s", {"error": e})
 
 
 def order_fulfilment_status_update(

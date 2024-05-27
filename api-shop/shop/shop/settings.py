@@ -43,7 +43,6 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
     print("Pulling secrets from Google Cloud Secret Manager")
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
     settings_name = os.environ.get("SETTINGS_NAME", "api-shop-settings")
-    print("Settings name", settings_name)
 
     client = secretmanager.SecretManagerServiceClient()
     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
@@ -119,7 +118,8 @@ INSTALLED_APPS = [
     'telegram.apps.TelegramConfig',
     'shipping.apps.ShippingConfig',
     'payment.apps.PaymentConfig',
-    'authentication.apps.AuthenticationConfig'
+    'authentication.apps.AuthenticationConfig',
+    'store.apps.StoreConfig'
 ]
 
 MIDDLEWARE = [
@@ -167,6 +167,24 @@ if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = "5432"
 
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+    }
+}
+
+GS_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+GS_AUTO_CREATE_BUCKET = True
+GS_DEFAULT_ACL = 'publicRead'
+STATIC_URL = 'https://storage.googleapis.com/{}/static/'.format(GS_BUCKET_NAME)
+
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -205,7 +223,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -256,6 +273,9 @@ TELEGRAM_SUPPORT_TOKEN = env("TELEGRAM_SUPPORT_TOKEN")
 TELEGRAM_WEB_APP_URL = env("TELEGRAM_WEB_APP_URL")
 TELEGRAM_ADMIN_CHAT_ID = env("TELEGRAM_ADMIN_CHAT_ID")
 TELEGRAM_SUPPORT_CHAT_ID = env("TELEGRAM_SUPPORT_CHAT_ID")
+
+SUPERUSER_TELEGRAM_ID = env("SUPERUSER_TELEGRAM_ID")
+TELEGRAM_ADMIN_BOT_TOKEN = env("TELEGRAM_ADMIN_BOT_TOKEN")
 
 # PAYMENT
 TELEGRAM_WALLET_PAY_URL = env("TELEGRAM_WALLET_PAY_URL")

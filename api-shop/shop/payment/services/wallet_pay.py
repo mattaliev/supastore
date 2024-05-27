@@ -11,7 +11,6 @@ WALLET_PAY_URL = "https://pay.wallet.tg"
 
 __all__ = [
     "wallet_pay_invoice_get",
-    "wallet_pay_webhook_process"
 ]
 
 
@@ -33,8 +32,14 @@ def wallet_pay_invoice_get(
         "auto_conversion_currency_code"
     )
 
-    success_url = f"{settings.TELEGRAM_PAYMENT_RETURN_URL}?startapp=checkout_payment_success__paymentId_{payment.id}"
-    fail_url = f"{settings.TELEGRAM_PAYMENT_RETURN_URL}?startapp=checkout_payment_failed__paymentId_{payment.id}"
+    return_url = (
+        f"{settings.TELEGRAM_PAYMENT_RETURN_URL}"
+        f"?startapp=store_{payment.payment_method.store.id}"
+        f"_checkout_payment"
+    )
+
+    success_url = f"{return_url}_success__paymentId_{payment.id}"
+    fail_url = f"{return_url}_failed__paymentId_{payment.id}"
     wallet_pay_url = f"{WALLET_PAY_URL}/wpay/store-api/v1/order"
 
     invoice_data = {

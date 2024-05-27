@@ -23,9 +23,11 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CustomerList({
+  storeId,
   customersPaginated,
   limit
 }: {
+  storeId: string;
   customersPaginated: Paginated<TelegramUserList>;
   limit: number;
 }) {
@@ -82,7 +84,7 @@ export default function CustomerList({
                   <TableCell className="h-8">
                     <div className="flex flex-col items-start text-sm">
                       <Link
-                        href={`/customers/detail/${customer.id}`}
+                        href={`/store/${storeId}/customers/detail/${customer.id}`}
                         className="hover:underline"
                       >
                         {customer.firstName} {customer.lastName}

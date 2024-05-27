@@ -6,6 +6,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 import { updateOrderStatus } from "@/components/order/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -89,9 +90,11 @@ function CancelOrderForm({
   orderId: string;
   className?: string;
 }) {
+  const storeId = useStore();
   const [formStatus, formAction] = useFormState(updateOrderStatus, {
     orderId,
-    fulfilmentStatus: FulfilmentStatus.CANCELLED
+    fulfilmentStatus: FulfilmentStatus.CANCELLED,
+    storeId
   });
   return (
     <form

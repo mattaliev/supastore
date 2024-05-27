@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import ProductDeleteDialog from "@/components/product/product-delete-dialog";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -21,6 +22,7 @@ export default function ProductAdminActions({
   id: string;
   title: string;
 }) {
+  const storeId = useStore();
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -40,7 +42,9 @@ export default function ProductAdminActions({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onSelect={() => router.push(`/products/edit/${id}`)}
+            onSelect={() =>
+              router.push(`/store/${storeId}/products/edit/${id}`)
+            }
           >
             Edit
           </DropdownMenuItem>

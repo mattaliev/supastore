@@ -20,7 +20,10 @@ import { tmaAuthenticated } from "@/lib/auth";
 
 import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
 
-export const createOrder = async (prevState: any): Promise<string | void> => {
+export const createOrder = async (
+  prevState: any,
+  storeId: string
+): Promise<string | void> => {
   const cartId = cookies().get("cartId")?.value;
   const initDataRaw = cookies().get("initDataRaw")?.value;
   const orderId = cookies().get("orderId")?.value;
@@ -39,30 +42,33 @@ export const createOrder = async (prevState: any): Promise<string | void> => {
     let order;
 
     if (orderId) {
-      order = await tmaAuthenticated(initDataRaw, orderGetById, {
+      order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
+        storeId,
         orderId,
         state: EntityState.ACTIVE
       });
     }
 
     if (!order) {
-      order = await tmaAuthenticated(initDataRaw, orderGetByCartId, {
+      order = await tmaAuthenticated(initDataRaw, storeId, orderGetByCartId, {
+        storeId,
         cartId,
         state: EntityState.ACTIVE
       });
     }
 
     if (!order) {
-      order = await tmaAuthenticated(initDataRaw, orderCreate, {
+      order = await tmaAuthenticated(initDataRaw, storeId, orderCreate, {
+        storeId,
         cartId
       });
     }
 
     cookies().set("orderId", order.id);
-    redirectPath = `/checkout/shipping?shippingId=${order.shipping.id}`;
+    redirectPath = `/store/${storeId}/checkout/shipping?shippingId=${order.shipping.id}`;
 
     if (order.hasDefaultShippingDetails) {
-      redirectPath = "/checkout/payment";
+      redirectPath = `/store/${storeId}/checkout/payment`;
     }
   } catch (e) {
     console.error(e);
@@ -83,6 +89,7 @@ export const createOrUpdateShippingDetails = async (
   formData: FormData
 ): Promise<FormErrorResponse> => {
   const initDataRaw = cookies().get("initDataRaw")?.value;
+  const storeId = formData.get("storeId") as string;
   const shippingId = formData.get("shipping-id") as string;
 
   if (!initDataRaw) {
@@ -113,7 +120,7 @@ export const createOrUpdateShippingDetails = async (
 
   try {
     if (shippingDetailsId) {
-      await tmaAuthenticated(initDataRaw, shippingDetailsUpdate, {
+      await tmaAuthenticated(initDataRaw, storeId, shippingDetailsUpdate, {
         input: {
           ...(validatedData.data as ShippingDetails),
           shippingId,
@@ -122,7 +129,7 @@ export const createOrUpdateShippingDetails = async (
         }
       });
     } else {
-      await tmaAuthenticated(initDataRaw, shippingDetailsCreate, {
+      await tmaAuthenticated(initDataRaw, storeId, shippingDetailsCreate, {
         input: {
           ...(validatedData.data as ShippingDetails),
           shippingId,
@@ -135,12 +142,13 @@ export const createOrUpdateShippingDetails = async (
   }
 
   revalidateTag(TAGS.ORDER);
-  redirect("/checkout/payment", RedirectType.push);
+  redirect(`/store/${storeId}/checkout/payment`, RedirectType.push);
 };
 
 export const createPayment = async (
   prevState: any,
   payload: {
+    storeId: string;
     paymentMethodId: string;
     currency?: string;
   }
@@ -152,12 +160,12 @@ export const createPayment = async (
     redirect("/unauthenticated");
   }
 
-  const { paymentMethodId, currency = "USD" } = payload;
+  const { storeId, paymentMethodId, currency = "USD" } = payload;
   if (!orderId) {
     return { success: false, error: "No order found" };
   }
 
-  const result = await tmaAuthenticated(initDataRaw, paymentCreate, {
+  const result = await tmaAuthenticated(initDataRaw, storeId, paymentCreate, {
     input: {
       orderId,
       paymentMethodId,

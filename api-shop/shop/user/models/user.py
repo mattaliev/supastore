@@ -5,6 +5,7 @@ from core.models.core import BaseEntity
 
 __all__ = [
     "TelegramUser",
+    "StoreUser",
     "UserRoleChoices",
     "CustomerSortChoices",
 ]
@@ -13,6 +14,7 @@ __all__ = [
 class UserRoleChoices(models.TextChoices):
     ADMIN = "ADMIN", "ADMIN"
     USER = "USER", "USER"
+    OWNER = "OWNER", "OWNER"
 
 
 class CustomerSortChoices(models.TextChoices):
@@ -28,11 +30,6 @@ class TelegramUser(AbstractUser, BaseEntity):
     is_bot = models.BooleanField(default=False)
     photo_url = models.URLField(blank=True, null=True)
     allows_notifications = models.BooleanField(default=False)
-    role = models.CharField(
-        max_length=50,
-        choices=UserRoleChoices.choices,
-        default=UserRoleChoices.USER
-    )
     shipping_details = models.OneToOneField(
         "shipping.ShippingDetails",
         on_delete=models.CASCADE,
@@ -57,7 +54,23 @@ class TelegramUser(AbstractUser, BaseEntity):
         return str(self.username)
 
     def can_access_resource(self, resource):
-        if self.role == UserRoleChoices.ADMIN or resource.user == self:
-            return True
-        return False
+        return resource.user == self
+
+
+class StoreUser(BaseEntity):
+    user = models.ForeignKey(
+        "user.TelegramUser",
+        on_delete=models.CASCADE,
+        related_name="store_users"
+    )
+    store = models.ForeignKey(
+        "store.Store",
+        on_delete=models.CASCADE,
+        related_name="store_users"
+    )
+    role = models.CharField(
+        max_length=50,
+        choices=UserRoleChoices.choices,
+        default=UserRoleChoices.USER
+    )
 

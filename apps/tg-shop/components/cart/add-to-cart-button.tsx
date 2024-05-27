@@ -52,10 +52,12 @@ function SubmitButton({
 }
 
 export default function AddToCartButton({
+  storeId,
   productId,
   selectedVariantId,
   doesProductHaveVariants
 }: {
+  storeId: string;
   productId: string;
   selectedVariantId?: string;
   doesProductHaveVariants: boolean;
@@ -63,6 +65,7 @@ export default function AddToCartButton({
   const [message, formAction] = useFormState(addToCart, null);
 
   const payload = {
+    storeId,
     productId,
     selectedVariantId,
     doesProductHaveVariants,

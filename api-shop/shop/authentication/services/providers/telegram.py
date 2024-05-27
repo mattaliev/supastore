@@ -4,10 +4,6 @@ from datetime import datetime
 from hashlib import sha256
 from urllib.parse import parse_qs
 
-from django.conf import settings
-
-TOKEN = settings.TELEGRAM_SHOP_TOKEN
-
 
 __all__ = [
     'validate_init_data',
@@ -15,7 +11,7 @@ __all__ = [
 ]
 
 
-def validate_init_data(init_data_raw: str, is_web_app: bool = True):
+def validate_init_data(init_data_raw: str, bot_token: str, is_web_app: bool = True):
     search_params = parse_qs(init_data_raw)
 
     auth_date = datetime(1970, 1, 1)
@@ -50,9 +46,9 @@ def validate_init_data(init_data_raw: str, is_web_app: bool = True):
 
     pairs.sort()
     if is_web_app:
-        secret_key = hmac.new('WebAppData'.encode(), TOKEN.encode(), digestmod=sha256)
+        secret_key = hmac.new('WebAppData'.encode(), bot_token.encode(), digestmod=sha256)
     else:
-        secret_key = hashlib.sha256(TOKEN.encode())
+        secret_key = hashlib.sha256(bot_token.encode())
 
     computed_hash = hmac.new(secret_key.digest(),'\n'.join(pairs).encode(), digestmod=sha256).hexdigest()
 

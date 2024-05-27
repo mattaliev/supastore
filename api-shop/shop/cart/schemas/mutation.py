@@ -21,14 +21,17 @@ from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
 
 
 class CartCreateMutation(graphene.Mutation):
+    class Arguments:
+        store_id = graphene.UUID(required=True)
+
     cart = graphene.Field("cart.schemas.CartType")
 
-    def mutate(self, info, **kwargs):
+    def mutate(self, info, store_id, **kwargs):
         user = info.context.user
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        cart = cart_create(user_id=user.id)
+        cart = cart_create(user_id=user.id, store_id=store_id)
         return CartCreateMutation(cart=cart)
 
 

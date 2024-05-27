@@ -12,12 +12,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 
 import HeaderBreadcrumb from "@/components/layout/header-breadcrumb";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +31,8 @@ import { Input } from "@/components/ui/input";
 
 export default function Header() {
   const pathname = usePathname();
+  const storeId = pathname.split("/")[2];
+  const { data } = useSession();
 
   const sheetItemClass =
     "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground";
@@ -56,18 +59,20 @@ export default function Header() {
                 <span className="sr-only">Acme Inc</span>
               </Link>
               <Link
-                href="/"
+                href={`/store/${storeId}`}
                 className={
-                  pathname === "/" ? sheetItemSelectedClass : sheetItemClass
+                  pathname === `/store/${storeId}`
+                    ? sheetItemSelectedClass
+                    : sheetItemClass
                 }
               >
                 <Home className="h-5 w-5" />
                 Dashboard
               </Link>
               <Link
-                href="/orders"
+                href={`/store/${storeId}/orders`}
                 className={
-                  pathname.startsWith("/orders")
+                  pathname.startsWith(`/store/${storeId}/orders`)
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -76,9 +81,9 @@ export default function Header() {
                 Orders
               </Link>
               <Link
-                href="/products"
+                href={`/store/${storeId}/products`}
                 className={
-                  pathname.startsWith("/products")
+                  pathname.startsWith(`/store/${storeId}/products`)
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -87,9 +92,9 @@ export default function Header() {
                 Products
               </Link>
               <Link
-                href="/customers"
+                href={`/store/${storeId}/customers`}
                 className={
-                  pathname.startsWith("/customers")
+                  pathname.startsWith(`/store/${storeId}/customers`)
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -98,9 +103,9 @@ export default function Header() {
                 Customers
               </Link>
               <Link
-                href="/payment-systems"
+                href={`/store/${storeId}/payment-systems`}
                 className={
-                  pathname.startsWith("/payment-systems")
+                  pathname.startsWith(`/store/${storeId}/payment-systems`)
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -109,9 +114,9 @@ export default function Header() {
                 Payment Systems
               </Link>
               <Link
-                href="#"
+                href={`/store/${storeId}/settings`}
                 className={
-                  pathname.startsWith("/analytics")
+                  pathname.startsWith(`/store/${storeId}/settings`)
                     ? sheetItemSelectedClass
                     : sheetItemClass
                 }
@@ -133,17 +138,23 @@ export default function Header() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="overflow-hidden rounded-full"
-            ></Button>
+            <Avatar>
+              <AvatarImage src={data?.user?.photoUrl} alt="User" />
+              <AvatarFallback>
+                {data?.user &&
+                  data?.user?.firstName.charAt(0) +
+                    data?.user?.lastName.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            {/*<DropdownMenuItem>Settings</DropdownMenuItem>*/}
+            {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
+            <DropdownMenuItem>
+              <Link href={`/store`}>Stores</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => signOut()}>
               Logout

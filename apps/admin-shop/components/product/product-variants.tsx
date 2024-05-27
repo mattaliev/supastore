@@ -86,7 +86,7 @@ export default function ProductVariants({
         )}
         <Button
           size="sm"
-          variant="ghost"
+          variant="primary-outline"
           className="gap-1"
           type="button"
           onClick={addVariant}
@@ -159,10 +159,10 @@ function ProductVariantDisplay({
           Remove
         </Label>
         <Button
-          variant="outline"
+          variant="destructive-outline"
           size="icon"
           type="button"
-          className="h-7 w-7"
+          className="h-7 w-7 border-primary-foreground"
           onClick={() => removeVariant(index)}
         >
           <TrashIcon className="h-4 w-4 text-error cursor-pointer" />

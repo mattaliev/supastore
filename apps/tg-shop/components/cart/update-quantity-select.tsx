@@ -1,10 +1,11 @@
 "use client";
 import { useHapticFeedback } from "@tma.js/sdk-react";
 import { clsx } from "clsx";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { updateCartItem } from "@/components/cart/actions";
+import { useStore } from "@/components/store/store-context";
 import {
   Select,
   SelectContent,
@@ -57,6 +58,7 @@ export default function UpdateItemQuantitySelect({
   itemId: string;
   quantity: number;
 }) {
+  const storeId = useStore();
   const formRef = useRef<HTMLFormElement>(null);
   const [message, formAction] = useFormState(updateCartItem, null);
   const hapticFeedback = useHapticFeedback();
@@ -68,6 +70,7 @@ export default function UpdateItemQuantitySelect({
 
   return (
     <form ref={formRef} action={formAction}>
+      <input type="hidden" name="storeId" value={storeId} />
       <input type="hidden" name="cartItemId" value={itemId} />
       <Select
         defaultValue={quantity.toString()}

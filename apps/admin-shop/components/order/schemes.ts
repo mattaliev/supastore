@@ -1,6 +1,12 @@
 import { z } from "zod";
 
 export const ShippingTrackingScheme = z.object({
+  storeId: z
+    .string({
+      invalid_type_error: "Store ID must be a string",
+      required_error: "Store ID is required"
+    })
+    .min(1),
   shippingId: z
     .string({
       invalid_type_error: "Shipping ID must be a string",

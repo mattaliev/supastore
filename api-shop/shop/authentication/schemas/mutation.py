@@ -28,11 +28,16 @@ class SignInShopUserMutation(graphene.Mutation):
 
     class Arguments:
         init_data_raw = graphene.String(required=True)
+        store_id = graphene.UUID(required=True)
         cart_id = graphene.UUID()
 
     @classmethod
-    def mutate(cls, root, info, init_data_raw, cart_id=None):
-        user, cart, created_cart = sign_in_shop_user(init_data_raw=init_data_raw, cart_id=cart_id)
+    def mutate(cls, root, info, init_data_raw, store_id, cart_id=None):
+        user, cart, created_cart = sign_in_shop_user(
+            init_data_raw=init_data_raw,
+            store_id=store_id,
+            cart_id=cart_id
+        )
 
         # Return user and cart
         return SignInShopUserMutation(user=user, cart=cart, created_cart=created_cart)

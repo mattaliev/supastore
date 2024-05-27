@@ -12,6 +12,7 @@ __all__ = [
 class EventType(DjangoObjectType):
     event_data = graphene.JSONString()
     state = graphene.String()
+    store = graphene.Field("store.schemas.schema.StoreType")
 
     class Meta:
         model = Event

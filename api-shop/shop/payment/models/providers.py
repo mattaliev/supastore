@@ -3,8 +3,9 @@ from typing import Tuple
 
 from payment.models import PaymentProviderChoices, Payment
 from payment.services.wallet_pay import wallet_pay_invoice_get
-from telegram.services import telegram_shop_message_send, \
-    telegram_shop_create_invoice_link
+from store.services import store_bot_token_get
+from telegram.services import telegram_message_send, \
+    telegram_create_invoice_link
 from telegram.services.shop.inline_buttons import (
     PayWithWalletPayButton, PayWithTelegramInvoiceButton, OpenOrderButton
 )
@@ -19,11 +20,11 @@ class PaymentProvider(ABC):
         self.provider = provider
 
     @abstractmethod
-    def create_payment(self, *args, **kwargs) -> Tuple[str, dict]:
+    def create_payment(self, payment: Payment, *args, **kwargs) -> Tuple[str, dict]:
         pass
 
     @abstractmethod
-    def send_payment_message(self, *args, **kwargs) -> None:
+    def send_payment_message(self, payment: Payment, bot_token: str = None, *args, **kwargs) -> None:
         pass
 
 
@@ -50,7 +51,10 @@ class WalletPayProvider(PaymentProvider):
 
         return self.provider, payment.additional_info
 
-    def send_payment_message(self, payment: Payment, *args, **kwargs):
+    def send_payment_message(self, payment: Payment, bot_token: str = None, *args, **kwargs):
+        if not bot_token:
+            return
+
         message = f"Order {payment.order.order_number} has been created! Please proceed with payment by clicking the button below. \n\nNote: Payment will expire on {payment.payment_expiry}"
 
         reply_markup = [
@@ -59,10 +63,11 @@ class WalletPayProvider(PaymentProvider):
                     "direct_payment_link"
                 )
             ).as_json()],
-            [OpenOrderButton(order_id=payment.order.id).as_json()]
+            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
         ]
 
-        telegram_shop_message_send(
+        telegram_message_send(
+            bot_token=bot_token,
             chat_id=payment.order.user.telegram_id,
             text=message,
             reply_markup=reply_markup,
@@ -80,7 +85,11 @@ class TelegramPaymentsProvider(PaymentProvider):
             *args,
             **kwargs
     ) -> Tuple[str, dict]:
-        payment_link = telegram_shop_create_invoice_link(payment=payment)
+        bot_token = store_bot_token_get(store=payment.order.store)
+        payment_link = telegram_create_invoice_link(
+            bot_token=bot_token,
+            payment=payment
+        )
         payment.additional_info = {
             "payment_link": payment_link
         }
@@ -89,7 +98,10 @@ class TelegramPaymentsProvider(PaymentProvider):
 
         return self.provider, payment.additional_info
 
-    def send_payment_message(self, payment: Payment, *args, **kwargs) -> None:
+    def send_payment_message(self, payment: Payment, bot_token: str = None, *args, **kwargs) -> None:
+        if not bot_token:
+            return
+
         message = (
             f"Order {payment.order.order_number} has been created! "
             f"Please proceed with payment by clicking the button below"
@@ -100,10 +112,11 @@ class TelegramPaymentsProvider(PaymentProvider):
                 payment_link=payment.additional_info.get("payment_link"),
                 name=payment.payment_method.name
             ).as_json()],
-            [OpenOrderButton(order_id=payment.order.id).as_json()]
+            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
         ]
 
-        telegram_shop_message_send(
+        telegram_message_send(
+            bot_token=bot_token,
             chat_id=payment.order.user.telegram_id,
             text=message,
             reply_markup=reply_markup,
@@ -126,7 +139,10 @@ class CryptoPaymentProvider(PaymentProvider):
             payment.payment_method.other_info
         )
 
-    def send_payment_message(self, payment: Payment, *args, **kwargs) -> None:
+    def send_payment_message(self, payment: Payment, bot_token: str = None, *args, **kwargs) -> None:
+        if not bot_token:
+            return
+
         wallet_address = payment.payment_method.other_info.get("address")
         network = payment.payment_method.other_info.get("network")
         message = (
@@ -139,10 +155,11 @@ class CryptoPaymentProvider(PaymentProvider):
         )
 
         reply_markup = [
-            [OpenOrderButton(order_id=payment.order.id).as_json()]
+            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
         ]
 
-        telegram_shop_message_send(
+        telegram_message_send(
+            bot_token=bot_token,
             chat_id=payment.order.user.telegram_id,
             text=message,
             reply_markup=reply_markup,
@@ -165,7 +182,10 @@ class BankTransferPaymentProvider(PaymentProvider):
             payment.payment_method.other_info
         )
 
-    def send_payment_message(self, payment: Payment, *args, **kwargs):
+    def send_payment_message(self, payment: Payment, bot_token: str = None, *args, **kwargs):
+        if not bot_token:
+            return
+
         message = (
             f"Order {payment.order.order_number} has been created! "
             f"Please proceed with payment"
@@ -175,10 +195,11 @@ class BankTransferPaymentProvider(PaymentProvider):
         )
 
         reply_markup = [
-            [OpenOrderButton(order_id=payment.order.id).as_json()]
+            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
         ]
 
-        telegram_shop_message_send(
+        telegram_message_send(
+            bot_token=bot_token,
             chat_id=payment.order.user.telegram_id,
             text=message,
             reply_markup=reply_markup,

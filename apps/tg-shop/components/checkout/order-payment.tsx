@@ -15,8 +15,10 @@ import { tmaAuthenticated } from "@/lib/auth";
 
 export default async function OrderPayment({
   order,
-  mutable
+  mutable,
+  storeId
 }: {
+  storeId: string;
   order: Order;
   mutable: boolean;
 }) {
@@ -28,8 +30,9 @@ export default async function OrderPayment({
 
   const paymentMethods = await tmaAuthenticated(
     initDataRaw,
+    storeId,
     shopPaymentMethodsList,
-    { state: EntityState.ACTIVE }
+    { storeId, state: EntityState.ACTIVE }
   );
   return (
     <Card>
@@ -61,7 +64,7 @@ export default async function OrderPayment({
         <CardFooter>
           <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
             {paymentMethods.map((paymentMethod) => (
-              <PaymentButton paymentMethod={paymentMethod} />
+              <PaymentButton paymentMethod={paymentMethod} storeId={storeId} />
             ))}
           </div>
         </CardFooter>

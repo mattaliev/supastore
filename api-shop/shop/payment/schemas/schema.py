@@ -17,6 +17,7 @@ __all__ = [
 class PaymentMethodType(DjangoObjectType):
     other_info = graphene.JSONString()
     state = graphene.String()
+    store = graphene.Field("store.schemas.StoreType")
 
     class Meta:
         model = PaymentMethod
@@ -37,9 +38,29 @@ class PaymentMethodType(DjangoObjectType):
 
         return other_info
 
+    def resolve_store(self, info):
+        return self.store
+
+
+class PaymentMethodSafeType(DjangoObjectType):
+    state = graphene.String()
+    store = graphene.Field("store.schemas.StoreType")
+
+    class Meta:
+        model = PaymentMethod
+        fields = ["id", "name", "provider", "button_text", "state", "created", "updated"]
+        description = "Payment method"
+
+    def resolve_state(self, info):
+        return self.state
+
+    def resolve_store(self, info):
+        return self.store
+
 
 class PaymentType(DjangoObjectType):
     state = graphene.String()
+    payment_method = graphene.Field(PaymentMethodSafeType)
 
     class Meta:
         model = Payment
@@ -51,12 +72,23 @@ class PaymentType(DjangoObjectType):
         description = "Payment"
 
 
-class PaymentMethodCreateInput(graphene.InputObjectType):
+    def resolve_state(self, info):
+        return self.state
+
+    def resolve_payment_method(self, info):
+        return self.payment_method
+
+
+class PaymentMethodInput(graphene.InputObjectType):
     name = graphene.String(required=True)
     provider = graphene.String(required=True)
     button_text = graphene.String()
     other_info = graphene.JSONString()
     state = graphene.String()
+
+
+class PaymentMethodCreateInput(PaymentMethodInput):
+    store_id = graphene.UUID(required=True)
 
 
 class PaymentMethodUpdateInput(PaymentMethodCreateInput):
@@ -71,6 +103,7 @@ class PaymentCreateInput(graphene.InputObjectType):
 
 
 class PaymentStatusUpdateInput(graphene.InputObjectType):
+    store_id = graphene.UUID(required=True)
     payment_id = graphene.UUID(required=True)
     payment_status = graphene.String(required=True)
     notify_customer = graphene.Boolean()

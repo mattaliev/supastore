@@ -9,8 +9,7 @@ from payment.services.payment_services import (
     payment_method_delete,
     payment_status_update
 )
-from user.models import UserRoleChoices
-
+from store.services import can_manage_store
 from .schema import (
     PaymentCreateInput,
     PaymentMethodCreateInput,
@@ -35,7 +34,7 @@ class PaymentMethodCreateMutation(graphene.Mutation):
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        if not can_manage_store(user=user, store_id=input.store_id):
             raise UNAUTHORIZED()
 
         payment_method = payment_method_create(**input)
@@ -54,7 +53,7 @@ class PaymentMethodUpdateMutation(graphene.Mutation):
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        if not can_manage_store(user=user, store_id=input.store_id):
             raise UNAUTHORIZED()
 
         payment_method = payment_method_update(**input)
@@ -63,17 +62,18 @@ class PaymentMethodUpdateMutation(graphene.Mutation):
 
 class PaymentMethodDeleteMutation(graphene.Mutation):
     class Arguments:
+        store_id = graphene.UUID(required=True)
         payment_method_id = graphene.UUID(required=True)
 
     success = graphene.Boolean()
 
     @staticmethod
-    def mutate(root, info, payment_method_id):
+    def mutate(root, info, store_id, payment_method_id):
         user = info.context.user
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        if not can_manage_store(user=user, store_id=store_id):
             raise UNAUTHORIZED()
 
         success = payment_method_delete(payment_method_id=payment_method_id)
@@ -94,7 +94,7 @@ class PaymentCreateMutation(graphene.Mutation):
             raise UNAUTHENTICATED()
 
         order = Order.objects.get(id=input.get("order_id"))
-        if order.user != user and user.role != UserRoleChoices.ADMIN:
+        if not user.can_access_resource(order) and not can_manage_store(user=user, store_id=order.store_id):
             raise UNAUTHORIZED()
 
         provider, payment_info = payment_create(**input)
@@ -116,7 +116,9 @@ class PaymentStatusUpdateMutation(graphene.Mutation):
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        if user.role != UserRoleChoices.ADMIN:
+        store_id = input.pop("store_id")
+
+        if not can_manage_store(user=user, store_id=store_id):
             raise UNAUTHORIZED()
 
         payment_status_update(**input)

@@ -8,8 +8,9 @@ from django.conf import settings
 from authentication.models.token import TokenBlacklist
 from cart.models import Cart
 from cart.services import cart_get_or_create
-from core.exceptions import UNAUTHORIZED
-from user.models import TelegramUser, UserRoleChoices
+from store.models import Store
+from store.services import store_bot_token_get
+from user.models import TelegramUser
 from user.services import user_create_or_update
 from .jwt import encode_jwt, decode_jwt
 from .providers import validate_init_data, parse_init_data
@@ -28,6 +29,7 @@ __all__ = [
 
 def sign_in_shop_user(
         *,
+        store_id: UUID,
         init_data_raw: str,
         cart_id: UUID = None
 ) -> Tuple[TelegramUser, Cart, bool]:
@@ -35,7 +37,10 @@ def sign_in_shop_user(
     logger.debug("Signing in shop user...")
 
     # Validate init_data_raw
-    validate_init_data(init_data_raw)
+    store = Store.objects.get(pk=store_id)
+    bot_token = store_bot_token_get(store=store)
+
+    validate_init_data(init_data_raw, bot_token=bot_token)
 
     # Parse init_data_raw
     init_data = parse_init_data(init_data_raw)
@@ -43,6 +48,7 @@ def sign_in_shop_user(
 
     # Get or create user
     user, created = user_create_or_update(
+        store_id=store_id,
         telegram_id=telegram_user.get("id"),
         username=telegram_user.get("username", None),
         first_name=telegram_user.get("first_name", None),
@@ -54,12 +60,12 @@ def sign_in_shop_user(
     )
 
     # Create new session for the user
-    session = session_create(user_id=user.id, hash=init_data.get("hash"))
+    session = session_create(user_id=user.id, hash=init_data.get("hash"), store_id=store_id)
 
     logger.debug("Created new session: Session Key: %s", session.session_key)
 
     # Get or create cart
-    cart, created_cart = cart_get_or_create(cart_id=cart_id, user=user)
+    cart, created_cart = cart_get_or_create(cart_id=cart_id, user=user, store_id=store_id)
 
     return user, cart, created_cart
 
@@ -69,16 +75,25 @@ def sign_in_admin_user(*, data_check_string: str, provider: str = "telegram"):
     access_token = None
 
     if provider == "telegram":
-        validate_init_data(data_check_string, is_web_app=False)
+        bot_token = settings.TELEGRAM_ADMIN_BOT_TOKEN
+
+        validate_init_data(data_check_string, bot_token=bot_token, is_web_app=False)
 
         data = parse_init_data(data_check_string)
 
-        user = TelegramUser.objects.filter(telegram_id=data.get("id")).first()
-
-        if not user or user.role != UserRoleChoices.ADMIN:
-            raise UNAUTHORIZED()
+        user, created = user_create_or_update(
+            telegram_id=data.get("id"),
+            username=data.get("username", None),
+            first_name=data.get("first_name", None),
+            last_name=data.get("last_name", None),
+            language_code=data.get("language_code", None),
+            is_bot=data.get("is_bot", None),
+            photo_url=data.get("photo_url", None),
+            allows_notifications=data.get("allows_write_to_pm", None),
+        )
 
         access_token = encode_jwt(user=user)
+        print("Access Token", access_token)
 
     return user, access_token
 

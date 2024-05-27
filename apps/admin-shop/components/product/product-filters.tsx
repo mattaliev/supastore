@@ -5,7 +5,7 @@ import Link from "next/link";
 import StateFilter from "@/components/filters/state-filter";
 import { Button } from "@/components/ui/button";
 
-export default function ProductFilters() {
+export default function ProductFilters({ storeId }: { storeId: string }) {
   return (
     <div className="flex items-center">
       <StateFilter />
@@ -16,7 +16,7 @@ export default function ProductFilters() {
             Import
           </span>
         </Button>
-        <Link href="/products/create">
+        <Link href={`/store/${storeId}/products/create`}>
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">

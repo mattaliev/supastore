@@ -4,8 +4,8 @@ import {
 } from "../fragments";
 
 export const customerDetailQuery = /* GraphQL */ `
-  query CustomerDetail($userId: UUID!) {
-    customerDetail(userId: $userId) {
+  query CustomerDetail($storeId: UUID!, $userId: UUID!) {
+    customerDetail(storeId: $storeId, userId: $userId) {
       ...UserDetailFields
     }
   }
@@ -13,8 +13,18 @@ export const customerDetailQuery = /* GraphQL */ `
 `;
 
 export const customerPaginatedQuery = /* GraphQL */ `
-  query CustomersPaginated($page: Int, $limit: Int, $sortBy: String) {
-    customersPaginated(page: $page, limit: $limit, sortBy: $sortBy) {
+  query CustomersPaginated(
+    $storeId: UUID!
+    $page: Int
+    $limit: Int
+    $sortBy: String
+  ) {
+    customersPaginated(
+      storeId: $storeId
+      page: $page
+      limit: $limit
+      sortBy: $sortBy
+    ) {
       ...CustomerPaginatedFields
     }
   }

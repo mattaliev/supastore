@@ -3,7 +3,13 @@ import Image from "next/image";
 
 import CartItemQuantity from "@/components/cart/cart-item-quantity";
 
-export default function CartItems({ items }: { items: CartItem[] }) {
+export default function CartItems({
+  items,
+  storeId
+}: {
+  items: CartItem[];
+  storeId: string;
+}): JSX.Element {
   return (
     <>
       {items.map((item) => (
@@ -32,7 +38,7 @@ export default function CartItems({ items }: { items: CartItem[] }) {
               <div className="font-semibold text-telegram-text-color">
                 ${item.product.price}
               </div>
-              <CartItemQuantity item={item} />
+              <CartItemQuantity item={item} storeId={storeId} />
             </div>
           </div>
         </>

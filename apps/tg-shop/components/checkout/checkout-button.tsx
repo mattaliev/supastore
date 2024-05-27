@@ -1,7 +1,7 @@
 "use client";
-import { useHapticFeedback, useMainButton } from "@tma.js/sdk-react";
+import { useHapticFeedback } from "@tma.js/sdk-react";
 import { clsx } from "clsx";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -41,12 +41,18 @@ function SubmitButton({
   );
 }
 
-export default function CheckoutButton(): JSX.Element {
+export default function CheckoutButton({
+  storeId
+}: {
+  storeId: string;
+}): JSX.Element {
   const formRef = useRef<HTMLFormElement>(null);
   const [message, formAction] = useFormState(createOrder, null);
 
+  const actionWithStoreId = formAction.bind(null, storeId);
+
   return (
-    <form action={formAction} ref={formRef}>
+    <form action={actionWithStoreId} ref={formRef}>
       <SubmitButton formRef={formRef} />
       <p className={"text-telegram-text-color text-center mt-2 text-xs"}>
         {message || ""}
