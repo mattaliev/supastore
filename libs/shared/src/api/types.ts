@@ -382,7 +382,6 @@ export type Store = {
   logoDark?: string;
   logoLight?: string;
   botUsername?: string;
-  botToken?: string;
   storeUrl: string;
   owner: TelegramUser;
   admins: TelegramUser[];
@@ -945,6 +944,15 @@ export type BackendStoreLogoGetOperation = {
       logoDark: string;
       logoLight: string;
     };
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreBotTokenGetOperation = {
+  data: {
+    storeBotTokenGet: string;
   };
   variables: {
     storeId: string;

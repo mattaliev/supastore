@@ -13,7 +13,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +41,13 @@ function SubmitButton() {
   );
 }
 
-export default function StoreBotToken({ store }: { store: Store }) {
+export default function StoreBotToken({
+  store,
+  botToken,
+}: {
+  store: Store;
+  botToken?: string | null;
+}) {
   const [urlCopied, setUrlCopied] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [formState, formAction] = useFormState(updateStore, null);
@@ -114,7 +120,7 @@ export default function StoreBotToken({ store }: { store: Store }) {
                 name="bot-token"
                 type={hidden ? "password" : "text"}
                 placeholder={"Enter your Telegram Bot API key"}
-                defaultValue={store.botToken || ""}
+                defaultValue={botToken || ""}
                 className={"pr-10"}
               />
               <div className={"absolute right-2.5 top-2.5"}>

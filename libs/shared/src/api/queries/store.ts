@@ -41,3 +41,9 @@ export const storeLogoGetQuery = /* GraphQL */ `
     }
   }
 `;
+
+export const storeBotTokenGetQuery = /* GraphQL */ `
+  query StoreBotTokenGet($storeId: UUID!) {
+    storeBotTokenGet(storeId: $storeId)
+  }
+`;

@@ -3,7 +3,7 @@ from graphene_django import DjangoObjectType
 from graphene_file_upload.scalars import Upload
 
 from store.models.store import Store, StoreApplication, StoreLogo
-from store.services import store_has_bot_token, store_bot_token_get
+from store.services import store_has_bot_token
 
 __all__ = [
     'StoreType',
@@ -20,7 +20,6 @@ from user.models import StoreUser, UserRoleChoices
 
 class StoreType(DjangoObjectType):
     admins = graphene.List('user.schemas.schema.TelegramUserType')
-    bot_token = graphene.String()
     bot_username = graphene.String()
     owner = graphene.Field('user.schemas.TelegramUserType')
     has_products = graphene.Boolean()
@@ -33,7 +32,20 @@ class StoreType(DjangoObjectType):
 
     class Meta:
         model = Store
-        fields = "__all__"
+        fields = [
+            "id",
+            "store_name",
+            "store_description",
+            "logo",
+            "bot_username",
+            "state",
+            "is_connected_to_telegram",
+            "created",
+            "updated",
+            "store_users",
+            "store_bot",
+            "store_url"
+        ]
 
     def resolve_admins(self, info):
         return self.store_users.filter(role=UserRoleChoices.ADMIN).values_list('user', flat=True)
@@ -42,9 +54,6 @@ class StoreType(DjangoObjectType):
         if hasattr(self, "store_bot"):
 
             return self.store_bot.bot_username
-
-    def resolve_bot_token(self, info):
-        return store_bot_token_get(store=self)
 
     def resolve_owner(self, info):
         return StoreUser.objects.filter(store=self, role=UserRoleChoices.OWNER).first().user
@@ -70,6 +79,7 @@ class StoreType(DjangoObjectType):
 
     def resolve_is_connected_to_telegram(self, info):
         return self.is_connected_to_telegram
+    
 
 
 class StoreInputType(graphene.InputObjectType):

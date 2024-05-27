@@ -22,8 +22,6 @@ __all__ = [
 ]
 
 
-
-
 class PaymentMethodCreateMutation(graphene.Mutation):
     class Arguments:
         input = PaymentMethodCreateInput(required=True)

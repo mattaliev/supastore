@@ -11,7 +11,7 @@ export const paymentMethodsListQuery = /* GraphQL */ `
 
 export const shopPaymentMethodsListQuery = /* GraphQL */ `
   query ShopPaymentMethodsList($storeId: UUID!, $state: String) {
-    paymentMethodsList(storeId: $storeId, state: $state) {
+    shopPaymentMethodsList(storeId: $storeId, state: $state) {
       ...ShopPaymentMethodFields
     }
   }

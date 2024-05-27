@@ -93,6 +93,7 @@ def sign_in_admin_user(*, data_check_string: str, provider: str = "telegram"):
         )
 
         access_token = encode_jwt(user=user)
+        print("Access Token", access_token)
 
     return user, access_token
 

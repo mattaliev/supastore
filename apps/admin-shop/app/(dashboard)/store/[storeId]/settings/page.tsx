@@ -1,4 +1,4 @@
-import { storeGet } from "@ditch/lib";
+import { storeBotTokenGet, storeGet } from "@ditch/lib";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
@@ -12,7 +12,7 @@ type SettingsPageProps = {
 };
 
 export default async function SettingsPage({
-  params: { storeId }
+  params: { storeId },
 }: SettingsPageProps) {
   const session = await getServerSession(authOptions);
 
@@ -21,12 +21,20 @@ export default async function SettingsPage({
   }
 
   const store = await authenticated(session.user.accessToken, storeGet, {
-    storeId
+    storeId,
   });
 
   if (!store) {
     redirect("/store");
   }
 
-  return <StoreUpdateForm store={store} />;
+  const botToken = await authenticated(
+    session.user.accessToken,
+    storeBotTokenGet,
+    {
+      storeId,
+    },
+  );
+
+  return <StoreUpdateForm store={store} botToken={botToken} />;
 }

@@ -42,8 +42,25 @@ class PaymentMethodType(DjangoObjectType):
         return self.store
 
 
+class PaymentMethodSafeType(DjangoObjectType):
+    state = graphene.String()
+    store = graphene.Field("store.schemas.StoreType")
+
+    class Meta:
+        model = PaymentMethod
+        fields = ["id", "name", "provider", "button_text", "state"]
+        description = "Payment method"
+
+    def resolve_state(self, info):
+        return self.state
+
+    def resolve_store(self, info):
+        return self.store
+
+
 class PaymentType(DjangoObjectType):
     state = graphene.String()
+    payment_method = graphene.Field(PaymentMethodSafeType)
 
     class Meta:
         model = Payment
@@ -53,6 +70,13 @@ class PaymentType(DjangoObjectType):
                   "payment_expiry", "additional_info", "state",
                   "created", "updated"]
         description = "Payment"
+
+
+    def resolve_state(self, info):
+        return self.state
+
+    def resolve_payment_method(self, info):
+        return self.payment_method
 
 
 class PaymentMethodInput(graphene.InputObjectType):

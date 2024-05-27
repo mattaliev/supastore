@@ -39,6 +39,7 @@ import {
   shopPaymentMethodsListQuery,
 } from "./queries";
 import {
+  storeBotTokenGetQuery,
   storeCanManageQuery,
   storeCheckpointsQuery,
   storeGetQuery,
@@ -80,6 +81,7 @@ import {
   BackendSignInShopUserOperation,
   BackendSignOutAdminOperation,
   BackendStoreApplicationCreateOperation,
+  BackendStoreBotTokenGetOperation,
   BackendStoreCanManageOperation,
   BackendStoreCheckpointsOperation,
   BackendStoreConnectToTelegramOperation,
@@ -1087,4 +1089,20 @@ export const storeLogoGet = async (
     });
 
   return responseBody.data.storeLogoGet;
+};
+
+export const storeBotTokenGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+): Promise<string | null> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreBotTokenGetOperation>({
+      query: storeBotTokenGetQuery,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.storeBotTokenGet;
 };

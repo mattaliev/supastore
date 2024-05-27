@@ -6,7 +6,6 @@ export const storeFragment = /* GraphQL */ `
     botUsername
     logoDark
     logoLight
-    botToken
     storeUrl
     isConnectedToTelegram
     state
