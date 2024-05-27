@@ -201,7 +201,8 @@ def store_bot_token_create_or_update(*, store_id: UUID, token: str):
             store=store, token=encrypted_token
         )
 
-    webhook_url = f"{settings.SERVICE_URL}/telegram/webhooks/shop/{str(store.id)}/update"
+    webhook_url = f"{settings.SERVICE_URL}/telegram/webhooks/shop/{str(store.id)}/update/"
+    print(webhook_url)
     telegram_webhook_set(
         bot_token=token,
         url=webhook_url
