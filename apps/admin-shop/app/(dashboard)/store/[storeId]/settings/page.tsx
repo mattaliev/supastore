@@ -12,7 +12,7 @@ type SettingsPageProps = {
 };
 
 export default async function SettingsPage({
-  params: { storeId },
+  params: { storeId }
 }: SettingsPageProps) {
   const session = await getServerSession(authOptions);
 
@@ -21,7 +21,7 @@ export default async function SettingsPage({
   }
 
   const store = await authenticated(session.user.accessToken, storeGet, {
-    storeId,
+    storeId
   });
 
   if (!store) {
@@ -32,8 +32,8 @@ export default async function SettingsPage({
     session.user.accessToken,
     storeBotTokenGet,
     {
-      storeId,
-    },
+      storeId
+    }
   );
 
   return <StoreUpdateForm store={store} botToken={botToken} />;

@@ -7,7 +7,7 @@ import StoreLogo from "@/components/store/store-logo";
 
 export default function StoreUpdateForm({
   store,
-  botToken,
+  botToken
 }: {
   store: Store;
   botToken?: string | null;
