@@ -8,7 +8,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { tmaAuthenticated } from "@/lib/auth";
@@ -16,7 +16,7 @@ import { tmaAuthenticated } from "@/lib/auth";
 export default async function OrderPayment({
   order,
   mutable,
-  storeId
+  storeId,
 }: {
   storeId: string;
   order: Order;
@@ -32,8 +32,11 @@ export default async function OrderPayment({
     initDataRaw,
     storeId,
     shopPaymentMethodsList,
-    { storeId, state: EntityState.ACTIVE }
+    { storeId, state: EntityState.ACTIVE },
   );
+
+  console.log(paymentMethods);
+
   return (
     <Card>
       <CardHeader>
@@ -60,7 +63,7 @@ export default async function OrderPayment({
           </div>
         </div>
       </CardContent>
-      {mutable && (
+      {mutable && paymentMethods && (
         <CardFooter>
           <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
             {paymentMethods.map((paymentMethod) => (

@@ -1,4 +1,4 @@
-import { orderGetById } from "@ditch/lib";
+import { EntityState, orderGetById } from "@ditch/lib";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
@@ -20,39 +20,30 @@ type OrderSummaryPageProps = {
 
 export default async function OrderSummaryPage({
   params: { storeId },
-  searchParams
+  searchParams,
 }: OrderSummaryPageProps) {
-  let orderId;
-  let order;
-  let mutable = true;
   const initDataRaw = cookies().get("initDataRaw")?.value;
 
   if (!initDataRaw) {
     redirect("/unauthenticated");
   }
 
-  if (searchParams.orderId) {
-    orderId = searchParams.orderId;
-    order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
-      storeId,
-      orderId
-    });
-    mutable = false;
-  } else {
-    orderId = cookies().get("orderId")?.value;
+  const orderId = searchParams.orderId || cookies().get("orderId")?.value;
 
-    if (!orderId) {
-      return notFound();
-    }
-    order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
-      storeId,
-      orderId
-    });
+  if (!orderId) {
+    notFound();
   }
+
+  const order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
+    storeId,
+    orderId,
+  });
 
   if (!order) {
     return notFound();
   }
+
+  const mutable = order.state === EntityState.ACTIVE;
 
   return (
     <div>
