@@ -14,7 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -23,11 +23,11 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 
 export default function PaymentMethodUpdateDialogDrawer({
-  paymentMethod,
+  paymentMethod
 }: {
   paymentMethod: ParsedPaymentMethod;
 }) {
@@ -91,7 +91,7 @@ export default function PaymentMethodUpdateDialogDrawer({
 function PaymentMethodUpdateForm({
   paymentMethod,
   setOpen,
-  className,
+  className
 }: {
   paymentMethod: ParsedPaymentMethod;
   setOpen: (open: boolean) => void;
@@ -100,7 +100,7 @@ function PaymentMethodUpdateForm({
   const storeId = useStore();
   const [provider, setProvider] = useState<string>(paymentMethod.provider);
   const [formState, formAction] = useFormState(updatePaymentMethod, {
-    storeId,
+    storeId
   });
 
   useEffect(() => {

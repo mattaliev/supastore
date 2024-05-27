@@ -18,11 +18,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "DITCH Admin Dashboard",
-  description: "View and manage your DITCH store",
+  description: "View and manage your DITCH store"
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {

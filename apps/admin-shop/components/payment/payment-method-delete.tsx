@@ -14,7 +14,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -24,11 +24,11 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 
 export default function PaymentMethodDelete({
-  paymentMethodId,
+  paymentMethodId
 }: {
   paymentMethodId: string;
 }) {
@@ -103,7 +103,7 @@ export default function PaymentMethodDelete({
 function PaymentMethodDeleteForm({
   paymentMethodId,
   className,
-  setOpen,
+  setOpen
 }: {
   paymentMethodId: string;
   className?: string;
@@ -111,7 +111,7 @@ function PaymentMethodDeleteForm({
 }) {
   const storeId = useStore();
   const [formState, formAction] = useFormState(deletePaymentMethod, {
-    storeId,
+    storeId
   });
 
   useEffect(() => {
