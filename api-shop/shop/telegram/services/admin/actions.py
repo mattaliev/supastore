@@ -54,8 +54,10 @@ def telegram_notify_about_store_application_approval(*, store: Store):
     Press the button below to open your store
     """
 
+    admin_url = f"{settings.ADMIN_CLIENT_URL}/store/{store.id}"
+
     reply_markup = [
-        [OpenStoreButton(store_url=store.store_url).as_json()]
+        [OpenStoreButton(store_url=admin_url).as_json()]
     ]
 
     telegram_message_send(
