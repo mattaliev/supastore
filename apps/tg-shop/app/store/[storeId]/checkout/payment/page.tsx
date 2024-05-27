@@ -20,7 +20,7 @@ type OrderSummaryPageProps = {
 
 export default async function OrderSummaryPage({
   params: { storeId },
-  searchParams,
+  searchParams
 }: OrderSummaryPageProps) {
   const initDataRaw = cookies().get("initDataRaw")?.value;
 
@@ -36,7 +36,7 @@ export default async function OrderSummaryPage({
 
   const order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
     storeId,
-    orderId,
+    orderId
   });
 
   if (!order) {
