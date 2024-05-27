@@ -48,7 +48,7 @@ def customer_list_get(*, store_id: UUID, sort_by: CustomerSortChoices = None):
             customers.annotate(
                 total_sales=Sum(
                     "orders__payment__total_amount",
-                    filter=Q(orders__store_id=store_id, orders__payment_status="PAID")
+                    filter=Q(orders__store_id=store_id, orders__payment__payment_status="PAID")
                 )
             ).order_by("-total_sales")
         )

@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -25,13 +25,16 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 
 export function CancelOrderDrawerDialog({ orderId }: { orderId: string }) {
   const [open, setOpen] = useState<boolean>(false);
-  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isDesktop =
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false;
 
   if (isDesktop) {
     return (
@@ -85,22 +88,25 @@ export function CancelOrderDrawerDialog({ orderId }: { orderId: string }) {
 
 function CancelOrderForm({
   orderId,
-  className
+  className,
 }: {
   orderId: string;
   className?: string;
 }) {
   const storeId = useStore();
-  const [formStatus, formAction] = useFormState(updateOrderStatus, {
-    orderId,
-    fulfilmentStatus: FulfilmentStatus.CANCELLED,
-    storeId
-  });
+  const [formStatus, formAction] = useFormState(updateOrderStatus, null);
   return (
     <form
       action={formAction}
       className={twMerge("grid items-start gap-4", className)}
     >
+      <input type={"hidden"} value={storeId} name={"store-id"} />
+      <input type={"hidden"} value={orderId} name={"order-id"} />
+      <input
+        type={"hidden"}
+        value={FulfilmentStatus.CANCELLED}
+        name={"fulfilment-status"}
+      />
       <div className="flex items-center space-x-2">
         <Checkbox id="notify-user" name="notify-user" />
         <Label htmlFor="notify-user">Notify customer about cancellation?</Label>

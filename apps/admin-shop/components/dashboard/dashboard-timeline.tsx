@@ -8,7 +8,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import {
   Timeline,
@@ -16,7 +16,7 @@ import {
   TimelineDot,
   TimelineHeading,
   TimelineItem,
-  TimelineLine
+  TimelineLine,
 } from "@/components/ui/timeline";
 
 type CheckpointField = {
@@ -30,7 +30,7 @@ type CheckpointField = {
 
 export default function DashboardTimeline({
   storeId,
-  adminCheckpoints
+  adminCheckpoints,
 }: {
   adminCheckpoints: StoreCheckpoints;
   storeId: string;
@@ -42,7 +42,7 @@ export default function DashboardTimeline({
       link: `/store/${storeId}/products`,
       description:
         "Start by creating a list of products that you want to sell in your store. Include detailed descriptions, high-quality images, and accurate pricing. Organize your products into categories and collections to make it easier for customers to browse and find what they're looking for.",
-      button: false
+      button: false,
     },
     {
       status: adminCheckpoints.isConnectedToTelegram
@@ -54,7 +54,7 @@ export default function DashboardTimeline({
       title: "Connect your Store to Telegram",
       description:
         "Connect your store to Telegram to enable clients to access it. Once you've connected your store you can attach to the menu button in your bot, pin it in your telegram channel, and start receiving orders.",
-      button: <MarkConnectToTelegramAsDone storeId={storeId} />
+      button: <MarkConnectToTelegramAsDone storeId={storeId} />,
     },
     {
       status: adminCheckpoints.hasBotToken
@@ -66,7 +66,7 @@ export default function DashboardTimeline({
       title: "Set Bot Token To Your Store",
       description:
         "Set your bot token to your store to enable communication between your store and the client. This allows you to send notifications, updates, and other information to your customers through the Telegram bot.",
-      button: false
+      button: false,
     },
     {
       status: adminCheckpoints.hasConnectedPaymentSystem
@@ -78,7 +78,7 @@ export default function DashboardTimeline({
       title: "Connect Payment System",
       description:
         "Choose a payment system that suits your needs and integrate it into your store. Make sure to test the payment system to ensure that it works correctly and that customers can make purchases without any issues.",
-      button: false
+      button: false,
     },
     {
       status:
@@ -92,8 +92,8 @@ export default function DashboardTimeline({
       title: "Done!",
       description:
         "You are all set! Your store is now ready to launch. Make sure to test all the features and functionalities to ensure that everything is working as expected. If you encounter any errors, feel free to reach out to our support team for assistance.",
-      button: false
-    }
+      button: false,
+    },
   ];
 
   return (
@@ -108,7 +108,7 @@ export default function DashboardTimeline({
         <div className={"grid"}>
           <Timeline>
             {checkpointFields.map((checkpointField, index) => (
-              <TimelineItem>
+              <TimelineItem key={index}>
                 <TimelineHeading>
                   {checkpointField.link ? (
                     <Link
@@ -122,7 +122,9 @@ export default function DashboardTimeline({
                   )}
                 </TimelineHeading>
                 <TimelineDot status={checkpointField.status || "default"} />
-                <TimelineLine done={checkpointField.status === "done"} />
+                {checkpointField.title !== "Done!" && (
+                  <TimelineLine done={checkpointField.status === "done"} />
+                )}
                 <TimelineContent className="flex flex-col items-start justify-start text-sm">
                   {checkpointField.description}
                   {checkpointField.status !== "done" && checkpointField.button}

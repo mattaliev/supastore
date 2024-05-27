@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -23,16 +23,19 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 
 export default function OrderDeleteDrawerDialog({
-  orderId
+  orderId,
 }: {
   orderId: string;
 }) {
   const [open, setOpen] = useState<boolean>(false);
-  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isDesktop =
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false;
 
   if (isDesktop) {
     return (
@@ -86,7 +89,7 @@ export default function OrderDeleteDrawerDialog({
 
 function DeleteOrderForm({
   orderId,
-  className
+  className,
 }: {
   orderId: string;
   className?: string;

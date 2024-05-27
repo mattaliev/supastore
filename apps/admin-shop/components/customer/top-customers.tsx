@@ -10,7 +10,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import {
   Table,
@@ -18,12 +18,12 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 
 export default async function TopCustomers({
   storeId,
-  sortBy
+  sortBy,
 }: {
   storeId: string;
   sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
@@ -32,7 +32,7 @@ export default async function TopCustomers({
 
   if (!session || !session.user.accessToken) {
     redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/customers`)}`
+      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/customers`)}`,
     );
   }
 
@@ -43,8 +43,8 @@ export default async function TopCustomers({
       storeId,
       page: 1,
       limit: 5,
-      sortBy
-    }
+      sortBy,
+    },
   );
 
   if (!topCustomersResponse) {

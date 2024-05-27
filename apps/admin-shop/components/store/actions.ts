@@ -3,7 +3,7 @@ import {
   storeApplicationCreate,
   storeConnectToTelegram,
   storeUpdate,
-  TAGS
+  TAGS,
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ import { authenticated, authOptions } from "@/auth";
 import {
   StoreApplicationScheme,
   StoreFieldErrors,
-  StoreScheme
+  StoreScheme,
 } from "@/components/store/schemes";
 
 export const connectToTelegram = async (prevState: any, storeId: string) => {
@@ -28,8 +28,8 @@ export const connectToTelegram = async (prevState: any, storeId: string) => {
       session.user.accessToken,
       storeConnectToTelegram,
       {
-        storeId
-      }
+        storeId,
+      },
     );
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ export const connectToTelegram = async (prevState: any, storeId: string) => {
 
 export const updateStore = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<
   | {
       fieldErrors?: StoreFieldErrors;
@@ -61,12 +61,12 @@ export const updateStore = async (
     logoDark: formData.get("logo-dark"),
     logoLight: formData.get("logo-light"),
     botToken: formData.get("bot-token"),
-    botUsername: formData.get("bot-username")
+    botUsername: formData.get("bot-username"),
   });
 
   if (!validatedData.success) {
     return {
-      fieldErrors: validatedData.error.flatten().fieldErrors
+      fieldErrors: validatedData.error.flatten().fieldErrors,
     };
   }
 
@@ -74,8 +74,8 @@ export const updateStore = async (
     const store = await authenticated(session.user.accessToken, storeUpdate, {
       input: {
         storeId,
-        ...validatedData.data
-      }
+        ...validatedData.data,
+      },
     });
 
     if (!store) throw new Error("Could not update store");
@@ -89,7 +89,7 @@ export const updateStore = async (
 
 export const createStoreApplication = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) => {
   const session = await getServerSession(authOptions);
 
@@ -101,12 +101,12 @@ export const createStoreApplication = async (
     storeName: formData.get("store-name"),
     storeDescription: formData.get("store-description"),
     channels: formData.get("channels"),
-    productCategory: formData.get("product-category")
+    productCategory: formData.get("product-category"),
   });
 
   if (!validatedData.success) {
     return {
-      fieldErrors: validatedData.error.flatten().fieldErrors
+      fieldErrors: validatedData.error.flatten().fieldErrors,
     };
   }
 
@@ -116,9 +116,9 @@ export const createStoreApplication = async (
       storeApplicationCreate,
       {
         input: {
-          ...validatedData.data
-        }
-      }
+          ...validatedData.data,
+        },
+      },
     );
 
     if (!storeApplication) throw new Error("Could not create store");

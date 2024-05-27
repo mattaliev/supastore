@@ -10,7 +10,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
@@ -22,15 +22,8 @@ type DashboardPageProps = {
 };
 
 export default async function DashboardPage({
-  params: { storeId }
+  params: { storeId },
 }: DashboardPageProps) {
-  const checkpoints = {
-    hasProducts: true,
-    hasConnectedToTelegram: false,
-    hasSetBotToken: false,
-    hasConnectedPaymentSystem: false,
-    isDone: false
-  };
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user.accessToken) {
@@ -41,8 +34,8 @@ export default async function DashboardPage({
     session.user.accessToken,
     storeCheckpointsGet,
     {
-      storeId
-    }
+      storeId,
+    },
   );
 
   if (!storeCheckpoints) {

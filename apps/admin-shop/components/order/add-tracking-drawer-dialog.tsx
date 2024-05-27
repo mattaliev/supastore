@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -21,20 +21,23 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function AddTrackingDrawerDialog({
   storeId,
-  shippingId
+  shippingId,
 }: {
   storeId: string;
   shippingId: string;
 }) {
   const [open, setOpen] = useState<boolean>(false);
-  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const isDesktop =
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false;
 
   if (isDesktop) {
     return (
@@ -83,7 +86,7 @@ export default function AddTrackingDrawerDialog({
 function AddTrackingForm({
   shippingId,
   className,
-  storeId
+  storeId,
 }: {
   storeId: string;
   shippingId: string;
@@ -91,7 +94,7 @@ function AddTrackingForm({
 }) {
   const [formState, formAction] = useFormState(addShippingTracking, {
     shippingId,
-    storeId
+    storeId,
   });
 
   return (
