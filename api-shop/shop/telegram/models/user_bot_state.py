@@ -41,7 +41,7 @@ class UserBotState(models.Model):
         db_table = "user_bot_state"
         verbose_name = "User Bot State"
         verbose_name_plural = "User Bot States"
-        unique_together = ("user", "state")
+        unique_together = ("user", "state", "store")
 
     def __str__(self):
         return f"{self.user} - {self.state}"
