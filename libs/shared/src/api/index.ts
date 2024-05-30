@@ -36,6 +36,7 @@ import {
   productsGetQuery,
   productsPaginatedGetQuery,
   salesAnalyticsGetQuery,
+  sessionAnalyticsByHourGetQuery,
   shopPaymentMethodsListQuery,
 } from "./queries";
 import {
@@ -73,6 +74,7 @@ import {
   BackendProductsPaginatedGetOperation,
   BackendProductUpdateOperation,
   BackendSalesAnalyticsOperation,
+  BackendSessionAnalyticsByHourGetOperation,
   BackendShippingAddTrackingOperation,
   BackendShippingDetailsCreateOperation,
   BackendShippingDetailsUpdateOperation,
@@ -1105,4 +1107,22 @@ export const storeBotTokenGet = async (
     });
 
   return responseBody.data.storeBotTokenGet;
+};
+
+export const sessionAnalyticsGet = async (
+  body: {
+    storeId: string;
+    date?: string;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendSessionAnalyticsByHourGetOperation>({
+      query: sessionAnalyticsByHourGetQuery,
+      variables: body,
+      headers,
+      cache: "no-store",
+    });
+
+  return responseBody.data.sessionAnalyticsByHourGet;
 };
