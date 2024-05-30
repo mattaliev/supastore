@@ -8,6 +8,7 @@ __all__ = [
     "StoreUser",
     "UserRoleChoices",
     "CustomerSortChoices",
+    "UserSession"
 ]
 
 
@@ -79,3 +80,14 @@ class StoreUser(BaseEntity):
         verbose_name = "Store User"
         verbose_name_plural = "Store Users"
 
+
+class UserSession(BaseEntity):
+    hash = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        "user.TelegramUser",
+        on_delete=models.CASCADE,
+    )
+    store = models.ForeignKey(
+        "store.Store",
+        on_delete=models.CASCADE,
+    )

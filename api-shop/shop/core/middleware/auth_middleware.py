@@ -1,7 +1,6 @@
 import json
 
 from django.contrib.auth import get_user_model
-from django.contrib.sessions.models import Session
 
 from authentication.services import (
     validate_init_data,
@@ -44,8 +43,7 @@ class AuthMiddleware(object):
                 request.user = user
 
                 # Update session
-                session = Session.objects.get(session_key=data.get("hash")[:40])
-                session_update(session=session)
+                session_update(hash=data.get("hash"))
 
             if method == "Bearer":
                 payload = decode_jwt(token=token)
