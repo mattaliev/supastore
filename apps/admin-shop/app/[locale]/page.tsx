@@ -27,19 +27,32 @@ export default async function LandingPage() {
                 <nav className="grid gap-6 text-lg font-medium">
                   <Logo />
                   <Link
-                    href={"https://ditchconceptstore.mintlify.app"}
+                    href={"https://guides.ditch-concept.com"}
                     inStore={false}
                     localized={false}
+                    className={
+                      "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                    }
                   >
                     Guides
                   </Link>
-                  <Link href={"/"} inStore={false} localized={false}>
+                  <Link
+                    href={"/"}
+                    inStore={false}
+                    localized={false}
+                    className={
+                      "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                    }
+                  >
                     Pricing
                   </Link>
                   <Link
                     href={"https://t.me/matveyaliev"}
                     inStore={false}
                     localized={false}
+                    className={
+                      "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                    }
                   >
                     Contact
                   </Link>
@@ -48,7 +61,7 @@ export default async function LandingPage() {
             </Sheet>
             <Logo />
             <Link
-              href={"https://ditchconceptstore.mintlify.app"}
+              href={"https://guides.ditch-concept.com"}
               inStore={false}
               className={
                 "hidden sm:block text-sm text-muted-foreground hover:text-primary transition ease-in-out duration-300 hover:-translate-y-1"
