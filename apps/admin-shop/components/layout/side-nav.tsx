@@ -7,7 +7,7 @@ import Link from "@/components/navigation/link";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getNavOptions } from "@/config/side-nav";
 
@@ -15,7 +15,7 @@ function SideNavOption({
   href,
   icon,
   label,
-  selected
+  selected,
 }: {
   href: string;
   icon: React.ReactNode;
@@ -60,7 +60,7 @@ export default function SideNav() {
           localized={false}
         >
           <Image
-            src={"/supastore logo white.svg"}
+            src={"/Supastore-logo-white.svg"}
             alt={"Supastore logo"}
             width={20}
             height={20}
@@ -72,7 +72,7 @@ export default function SideNav() {
           (option) =>
             option.href !== "/settings" && (
               <SideNavOption key={option.href} {...option} />
-            )
+            ),
         )}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
