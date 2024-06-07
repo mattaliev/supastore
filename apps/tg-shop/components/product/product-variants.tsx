@@ -9,13 +9,20 @@ export default function ProductVariants({
   selectedVariant: string | undefined;
   setSelectedVariant: (id: string) => void;
 }) {
+  const uniqueSizes = variants?.reduce((acc, variant) => {
+    if (!acc.find((v) => v.size === variant.size)) {
+      acc.push(variant);
+    }
+    return acc;
+  }, [] as ProductVariant[]);
+
   return (
     <div className="flex justify-start gap-x-3">
       {variants && variants.length > 0 && (
         <p className="text-telegram-text-color">Size: </p>
       )}
-      {variants &&
-        variants.map((variant) => (
+      {uniqueSizes &&
+        uniqueSizes.map((variant) => (
           <p
             key={variant.size}
             className={
