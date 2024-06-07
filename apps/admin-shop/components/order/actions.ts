@@ -7,37 +7,34 @@ import {
   shippingAddTracking,
   TAGS
 } from "@ditch/lib";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { redirect, RedirectType } from "next/navigation";
-import { getServerSession } from "next-auth";
+import { RedirectType } from "next/navigation";
 
-import { authenticated, authOptions } from "@/auth";
+import { authenticated } from "@/auth";
+import { getAccessToken } from "@/components/auth/get-token";
+import storeRedirect from "@/components/navigation/redirect";
+import revalidateStorePath from "@/components/navigation/revalidatePath";
 import {
   ShippingTrackingFieldErrors,
   ShippingTrackingScheme
 } from "@/components/order/schemes";
+import { getStoreId } from "@/components/store/helpers";
 
 export const deleteOrder = async (
   prevState: any,
-  payload: {
-    orderId: string;
-    storeId: string;
-  }
-): Promise<{
-  error?: string;
-}> => {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=/store/${encodeURIComponent(prevState.storeId)}orders`,
-      RedirectType.push
-    );
-  }
+  orderId: string
+): Promise<
+  | {
+      error?: string;
+    }
+  | undefined
+> => {
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
 
   try {
-    await authenticated(session.user.accessToken, orderDelete, payload);
+    await authenticated(accessToken, orderDelete, { storeId, orderId });
   } catch (e) {
     if (isRedirectError(e)) {
       throw e;
@@ -46,8 +43,8 @@ export const deleteOrder = async (
     return { error: "Could not delete order" };
   }
 
-  revalidatePath("/orders");
-  redirect(`/store/${payload.storeId}/orders`, RedirectType.push);
+  await revalidateStorePath("/orders");
+  storeRedirect(`/orders`, RedirectType.push);
 };
 
 export const updateOrderStatus = async (
@@ -59,16 +56,9 @@ export const updateOrderStatus = async (
     }
   | undefined
 > => {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=/store/${encodeURIComponent(prevState.storeId)}/orders`,
-      RedirectType.push
-    );
-  }
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
   const orderId = formData.get("order-id") as string;
-  const storeId = formData.get("store-id") as string;
   const fulfilmentStatus = formData.get(
     "fulfilment-status"
   ) as FulfilmentStatus;
@@ -81,7 +71,7 @@ export const updateOrderStatus = async (
   };
 
   try {
-    await authenticated(session.user.accessToken, orderStatusUpdate, {
+    await authenticated(accessToken, orderStatusUpdate, {
       input: payload
     });
   } catch (e) {
@@ -102,45 +92,34 @@ export const addShippingTracking = async (
   formData: FormData
 ): Promise<
   | {
-      storeId: string;
-      shippingId: string;
       formError?: string;
       fieldErrors?: ShippingTrackingFieldErrors;
     }
   | undefined
 > => {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=/store/${encodeURIComponent(prevState.storeId)}/orders`,
-      RedirectType.push
-    );
-  }
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
+  const shippingId = formData.get("shipping-id") as string;
 
   const validatedData = ShippingTrackingScheme.safeParse({
-    storeId: prevState.storeId,
-    shippingId: prevState.shippingId,
+    storeId,
+    shippingId,
     trackingNumber: formData.get("tracking-number") as string,
     carrier: formData.get("carrier") as string
   });
 
   if (!validatedData.success) {
     return {
-      storeId: prevState.storeId,
-      shippingId: prevState.shippingId,
       fieldErrors: validatedData.error.flatten().fieldErrors
     };
   }
 
   try {
-    await authenticated(session.user.accessToken, shippingAddTracking, {
+    await authenticated(accessToken, shippingAddTracking, {
       input: validatedData.data
     });
   } catch (e) {
     return {
-      storeId: prevState.storeId,
-      shippingId: prevState.shippingId,
       formError: "Could not add tracking number"
     };
   }

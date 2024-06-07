@@ -3,6 +3,7 @@ export const storeFragment = /* GraphQL */ `
     id
     storeName
     storeDescription
+    storeTimezone
     botUsername
     logoDark
     logoLight

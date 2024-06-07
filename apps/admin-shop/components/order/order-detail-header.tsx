@@ -3,17 +3,14 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import OrderDeleteDrawerDialog from "@/components/order/order-delete-drawer-dialog";
-import { StoreProvider } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 
 export default function OrderDetailHeader({
   orderNumber,
-  orderId,
-  storeId
+  orderId
 }: {
   orderNumber: string;
   orderId: string;
-  storeId: string;
 }) {
   const router = useRouter();
 
@@ -35,9 +32,7 @@ export default function OrderDetailHeader({
       </h1>
 
       <div className={"hidden md:ml-auto md:flex items-center gap-2"}>
-        <StoreProvider storeId={storeId}>
-          <OrderDeleteDrawerDialog orderId={orderId} />
-        </StoreProvider>
+        <OrderDeleteDrawerDialog orderId={orderId} />
       </div>
     </div>
   );

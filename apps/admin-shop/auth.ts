@@ -1,7 +1,12 @@
 import { APIFunction, signInAdmin, signOutAdmin } from "@ditch/lib";
-import { redirect } from "next/navigation";
+import { redirect as nextRedirect, RedirectType } from "next/navigation";
 import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getLocale } from "next-intl/server";
+
+import { getStoreId } from "@/components/store/helpers";
+
+export const DEFAULT_CALLBACK_URL = "/en/store";
 
 export const authenticated = async <T, U>(
   accessToken: string,
@@ -15,11 +20,11 @@ export const authenticated = async <T, U>(
     return response;
   } catch (error: any) {
     if (error.errorCode === 401) {
-      redirect("/auth/signIn");
+      return await redirectToAuth({ callbackUrl: DEFAULT_CALLBACK_URL });
     }
 
     if (error.errorCode === 403) {
-      redirect("/auth/error?error=AccessDenied");
+      nextRedirect(getErrorPageUrl({ error: "AccessDenied" }));
     }
   }
 };
@@ -101,3 +106,45 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 60 * 4, // 4 hours
   },
 };
+
+export function getAuthPageUrl({ callbackUrl }: { callbackUrl?: string }) {
+  const authPageUrl = authOptions.pages?.signIn as string;
+  if (callbackUrl) {
+    return `${authPageUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+  }
+  return authPageUrl;
+}
+
+export function getErrorPageUrl({ error }: { error?: string }) {
+  const errorPageUrl = authOptions.pages?.error as string;
+  if (error) {
+    return `${errorPageUrl}?error=${error}`;
+  }
+  return errorPageUrl;
+}
+
+export async function redirectToAuth({
+  callbackUrl,
+  isInStore = true,
+  localized = true,
+  redirectType,
+}: {
+  callbackUrl?: string;
+  isInStore?: boolean;
+  localized?: boolean;
+  redirectType?: RedirectType;
+}): Promise<never> {
+  let callback = callbackUrl;
+  if (isInStore) {
+    const storeId = getStoreId();
+    callback = `/store/${storeId}${callbackUrl}`;
+  }
+
+  if (localized) {
+    const locale = await getLocale();
+    callback = `/${locale}${callback}`;
+  }
+
+  const redirectUrl = getAuthPageUrl({ callbackUrl: callback });
+  return nextRedirect(redirectUrl, redirectType);
+}

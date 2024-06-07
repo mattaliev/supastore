@@ -379,6 +379,7 @@ export type Store = {
   id: string;
   storeName: string;
   storeDescription?: string;
+  storeTimezone: string;
   logoDark?: string;
   logoLight?: string;
   botUsername?: string;
@@ -420,6 +421,15 @@ export type StoreUpdateInputType = {
   logoLight?: File | null;
   botUsername?: string | null;
   botToken?: string | null;
+};
+
+export type SessionAnalyticsByHour = {
+  sessionCount: number;
+  sessionIncreasePercentage: number;
+  sessions: {
+    hour: string;
+    sessions: number;
+  }[];
 };
 
 export type BackendSignInShopUserOperation = {
@@ -956,5 +966,24 @@ export type BackendStoreBotTokenGetOperation = {
   };
   variables: {
     storeId: string;
+  };
+};
+
+export type BackendStoreBotUsernameGetOperation = {
+  data: {
+    storeBotUsernameGet: string;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendSessionAnalyticsByHourGetOperation = {
+  data: {
+    sessionAnalyticsByHourGet: SessionAnalyticsByHour;
+  };
+  variables: {
+    storeId: string;
+    date?: string;
   };
 };

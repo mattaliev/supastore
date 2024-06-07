@@ -1,10 +1,8 @@
 import { customersPaginated } from "@ditch/lib";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 
-import { authenticated, authOptions } from "@/auth";
+import { authenticated } from "@/auth";
 import TopCustomerSort from "@/components/customer/top-customer-sort";
+import { Link } from "@/components/i18n/i18n-navigation";
 import {
   Card,
   CardContent,
@@ -23,21 +21,15 @@ import {
 
 export default async function TopCustomers({
   storeId,
-  sortBy
+  sortBy,
+  accessToken
 }: {
   storeId: string;
   sortBy?: "TOTAL_SALES" | "TOTAL_VISITS";
+  accessToken: string;
 }) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/customers`)}`
-    );
-  }
-
   const topCustomersResponse = await authenticated(
-    session.user.accessToken,
+    accessToken,
     customersPaginated,
     {
       storeId,
@@ -77,7 +69,9 @@ export default async function TopCustomers({
                 <TableRow key={customer.id}>
                   <TableCell className="h-8 py-2">
                     <div className="flex flex-col items-start text-sm">
-                      <Link href={`/store/${storeId}/customers/${customer.id}`}>
+                      <Link
+                        href={`/store/${storeId}/customers/detail/${customer.id}`}
+                      >
                         <div>
                           {customer.firstName} {customer.lastName}
                         </div>

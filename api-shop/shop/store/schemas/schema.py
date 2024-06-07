@@ -36,6 +36,7 @@ class StoreType(DjangoObjectType):
             "id",
             "store_name",
             "store_description",
+            "store_timezone",
             "logo",
             "bot_username",
             "state",
@@ -79,12 +80,12 @@ class StoreType(DjangoObjectType):
 
     def resolve_is_connected_to_telegram(self, info):
         return self.is_connected_to_telegram
-    
 
 
 class StoreInputType(graphene.InputObjectType):
     store_name = graphene.String(required=True)
     store_description = graphene.String()
+    store_timezone = graphene.String()
     logo_dark = Upload()
     logo_light = Upload()
     bot_token = graphene.String()

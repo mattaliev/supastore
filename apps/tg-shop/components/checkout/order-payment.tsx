@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import PaymentButton from "@/components/checkout/payment-button";
+import { getStoreId } from "@/components/store/getStoreId";
 import {
   Card,
   CardContent,
@@ -15,14 +16,13 @@ import { tmaAuthenticated } from "@/lib/auth";
 
 export default async function OrderPayment({
   order,
-  mutable,
-  storeId
+  mutable
 }: {
-  storeId: string;
   order: Order;
   mutable: boolean;
 }) {
   const initDataRaw = cookies().get("initDataRaw")?.value;
+  const storeId = getStoreId();
 
   if (!initDataRaw) {
     redirect("/unauthenticated");
@@ -65,7 +65,7 @@ export default async function OrderPayment({
         <CardFooter>
           <div className="grid gap-4 grid-cols-1 auto-rows-max w-full">
             {paymentMethods.map((paymentMethod) => (
-              <PaymentButton paymentMethod={paymentMethod} storeId={storeId} />
+              <PaymentButton paymentMethod={paymentMethod} />
             ))}
           </div>
         </CardFooter>

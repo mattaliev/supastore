@@ -1,8 +1,10 @@
 import { StoreCheckpoints } from "@ditch/lib";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import React from "react";
 
+import { Link } from "@/components/i18n/i18n-navigation";
 import MarkConnectToTelegramAsDone from "@/components/store/connect-to-telegram";
+import { getStoreId } from "@/components/store/helpers";
 import {
   Card,
   CardContent,
@@ -28,20 +30,35 @@ type CheckpointField = {
   id?: string;
 };
 
-export default function DashboardTimeline({
-  storeId,
+export default async function DashboardTimeline({
   adminCheckpoints
 }: {
-  adminCheckpoints: StoreCheckpoints;
-  storeId: string;
+  adminCheckpoints?: StoreCheckpoints;
 }) {
+  const t = await getTranslations("Dashboard");
+  const storeId = getStoreId();
+
+  if (!adminCheckpoints) {
+    return null;
+  }
+
   const checkpointFields: CheckpointField[] = [
     {
       status: adminCheckpoints.hasProducts ? "done" : "current",
-      title: "Create Products",
+      title: t("checklist.create-products.header"),
       link: `/store/${storeId}/products`,
-      description:
-        "Start by creating a list of products that you want to sell in your store. Include detailed descriptions, high-quality images, and accurate pricing. Organize your products into categories and collections to make it easier for customers to browse and find what they're looking for.",
+      description: t("checklist.create-products.description"),
+      button: false
+    },
+    {
+      status: adminCheckpoints.hasBotToken
+        ? "done"
+        : adminCheckpoints.isConnectedToTelegram
+          ? "current"
+          : "default",
+      link: `/store/${storeId}/settings`,
+      title: t("checklist.set-bot-token.header"),
+      description: t("checklist.set-bot-token.description"),
       button: false
     },
     {
@@ -51,22 +68,9 @@ export default function DashboardTimeline({
           ? "current"
           : "default",
       link: undefined,
-      title: "Connect your Store to Telegram",
-      description:
-        "Connect your store to Telegram to enable clients to access it. Once you've connected your store you can attach to the menu button in your bot, pin it in your telegram channel, and start receiving orders.",
+      title: t("checklist.connect-to-telegram.header"),
+      description: t("checklist.connect-to-telegram.description"),
       button: <MarkConnectToTelegramAsDone storeId={storeId} />
-    },
-    {
-      status: adminCheckpoints.hasBotToken
-        ? "done"
-        : adminCheckpoints.isConnectedToTelegram
-          ? "current"
-          : "default",
-      link: `/store/${storeId}/settings`,
-      title: "Set Bot Token To Your Store",
-      description:
-        "Set your bot token to your store to enable communication between your store and the client. This allows you to send notifications, updates, and other information to your customers through the Telegram bot.",
-      button: false
     },
     {
       status: adminCheckpoints.hasConnectedPaymentSystem
@@ -75,9 +79,8 @@ export default function DashboardTimeline({
           ? "current"
           : "default",
       link: `/store/${storeId}/payment-systems`,
-      title: "Connect Payment System",
-      description:
-        "Choose a payment system that suits your needs and integrate it into your store. Make sure to test the payment system to ensure that it works correctly and that customers can make purchases without any issues.",
+      title: t("checklist.connect-payment-system.header"),
+      description: t("checklist.connect-payment-system.description"),
       button: false
     },
     {
@@ -89,9 +92,8 @@ export default function DashboardTimeline({
           ? "done"
           : "default",
       id: "isDone",
-      title: "Done!",
-      description:
-        "You are all set! Your store is now ready to launch. Make sure to test all the features and functionalities to ensure that everything is working as expected. If you encounter any errors, feel free to reach out to our support team for assistance.",
+      title: t("checklist.is-done.header"),
+      description: t("checklist.is-done.description"),
       button: false
     }
   ];
@@ -99,10 +101,8 @@ export default function DashboardTimeline({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Checklist</CardTitle>
-        <CardDescription>
-          A list of tasks to complete before launching your store.
-        </CardDescription>
+        <CardTitle>{t("checklist.header")}</CardTitle>
+        <CardDescription>{t("checklist.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className={"grid"}>
@@ -122,7 +122,7 @@ export default function DashboardTimeline({
                   )}
                 </TimelineHeading>
                 <TimelineDot status={checkpointField.status || "default"} />
-                {checkpointField.title !== "Done!" && (
+                {index !== checkpointFields.length - 1 && (
                   <TimelineLine done={checkpointField.status === "done"} />
                 )}
                 <TimelineContent className="flex flex-col items-start justify-start text-sm">

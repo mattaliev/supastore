@@ -110,9 +110,7 @@ function CreatePaymentForm({
   paymentMethods: PaymentMethod[];
   className?: string;
 }) {
-  const [formState, formAction] = useFormState(createPaymentManually, {
-    orderId
-  });
+  const [formState, formAction] = useFormState(createPaymentManually, null);
 
   const [paymentMethod, setPaymentMethod] = useState<string>("");
 
@@ -121,6 +119,7 @@ function CreatePaymentForm({
       action={formAction}
       className={twMerge("grid items-start gap-4", className)}
     >
+      <input type={"hidden"} value={orderId} name={"order-id"} />
       <div className="flex flex-col items-start space-y-2">
         <Label htmlFor="tracking-number">Payment Provider</Label>
         <Select

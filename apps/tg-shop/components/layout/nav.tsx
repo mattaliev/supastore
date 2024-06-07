@@ -9,7 +9,6 @@ async function Nav({ storeId }: { storeId: string }) {
   return (
     <nav className="flex justify-between items-center p-4 bg-telegram-bg-color sticky top-0 z-10 w-full">
       <Logo
-        storeId={storeId}
         logoDark={logoDark || undefined}
         logoLight={logoLight || undefined}
       />

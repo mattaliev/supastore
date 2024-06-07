@@ -2,14 +2,13 @@
 
 import { useThemeParams } from "@tma.js/sdk-react";
 import Image from "next/image";
-import Link from "next/link";
+
+import Link from "@/components/navigation/link";
 
 export default function Logo({
-  storeId,
   logoLight,
   logoDark
 }: {
-  storeId: string;
   logoLight?: string;
   logoDark?: string;
 }) {
@@ -21,7 +20,7 @@ export default function Logo({
 
   if (themeParams.isDark && logoLight) {
     return (
-      <Link href={`/store/${storeId}`}>
+      <Link href={`/`}>
         <Image
           src={logoLight}
           alt="Logo"
@@ -34,7 +33,7 @@ export default function Logo({
   }
 
   return (
-    <Link href={`/store/${storeId}`}>
+    <Link href={`/`}>
       <Image
         src={logoDark || logoLight || ""}
         alt="Logo"

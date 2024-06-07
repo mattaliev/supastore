@@ -54,7 +54,6 @@ export default function StoreBotToken({
   return (
     <form action={formAction}>
       <Card>
-        <input type={"hidden"} name={"store-id"} value={store.id} />
         <CardHeader>
           <CardTitle>Telegram Bot</CardTitle>
           <CardDescription>

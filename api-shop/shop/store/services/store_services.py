@@ -67,6 +67,7 @@ def store_create(
         *,
         user: TelegramUser,
         store_name: str,
+        store_timezone: str = "UTC",
         store_description: str = None,
         logo_dark: InMemoryUploadedFile = None,
         logo_light: InMemoryUploadedFile = None,
@@ -79,9 +80,10 @@ def store_create(
     store = Store.objects.create(
         store_name=store_name,
         store_description=store_description,
+        store_timezone=store_timezone
     )
 
-    store_url = f"{settings.FRONTEND_CLIENT_URL}/store/{store.id}"
+    store_url = f"{settings.FRONTEND_CLIENT_URL}/en/store/{store.id}"
 
     store.store_url = store_url
 
@@ -114,6 +116,7 @@ def store_create(
 def store_update(
         *,
         store_id: UUID,
+        store_timezone: str = None,
         store_name: str = None,
         store_description: str = None,
         logo_dark: InMemoryUploadedFile = None,
@@ -131,6 +134,9 @@ def store_update(
 
     if store_description:
         store.store_description = store_description
+
+    if store_timezone:
+        store.store_timezone = store_timezone
 
     store_logo = store.logo
 
@@ -202,7 +208,7 @@ def store_bot_token_create_or_update(*, store_id: UUID, token: str):
         )
 
     webhook_url = f"{settings.SERVICE_URL}/telegram/webhooks/shop/{str(store.id)}/update/"
-    print(webhook_url)
+
     telegram_webhook_set(
         bot_token=token,
         url=webhook_url
@@ -259,3 +265,9 @@ def store_application_approve(*, store_application_id: UUID):
     )
 
     return store
+
+def store_timezone_get(*, store_id: UUID):
+    logger = logging.getLogger(__name__)
+    logger.info("Getting store timezone with id: %s", store_id)
+
+    return Store.objects.get(id=store_id).store_timezone

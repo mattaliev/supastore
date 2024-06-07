@@ -4,11 +4,9 @@ import Image from "next/image";
 import CartItemQuantity from "@/components/cart/cart-item-quantity";
 
 export default function CartItems({
-  items,
-  storeId
+  items
 }: {
   items: CartItem[];
-  storeId: string;
 }): JSX.Element {
   return (
     <>
@@ -38,7 +36,7 @@ export default function CartItems({
               <div className="font-semibold text-telegram-text-color">
                 ${item.product.price}
               </div>
-              <CartItemQuantity item={item} storeId={storeId} />
+              <CartItemQuantity item={item} />
             </div>
           </div>
         </>

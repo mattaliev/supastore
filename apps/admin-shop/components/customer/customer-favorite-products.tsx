@@ -1,13 +1,11 @@
 import { Product } from "@ditch/lib";
-import Link from "next/link";
 
+import Link from "@/components/navigation/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function CustomerFavoriteProducts({
-  storeId,
   favoriteProducts
 }: {
-  storeId: string;
   favoriteProducts?: Product[];
 }) {
   return (
@@ -25,7 +23,7 @@ export default function CustomerFavoriteProducts({
               >
                 <p>{index + 1}</p>
                 <Link
-                  href={`/store/${storeId}/products/edit/${product.id}`}
+                  href={`/products/edit/${product.id}`}
                   className="hover:underline"
                 >
                   {product.title}

@@ -13,6 +13,7 @@ __all__ = [
 class Store(BaseEntity):
     store_name = models.TextField(max_length=100)
     store_description = models.TextField(max_length=255, null=True, blank=True)
+    store_timezone = models.TextField(max_length=100, default="UTC")
     is_connected_to_telegram = models.BooleanField(default=False)
     store_url = models.URLField(max_length=255, null=True, blank=True)
 

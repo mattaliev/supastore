@@ -15,7 +15,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { timezones } from "@/lib/timezones";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -47,7 +55,6 @@ export default function StoreInformation({ store }: { store: Store }) {
   return (
     <form action={formAction}>
       <Card>
-        <input type="hidden" name="store-id" value={store.id} />
         <CardHeader>
           <CardTitle>Store Information</CardTitle>
           <CardDescription>
@@ -81,6 +88,25 @@ export default function StoreInformation({ store }: { store: Store }) {
               id="store-description"
               name="store-description"
             />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="store-timezone">Store Timezone</Label>
+            {formState?.fieldErrors &&
+              formState?.fieldErrors?.storeTimezone && (
+                <p className={"text-xs text-destructive text-start"}>
+                  {formState.fieldErrors.storeTimezone[0]}
+                </p>
+              )}
+            <Select defaultValue={store.storeTimezone} name={"store-timezone"}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {timezones.map(({ name, value }) => (
+                  <SelectItem value={value}>{name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
         <CardFooter>

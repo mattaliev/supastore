@@ -8,3 +8,16 @@ export const salesAnalyticsGetQuery = /* GraphQL */ `
   }
   ${salesAnalyticsFragment}
 `;
+
+export const sessionAnalyticsByHourGetQuery = /* GraphQL */ `
+  query SessionAnalyticsGet($storeId: UUID!, $date: String) {
+    sessionAnalyticsByHourGet(storeId: $storeId, date: $date) {
+      sessionCount
+      sessionIncreasePercentage
+      sessions {
+        hour
+        sessions
+      }
+    }
+  }
+`;

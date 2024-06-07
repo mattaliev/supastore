@@ -41,18 +41,12 @@ function SubmitButton({
   );
 }
 
-export default function CheckoutButton({
-  storeId
-}: {
-  storeId: string;
-}): JSX.Element {
+export default function CheckoutButton(): JSX.Element {
   const formRef = useRef<HTMLFormElement>(null);
   const [message, formAction] = useFormState(createOrder, null);
 
-  const actionWithStoreId = formAction.bind(null, storeId);
-
   return (
-    <form action={actionWithStoreId} ref={formRef}>
+    <form action={formAction} ref={formRef}>
       <SubmitButton formRef={formRef} />
       <p className={"text-telegram-text-color text-center mt-2 text-xs"}>
         {message || ""}

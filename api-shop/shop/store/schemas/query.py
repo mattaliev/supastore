@@ -20,6 +20,7 @@ class Query(graphene.ObjectType):
     store_list = graphene.List('store.schemas.schema.StoreType')
     can_manage_store = graphene.Boolean(store_id=graphene.UUID())
     store_bot_token_get = graphene.String(store_id=graphene.UUID(required=True))
+    store_bot_username_get = graphene.String(store_id=graphene.UUID(required=True))
 
     def resolve_store_logo_get(self, info, store_id):
         return store_logo_get(store_id=store_id)
@@ -63,6 +64,11 @@ class Query(graphene.ObjectType):
         store = store_get(store_id=store_id)
 
         return store_bot_token_get(store=store)
+
+    def resolve_store_bot_username_get(self, info, store_id):
+        store = store_get(store_id=store_id)
+
+        return store.store_bot.bot_username
 
 
 

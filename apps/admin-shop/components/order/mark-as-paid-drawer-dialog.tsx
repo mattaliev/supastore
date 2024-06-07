@@ -97,17 +97,19 @@ function MarkAsPaidForm({
   className?: string;
 }) {
   const storeId = useStore();
-  const [formState, formAction] = useFormState(updatePaymentStatus, {
-    storeId,
-    paymentId,
-    paymentStatus: PaymentStatus.PAID
-  });
+  const [formState, formAction] = useFormState(updatePaymentStatus, null);
 
   return (
     <form
       action={formAction}
       className={twMerge("grid items-start gap-4", className)}
     >
+      <input type={"hidden"} name={"payment-id"} value={paymentId} />
+      <input
+        type={"hidden"}
+        name={"payment-status"}
+        value={PaymentStatus.PAID}
+      />
       <div className="flex items-center space-x-2">
         <Checkbox id="notify-user" name="notify-user" />
         <Label htmlFor="notify-user">

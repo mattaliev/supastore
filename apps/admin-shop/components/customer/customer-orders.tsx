@@ -1,7 +1,7 @@
 import { PaymentStatus, TelegramUserDetailParsed } from "@ditch/lib";
 import { DateTime } from "luxon";
-import Link from "next/link";
 
+import Link from "@/components/navigation/link";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,10 +15,8 @@ import {
 } from "@/components/ui/table";
 
 export default function CustomerOrders({
-  storeId,
   customer
 }: {
-  storeId: string;
   customer: TelegramUserDetailParsed;
 }) {
   const formatDateMed = (date: string) => {
@@ -46,7 +44,7 @@ export default function CustomerOrders({
             {customer.orders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell className="text-muted-foreground hover:underline">
-                  <Link href={`/store/${storeId}/orders/edit/${order.id}`}>
+                  <Link href={`/orders/edit/${order.id}`}>
                     {order.orderNumber}
                   </Link>
                 </TableCell>

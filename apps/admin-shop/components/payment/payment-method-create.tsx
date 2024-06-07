@@ -5,7 +5,6 @@ import { useFormState, useFormStatus } from "react-dom";
 
 import { createPaymentMethod } from "@/components/payment/actions";
 import PaymentMethodFields from "@/components/payment/payment-method-fields";
-import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,11 +38,8 @@ function SubmitButton() {
 }
 
 export default function PaymentMethodCreate() {
-  const storeId = useStore();
   const [provider, setProvider] = useState<string | null>(null);
-  const [formState, formAction] = useFormState(createPaymentMethod, {
-    storeId
-  });
+  const [formState, formAction] = useFormState(createPaymentMethod, null);
 
   return (
     <Card>

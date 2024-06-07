@@ -1,0 +1,78 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "supastore",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0098EA",
+    "light": "#0098EA",
+    "dark": "#0098EA",
+    "anchors": {
+      "from": "#0098EA",
+      "to": "#F7F9FB"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:matvey@ditch-concept.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://admin.ditch-concept.com/en/store"
+  },
+  "topAnchor": {
+    "name": "Guides",
+    "icon": "book-open"
+  },
+  "anchors": [
+    {
+      "name": "Community",
+      "icon": "telegram",
+      "url": "https://t.me/matveyaliev"
+    },{
+      "name": "Support",
+      "icon": "envelope",
+      "url": "https://t.me/matveyaliev"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction"
+      ]
+    },
+    {
+      "group": "Telegram Bot",
+      "pages": [
+        "pages/create-bot",
+        "pages/create-web-app",
+        "pages/connect-bot",
+        "pages/customize-bot"
+      ]
+    },
+    {
+      "group": "Products",
+      "pages": [
+        "pages/create-products"
+      ]
+    },
+    {
+      "group": "Connect Payment Gateway",
+      "pages": [
+        "pages/connect-payment-gateway",
+        "pages/connect-crypto-gateway",
+        "pages/connect-telegram-payment-gateway",
+        "pages/connect-wallet-pay"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "telegram": "https://t.me/matveyaliev"
+  }
+}

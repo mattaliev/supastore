@@ -6,6 +6,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { addToCart } from "@/components/cart/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 
 function SubmitButton({
@@ -52,17 +53,16 @@ function SubmitButton({
 }
 
 export default function AddToCartButton({
-  storeId,
   productId,
   selectedVariantId,
   doesProductHaveVariants
 }: {
-  storeId: string;
   productId: string;
   selectedVariantId?: string;
   doesProductHaveVariants: boolean;
 }): JSX.Element {
   const [message, formAction] = useFormState(addToCart, null);
+  const storeId = useStore();
 
   const payload = {
     storeId,

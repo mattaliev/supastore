@@ -62,7 +62,7 @@ def sign_in_shop_user(
     # Create new session for the user
     session = session_create(user_id=user.id, hash=init_data.get("hash"), store_id=store_id)
 
-    logger.debug("Created new session: Session Key: %s", session.session_key)
+    logger.debug("Created new session: Session Id: %s", session.id)
 
     # Get or create cart
     cart, created_cart = cart_get_or_create(cart_id=cart_id, user=user, store_id=store_id)

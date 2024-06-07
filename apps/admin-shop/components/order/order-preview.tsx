@@ -3,10 +3,10 @@
 import { FulfilmentStatus, Order, PaymentStatus } from "@ditch/lib";
 import { ChevronLeft, ChevronRight, CreditCard, Truck } from "lucide-react";
 import { DateTime } from "luxon";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+import Link from "@/components/navigation/link";
 import {
   FulfilmentStatusBadge,
   PaymentStatusBadge
@@ -28,7 +28,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export default function OrderPreview({
-  storeId,
   orders,
   hasNext,
   hasPrev,
@@ -36,7 +35,6 @@ export default function OrderPreview({
   totalItems,
   page
 }: {
-  storeId: string;
   orders: Order[];
   hasNext: boolean;
   hasPrev: boolean;
@@ -95,7 +93,7 @@ export default function OrderPreview({
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-1">
           <CardTitle className="group flex items-center gap-2 text-lg hover:underline">
-            <Link href={`store/${storeId}/orders/edit/${orders[current].id}`}>
+            <Link href={`/orders/edit/${orders[current].id}`}>
               Order {orders[current].orderNumber}
             </Link>
           </CardTitle>

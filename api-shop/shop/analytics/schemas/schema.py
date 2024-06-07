@@ -6,6 +6,8 @@ from analytics.models import Event
 __all__ = [
     "EventType",
     "SalesAnalytics",
+    "SessionAnalytics",
+    "SessionByHour",
 ]
 
 
@@ -36,3 +38,30 @@ class SalesAnalytics(graphene.ObjectType):
 
     def resolve_sales_increase_this_month(self, info):
         return self.get("sales_increase_this_month")
+
+
+class SessionByHour(graphene.ObjectType):
+    sessions = graphene.Int()
+    hour = graphene.String()
+
+    def resolve_sessions(self, info):
+        return self.get("sessions")
+
+    def resolve_hour(self, info):
+        return self.get("hour")
+
+
+class SessionAnalytics(graphene.ObjectType):
+    session_count = graphene.Int()
+    session_increase_percentage = graphene.Int()
+    sessions = graphene.List(SessionByHour)
+
+    def resolve_session_count(self, info):
+        return self.get("session_count")
+
+    def resolve_session_increase_percentage(self, info):
+        return self.get("session_increase_percentage")
+
+    def resolve_sessions(self, info):
+        return self.get("sessions")
+

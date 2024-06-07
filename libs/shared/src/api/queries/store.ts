@@ -47,3 +47,9 @@ export const storeBotTokenGetQuery = /* GraphQL */ `
     storeBotTokenGet(storeId: $storeId)
   }
 `;
+
+export const storeBotUsernameGetQuery = /* GraphQL */ `
+  query StoreBotUsernameGet($storeId: UUID!) {
+    storeBotUsernameGet(storeId: $storeId)
+  }
+`;
