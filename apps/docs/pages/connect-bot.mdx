@@ -1,0 +1,84 @@
+---
+title: 'Connect your Bot to Supastore'
+description: 'Learn how to connect your bot to Supastore'
+---
+
+## Introduction
+
+In the last tutorial, we have created a new bot, but this bot is kind of useless. It doesn't reply to any messages and it does not have a shop. Now, we will learn how to to power up this bot by connecting it to Supastore
+
+## Tutorial
+
+
+## Breakdown
+
+In the tutorial we have mentioned, that in order for bot to function properly we need to do two things:
+
+1. Connect our bot to Supastore
+2. Connect Supastore to your bot
+
+### 1. Connecting our bot to Supastore
+
+<Steps>
+  <Step title="Get the bot token from @BotFather">
+    In the previous tutorial, after we created a new bot, [@BotFather](https://t.me/BotFather) sent us the bot token. If you lost that bot token, then you need to:
+      - Navigate to [@BotFather](https://t.me/BotFather)
+      - Send `/mybots` command
+      - Select your bot from the list
+      - Press `API Token` on the inline menu
+      - Copy the token
+  </Step>
+  <Step title="Go to Store Settings">
+  </Step>
+  <Step title="Insert the bot token">
+    Under `Telegram Bot` section, insert bot username and bot token. Make sure to save changes after
+  </Step>
+</Steps>
+
+### 2. Connecting Supastore to our bot
+
+Now we will connect supastore to our bot. For this we will need to create a new **Telegram Web App**
+
+**Prerequisets**
+
+- Store Image (must be 640x360 pixels exactly)
+
+<Steps>
+  <Step title="Navigate to @BotFather">
+  </Step>
+  <Step title="Send /newapp command">
+    Send `/newapp` command and select your bot from the list
+  </Step>
+  <Step title="Follow instructions to add title, description and photo">
+    All these will be used when you are sending your store as an attachment
+
+    **Note**: The store image must be 640x360 pixels exactly
+  </Step>
+  <Step title="Provide the Web App URL">
+    The Web App Url can be found in your **Supastore** settings page in the `Telegram Bot` sections. Just above the bot username and bot token input fields
+  </Step>
+  <Step title="Enter short name for your web app">
+    This will be on the end of your Telegram WebApp url
+
+    `https://t.me/<your_bot_name>/<short_name>`
+  </Step>
+  <Step title="Finished!">
+    After finishing all the steps, `@BotFather` will send you URL for your Web App in this format
+
+    `https://t.me/<your_bot_name>/<short_name>`
+
+    **This is the URL you want your customers to access your Telegram Store through**
+  </Step>
+</Steps>
+
+
+
+
+
+
+
+
+
+
+
+

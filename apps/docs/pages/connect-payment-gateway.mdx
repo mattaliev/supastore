@@ -1,0 +1,52 @@
+---
+title: 'Connect your First Payment System'
+description: 'Learn how to connect payment system to Supastore'
+---
+
+## Introduction
+
+We have our products, we have our bot, now the only thing that's left is accepting payments. In this tutorial you will learn how to connect the simplest and fastest to implement payment system - Bank Transfer
+
+## Tutorial
+
+## Breakdown
+
+In your [Supastore Dashboard](https://admin.ditch-concept.com), navigate to `Payment Systems` page. In there, you will have a form for adding a new payment system.
+
+Each payment system, needs to have a unique name for you to be able to differentiate between them.  
+
+Then select a payment provider, for this tutorial we will choose `Bank Transfer`. We will go more in depth about other providers in the next tutorials.
+
+You then need to provide button text. This will be displayed to your customer on the checkout page
+
+And below, you need to provide a message with your bank details. 
+
+Here is an example
+
+```plaintext
+ For Indonesian Payments
+
+Bank: Permata
+Account number: 12345689
+Beneficiary: John Doe
+
+For International Payments:
+
+Country: United Kingdom
+Beneficiary: John Doe
+Bank name: Revolut
+IBAN: *******************
+BIC / SWIFT code: *******
+
+For Russian Payments:
+
+SBP
+Phone number: +7999999999
+Bank name: Alfa Bank
+Beneficiary: John Doe
+
+```
+
+Now, when your customer selects this message he will recieve a message with those details. He has to provide the order number in the comment, so you can see that he made a payment
+
+

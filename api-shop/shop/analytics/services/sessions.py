@@ -97,8 +97,8 @@ def session_analytics_by_hour_get(store_id: UUID, date_str: str | None):
 
     return {
         "sessions": data,
-        "session_count": session_count,
-        "session_increase_percentage": session_increase_percentage
+        "session_count": int(session_count),
+        "session_increase_percentage": int(session_increase_percentage)
     }
 
 
