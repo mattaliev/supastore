@@ -969,6 +969,15 @@ export type BackendStoreBotTokenGetOperation = {
   };
 };
 
+export type BackendStoreBotUsernameGetOperation = {
+  data: {
+    storeBotUsernameGet: string;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
 export type BackendSessionAnalyticsByHourGetOperation = {
   data: {
     sessionAnalyticsByHourGet: SessionAnalyticsByHour;
