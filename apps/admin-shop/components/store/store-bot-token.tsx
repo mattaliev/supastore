@@ -14,7 +14,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,7 +44,7 @@ function SubmitButton() {
 
 export default function StoreBotToken({
   store,
-  botToken,
+  botToken
 }: {
   store: Store;
   botToken?: string | null;

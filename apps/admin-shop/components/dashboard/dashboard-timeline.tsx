@@ -10,7 +10,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Timeline,
@@ -18,7 +18,7 @@ import {
   TimelineDot,
   TimelineHeading,
   TimelineItem,
-  TimelineLine,
+  TimelineLine
 } from "@/components/ui/timeline";
 
 type CheckpointField = {
@@ -31,7 +31,7 @@ type CheckpointField = {
 };
 
 export default async function DashboardTimeline({
-  adminCheckpoints,
+  adminCheckpoints
 }: {
   adminCheckpoints?: StoreCheckpoints;
 }) {
@@ -52,7 +52,7 @@ export default async function DashboardTimeline({
       link: `/store/${storeId}/settings`,
       title: t("checklist.set-bot-token.header"),
       description: t("checklist.set-bot-token.description"),
-      button: false,
+      button: false
     },
     {
       status: adminCheckpoints.isConnectedToTelegram
@@ -63,14 +63,14 @@ export default async function DashboardTimeline({
       link: "https://guides.ditch-concept.com/pages/connect-bot",
       title: t("checklist.connect-to-telegram.header"),
       description: t("checklist.connect-to-telegram.description"),
-      button: <MarkConnectToTelegramAsDone storeId={storeId} />,
+      button: <MarkConnectToTelegramAsDone storeId={storeId} />
     },
     {
       status: adminCheckpoints.hasProducts ? "done" : "current",
       title: t("checklist.create-products.header"),
       link: `/store/${storeId}/products`,
       description: t("checklist.create-products.description"),
-      button: false,
+      button: false
     },
     {
       status: adminCheckpoints.hasConnectedPaymentSystem
@@ -81,7 +81,7 @@ export default async function DashboardTimeline({
       link: `/store/${storeId}/payment-systems`,
       title: t("checklist.connect-payment-system.header"),
       description: t("checklist.connect-payment-system.description"),
-      button: false,
+      button: false
     },
     {
       status:
@@ -94,8 +94,8 @@ export default async function DashboardTimeline({
       id: "isDone",
       title: t("checklist.is-done.header"),
       description: t("checklist.is-done.description"),
-      button: false,
-    },
+      button: false
+    }
   ];
 
   return (

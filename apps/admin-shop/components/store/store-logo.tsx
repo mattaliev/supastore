@@ -14,7 +14,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,16 +45,16 @@ function SubmitButton() {
 export default function StoreLogo({ store }: { store: Store }) {
   const [formState, formAction] = useFormState(updateStore, null);
   const [logoDarkUrl, setLogoDarkUrl] = useState<string | null>(
-    store.logoDark || null,
+    store.logoDark || null
   );
 
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(
-    store.logoLight || null,
+    store.logoLight || null
   );
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    isDark: boolean,
+    isDark: boolean
   ) => {
     const selectedFile = e.target.files && e.target.files[0];
     if (selectedFile) {
@@ -134,7 +134,7 @@ export default function StoreLogo({ store }: { store: Store }) {
 
 function LogoPreview({
   logoUrl,
-  isDark,
+  isDark
 }: {
   logoUrl?: string | null;
   isDark?: boolean;

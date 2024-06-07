@@ -7,7 +7,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function ProductDetails({
   product,
-  productDetailsFieldErrors,
+  productDetailsFieldErrors
 }: {
   product?: Product;
   productDetailsFieldErrors?: {
