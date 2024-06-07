@@ -1,22 +1,50 @@
 "use client";
 
+import { storeBotUsernameGet } from "@ditch/lib";
 import { DisplayGate, SDKProvider } from "@tma.js/sdk-react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
+import Link from "@/components/navigation/link";
+import { useStore } from "@/components/store/store-context";
+import { Button } from "@/components/ui/button";
 
 interface SDKProviderErrorProps {
   error: unknown;
 }
 
 const SDKProviderError = ({ error }: SDKProviderErrorProps) => {
+  const storeId = useStore();
+  const [storeBotUsername, setStoreBotUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchStoreBotUsername() {
+      const botUsername = await storeBotUsernameGet({ storeId });
+      setStoreBotUsername(botUsername);
+    }
+
+    fetchStoreBotUsername();
+  }, [storeId]);
+
   return (
     <div>
-      Oops. Something went wrong.
-      <blockquote>
-        <code>
-          {error instanceof Error ? error.message : JSON.stringify(error)}
-        </code>
-      </blockquote>
+      <h1>Opps, something went wrong...</h1>
+      <p>This Online Store is only made to be used inside Telegram</p>
+
+      {storeBotUsername ? (
+        <Link
+          href={`https://t.me/${storeBotUsername}`}
+          inStore={false}
+          localized={false}
+        >
+          <Button>Open in Telegram</Button>
+        </Link>
+      ) : (
+        <Button disabled>
+          <AiOutlineLoading3Quarters className="animate-spin" />
+          Loading...
+        </Button>
+      )}
     </div>
   );
 };

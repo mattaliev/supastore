@@ -7,6 +7,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 
 import { createPayment } from "@/components/checkout/actions";
+import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 
 const buttonClasses: Record<string, string> = {
@@ -53,14 +54,12 @@ function SubmitButton({
 }
 
 export default function PaymentButton({
-  storeId,
   paymentMethod
 }: {
-  storeId: string;
   paymentMethod: SafePaymentMethod;
 }) {
   const { id, name, provider, buttonText } = paymentMethod;
-
+  const storeId = useStore();
   const utils = useUtils();
   const miniApp = useMiniApp();
   const [formState, formAction] = useFormState(createPayment, null);

@@ -16,14 +16,14 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 
+import storeRedirect from "@/components/navigation/redirect";
+import { getStoreId } from "@/components/store/getStoreId";
 import { tmaAuthenticated } from "@/lib/auth";
 
 import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
 
-export const createOrder = async (
-  prevState: any,
-  storeId: string
-): Promise<string | void> => {
+export const createOrder = async (prevState: any): Promise<string | void> => {
+  const storeId = getStoreId();
   const cartId = cookies().get("cartId")?.value;
   const initDataRaw = cookies().get("initDataRaw")?.value;
   const orderId = cookies().get("orderId")?.value;
@@ -65,10 +65,10 @@ export const createOrder = async (
     }
 
     cookies().set("orderId", order.id);
-    redirectPath = `/store/${storeId}/checkout/shipping?shippingId=${order.shipping.id}`;
+    redirectPath = `/checkout/shipping?shippingId=${order.shipping.id}`;
 
     if (order.hasDefaultShippingDetails) {
-      redirectPath = `/store/${storeId}/checkout/payment`;
+      redirectPath = `/checkout/payment`;
     }
   } catch (e) {
     console.error(e);
@@ -76,7 +76,7 @@ export const createOrder = async (
   }
 
   revalidateTag(TAGS.ORDER);
-  redirect(redirectPath, RedirectType.push);
+  storeRedirect(redirectPath, RedirectType.push);
 };
 
 export type FormErrorResponse = {
@@ -142,7 +142,7 @@ export const createOrUpdateShippingDetails = async (
   }
 
   revalidateTag(TAGS.ORDER);
-  redirect(`/store/${storeId}/checkout/payment`, RedirectType.push);
+  storeRedirect(`/checkout/payment`, RedirectType.push);
 };
 
 export const createPayment = async (
@@ -176,9 +176,6 @@ export const createPayment = async (
   if (!result) {
     return { success: false, error: "Could not create payment" };
   }
-
-  revalidateTag(TAGS.ORDER);
-  revalidateTag(TAGS.CART);
 
   const { paymentInfo, provider } = result;
 

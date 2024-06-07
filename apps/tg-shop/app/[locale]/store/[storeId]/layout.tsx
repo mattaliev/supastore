@@ -1,6 +1,7 @@
 import TelegramBackButton from "@/components/layout/back-button";
 import Footer from "@/components/layout/footer";
 import Nav from "@/components/layout/nav";
+import { StoreProvider } from "@/components/store/store-context";
 import TmaSdkLoader from "@/components/telegram/tma-sdk-loader";
 import ThemeProvider from "@/components/theme/theme-provider";
 import AuthProvider from "@/components/user/user-register";
@@ -10,7 +11,7 @@ const ShopLayout = ({
   params
 }: Readonly<{ children: React.ReactNode; params: { storeId: string } }>) => {
   return (
-    <>
+    <StoreProvider storeId={params.storeId}>
       <TmaSdkLoader>
         <ThemeProvider>
           <AuthProvider>
@@ -21,7 +22,7 @@ const ShopLayout = ({
           </AuthProvider>
         </ThemeProvider>
       </TmaSdkLoader>
-    </>
+    </StoreProvider>
   );
 };
 

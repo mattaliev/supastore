@@ -53,7 +53,6 @@ export default function ProductDetail({
               </span>
               <div className="flex items-center w-1/2 justify-stretch">
                 <AddToCartButton
-                  storeId={storeId}
                   productId={product.id}
                   doesProductHaveVariants={
                     (product.variants && product.variants.length > 0) as boolean

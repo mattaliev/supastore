@@ -2,8 +2,10 @@
 import { isPageReload } from "@tma.js/sdk";
 import { useInitData, useLaunchParams } from "@tma.js/sdk-react";
 import { usePathname, useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import { createContext, useEffect, useState } from "react";
 
+import { useStore } from "@/components/store/store-context";
 import { getPath } from "@/lib/path";
 
 const AuthContext = createContext<{ authenticated: boolean }>({
@@ -21,7 +23,8 @@ export default function AuthProvider({
   const isReload = isPageReload();
   const router = useRouter();
   const pathname = usePathname();
-  const storeId = pathname.split("/")[2];
+  const storeId = useStore();
+  const locale = useLocale();
 
   useEffect(() => {
     const authenticate = async () => {
@@ -35,15 +38,18 @@ export default function AuthProvider({
       if (authenticated) return;
 
       try {
-        const register = await fetch(`/store/${storeId}/api/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            initDataRaw: launchParams.initDataRaw
-          })
-        });
+        const register = await fetch(
+          `/${locale}/store/${storeId}/api/register`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              initDataRaw: launchParams.initDataRaw
+            })
+          }
+        );
 
         if (register.status !== 200) {
           console.error("Failed to register user");

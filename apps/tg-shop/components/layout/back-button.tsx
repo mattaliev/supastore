@@ -8,7 +8,7 @@ export default function TelegramBackButton() {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (pathname === "/") {
+  if (pathname.split("/").length <= 4) {
     backButton.hide();
   } else {
     backButton.show();

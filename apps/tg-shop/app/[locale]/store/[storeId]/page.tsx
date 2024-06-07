@@ -26,13 +26,7 @@ const CatalogPage = async ({
     limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit
   });
 
-  return (
-    <Catalog
-      paginatedProducts={paginatedProducts}
-      limit={defaultLimit}
-      storeId={storeId}
-    />
-  );
+  return <Catalog paginatedProducts={paginatedProducts} limit={defaultLimit} />;
 };
 
 export default CatalogPage;

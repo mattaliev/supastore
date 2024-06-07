@@ -50,11 +50,10 @@ export default async function OrderSummaryPage({
       <ShippingSummary
         shippingDetails={order.shipping.details}
         mutable={mutable}
-        storeId={storeId}
       />
       <OrderItems items={order.cart.items} />
       <DeliverySummary shippingDetails={order.shipping.details} />
-      <OrderPayment order={order} mutable={mutable} storeId={storeId} />
+      <OrderPayment order={order} mutable={mutable} />
     </div>
   );
 }

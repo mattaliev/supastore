@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,13 +13,17 @@ export const metadata: Metadata = {
 
 export const revalidate = 0;
 
-export default function RootLayout({
-  children
+export default async function RootLayout({
+  children,
+  params: { locale }
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,7 +40,11 @@ export default function RootLayout({
         )}
       </head>
 
-      <body className={inter.className + "min-h-screen"}>{children}</body>
+      <body className={inter.className + "min-h-screen"}>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

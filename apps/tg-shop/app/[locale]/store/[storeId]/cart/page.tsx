@@ -27,7 +27,7 @@ export default async function Cart({
   const cart = await cartGet({ cartId, storeId });
 
   if (!cart || cart.totalQuantity === 0) {
-    return <EmptyCart storeId={storeId} />;
+    return <EmptyCart />;
   }
 
   return (
@@ -38,9 +38,9 @@ export default async function Cart({
             totalQuantity={cart.totalQuantity}
             totalPrice={cart.totalPrice}
           />
-          <CartItems items={cart.items} storeId={storeId} />
+          <CartItems items={cart.items} />
         </div>
-        <CheckoutButton storeId={storeId} />
+        <CheckoutButton />
       </CardContent>
     </Card>
   );
