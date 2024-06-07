@@ -256,6 +256,7 @@ export const productsPaginatedGet = async (
       variables: body,
       tags: [TAGS.PRODUCT],
       headers,
+      cache: "no-store",
     });
 
   return responseBody.data.productsPaginatedGet;
