@@ -27,6 +27,14 @@ class PaymentProvider(ABC):
     def send_payment_message(self, payment: Payment, bot_token: str = None, *args, **kwargs) -> None:
         pass
 
+    @staticmethod
+    def open_order_button_get(payment: Payment):
+        return OpenOrderButton(
+            order_id=payment.order.id,
+            store_id=payment.order.store.id,
+            store_url=payment.order.store.store_url
+        ).as_json()
+
 
 class WalletPayProvider(PaymentProvider):
     def __init__(self):
@@ -63,7 +71,7 @@ class WalletPayProvider(PaymentProvider):
                     "direct_payment_link"
                 )
             ).as_json()],
-            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
+            [self.open_order_button_get(payment=payment)]
         ]
 
         telegram_message_send(
@@ -112,7 +120,7 @@ class TelegramPaymentsProvider(PaymentProvider):
                 payment_link=payment.additional_info.get("payment_link"),
                 name=payment.payment_method.name
             ).as_json()],
-            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
+            [self.open_order_button_get(payment=payment)]
         ]
 
         telegram_message_send(
@@ -155,7 +163,7 @@ class CryptoPaymentProvider(PaymentProvider):
         )
 
         reply_markup = [
-            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
+            [open_order_button_get(payment=payment)]
         ]
 
         telegram_message_send(
@@ -195,7 +203,7 @@ class BankTransferPaymentProvider(PaymentProvider):
         )
 
         reply_markup = [
-            [OpenOrderButton(order_id=payment.order.id, store_id=payment.order.store.id).as_json()]
+            [self.open_order_button_get(payment=payment)]
         ]
 
         telegram_message_send(
