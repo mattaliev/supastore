@@ -5,6 +5,7 @@ import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useFormState, useFormStatus } from "react-dom";
 
+import Link from "@/components/navigation/link";
 import { updateStore } from "@/components/store/actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,7 +59,15 @@ export default function StoreBotToken({
           <CardTitle>Telegram Bot</CardTitle>
           <CardDescription>
             Connect Telegram Bot to your store to be able interact with users.
-            Learn more on how to get token here.
+            Learn how to do it in our{" "}
+            <Link
+              href={"https://guides.ditch-concept.com/pages/connect-bot"}
+              inStore={false}
+              localized={false}
+              className={"underline hover:text-primary hover:no-underline"}
+            >
+              quick guide
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">

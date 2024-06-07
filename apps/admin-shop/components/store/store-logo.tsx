@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
+import Link from "@/components/navigation/link";
 import { updateStore } from "@/components/store/actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -71,7 +72,16 @@ export default function StoreLogo({ store }: { store: Store }) {
         <CardHeader>
           <CardTitle>Store Logo</CardTitle>
           <CardDescription>
-            Update your store's logo. Recommended size is 96x32 pixels.
+            Upload your brand's logo. Recommended size of the logo is 96x32
+            pixels. You can learn more about your store customization in our{" "}
+            <Link
+              href={"https://guides.ditch-concept.com/pages/customize-bot"}
+              inStore={false}
+              localized={false}
+              className={"underline hover:text-primary hover:no-underline"}
+            >
+              guide
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent>

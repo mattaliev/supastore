@@ -44,13 +44,6 @@ export default async function DashboardTimeline({
 
   const checkpointFields: CheckpointField[] = [
     {
-      status: adminCheckpoints.hasProducts ? "done" : "current",
-      title: t("checklist.create-products.header"),
-      link: `/store/${storeId}/products`,
-      description: t("checklist.create-products.description"),
-      button: false
-    },
-    {
       status: adminCheckpoints.hasBotToken
         ? "done"
         : adminCheckpoints.isConnectedToTelegram
@@ -67,10 +60,17 @@ export default async function DashboardTimeline({
         : adminCheckpoints.hasProducts
           ? "current"
           : "default",
-      link: undefined,
+      link: "https://guides.ditch-concept.com/pages/connect-bot",
       title: t("checklist.connect-to-telegram.header"),
       description: t("checklist.connect-to-telegram.description"),
       button: <MarkConnectToTelegramAsDone storeId={storeId} />
+    },
+    {
+      status: adminCheckpoints.hasProducts ? "done" : "current",
+      title: t("checklist.create-products.header"),
+      link: `/store/${storeId}/products`,
+      description: t("checklist.create-products.description"),
+      button: false
     },
     {
       status: adminCheckpoints.hasConnectedPaymentSystem
