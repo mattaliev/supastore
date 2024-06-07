@@ -83,7 +83,7 @@ def store_create(
         store_timezone=store_timezone
     )
 
-    store_url = f"{settings.FRONTEND_CLIENT_URL}/store/{store.id}"
+    store_url = f"{settings.FRONTEND_CLIENT_URL}/en/store/{store.id}"
 
     store.store_url = store_url
 
