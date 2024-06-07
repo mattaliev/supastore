@@ -11,6 +11,7 @@ import AdminDropdownMenu from "@/components/admin/admin-dropdown-menu";
 import HeaderBreadcrumb from "@/components/layout/header-breadcrumb";
 import Link from "@/components/navigation/link";
 import { Input } from "@/components/ui/input";
+import Logo from "@/components/ui/logo";
 import { getNavOptions } from "@/config/side-nav";
 
 export default function Header() {
@@ -37,6 +38,7 @@ export default function Header() {
           </SheetTrigger>
           <SheetContent side="left" className="sm:max-w-xs">
             <nav className="grid gap-6 text-lg font-medium">
+              <Logo />
               {navOptions.map((navOption) => {
                 return (
                   <Link
