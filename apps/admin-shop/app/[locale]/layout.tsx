@@ -13,12 +13,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Supastore",
-  description: "Create your first store in Telegram in just a few minutes",
+  description: "Create your first store in Telegram in just a few minutes"
 };
 
 export default async function RootLayout({
   children,
-  params: { locale },
+  params: { locale }
 }: Readonly<{
   children: React.ReactNode;
   params: { locale: string };
