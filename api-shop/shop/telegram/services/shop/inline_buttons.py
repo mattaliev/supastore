@@ -142,16 +142,17 @@ class PayWithWalletPayButton(InlineButton):
 
 
 class OpenOrderButton(InlineButton):
-    def __init__(self,  order_id: str, store_id: UUID, text: str = "📦View order"):
+    def __init__(self, *, order_id: str, store_id: UUID, store_url: str, text: str = "📦View order"):
         self.store_id = store_id
         self.order_id = order_id
+        self.store_url = store_url
         super().__init__(InlineButtonType.OPEN_ORDER, text)
 
     def as_json(self):
         return {
             "text": self.text,
             "web_app": {
-                "url": f"{settings.FRONTEND_CLIENT_URL}/store/{self.store_id}/checkout/payment?orderId={self.order_id}"
+                "url": f"{self.store_url}/checkout/payment?orderId={self.order_id}"
             }
         }
 
