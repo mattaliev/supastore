@@ -163,7 +163,7 @@ class CryptoPaymentProvider(PaymentProvider):
         )
 
         reply_markup = [
-            [open_order_button_get(payment=payment)]
+            [self.open_order_button_get(payment=payment)]
         ]
 
         telegram_message_send(
