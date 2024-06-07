@@ -8,11 +8,7 @@ export function SignInWithTelegramButton() {
       <LoginButton
         botUsername={process.env.NEXT_PUBLIC_BOT_USERNAME as string}
         onAuthCallback={(authData) => {
-          signIn(
-            "telegram",
-            { callbackUrl: "https://tg.ditch.ngrok.app/store" },
-            authData as any
-          );
+          signIn("telegram", {}, authData as any);
         }}
         buttonSize="large" // "large" | "medium" | "small"
         cornerRadius={10} // 0 - 20

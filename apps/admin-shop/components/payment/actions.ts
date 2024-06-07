@@ -12,37 +12,25 @@ import {
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 
-import { authenticated, authOptions } from "@/auth";
+import { authenticated } from "@/auth";
+import { getAccessToken } from "@/components/auth/get-token";
 import {
   BasePaymentMethodScheme,
   PaymentFieldErrors,
   PaymentSchemes
 } from "@/components/payment/schemes";
+import { getStoreId } from "@/components/store/helpers";
 
 export const updatePaymentStatus = async (
   prevState: any,
   formData: FormData
-): Promise<
-  | {
-      storeId: string;
-      paymentId: string;
-      paymentStatus?: PaymentStatus;
-      error?: string;
-    }
-  | undefined
-> => {
-  const session = await getServerSession(authOptions);
+): Promise<{ error?: string } | undefined> => {
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
+  const paymentId = formData.get("payment-id") as string;
+  const paymentStatus = formData.get("payment-status") as PaymentStatus;
 
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=/store/${prevState.storeId}/payment-systems`
-    );
-  }
-
-  const { paymentId, paymentStatus, storeId } = prevState;
   const payload = {
     storeId,
     paymentId,
@@ -51,7 +39,7 @@ export const updatePaymentStatus = async (
   };
 
   try {
-    await authenticated(session.user.accessToken, paymentStatusUpdate, {
+    await authenticated(accessToken, paymentStatusUpdate, {
       input: {
         ...payload
       }
@@ -62,9 +50,6 @@ export const updatePaymentStatus = async (
     }
 
     return {
-      storeId,
-      paymentId,
-      paymentStatus,
       error: "Could not update order status"
     };
   }
@@ -75,29 +60,19 @@ export const updatePaymentStatus = async (
 export const createPaymentManually = async (
   prevState: any,
   formData: FormData
-): Promise<
-  | {
-      orderId: string;
-      error?: string;
-    }
-  | undefined
-> => {
-  const session = await getServerSession(authOptions);
+): Promise<{ error?: string } | undefined> => {
+  const accessToken = await getAccessToken();
 
-  if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/payment-systems");
-  }
-
-  const { orderId } = prevState;
+  const orderId = formData.get("order-id") as string;
   const paymentMethodId = formData.get("payment-method") as string;
   const notifyCustomer = formData.get("notify-customer") === "on";
 
   if (!paymentMethodId || paymentMethodId.length === 0) {
-    return { orderId, error: "Please select a payment method" };
+    return { error: "Please select a payment method" };
   }
 
   try {
-    await authenticated(session.user.accessToken, paymentCreate, {
+    await authenticated(accessToken, paymentCreate, {
       input: {
         orderId,
         paymentMethodId,
@@ -109,7 +84,7 @@ export const createPaymentManually = async (
       throw e;
     }
 
-    return { orderId, error: "Could not create payment" };
+    return { error: "Could not create payment" };
   }
   revalidateTag(TAGS.ORDER);
 };
@@ -119,28 +94,23 @@ export const createPaymentMethod = async (
   formData: FormData
 ): Promise<
   | {
-      storeId: string;
       success?: boolean;
       fieldErrors?: PaymentFieldErrors;
       formError?: string;
     }
   | undefined
 > => {
-  const storeId = prevState.storeId;
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect("/auth/signIn?callbackUrl=/payment-systems");
-  }
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
 
   const validationResults = validatePaymentMethodForm(formData);
 
   if (validationResults.error) {
-    return { ...validationResults.error, storeId };
+    return { ...validationResults.error };
   }
 
   try {
-    await authenticated(session.user.accessToken, paymentMethodCreate, {
+    await authenticated(accessToken, paymentMethodCreate, {
       input: {
         storeId,
         ...validationResults.data
@@ -151,11 +121,11 @@ export const createPaymentMethod = async (
       throw e;
     }
 
-    return { storeId, formError: "Could not create payment method" };
+    return { formError: "Could not create payment method" };
   }
 
   revalidateTag(TAGS.PAYMENT);
-  return { storeId, success: true };
+  return { success: true };
 };
 
 export const updatePaymentMethod = async (
@@ -163,36 +133,28 @@ export const updatePaymentMethod = async (
   formData: FormData
 ): Promise<
   | {
-      storeId: string;
       success?: boolean;
       fieldErrors?: PaymentFieldErrors;
       formError?: string;
     }
   | undefined
 > => {
-  const storeId = prevState.storeId;
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/payment-systems`)}`
-    );
-  }
-
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
   const paymentMethodId = formData.get("id") as string;
 
   if (!paymentMethodId) {
-    return { storeId, formError: "Invalid payment method" };
+    return { formError: "Invalid payment method" };
   }
 
   const validationResults = validatePaymentMethodForm(formData);
 
   if (validationResults.error) {
-    return { ...validationResults.error, storeId };
+    return { ...validationResults.error };
   }
 
   try {
-    await authenticated(session.user.accessToken, paymentMethodUpdate, {
+    await authenticated(accessToken, paymentMethodUpdate, {
       input: {
         storeId,
         paymentMethodId,
@@ -204,11 +166,11 @@ export const updatePaymentMethod = async (
       throw e;
     }
 
-    return { storeId, formError: "Could not create payment method" };
+    return { formError: "Could not create payment method" };
   }
 
   revalidateTag(TAGS.PAYMENT);
-  return { storeId, success: true };
+  return { success: true };
 };
 
 export const deletePaymentMethod = async (
@@ -216,36 +178,28 @@ export const deletePaymentMethod = async (
   paymentMethodId: string
 ): Promise<
   | {
-      storeId: string;
       success?: boolean;
       error?: string;
     }
   | undefined
 > => {
-  const storeId = prevState.storeId;
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/payment-systems`)}`
-    );
-  }
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
 
   try {
-    await authenticated(session.user.accessToken, paymentMethodDelete, {
+    await authenticated(accessToken, paymentMethodDelete, {
       storeId,
       paymentMethodId
     });
   } catch (e) {
     return {
-      storeId,
       success: false,
       error: "Could not delete payment method"
     };
   }
 
   revalidateTag(TAGS.PAYMENT);
-  return { storeId, success: true };
+  return { success: true };
 };
 
 const validatePaymentMethodForm = (formData: FormData) => {

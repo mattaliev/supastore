@@ -31,6 +31,13 @@ export const StoreScheme = z.object({
       invalid_type_error: "Bot username must be a string"
     })
     .optional()
+    .nullable(),
+  storeTimezone: z
+    .string({
+      required_error: "Store timezone is required",
+      invalid_type_error: "Store timezone must be a string"
+    })
+    .optional()
     .nullable()
 });
 

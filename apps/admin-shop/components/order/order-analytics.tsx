@@ -28,9 +28,6 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
             Insightful Analysis.
           </CardDescription>
         </CardHeader>
-        {/*<CardFooter>*/}
-        {/*  <Button>Create New Order</Button>*/}
-        {/*</CardFooter>*/}
       </Card>
       <Card>
         <CardHeader className="pb-2">

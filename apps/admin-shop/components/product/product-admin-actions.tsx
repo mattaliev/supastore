@@ -1,8 +1,8 @@
 "use client";
 import { MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useRouter } from "@/components/i18n/i18n-navigation";
 import ProductDeleteDialog from "@/components/product/product-delete-dialog";
 import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";

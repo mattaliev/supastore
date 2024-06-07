@@ -75,7 +75,6 @@ export default function StoreLogo({ store }: { store: Store }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <input type={"hidden"} name={"store-id"} value={store.id} />
           <div className={"grid gap-4 lg:grid-cols-2"}>
             <div className={"grid gap-2"}>
               <Label htmlFor={"logo-light"}>Light logo</Label>

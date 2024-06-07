@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,22 +9,24 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 
-const pathnames: Record<string, string[]> = {
-  "": ["Dashboard"],
-  products: ["Dashboard", "Products"],
-  orders: ["Dashboard", "Orders"],
-  "orders/edit": ["Dashboard", "Orders", "Edit"],
-  "products/create": ["Dashboard", "Products", "Create"],
-  "products/edit": ["Dashboard", "Products", "Edit"],
-  customers: ["Dashboard", "Customers"],
-  "customers/detail": ["Dashboard", "Customers", "Detail"],
-  "payment-systems": ["Dashboard", "Payment Systems"],
-  analytics: ["Settings"],
-  settings: ["Dashboard", "Settings"]
-};
-
 export default function HeaderBreadcrumb({ pathname }: { pathname: string }) {
-  const formattedPathname = pathname.split("/").slice(3, 5).join("/");
+  const t = useTranslations("HeaderBreadcrumb");
+
+  const pathnames: Record<string, string[]> = {
+    "": [t("dashboard")],
+    products: [t("dashboard"), t("products")],
+    orders: [t("dashboard"), t("orders")],
+    "orders/edit": [t("dashboard"), t("orders"), t("edit")],
+    "products/create": [t("dashboard"), t("products"), t("create")],
+    "products/edit": [t("dashboard"), t("products"), t("edit")],
+    customers: [t("dashboard"), t("customers")],
+    "customers/detail": [t("dashboard"), t("customers"), t("details")],
+    "payment-systems": [t("dashboard"), t("payment-systems")],
+    analytics: [t("settings")],
+    settings: [t("dashboard"), t("settings")]
+  };
+
+  const formattedPathname = pathname.split("/").slice(4, 6).join("/");
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>

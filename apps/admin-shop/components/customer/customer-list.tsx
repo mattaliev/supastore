@@ -1,7 +1,7 @@
 import { Paginated, TelegramUserList } from "@ditch/lib";
 import { DateTime } from "luxon";
-import Link from "next/link";
 
+import Link from "@/components/navigation/link";
 import Pagination from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -23,11 +23,9 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CustomerList({
-  storeId,
   customersPaginated,
   limit
 }: {
-  storeId: string;
   customersPaginated: Paginated<TelegramUserList>;
   limit: number;
 }) {
@@ -57,7 +55,6 @@ export default function CustomerList({
           <TabsTrigger value="new">New</TabsTrigger>
           <TabsTrigger value="return">Returning</TabsTrigger>
           <TabsTrigger value="made-sale">Made a Purchase</TabsTrigger>
-          {/*<TabsTrigger value="draft">Draft</TabsTrigger>*/}
         </TabsList>
       </Tabs>
       <Card>
@@ -84,7 +81,7 @@ export default function CustomerList({
                   <TableCell className="h-8">
                     <div className="flex flex-col items-start text-sm">
                       <Link
-                        href={`/store/${storeId}/customers/detail/${customer.id}`}
+                        href={`/customers/detail/${customer.id}`}
                         className="hover:underline"
                       >
                         {customer.firstName} {customer.lastName}

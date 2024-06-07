@@ -1,6 +1,6 @@
 import { Order, PaymentStatus } from "@ditch/lib";
-import Link from "next/link";
 
+import Link from "@/components/navigation/link";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
 import OrderFilters from "@/components/order/order-filters";
 import { Button } from "@/components/ui/button";
@@ -23,13 +23,11 @@ import {
 import { formatDateShort } from "@/lib/utils";
 
 export default function OrderList({
-  storeId,
   orders,
   page,
   limit,
   totalOrderCount
 }: {
-  storeId: string;
   orders?: Order[];
   page: number;
   totalOrderCount: number;
@@ -48,9 +46,9 @@ export default function OrderList({
         </CardHeader>
         <CardContent>
           {totalOrderCount === 0 ? (
-            <NoOrdersYet storeId={storeId} />
+            <NoOrdersYet />
           ) : (
-            <OrderTable orders={orders} storeId={storeId} />
+            <OrderTable orders={orders} />
           )}
 
           <CardFooter>
@@ -68,13 +66,7 @@ export default function OrderList({
   );
 }
 
-function OrderTable({
-  orders,
-  storeId
-}: {
-  orders?: Order[];
-  storeId: string;
-}) {
+function OrderTable({ orders }: { orders?: Order[] }) {
   return (
     <Table containerClassname={"w-full overflow-x-auto relative"}>
       <TableHeader>
@@ -90,7 +82,7 @@ function OrderTable({
         {orders?.map((order) => (
           <TableRow key={order.id}>
             <TableCell>
-              <Link href={`/store/${storeId}/orders/edit/${order.id}`}>
+              <Link href={`/orders/edit/${order.id}`}>
                 <p className="text-gray-500 underline">{order.orderNumber}</p>
               </Link>
             </TableCell>
@@ -125,7 +117,7 @@ function OrderTable({
   );
 }
 
-function NoOrdersYet({ storeId }: { storeId: string }) {
+function NoOrdersYet() {
   return (
     <div className="flex flex-1 items-center justify-center h-64">
       <div className="flex flex-col items-center gap-1 text-center">
@@ -133,7 +125,7 @@ function NoOrdersYet({ storeId }: { storeId: string }) {
         <p className="text-sm text-muted-foreground">
           Try changing the filters or view all orders
         </p>
-        <Link href={`/store/${storeId}/orders`}>
+        <Link href={`/orders`}>
           <Button className="mt-4" size="sm">
             View orders
           </Button>

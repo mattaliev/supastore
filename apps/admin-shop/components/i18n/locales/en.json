@@ -1,0 +1,72 @@
+{
+  "Dashboard": {
+    "title": "Dashboard",
+    "store-sessions" : {
+      "header": "Store Sessions",
+      "tooltip": "{value} Sessions",
+      "select-date": "Select",
+      "relative-date": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "week-ago": "A week ago"
+      }
+    },
+    "checklist": {
+      "header": "Checklist",
+      "description": "A list of tasks to complete before launching your store.",
+      "create-products": {
+        "header": "Create Products",
+        "description": "Start by creating a list of products that you want to sell in your store. Include detailed descriptions, high-quality images, and accurate pricing. Organize your products into categories and collections to make it easier for customers to browse and find what they're looking for."
+      },
+      "connect-to-telegram": {
+        "header": "Connect Your Store to Telegram",
+        "description": "Connect your store to Telegram to enable clients to access it. Once you've connected your store you can attach to the menu button in your bot, pin it in your telegram channel, and start receiving orders."
+      },
+      "set-bot-token": {
+        "header": "Set Bot Token To Your Store",
+        "description": "Set your bot token to your store to enable communication between your store and the client. This allows you to send notifications, updates, and other information to your customers through the Telegram bot."
+      },
+      "connect-payment-system": {
+        "header": "Connect Payment System",
+        "description": "Choose a payment system that suits your needs and integrate it into your store. Make sure to test the payment system to ensure that it works correctly and that customers can make purchases without any issues."
+      },
+
+      "is-done": {
+        "header": "Done!",
+        "description": "You are all set! Your store is now ready to launch. Make sure to test all the features and functionalities to ensure that everything is working as expected. If you encounter any errors, feel free to reach out to our support team for assistance."
+      },
+      "mark-as-done-button": {
+        "active": "Mark as Done",
+        "pending": "Marking as Done..."
+      }
+    }
+  },
+  "HeaderBreadcrumb": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "customers": "Customers",
+    "settings": "Settings",
+    "analytics": "Analytics",
+    "payment-systems": "Payment Systems",
+    "edit": "Edit",
+    "create": "Create",
+    "details": "Details"
+  },
+  "Nav": {
+    "toggle": "Toggle menu",
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "customers": "Customers",
+    "settings": "Settings",
+    "analytics": "Analytics",
+    "payment-systems": "Payment Systems",
+    "search-placeholder": "Search...",
+    "dropdown": {
+      "label": "My Account",
+      "stores": "My Stores",
+      "logout": "Logout"
+    }
+  }
+}

@@ -1,11 +1,9 @@
 import { Product } from "@ditch/lib";
-import { PlusCircle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
+import Link from "@/components/navigation/link";
 import ProductAdminActions from "@/components/product/product-admin-actions";
 import { ProductBadge } from "@/components/product/product-badges";
-import { StoreProvider } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,47 +24,41 @@ import {
 } from "@/components/ui/table";
 import { formatDateMedium } from "@/lib/utils";
 
-function NoProducts({ storeId }: { storeId: string }) {
+function NoProducts() {
   return (
-    <Card className="min-h-[60vh]">
-      <CardHeader>
-        <CardTitle>Products</CardTitle>
-        <CardDescription>
-          Manage your products and view their sales performance.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-full">
-          <div className="flex flex-1 items-center justify-center rounded-lg ">
-            <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-2xl font-bold tracking-tight">
-                No products found
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                You can start selling as soon as you add a product.
-              </p>
-              <Link href={`/store/${storeId}/products/create`}>
-                <Button size="sm" className="h-8 gap-1 mt-4">
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sm:whitespace-nowrap">Add Product</span>
-                </Button>
-              </Link>
-            </div>
-          </div>
+    <div className="flex flex-1 items-center justify-center h-64">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <h3 className="text-2xl font-bold tracking-tight">No products found</h3>
+        <p className="text-sm text-muted-foreground">
+          Try changing the filters or add a new product.
+        </p>
+        <div
+          className={
+            "grid grid-cols-1 sm:grid-cols-2 items-center justify-center w-full gap-2"
+          }
+        >
+          <Link href={`/products`}>
+            <Button className="mt-4" size="sm" variant={"primary-outline"}>
+              All products
+            </Button>
+          </Link>
+          <Link href={`/products/create`}>
+            <Button className="mt-4" size="sm" variant="default">
+              New product
+            </Button>
+          </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 export default function ProductList({
-  storeId,
   products,
   page,
   limit,
   totalProductCount
 }: {
-  storeId: string;
   products: Product[];
   page: number;
   totalProductCount: number;
@@ -74,10 +66,6 @@ export default function ProductList({
 }) {
   const firstProductIndex = (page - 1) * limit + 1;
   const lastProductIndex = Math.min(page * limit, totalProductCount);
-
-  if (totalProductCount === 0) {
-    return <NoProducts storeId={storeId} />;
-  }
 
   return (
     <Card>
@@ -88,74 +76,78 @@ export default function ProductList({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
-              <TableHead className="hidden md:table-cell">Quantity</TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell className="hidden sm:table-cell">
-                  {product.images ? (
-                    product.images.length > 0 && (
-                      <Image
-                        alt="Product image"
-                        className="aspect-square rounded-md object-cover"
-                        height="64"
-                        src={product.images[0].url}
-                        width="64"
-                      />
-                    )
-                  ) : (
-                    <Skeleton className="aspect-square rounded-md w-full h-full" />
-                  )}
-                </TableCell>
-                <TableCell className="font-medium hover:underline">
-                  <Link href={`/store/${storeId}/products/edit/${product.id}`}>
-                    {product.title}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <ProductBadge state={product.state} />
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  ${product.price}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {product.variants
-                    ? product.variants.reduce(
-                        (acc, variant) => acc + variant.quantity,
-                        0
+        {totalProductCount === 0 ? (
+          <NoProducts />
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="hidden w-[100px] sm:table-cell">
+                  <span className="sr-only">Image</span>
+                </TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="hidden md:table-cell">Price</TableHead>
+                <TableHead className="hidden md:table-cell">Quantity</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Created at
+                </TableHead>
+                <TableHead>
+                  <span className="sr-only">Actions</span>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {products.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="hidden sm:table-cell">
+                    {product.images ? (
+                      product.images.length > 0 && (
+                        <Image
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                          height="64"
+                          src={product.images[0].url}
+                          width="64"
+                        />
                       )
-                    : product.quantity || 0}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {product.created && formatDateMedium(product.created)}
-                </TableCell>
-                <TableCell>
-                  <StoreProvider storeId={storeId}>
+                    ) : (
+                      <Skeleton className="aspect-square rounded-md w-full h-full" />
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium hover:underline">
+                    <Link href={`/products/edit/${product.id}`}>
+                      {product.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <ProductBadge state={product.state} />
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    ${product.price}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {product.variants
+                      ? product.variants.reduce(
+                          (acc, variant) => acc + variant.quantity,
+                          0
+                        )
+                      : product.quantity || 0}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {product.created && formatDateMedium(product.created)}
+                  </TableCell>
+                  <TableCell>
                     <ProductAdminActions
                       id={product.id}
                       title={product.title}
                     />
-                  </StoreProvider>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
       <CardFooter>
         <div className="text-xs text-muted-foreground">

@@ -6,7 +6,6 @@ import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 import { deletePaymentMethod } from "@/components/payment/actions";
-import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -109,10 +108,7 @@ function PaymentMethodDeleteForm({
   className?: string;
   setOpen: (value: boolean) => void;
 }) {
-  const storeId = useStore();
-  const [formState, formAction] = useFormState(deletePaymentMethod, {
-    storeId
-  });
+  const [formState, formAction] = useFormState(deletePaymentMethod, null);
 
   useEffect(() => {
     if (formState?.success) {

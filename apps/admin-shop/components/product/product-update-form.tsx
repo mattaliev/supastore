@@ -1,29 +1,22 @@
 "use client";
 import { Product } from "@ditch/lib";
 import { ChevronLeft, LoaderCircle } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
+import Link from "@/components/navigation/link";
 import { updateProduct } from "@/components/product/actions";
 import ProductDeleteDialog from "@/components/product/product-delete-dialog";
 import ProductInputFields from "@/components/product/product-input-fields";
-import { StoreProvider } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-export default function ProductUpdateForm({
-  product,
-  storeId
-}: {
-  product: Product;
-  storeId: string;
-}) {
+export default function ProductUpdateForm({ product }: { product: Product }) {
   const { back } = useRouter();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [formErrors, formAction] = useFormState(updateProduct, { storeId });
+  const [formErrors, formAction] = useFormState(updateProduct, null);
 
   return (
     <Dialog>
@@ -73,7 +66,7 @@ export default function ProductUpdateForm({
             </p>
           )}
           <div className={"items-center gap-2 flex"}>
-            <Link href={`/store/${storeId}/products`}>
+            <Link href={`/products`}>
               <Button size={"sm"} type={"button"} variant="outline">
                 Discard
               </Button>
@@ -91,15 +84,13 @@ export default function ProductUpdateForm({
           </div>
         </div>
       </form>
-      <StoreProvider storeId={storeId}>
-        <ProductDeleteDialog
-          title={product.title}
-          productId={product.id}
-          dialogOpen={dialogOpen}
-          setDialogOpen={setDialogOpen}
-          isProductsPage={false}
-        />
-      </StoreProvider>
+      <ProductDeleteDialog
+        title={product.title}
+        productId={product.id}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        isProductsPage={false}
+      />
     </Dialog>
   );
 }

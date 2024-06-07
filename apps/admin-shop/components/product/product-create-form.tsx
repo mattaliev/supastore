@@ -8,8 +8,8 @@ import { createProduct } from "@/components/product/actions";
 import ProductInputFields from "@/components/product/product-input-fields";
 import { Button } from "@/components/ui/button";
 
-export default function ProductCreateForm({ storeId }: { storeId: string }) {
-  const [formErrors, formAction] = useFormState(createProduct, { storeId });
+export default function ProductCreateForm() {
+  const [formErrors, formAction] = useFormState(createProduct, null);
   const { back } = useRouter();
 
   return (

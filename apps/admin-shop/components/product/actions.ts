@@ -1,19 +1,22 @@
 "use server";
 
 import { productCreate, productDelete, productUpdate, TAGS } from "@ditch/lib";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { redirect, RedirectType } from "next/navigation";
-import { getServerSession } from "next-auth";
+import { RedirectType } from "next/navigation";
+import { getLocale } from "next-intl/server";
 
-import { authenticated, authOptions } from "@/auth";
+import { authenticated } from "@/auth";
+import { getAccessToken } from "@/components/auth/get-token";
+import storeRedirect from "@/components/navigation/redirect";
+import revalidateStorePath from "@/components/navigation/revalidatePath";
 import {
   ProductFieldErrors,
   ProductScheme
 } from "@/components/product/schemes";
+import { getStoreId } from "@/components/store/helpers";
 
 export type ProductFormErrorResponse = {
-  storeId: string;
   fieldErrors?: ProductFieldErrors;
   formError?: string;
 };
@@ -21,16 +24,9 @@ export type ProductFormErrorResponse = {
 export const createProduct = async (
   prevState: any,
   formData: FormData
-): Promise<ProductFormErrorResponse> => {
-  const storeId = prevState.storeId;
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/products`)}`,
-      RedirectType.push
-    );
-  }
+): Promise<ProductFormErrorResponse | undefined> => {
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
 
   const rawFormData = Object.fromEntries(formData.entries());
 
@@ -46,11 +42,11 @@ export const createProduct = async (
   });
 
   if (!validatedData.success) {
-    return { storeId, fieldErrors: validatedData.error.flatten().fieldErrors };
+    return { fieldErrors: validatedData.error.flatten().fieldErrors };
   }
 
   try {
-    await authenticated(session.user.accessToken, productCreate, {
+    await authenticated(accessToken, productCreate, {
       input: {
         storeId,
         ...validatedData.data
@@ -61,33 +57,26 @@ export const createProduct = async (
       throw e;
     }
 
-    return { storeId, formError: "Could not create product" };
+    return { formError: "Could not create product" };
   }
 
   revalidateTag(TAGS.PRODUCT);
-  redirect(`/store/${storeId}/products`, RedirectType.push);
+  storeRedirect(`/products`, RedirectType.push);
 };
 
 export const updateProduct = async (
   prevState: any,
   formData: FormData
-): Promise<ProductFormErrorResponse> => {
-  const storeId = prevState.storeId;
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/products`)}`,
-      RedirectType.push
-    );
-  }
+): Promise<ProductFormErrorResponse | undefined> => {
+  const accessToken = await getAccessToken();
+  const storeId = getStoreId();
 
   const rawFormData = Object.fromEntries(formData.entries());
 
   const productId = rawFormData["id"];
 
   if (!productId || typeof productId !== "string") {
-    return { storeId, formError: "Product not found. Try reloading the page" };
+    return { formError: "Product not found. Try reloading the page" };
   }
 
   const validatedData = ProductScheme.safeParse({
@@ -102,11 +91,11 @@ export const updateProduct = async (
   });
 
   if (!validatedData.success) {
-    return { storeId, fieldErrors: validatedData.error.flatten().fieldErrors };
+    return { fieldErrors: validatedData.error.flatten().fieldErrors };
   }
 
   try {
-    await authenticated(session.user.accessToken, productUpdate, {
+    await authenticated(accessToken, productUpdate, {
       input: {
         storeId,
         ...validatedData.data,
@@ -118,36 +107,33 @@ export const updateProduct = async (
       throw e;
     }
 
-    return { storeId, formError: "Could not edit product" };
+    return { formError: "Could not edit product" };
   }
 
   revalidateTag(TAGS.PRODUCT);
-  redirect(`/store/${storeId}/products`, RedirectType.push);
+  storeRedirect(`/products`, RedirectType.push);
 };
 
 export const deleteProduct = async (
   prevState: any,
   payload: {
-    storeId: string;
     productId: string;
     isProductsPage: boolean;
   }
-): Promise<{
-  success?: boolean;
-  formError?: string;
-}> => {
-  const { productId, isProductsPage, storeId } = payload;
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user.accessToken) {
-    redirect(
-      `/auth/signIn?callbackUrl=${encodeURIComponent(`/store/${storeId}/products`)}`,
-      RedirectType.push
-    );
-  }
+): Promise<
+  | {
+      success?: boolean;
+      formError?: string;
+    }
+  | undefined
+> => {
+  const accessToken = await getAccessToken();
+  const locale = await getLocale();
+  const storeId = getStoreId();
+  const { productId, isProductsPage } = payload;
 
   try {
-    await authenticated(session.user.accessToken, productDelete, {
+    await authenticated(accessToken, productDelete, {
       storeId,
       id: productId
     });
@@ -159,13 +145,13 @@ export const deleteProduct = async (
     return { formError: "Could not delete product" };
   }
 
-  revalidatePath(`/store/${storeId}/products`);
+  await revalidateStorePath(`/products`);
 
   if (isProductsPage) {
     return { success: true };
   }
 
-  redirect(`/store/${storeId}/products`);
+  storeRedirect(`/products`);
 };
 
 const productVariantsGetFromFormData = (rawFormData: any) => {

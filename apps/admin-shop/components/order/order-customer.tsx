@@ -1,6 +1,6 @@
 import { TelegramUser } from "@ditch/lib";
-import Link from "next/link";
 
+import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,13 +10,7 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
-export default function OrderCustomer({
-  user,
-  storeId
-}: {
-  user?: TelegramUser;
-  storeId: string;
-}) {
+export default function OrderCustomer({ user }: { user?: TelegramUser }) {
   return (
     <Card>
       <CardHeader>
@@ -41,7 +35,7 @@ export default function OrderCustomer({
       </CardContent>
       <CardFooter>
         <div className="flex ml-auto">
-          <Link href={`/store/${storeId}/customers/edit/${user?.id}`}>
+          <Link href={`/customers/edit/${user?.id}`}>
             <Button variant="outline" size="sm" className="w-full">
               View Customer
             </Button>

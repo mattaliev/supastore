@@ -1,12 +1,12 @@
 import { Order, paymentMethodsList, PaymentStatus } from "@ditch/lib";
 import { CreditCard } from "lucide-react";
-import { getServerSession } from "next-auth";
 
-import { authenticated, authOptions } from "@/auth";
+import { authenticated } from "@/auth";
+import { getAccessToken } from "@/components/auth/get-token";
 import CreatePaymentDrawerDialog from "@/components/order/create-payment-drawer-dialog";
 import MarkAsPaidDrawerDialog from "@/components/order/mark-as-paid-drawer-dialog";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
-import { StoreProvider } from "@/components/store/store-context";
+import { getStoreId } from "@/components/store/helpers";
 import {
   Card,
   CardContent,
@@ -16,13 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function OrderPayment({
-  order,
-  storeId
-}: {
-  order: Order;
-  storeId: string;
-}) {
+export default function OrderPayment({ order }: { order: Order }) {
   return (
     <Card>
       <CardHeader>
@@ -65,27 +59,18 @@ export default function OrderPayment({
           )}
         </div>
       </CardContent>
-      <PaymentActions order={order} storeId={storeId} />
+      <PaymentActions order={order} />
     </Card>
   );
 }
 
-async function PaymentActions({
-  order,
-  storeId
-}: {
-  order: Order;
-  storeId: string;
-}) {
+async function PaymentActions({ order }: { order: Order }) {
   if (!order.payment) {
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user.accessToken) {
-      return null;
-    }
+    const accessToken = await getAccessToken();
+    const storeId = getStoreId();
 
     const paymentMethods = await authenticated(
-      session.user.accessToken,
+      accessToken,
       paymentMethodsList,
       { storeId }
     );
@@ -109,11 +94,9 @@ async function PaymentActions({
   if (order.payment.paymentStatus === PaymentStatus.UNPAID) {
     return (
       <CardFooter>
-        <StoreProvider storeId={storeId}>
-          <div className="flex ml-auto">
-            <MarkAsPaidDrawerDialog paymentId={order.payment.id} />
-          </div>
-        </StoreProvider>
+        <div className="flex ml-auto">
+          <MarkAsPaidDrawerDialog paymentId={order.payment.id} />
+        </div>
       </CardFooter>
     );
   }

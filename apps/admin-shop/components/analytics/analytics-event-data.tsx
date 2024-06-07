@@ -1,11 +1,10 @@
 import { AnalyticsEvent, EventType } from "@ditch/lib";
-import Link from "next/link";
+
+import Link from "@/components/navigation/link";
 
 export default function AnalyticsEventData({
-  event,
-  storeId
+  event
 }: {
-  storeId: string;
   event: AnalyticsEvent;
 }) {
   if (
@@ -25,7 +24,7 @@ export default function AnalyticsEventData({
         Order{" "}
         <span>
           <Link
-            href={`/store/${storeId}/orders/edit/${event.eventData.order_id}`}
+            href={`/orders/edit/${event.eventData.order_id}`}
             className={"hover:underline"}
           >
             #{event.eventData.order_number}

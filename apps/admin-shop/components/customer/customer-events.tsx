@@ -15,10 +15,8 @@ import {
 } from "@/components/ui/table";
 
 export default function CustomerEvents({
-  events,
-  storeId
+  events
 }: {
-  storeId: string;
   events: AnalyticsEvent[];
 }) {
   const formatDate = (date: string) => {
@@ -75,7 +73,7 @@ export default function CustomerEvents({
                     <AnalyticsEventBadge eventType={events[0].eventType} />
                   </TableCell>
                   <TableCell className="px-2 hidden sm:table-cell">
-                    <AnalyticsEventData event={events[0]} storeId={storeId} />
+                    <AnalyticsEventData event={events[0]} />
                   </TableCell>
                 </TableRow>
                 {events.slice(1).map((event) => (
@@ -87,7 +85,7 @@ export default function CustomerEvents({
                       <AnalyticsEventBadge eventType={event.eventType} />
                     </TableCell>
                     <TableCell className="px-2 hidden sm:table-cell">
-                      <AnalyticsEventData event={event} storeId={storeId} />
+                      <AnalyticsEventData event={event} />
                     </TableCell>
                   </TableRow>
                 ))}

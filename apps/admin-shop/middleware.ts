@@ -1,22 +1,51 @@
 import { storeCanManage } from "@ditch/lib";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { NextResponse } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
+import createMiddleware from "next-intl/middleware";
 
-import { authenticated } from "@/auth";
+import { authenticated, getAuthPageUrl, getErrorPageUrl } from "@/auth";
+import { localePrefix, locales } from "@/components/i18n/i18n-navigation";
 
-export default withAuth(
+const isProtectedRoute = (pathname: string) => {
+  const pattern =
+    /^\/[a-z]{2}\/store\/((?!create$)(?!^$)(?!create\/success$).*)$/;
+  return pattern.test(pathname);
+};
+
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale: "en",
+  localePrefix,
+});
+
+const storeMiddleware = async (req: NextRequest) => {
+  const pathname = req.nextUrl.pathname;
+  const storeId =
+    pathname.split("/").length >= 3 ? pathname.split("/")[3] : null;
+  if (storeId) {
+    // Set the storeId in request headers
+    req.headers.set("x-store-id", storeId);
+    req.cookies.set("store-id", storeId);
+  }
+  return intlMiddleware(req);
+};
+
+const authMiddleware = withAuth(
   async (req, res) => {
-    const storeId = req.nextUrl.pathname.split("/")[2];
+    const storeId = req.nextUrl.pathname.split("/")[3];
 
     const jwt = req.nextauth.token;
+    const locale =
+      req.nextUrl.pathname.match(/(\/.*)\/store\/?.*/)?.at(1) ?? "";
+
+    function rewrite(url: string) {
+      const urlObj = new URL(url, req.url);
+      return NextResponse.rewrite(urlObj);
+    }
+
     if (!jwt) {
-      return NextResponse.rewrite(
-        new URL(
-          `/auth/signIn?callbackUrl=${encodeURIComponent("/store")}`,
-          req.url,
-        ),
-      );
+      return rewrite(getAuthPageUrl({ callbackUrl: `/${locale}/store` }));
     }
 
     try {
@@ -25,20 +54,14 @@ export default withAuth(
       });
 
       if (!isAllowed) {
-        return NextResponse.rewrite(
-          new URL("/auth/error?error=AccessDenied", req.url),
-        );
+        return rewrite(getErrorPageUrl({ error: "AccessDenied" }));
       }
     } catch (error: any) {
       if (isRedirectError(error)) {
-        return NextResponse.rewrite(
-          new URL(
-            `/auth/signIn?callbackUrl=${encodeURIComponent("/store")}`,
-            req.url,
-          ),
-        );
+        return rewrite(getAuthPageUrl({ callbackUrl: `/${locale}/store` }));
       }
     }
+    return storeMiddleware(req);
   },
   {
     callbacks: {
@@ -47,10 +70,14 @@ export default withAuth(
   },
 );
 
-// export const config = {
-//   matcher: ["/store/:path((?!^$|^create$).*)"],
-// };
+export function middleware(req: NextRequest, res: NextFetchEvent) {
+  if (isProtectedRoute(req.nextUrl.pathname)) {
+    return (authMiddleware as any)(req);
+  }
+  return storeMiddleware(req);
+}
 
 export const config = {
-  matcher: ["/store/:path((?!create$)(?!^$)(?!create/success$).*)"],
+  // Match only internationalized pathnames
+  matcher: ["/", "/(ru|en)/:path*"],
 };

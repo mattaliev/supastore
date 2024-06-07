@@ -12,11 +12,9 @@ import {
 } from "@/components/ui/card";
 
 export default function OrderShipping({
-  storeId,
   shipping,
   fulfilmentStatus
 }: {
-  storeId: string;
   shipping: Shipping;
   fulfilmentStatus: FulfilmentStatus;
 }) {
@@ -94,10 +92,7 @@ export default function OrderShipping({
       {fulfilmentStatus === FulfilmentStatus.FULFILLED && (
         <CardFooter>
           <div className={"flex space-x-2 ml-auto"}>
-            <AddTrackingDrawerDialog
-              shippingId={shipping.id}
-              storeId={storeId}
-            />
+            <AddTrackingDrawerDialog shippingId={shipping.id} />
           </div>
         </CardFooter>
       )}

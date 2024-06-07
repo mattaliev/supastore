@@ -1,8 +1,8 @@
 "use client";
 
 import { arrayMove } from "@dnd-kit/sortable";
-import { useState } from "react";
 import * as React from "react";
+import { useState } from "react";
 
 import {
   FileState,
@@ -66,7 +66,7 @@ export default function MultiFileSortableUpload({
       className="aspect-square rounded-md object-cover"
       value={fileStates}
       dropzoneOptions={{
-        maxFiles: 6
+        maxFiles: 20
       }}
       onChange={(files) => {
         setFileStates(files);

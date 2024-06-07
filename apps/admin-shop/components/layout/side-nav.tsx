@@ -1,31 +1,54 @@
 "use client";
-import {
-  CreditCard,
-  Home,
-  LineChart,
-  Package,
-  Package2,
-  Settings,
-  ShoppingCart,
-  Users2
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Package2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { twMerge } from "tailwind-merge";
 
+import Link from "@/components/navigation/link";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip";
+import { getNavOptions } from "@/config/side-nav";
 
-export default function SideNav() {
-  const pathname = usePathname();
-  const storeId = pathname.split("/")[2];
-
+function SideNavOption({
+  href,
+  icon,
+  label,
+  selected
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  selected: boolean;
+}) {
+  const t = useTranslations("Nav");
   const navItemClass =
     "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8";
   const navItemSelectedClass = "bg-accent";
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link
+          href={href}
+          className={
+            selected
+              ? twMerge(navItemClass, navItemSelectedClass)
+              : navItemClass
+          }
+        >
+          {icon}
+          <span className="sr-only">{t(label)}</span>
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent side="right">{t(label)}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+export default function SideNav() {
+  const navOptions = getNavOptions();
 
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -37,120 +60,19 @@ export default function SideNav() {
           <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
           <span className="sr-only">Acme Inc</span>
         </Link>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={`/store/${storeId}`}
-              className={
-                pathname === `/store/${storeId}`
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <Home className="h-5 w-5" />
-              <span className="sr-only">Dashboard</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Dashboard</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={`/store/${storeId}/orders`}
-              className={
-                pathname.startsWith(`/store/${storeId}/orders`)
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Orders</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Orders</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={`/store/${storeId}/products`}
-              className={
-                pathname.startsWith(`/store/${storeId}/products`)
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <Package className="h-5 w-5" />
-              <span className="sr-only">Products</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Products</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={`/store/${storeId}/customers`}
-              className={
-                pathname.startsWith(`/store/${storeId}/customers`)
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <Users2 className="h-5 w-5" />
-              <span className="sr-only">Customers</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Customers</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={`/store/${storeId}/payment-systems`}
-              className={
-                pathname.startsWith(`/store/${storeId}/payment-systems`)
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <CreditCard className="h-5 w-5" />
-              <span className="sr-only">Payment Systems</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Payment Systems</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className={
-                pathname.startsWith(`/store/${storeId}/analytics`)
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <LineChart className="h-5 w-5" />
-              <span className="sr-only">Analytics</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Analytics</TooltipContent>
-        </Tooltip>
+        {navOptions.map(
+          (option) =>
+            option.href !== "/settings" && (
+              <SideNavOption key={option.href} {...option} />
+            )
+        )}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={`/store/${storeId}/settings`}
-              className={
-                pathname.startsWith(`/store/${storeId}/settings`)
-                  ? twMerge(navItemClass, navItemSelectedClass)
-                  : navItemClass
-              }
-            >
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
+        {navOptions
+          .filter((option) => option.href === "/settings")
+          .map((option) => (
+            <SideNavOption key={option.href} {...option} />
+          ))}
       </nav>
     </aside>
   );

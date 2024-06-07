@@ -5,7 +5,6 @@ import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 import { deleteOrder } from "@/components/order/actions";
-import { useStore } from "@/components/store/store-context";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -94,10 +93,9 @@ function DeleteOrderForm({
   orderId: string;
   className?: string;
 }) {
-  const storeId = useStore();
   const [formStatus, formAction] = useFormState(deleteOrder, null);
 
-  const actionWithOrderId = formAction.bind(null, { orderId, storeId });
+  const actionWithOrderId = formAction.bind(null, orderId);
 
   return (
     <form
