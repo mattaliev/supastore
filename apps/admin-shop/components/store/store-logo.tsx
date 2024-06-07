@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
+import Link from "@/components/navigation/link";
 import { updateStore } from "@/components/store/actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,16 +45,16 @@ function SubmitButton() {
 export default function StoreLogo({ store }: { store: Store }) {
   const [formState, formAction] = useFormState(updateStore, null);
   const [logoDarkUrl, setLogoDarkUrl] = useState<string | null>(
-    store.logoDark || null
+    store.logoDark || null,
   );
 
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(
-    store.logoLight || null
+    store.logoLight || null,
   );
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    isDark: boolean
+    isDark: boolean,
   ) => {
     const selectedFile = e.target.files && e.target.files[0];
     if (selectedFile) {
@@ -71,7 +72,16 @@ export default function StoreLogo({ store }: { store: Store }) {
         <CardHeader>
           <CardTitle>Store Logo</CardTitle>
           <CardDescription>
-            Update your store's logo. Recommended size is 96x32 pixels.
+            Upload your brand's logo. Recommended size of the logo is 96x32
+            pixels. You can learn more about your store customization in our{" "}
+            <Link
+              href={"https://guides.ditch-concept.com/pages/customize-bot"}
+              inStore={false}
+              localized={false}
+              className={"underline hover:text-primary hover:no-underline"}
+            >
+              guide
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -124,7 +134,7 @@ export default function StoreLogo({ store }: { store: Store }) {
 
 function LogoPreview({
   logoUrl,
-  isDark
+  isDark,
 }: {
   logoUrl?: string | null;
   isDark?: boolean;

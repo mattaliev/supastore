@@ -3,6 +3,7 @@ import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
+import Link from "@/components/navigation/link";
 import { createPaymentMethod } from "@/components/payment/actions";
 import PaymentMethodFields from "@/components/payment/payment-method-fields";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 
 function SubmitButton() {
@@ -46,7 +47,17 @@ export default function PaymentMethodCreate() {
       <CardHeader>
         <CardTitle>Add Payment Gateway</CardTitle>
         <CardDescription>
-          Learn more about connecting payment gateways
+          Learn more about connecting payment gateways in our{" "}
+          <Link
+            href={
+              "https://guides.ditch-concept.com/pages/connect-payment-gateway"
+            }
+            inStore={false}
+            localized={false}
+            className={"underline hover:text-primary hover:no-underline"}
+          >
+            guide
+          </Link>
         </CardDescription>
       </CardHeader>
       <CardContent>

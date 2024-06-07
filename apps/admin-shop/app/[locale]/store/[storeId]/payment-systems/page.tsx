@@ -11,7 +11,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import {
   Table,
@@ -19,7 +19,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 
 export const dynamic = "force-dynamic";
@@ -32,10 +32,10 @@ type PaymentSystemsPageProps = {
 
 async function PaymentSystemsPage({
   params: { storeId },
-  accessToken
+  accessToken,
 }: WithAuthProps<PaymentSystemsPageProps>) {
   const paymentMethods = await authenticated(accessToken, paymentMethodsList, {
-    storeId
+    storeId,
   });
 
   return (

@@ -1,14 +1,21 @@
 import { Product } from "@ditch/lib";
 
+import Link from "@/components/navigation/link";
 import { ProductFieldErrors } from "@/components/product/schemes";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ProductDetails({
   product,
-  productDetailsFieldErrors
+  productDetailsFieldErrors,
 }: {
   product?: Product;
   productDetailsFieldErrors?: {
@@ -23,6 +30,18 @@ export default function ProductDetails({
     <Card>
       <CardHeader>
         <CardTitle>Product Details</CardTitle>
+        <CardDescription>
+          Follow a <span> </span>
+          <Link
+            href={"https://guides.ditch-concept.com/pages/create-products"}
+            inStore={false}
+            localized={false}
+            className={"underline hover:text-primary hover:no-underline"}
+          >
+            quick guide
+          </Link>{" "}
+          on how to create and update products
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-6">
