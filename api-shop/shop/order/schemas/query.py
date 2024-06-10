@@ -11,8 +11,6 @@ __all__ = [
 
 from store.services import can_manage_store
 
-from user.models import UserRoleChoices
-
 
 class Query(graphene.ObjectType):
     order_get_by_id = graphene.Field(
@@ -47,7 +45,7 @@ class Query(graphene.ObjectType):
         if not order:
             return None
 
-        if not user.can_access_resource(order):
+        if not user.can_access_resource(order) and not can_manage_store(user=user, store_id=store_id):
             raise UNAUTHORIZED()
 
         return order
