@@ -1,5 +1,161 @@
 {
-  "Catalog": {
-    "name": "Catalog"
+  "ErrorPage": {
+    "somethingWentWrong": "Oops, something went wrong...",
+    "tryAgain": "Try Again",
+    "goToCatalog": "Go to Catalog"
+  },
+  "UnauthorizedPage": {
+    "unauthorized": "Unauthorized",
+    "unauthorizedMessage": "You are not authorized to view this page.",
+    "goToCatalog": "Go to Catalog"
+  },
+  "ShippingPage": {
+    "title": "Your Shipping Addresses",
+    "noShippingAddresses": "You have no shipping addresses saved.",
+    "addShippingAddress": "Add New Shipping Address",
+    "select": "Select",
+    "selecting": "Selecting...",
+    "deleteMessage": "Are you sure you want to delete this address?",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "deleteAddressError": "Could not delete shipping address",
+    "selectAddressError": "Could not select shipping address"
+  },
+  "ShippingCreatePage": {
+    "title": "Enter new shipping address",
+    "select": "Select",
+    "close": "Close",
+    "pleaseSelectAddress": "Please Select an Address",
+    "add": "Add",
+    "adding": "Adding...",
+    "CreateForm": {
+      "houseNumber": {
+        "label": "House Number",
+        "placeholder": "Enter house number",
+        "errorMessage": "Please enter house number or check the 'Private house' checkbox"
+      },
+      "privateHouse": {
+        "label": "Private House",
+        "placeholder": "Enter private house"
+      },
+      "floor": {
+        "label": "Floor",
+        "placeholder": "Enter floor"
+      },
+      "entrance": {
+        "label": "Entrance",
+        "placeholder": "Enter entrance"
+      },
+      "intercom": {
+        "label": "Intercom",
+        "placeholder": "Enter intercom"
+      },
+      "additionalInfoMessage": "Additional Information for delivery",
+      "formError": "Could not create shipping address"
+    }
+  },
+  "ContactInfoPage": {
+    "title": "Your Contact Information",
+    "noContactInfo": "You have no contact information saved.",
+    "addContactInfo": "Add Contact Information",
+    "select": "Select",
+    "selecting": "Selecting...",
+    "deleteMessage": "Are you sure you want to delete this contact information?",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "deleteContactInfoError": "Could not delete contact information",
+    "selectContactInfoError": "Could not select contact information",
+    "CreateForm": {
+      "fullName": {
+        "label": "Full Name",
+        "placeholder": "Enter full name",
+        "errorMessage": "Please enter full name"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Enter phone number",
+        "errorMessage": "Please enter phone number"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter email",
+        "errorMessage": "Please enter valid email"
+      },
+      "save": "Save",
+      "saving": "Saving...",
+      "formError": "Could not create contact information"
+    }
+  },
+  "ProductCatalogPage": {
+    "selectVariant": "Please Select a size",
+    "addToCart": "Add to Cart",
+    "sizeTitle": "Size",
+    "colorTitle": "Color",
+    "materialTitle": "Material",
+    "selectVariantButton": "Select Variant",
+    "AddToCartErrors": {
+      "noProductFound": "No product found, please try to refresh the page",
+      "noVariantSelected": "Please select a variant",
+      "couldNotAddToCart": "Could not add product to cart",
+      "couldNotCreateCart": "Could not create cart, please try to refresh the page"
+    },
+    "RemoveFromCartErrors": {
+      "noCartFound": "No cart found, please try to refresh the page",
+      "noProductFound": "No product found, please try to refresh the page",
+      "couldNotRemoveFromCart": "Could not remove product from cart"
+    },
+    "UpdateCartItemErrors": {
+      "noCartFound": "No cart found, please try to refresh the page",
+      "noProductFound": "No product found, please try to refresh the page",
+      "couldNotUpdateCartItem": "Could not update cart item"
+    }
+  },
+  "ProductDetailPage": {
+    "characteristics": "Characteristics",
+    "description": "Description"
+  },
+  "CartPage": {
+    "cartTotalMessage": "{count, selectordinal, zero {# items} one {# item} few {# items} many {# items} other {# items}}. Total (excluding delivery)",
+    "CheckoutForm": {
+      "errors": {
+        "noCartFound": "No cart found",
+        "noPaymentMethodSelected": "Please select a payment method",
+        "couldNotCreateOrder": "Could not create order"
+      }
+    },
+    "CheckoutTotal": {
+      "items": "{count, selectordinal, zero {Items} one {Item} other {Items}}, {count}",
+      "shipping": "Shipping",
+      "total": "Total"
+    },
+    "checkoutButton": "Checkout",
+    "checkoutShippingAddress": "Shipping Address",
+    "checkoutContactInformation": "Contact Information",
+    "checkoutPaymentMethods": "Payment Methods",
+    "loading": "Loading...",
+    "createNewShippingAddress": "Create New Shipping Address",
+    "createNewContactInfo": "Create New Contact Information",
+    "noPaymentMethods": "This store does not have any payment methods available",
+    "emptyCart": "Your cart is empty",
+    "shopNow": "Shop Now"
+  },
+  "PaymentSuccessPage": {
+    "paymentSuccess": "Payment Success",
+    "thankYou": "Thank you for your purchase!",
+    "orderNumber": "Order Number",
+    "items": "{count, selectordinal, zero {# items} one {# item} other {# items}}",
+    "total": "Total",
+    "continueShopping": "Continue Shopping"
+  },
+  "PoliciesPage": {
+    "title": "Policies",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "returnPolicy": "Return Policy",
+    "deliveryPolicy": "Delivery Policy"
+  },
+  "Footer": {
+    "contact": "Contact",
+    "policies": "Policies"
   }
 }

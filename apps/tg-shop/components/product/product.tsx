@@ -1,49 +1,48 @@
 "use client";
-import { Product } from "@ditch/lib";
-import { useState } from "react";
+import { ProductVariant } from "@ditch/lib";
 
 import AddToCartButton from "@/components/cart/add-to-cart-button";
 import Link from "@/components/navigation/link";
 import ProductImages from "@/components/product/product-images";
-import ProductVariants from "@/components/product/product-variants";
+import VariantSelectDrawer from "@/components/product/ProductVariantSelectDrawer";
 
-export default function CatalogProduct({ product }: { product: Product }) {
+export default function CatalogProduct({
+  product
+}: {
+  product: ProductVariant;
+}) {
   /**
    *  Need to check if the product has more than one variant
    *  If it does, we need to make sure the user selects a variant before adding to cart
    *  Else if it doesn't, we can just add the product to the cart
    */
-  const doesProductHaveVariants = !!(
-    product.variants && product.variants.length > 1
-  );
-
-  const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
-    product.variants && product.variants.length > 0
-      ? product.variants[0]?.id
-      : undefined
-  );
+  const hasVariants = product.sizes.length > 1;
 
   return (
-    <div className="shadow-lg group transform transition-transform duration-300 rounded-xl bg-telegram-secondary-bg-color">
-      <ProductImages images={product.images || []} />
-      <div className="p-4 grid grid-cols-1 gap-2 bg-telegram-secondary-bg-color rounded-b-lg">
-        <Link href={`/product/${product.id}`}>
-          <h3 className="font-semibold text-telegram-text-color text-lg hover:underline">
-            {product.title}
+    <div className="shadow-lg group transform transition-transform duration-300 rounded-xl grid gap-2 focus:opacity-75">
+      <Link href={`/product/${product.id}`} className={"grid gap-2"}>
+        <ProductImages images={product.images || []} />
+        <div className={"p-1"}>
+          <h3 className="font-semibold text-telegram-text-color text-sm line-clamp-1">
+            {product.name}
           </h3>
-        </Link>
-        <p className="text-telegram-hint-color">${product.price}</p>
-
-        <ProductVariants
-          variants={product.variants}
-          selectedVariant={selectedVariant}
-          setSelectedVariant={setSelectedVariant}
-        />
-        <AddToCartButton
-          productId={product.id}
-          doesProductHaveVariants={doesProductHaveVariants}
-          selectedVariantId={selectedVariant}
-        />
+          <p className="text-telegram-hint-color text-sm">
+            ${product.sizes[0].price}
+          </p>
+        </div>
+      </Link>
+      <div className={"hover:opacity-100 p-1"}>
+        {hasVariants ? (
+          <VariantSelectDrawer sizes={product.sizes} productId={product.id} />
+        ) : (
+          <AddToCartButton
+            productVariantId={product.id}
+            doesProductHaveVariants={hasVariants}
+            productVariantSizeId={product.sizes[0].id}
+            size={"sm"}
+            className={"text-xs"}
+          />
+        )}
       </div>
     </div>
   );

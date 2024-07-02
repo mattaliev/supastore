@@ -2,6 +2,7 @@
 import { Order } from "@ditch/lib";
 import { useHapticFeedback } from "@tma.js/sdk-react";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,8 @@ import { PaymentSuccessIcon } from "@/components/ui/icons";
 
 export default function PaymentSuccess({ order }: { order: Order }) {
   const hapticFeedback = useHapticFeedback();
+  const t = useTranslations("PaymentSuccessPage");
+  const locale = useLocale();
 
   useEffect(() => {
     hapticFeedback.notificationOccurred("success");
@@ -27,10 +30,10 @@ export default function PaymentSuccess({ order }: { order: Order }) {
           style={{ animationDelay: "1.5s" }}
         >
           <h1 className="font-bold text-3xl tracking-tighter text-telegram-text-color">
-            Payment successful
+            {t("paymentSuccess")}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-telegram-text-color">
-            Thank you for your purchase
+            {t("thankYou")}
           </p>
         </div>
       </div>
@@ -44,7 +47,7 @@ export default function PaymentSuccess({ order }: { order: Order }) {
               <div
                 className={"text-telegram-text-color text-base font-semibold"}
               >
-                Order number
+                {t("orderNumber")}
               </div>
               <div className="text-telegram-text-color">
                 {order.orderNumber}
@@ -52,13 +55,13 @@ export default function PaymentSuccess({ order }: { order: Order }) {
             </div>
             <div className="grid gap-1.5 items-start">
               <div className="text-telegram-text-color text-base font-semibold">
-                Items
+                {t("items", { count: order.cart.totalQuantity })}
               </div>
               {order.cart.items.map((item, index) => (
                 <div key={index} className="flex justify-between">
                   <div className="text-telegram-text-color">
-                    {item.product.title}{" "}
-                    {item.variant?.size ? item.variant?.size : ""}
+                    {item.productVariant.name}{" "}
+                    {locale === "ru" ? item.size.sizeRu : item.size.sizeEn}
                   </div>
                   <div className="font-medium text-telegram-text-color">
                     x{item.quantity}
@@ -68,7 +71,7 @@ export default function PaymentSuccess({ order }: { order: Order }) {
             </div>
             <div className="flex justify-between items-end">
               <div className="text-telegram-text-color text-base font-semibold">
-                Total
+                {t("total")}
               </div>
               <div className="text-telegram-text-color">
                 ${order.totalAmount}
@@ -83,7 +86,7 @@ export default function PaymentSuccess({ order }: { order: Order }) {
           style={{ animationDelay: "2s" }}
           onClick={() => hapticFeedback.impactOccurred("light")}
         >
-          Continue shopping
+          {t("continueShopping")}
         </Button>
       </Link>
     </div>

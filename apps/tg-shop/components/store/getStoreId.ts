@@ -1,9 +1,10 @@
+"use server";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { cookies, headers } from "next/headers";
 
 import { redirect as intlRedirect } from "@/components/i18n/i18n-navigation";
 
-export function getStoreId(): string {
+export const getStoreId = async (): Promise<string> => {
   try {
     const headerList = headers();
 
@@ -28,4 +29,4 @@ export function getStoreId(): string {
         : ""
     );
   }
-}
+};

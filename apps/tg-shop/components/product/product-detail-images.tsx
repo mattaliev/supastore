@@ -1,6 +1,5 @@
 "use client";
 
-import { ProductImage } from "@ditch/lib";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -8,13 +7,17 @@ import {
   Carousel,
   CarouselApi,
   CarouselContent,
-  CarouselItem
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
 } from "@/components/ui/carousel";
+import { NoImage } from "@/components/ui/NoImage";
+import { cn } from "@/lib/utils";
 
 export default function ProductDetailImages({
   productImages
 }: {
-  productImages: ProductImage[];
+  productImages: string[];
 }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(1);
@@ -33,15 +36,12 @@ export default function ProductDetailImages({
     });
   }, [api]);
 
+  if (productImages.length === 0) {
+    return <NoImage iconSize={"sm"} className={"h-96"} />;
+  }
+
   return (
     <div className="grid gap-4">
-      <Image
-        src={productImages[current - 1].url}
-        alt="Product Image"
-        width={400}
-        height={400}
-        className="aspect-square w-full rounded-lg object-cover cursor-pointer"
-      />
       <Carousel
         className="w-full"
         setApi={setApi}
@@ -54,19 +54,21 @@ export default function ProductDetailImages({
           {productImages.map((image, index) => (
             <CarouselItem
               key={index}
-              className="basis-1/3"
               onClick={() => setCurrent(index + 1)}
+              className={cn({ "basis-4/5": productImages.length > 1 })}
             >
               <Image
-                src={image.url}
+                src={image}
                 alt={"Image " + index + " of product"}
                 width={400}
                 height={400}
-                className="aspect-square w-full rounded-lg object-cover"
+                className=" w-full rounded-lg object-contain"
               />
             </CarouselItem>
           ))}
         </CarouselContent>
+        <CarouselPrevious className={"left-1"} />
+        <CarouselNext className={"right-1"} />
       </Carousel>
       {productImages.length > 3 && (
         <div className="flex justify-center mt-2">

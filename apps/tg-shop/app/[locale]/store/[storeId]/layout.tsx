@@ -1,10 +1,7 @@
-import TelegramBackButton from "@/components/layout/back-button";
-import Footer from "@/components/layout/footer";
-import Nav from "@/components/layout/nav";
+import AuthProvider from "@/components/auth/AuthProvider";
 import { StoreProvider } from "@/components/store/store-context";
 import TmaSdkLoader from "@/components/telegram/tma-sdk-loader";
 import ThemeProvider from "@/components/theme/theme-provider";
-import AuthProvider from "@/components/user/user-register";
 
 const ShopLayout = ({
   children,
@@ -14,12 +11,7 @@ const ShopLayout = ({
     <StoreProvider storeId={params.storeId}>
       <TmaSdkLoader>
         <ThemeProvider>
-          <AuthProvider>
-            <TelegramBackButton />
-            <Nav storeId={params.storeId} />
-            <div className="min-h-screen pb-10">{children}</div>
-            <Footer />
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </TmaSdkLoader>
     </StoreProvider>

@@ -4,71 +4,85 @@ import {
   Cart,
   cartAddItem,
   cartCreate,
+  cartGet,
+  cartGetByUserId,
   cartRemoveItem,
   cartUpdateItem,
   TAGS
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
+import { getInitDataRaw } from "@/components/auth/getInitDataRaw";
+import { getStoreId } from "@/components/store/getStoreId";
 import { tmaAuthenticated } from "@/lib/auth";
 
 export const addToCart = async (
   prevState: any,
   payload: {
     storeId: string;
-    productId?: string;
-    selectedVariantId?: string | null;
+    productVariantId: string;
+    productVariantSizeId: string;
     doesProductHaveVariants?: boolean;
     quantity?: number;
   }
-): Promise<string | void> => {
+): Promise<string | undefined> => {
   let cartId = cookies().get("cartId")?.value;
-  const initDataRaw = cookies().get("initDataRaw")?.value;
-
-  if (!initDataRaw) {
-    redirect("/unathenticated");
-  }
+  const initDataRaw = await getInitDataRaw();
+  const t = await getTranslations("ProductCatalogPage.AddToCartErrors");
 
   const {
     storeId,
-    productId,
-    selectedVariantId,
+    productVariantId,
+    productVariantSizeId,
     doesProductHaveVariants,
     quantity
   } = payload;
 
   let cart: Cart | undefined;
 
-  if (!productId) {
-    return "No product found, please try to refresh the page";
+  if (!productVariantId) {
+    return t("noProductFound");
   }
 
-  if (doesProductHaveVariants && !selectedVariantId) {
-    return "Please select size";
+  if (doesProductHaveVariants && !productVariantSizeId) {
+    return t("noVariantSelected");
   }
 
-  if (!cartId) {
+  if (cartId) {
+    cart = await cartGet({ cartId, storeId });
+  }
+
+  if (!cart) {
+    cart = await tmaAuthenticated(initDataRaw, storeId, cartGetByUserId, {
+      storeId
+    });
+  }
+
+  if (!cart) {
     cart = await tmaAuthenticated(initDataRaw, storeId, cartCreate, {
       storeId
     });
-    cartId = cart.id;
-    cookies().set("cartId", cartId);
   }
+
+  if (!cart) return t("couldNotCreateCart");
+
+  cartId = cart.id;
+  cookies().set("cartId", cartId);
 
   try {
     await tmaAuthenticated(initDataRaw, storeId, cartAddItem, {
       input: {
         cartId,
-        productId,
-        variantId: selectedVariantId || null,
+        productVariantId,
+        productVariantSizeId,
         quantity: quantity || 1
       }
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
-    return "Could not add item to cart";
+    return t("couldNotAddToCart");
   }
 };
 
@@ -83,18 +97,15 @@ export const removeFromCart = async (
   const { storeId, cartItemId, quantity } = payload;
 
   const cartId = cookies().get("cartId")?.value;
-  const initDataRaw = cookies().get("initDataRaw")?.value;
-
-  if (!initDataRaw) {
-    redirect("/unathenticated");
-  }
+  const initDataRaw = await getInitDataRaw();
+  const t = await getTranslations("ProductCatalogPage.RemoveFromCartErrors");
 
   if (!cartId) {
-    return "No cart found";
+    return t("noCartFound");
   }
 
   if (!cartItemId) {
-    return "No item found";
+    return t("noItemFound");
   }
 
   try {
@@ -107,7 +118,7 @@ export const removeFromCart = async (
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
-    return "Could not remove item from cart";
+    return t("couldNotRemoveFromCart");
   }
 };
 
@@ -115,23 +126,21 @@ export const updateCartItem = async (
   prevState: any,
   formData: FormData
 ): Promise<string | void> => {
-  const storeId = formData.get("storeId") as string;
+  const storeId = await getStoreId();
+  const initDataRaw = await getInitDataRaw();
+  const t = await getTranslations("ProductCatalogPage.UpdateCartItemErrors");
+
+  const cartId = cookies().get("cartId")?.value;
+
   const cartItemId = String(formData.get("cartItemId"));
   const quantity = Number(formData.get("quantity"));
 
-  const cartId = cookies().get("cartId")?.value;
-  const initDataRaw = cookies().get("initDataRaw")?.value;
-
-  if (!initDataRaw) {
-    redirect("/unathenticated");
-  }
-
   if (!cartId) {
-    return "No cart found";
+    return t("noCartFound");
   }
 
   if (!cartItemId) {
-    return "No item found";
+    return t("noProductFound");
   }
 
   try {
@@ -144,6 +153,6 @@ export const updateCartItem = async (
     });
     revalidateTag(TAGS.CART);
   } catch (e) {
-    return "Could not update item in cart";
+    return t("couldNotUpdateCartItem");
   }
 };

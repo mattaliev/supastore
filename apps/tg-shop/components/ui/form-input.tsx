@@ -23,6 +23,14 @@ export default function FormInput({
   defaultValue,
   onChange
 }: FormInputProps) {
+  const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      // Close the keyboard
+      e.currentTarget.blur();
+    }
+  };
+
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
@@ -34,6 +42,10 @@ export default function FormInput({
         type={type}
         value={value}
         defaultValue={defaultValue}
+        className={
+          "bg-telegram-bg-color border-telegram-hint-color focus:ring-telegram-button-color"
+        }
+        onKeyDown={onKeyPress}
       />
       {error && (
         <p className="text-telegram-accent-text-color text-xs">{error}</p>
