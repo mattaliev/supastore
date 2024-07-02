@@ -24,6 +24,7 @@ class Query(
     PaymentQuery,
     ShippingQuery,
     StoreQuery,
+    CategoryQuery,
     graphene.ObjectType
 ):
     pass

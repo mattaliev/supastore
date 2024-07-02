@@ -7,7 +7,6 @@ from django.conf import settings
 
 from authentication.models.token import TokenBlacklist
 from cart.models import Cart
-from cart.services import cart_get_or_create
 from store.models import Store
 from store.services import store_bot_token_get
 from user.models import TelegramUser
@@ -31,7 +30,6 @@ def sign_in_shop_user(
         *,
         store_id: UUID,
         init_data_raw: str,
-        cart_id: UUID = None
 ) -> Tuple[TelegramUser, Cart, bool]:
     logger = logging.getLogger(__name__)
     logger.debug("Signing in shop user...")
@@ -64,10 +62,7 @@ def sign_in_shop_user(
 
     logger.debug("Created new session: Session Id: %s", session.id)
 
-    # Get or create cart
-    cart, created_cart = cart_get_or_create(cart_id=cart_id, user=user, store_id=store_id)
-
-    return user, cart, created_cart
+    return user
 
 
 def sign_in_admin_user(*, data_check_string: str, provider: str = "telegram"):

@@ -7,7 +7,6 @@ from django.test import TestCase
 
 from analytics.models import EventTypeChoices, Event
 from payment.models import Payment, PaymentStatusChoices
-from product.models import Product
 from user.models.user import CustomerSortChoices, TelegramUser
 from user.services.user_service import customer_list_get, customer_detail_get, \
     customer_completed_payment_count, customer_is_new, customer_last_visit, \

@@ -9,7 +9,7 @@ from analytics.models import Event, EventTypeChoices
 from cart.models import Cart
 from order.models import Order
 from payment.models import PaymentStatusChoices
-from product.models import Product
+from product.models import ProductVariant
 from user.models.user import CustomerSortChoices, StoreUser
 
 User = get_user_model()
@@ -154,7 +154,7 @@ def customer_total_cart_amount(*, user: User):
     return Decimal(sum([cart.get_total_price() for cart in user.carts.all()]))
 
 
-def customer_favorite_products(*, user: User) -> QuerySet[Product]:
+def customer_favorite_products(*, user: User) -> QuerySet[ProductVariant]:
     """
     TODO: Implement proper logic for this function
     Needs to also take in the account which products have user ordered and
@@ -174,18 +174,18 @@ def customer_favorite_products(*, user: User) -> QuerySet[Product]:
     product_counts = (
         user.events.filter(
             event_type=EventTypeChoices.ADDED_TO_CART
-        ).values("event_data__product_id")
-        .annotate(count=Count("event_data__product_id"))
+        ).values("event_data__product_variant_id")
+        .annotate(count=Count("event_data__product_variant_id"))
         .order_by("-count")
     )
 
     # Get the product IDs in order
-    product_ids = [item["event_data__product_id"] for item in product_counts]
+    product_ids = [item["event_data__product_variant_id"] for item in product_counts]
 
     preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(product_ids)])
 
     # Get the products and annotate them with the count of ADDED_TO_CART events
-    favorite_products = Product.objects.filter(id__in=product_ids).order_by(preserved_order)
+    favorite_products = ProductVariant.objects.filter(id__in=product_ids).order_by(preserved_order)
 
     return favorite_products
 

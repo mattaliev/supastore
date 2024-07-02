@@ -12,12 +12,11 @@ from cart.services.cart_services import (
     cart_remove_from,
     cart_update_item
 )
+from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
 
 __all__ = [
     "Mutation"
 ]
-
-from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
 
 
 class CartCreateMutation(graphene.Mutation):

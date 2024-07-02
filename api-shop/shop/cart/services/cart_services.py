@@ -7,6 +7,7 @@ from django.http import Http404
 
 from analytics.models import Event
 from cart.models.cart import Cart, CartItem
+from core.exceptions import ServerError
 from core.models import EntityStateChoices
 
 User = get_user_model()
@@ -18,6 +19,19 @@ def cart_get(*, cart_id: UUID, store_id: UUID) -> Cart:
 
     cart = Cart.objects.filter(
         id=cart_id,
+        state=EntityStateChoices.ACTIVE,
+        store_id=store_id
+    ).first()
+
+    return cart
+
+
+def cart_get_by_user_id(*, user_id: UUID, store_id: UUID) -> Cart:
+    logger = logging.getLogger(__name__)
+    logger.debug("Getting cart detail for user_id: %s in store: %s", user_id, store_id)
+
+    cart = Cart.objects.filter(
+        user_id=user_id,
         state=EntityStateChoices.ACTIVE,
         store_id=store_id
     ).first()
@@ -77,21 +91,25 @@ def cart_create(*, user_id: UUID, store_id: UUID) -> Cart:
     return cart
 
 
-def cart_add_to(*, cart_id: UUID, product_id: UUID, variant_id: UUID | None = None, quantity: int = 1) -> Cart:
+def cart_add_to(*, cart_id: UUID, product_variant_id: UUID, product_variant_size_id: UUID | None = None, quantity: int = 1) -> Cart:
     logger = logging.getLogger(__name__)
     logger.debug("Adding to cart with input: %s", {
         "cart_id": cart_id,
-        "product_id": product_id,
-        "variant_id": variant_id,
+        "product_variant_id": product_variant_id,
+        "product_variant_size_id": product_variant_size_id,
         "quantity": quantity
     })
 
     try:
         cart = Cart.objects.get(pk=cart_id)
+
+        if cart.state != EntityStateChoices.ACTIVE:
+            raise ServerError("Can't add item to inactive cart")
+
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
-            product_id=product_id,
-            variant_id=variant_id,
+            product_variant_id=product_variant_id,
+            size_id=product_variant_size_id,
         )
         cart_item.quantity += quantity
         cart_item.save()
@@ -118,7 +136,7 @@ def cart_remove_from(*, cart_id: UUID, cart_item_id: UUID, quantity: int) -> Car
             cart=cart,
             pk=cart_item_id
         )
-        product = cart_item.product
+        product = cart_item.product_variant
         if cart_item.quantity > quantity:
             cart_item.quantity -= quantity
             cart_item.save()
