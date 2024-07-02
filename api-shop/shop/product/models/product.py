@@ -29,7 +29,7 @@ class ProductVariant(BaseEntity):
         db_table = "product_variants"
         verbose_name = "product variant"
         verbose_name_plural = "product variants"
-        ordering = ["-created"]
+        ordering = ["created"]
 
 
 class ProductVariantSize(BaseEntity):
