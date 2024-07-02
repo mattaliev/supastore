@@ -1,6 +1,6 @@
 name: Build API
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:

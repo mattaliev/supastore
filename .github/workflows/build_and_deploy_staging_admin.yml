@@ -1,7 +1,7 @@
 name: Build and Deploy Admin Client to Google Cloud Run to Staging
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
