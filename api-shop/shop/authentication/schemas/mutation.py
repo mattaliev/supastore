@@ -23,8 +23,6 @@ class SignInAdminMutation(graphene.Mutation):
 
 class SignInShopUserMutation(graphene.Mutation):
     user = graphene.Field("user.schemas.schema.TelegramUserType")
-    cart = graphene.Field("cart.schemas.CartType")
-    created_cart = graphene.Boolean()
 
     class Arguments:
         init_data_raw = graphene.String(required=True)
@@ -32,15 +30,14 @@ class SignInShopUserMutation(graphene.Mutation):
         cart_id = graphene.UUID()
 
     @classmethod
-    def mutate(cls, root, info, init_data_raw, store_id, cart_id=None):
-        user, cart, created_cart = sign_in_shop_user(
+    def mutate(cls, root, info, init_data_raw, store_id):
+        user = sign_in_shop_user(
             init_data_raw=init_data_raw,
             store_id=store_id,
-            cart_id=cart_id
         )
 
         # Return user and cart
-        return SignInShopUserMutation(user=user, cart=cart, created_cart=created_cart)
+        return SignInShopUserMutation(user=user)
 
 
 class SignOutAdminMutation(graphene.Mutation):
