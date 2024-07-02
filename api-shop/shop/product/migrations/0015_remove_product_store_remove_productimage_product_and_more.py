@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0006_remove_cartitem_unique_cart_variant_and_more'),
+        ('cart', '0006_auto_20240620_0826'),
         ('product', '0014_alter_wbproduct_category_alter_wbproduct_store_and_more'),
     ]
 
