@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -27,7 +27,7 @@ type ProductCategorySelectProps = {
 function ProductCategorySelect({
   category,
   setCategory,
-  error,
+  error
 }: ProductCategorySelectProps) {
   const locale = useLocale();
   const {
@@ -35,7 +35,7 @@ function ProductCategorySelect({
     parentId,
     setParentId,
     handleCategorySearchChange,
-    categoriesLoading,
+    categoriesLoading
   } = useCategoriesSelect({ locale });
 
   return (
@@ -103,8 +103,8 @@ function ProductCategorySelect({
                       className={cn(
                         "p-2 text-sm w-full rounded-md hover:bg-muted",
                         {
-                          "bg-muted": parentCategory.id === parentId,
-                        },
+                          "bg-muted": parentCategory.id === parentId
+                        }
                       )}
                       onClick={() => setParentId(parentCategory.id)}
                     >
@@ -135,8 +135,8 @@ function ProductCategorySelect({
                       className={cn(
                         "p-2 text-sm w-full rounded-md hover:bg-muted",
                         {
-                          "bg-muted": category?.id === subcategory.id,
-                        },
+                          "bg-muted": category?.id === subcategory.id
+                        }
                       )}
                       onClick={() => setCategory(subcategory)}
                     >

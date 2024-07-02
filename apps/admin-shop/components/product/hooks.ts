@@ -5,7 +5,7 @@ import {
   categoryCharacteristicsGet,
   Product,
   ProductVariant,
-  ProductVariantSize,
+  ProductVariantSize
 } from "@ditch/lib";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -22,12 +22,12 @@ export type ProductVariantStateUpdate = {
 const emptyVariant = {
   name: "",
   sku: "",
-  images: [],
+  images: []
 };
 
 export function useProductForm({ product }: { product?: Product }) {
   const [variants, setVariants] = useState<Partial<ProductVariant>[]>(
-    product?.variants || [emptyVariant],
+    product?.variants || [emptyVariant]
   );
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
@@ -37,18 +37,18 @@ export function useProductForm({ product }: { product?: Product }) {
 
   const [formState, formAction] = useFormState(
     product ? updateProduct : createProduct,
-    null,
+    null
   );
 
   const updateVariantField = ({
     field,
     value,
-    variantIndex,
+    variantIndex
   }: ProductVariantStateUpdate) => {
     const newVariants = [...variants];
     newVariants[variantIndex] = {
       ...newVariants[variantIndex],
-      [field]: value,
+      [field]: value
     };
     setVariants((prevState) => newVariants);
   };
@@ -72,13 +72,13 @@ export function useProductForm({ product }: { product?: Product }) {
     setProductCategory,
     updateVariantField,
     addVariant,
-    deleteVariant,
+    deleteVariant
   };
 }
 
 export function useCategoriesSelect({
   parent,
-  locale,
+  locale
 }: {
   parent?: string;
   locale?: string;
@@ -88,14 +88,14 @@ export function useCategoriesSelect({
   const {
     data: categories,
     isLoading: categoriesLoading,
-    refetch,
+    refetch
   } = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => await categoriesGet({ locale, parentId, search }),
+    queryFn: async () => await categoriesGet({ locale, parentId, search })
   });
 
   const handleCategorySearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSearch((prevState) => e.target.value);
   };
@@ -111,34 +111,33 @@ export function useCategoriesSelect({
     parentId,
     setParentId,
     categoriesLoading,
-    handleCategorySearchChange,
+    handleCategorySearchChange
   };
 }
 
 export function useCategoryCharacteristics({
-  category,
+  category
 }: {
   category?: Partial<Category>;
 }) {
   const {
     data: characteristics,
     isLoading: characteristicsLoading,
-    refetch,
+    refetch
   } = useQuery({
     queryKey: ["categoryCharacteristics", category?.id],
     queryFn: async () =>
       await categoryCharacteristicsGet({ categoryId: category?.id }),
-    enabled: !!category,
+    enabled: !!category
   });
   const filterCharacteristicsBy = ["Size", "Ros. size", "SKU"];
 
   const filteredCharacteristics = characteristics?.filter(
-    (characteristic) =>
-      !filterCharacteristicsBy.includes(characteristic.nameEn),
+    (characteristic) => !filterCharacteristicsBy.includes(characteristic.nameEn)
   );
 
   const hasSize = characteristics?.some(
-    (characteristic) => characteristic.nameEn === "Size",
+    (characteristic) => characteristic.nameEn === "Size"
   );
 
   useEffect(() => {
@@ -151,25 +150,25 @@ export function useCategoryCharacteristics({
     characteristics,
     filteredCharacteristics,
     characteristicsLoading,
-    hasSize,
+    hasSize
   };
 }
 
 const emptySize = {
   sizeEn: "",
   sizeRu: "",
-  price: "",
+  price: ""
 };
 
 export function useProductVariantSizes({
-  variant,
+  variant
 }: {
   variant?: Partial<ProductVariant>;
 }) {
   const [sizes, setSizes] = useState<Partial<ProductVariantSize>[]>(
     (variant?.sizes && variant?.sizes?.length > 0 && variant?.sizes) || [
-      emptySize,
-    ],
+      emptySize
+    ]
   );
 
   const addSize = () => setSizes([...sizes, emptySize]);
@@ -180,7 +179,7 @@ export function useProductVariantSizes({
     const newSizes = [...sizes];
     newSizes[index] = {
       ...newSizes[index],
-      [field]: value,
+      [field]: value
     };
     setSizes(newSizes);
   };

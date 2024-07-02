@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import Link from "@/components/navigation/link";
 
 export default function AnalyticsEventData({
-  event,
+  event
 }: {
   event: AnalyticsEvent;
 }) {

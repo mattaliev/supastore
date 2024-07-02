@@ -11,7 +11,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { NoImage } from "@/components/ui/NoImage";
 import { cn } from "@/lib/utils";
@@ -128,7 +128,7 @@ function ProductVariantOption({
   variant,
   productCategory,
   deleteVariant,
-  canDelete,
+  canDelete
 }: ProductVariantOptionProps) {
   const locale = useLocale();
   const t = useTranslations("ProductForm.VariantSelector");
@@ -139,8 +139,8 @@ function ProductVariantOption({
       className={cn(
         "w-full min-h-36 bg-card mx-auto rounded-md flex items-start justify-start p-4 cursor-pointer text-sm gap-4 border",
         {
-          "border-primary": selectedVariant === variantIndex,
-        },
+          "border-primary": selectedVariant === variantIndex
+        }
       )}
     >
       <div className={"w-28 h-full"}>

@@ -13,7 +13,7 @@ export default function CategoryCharacteristics({
   category,
   variant,
   variantIndex,
-  fieldErrors,
+  fieldErrors
 }: {
   category?: Partial<Category>;
   fieldErrors?: ProductVariantFieldErrors;
@@ -21,7 +21,7 @@ export default function CategoryCharacteristics({
   variantIndex: number;
 }) {
   const { filteredCharacteristics, hasSize } = useCategoryCharacteristics({
-    category,
+    category
   });
   const [showAll, setShowAll] = useState(false);
   const t = useTranslations("ProductForm.Fields");
@@ -39,12 +39,12 @@ export default function CategoryCharacteristics({
           variantIndex={variantIndex}
           fieldError={
             fieldErrors?.characteristics?.find(({ path }) =>
-              path.includes(characteristic.id),
+              path.includes(characteristic.id)
             )?.code
           }
           defaultValue={
             variant?.productCharacteristics?.find(
-              (charc) => charc.characteristic.id === characteristic.id,
+              (charc) => charc.characteristic.id === characteristic.id
             )?.value
           }
           hidden={!showAll}
@@ -86,7 +86,7 @@ function CharacteristicInput({
   variantIndex,
   fieldError,
   defaultValue,
-  hidden,
+  hidden
 }: {
   characteristic: Characteristic;
   fieldError?: string;
@@ -102,7 +102,7 @@ function CharacteristicInput({
     name: nameEn,
     variantIndex,
     hidden,
-    error: fieldError,
+    error: fieldError
   };
 
   if (type === "ARRAY_NUMBER") {
