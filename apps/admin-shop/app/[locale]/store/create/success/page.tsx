@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { Link } from "@/components/i18n/i18n-navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,7 +10,9 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
-export default function StoreApplicationSuccess() {
+export default async function StoreApplicationSuccess() {
+  const t = await getTranslations("StoreApplicationSuccess");
+
   return (
     <div
       className={
@@ -17,16 +21,13 @@ export default function StoreApplicationSuccess() {
     >
       <Card className={"m-4"}>
         <CardHeader>
-          <CardTitle>Store Application Have Been Submitted!</CardTitle>
-          <CardDescription>
-            Please wait for one of our team members to approve it. We will
-            notify you once it's done.
-          </CardDescription>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardFooter>
           <Link href={"/store"} className={"w-full"}>
             <Button size={"sm"} className={"w-full"}>
-              Back to Stores
+              {t("backToStores")}
             </Button>
           </Link>
         </CardFooter>

@@ -20,7 +20,6 @@ export const orderFragment = /* GraphQL */ `
       ...PaymentFields
     }
     fulfilmentStatus
-    hasDefaultShippingDetails
     subtotalAmount
     shippingAmount
     totalAmount

@@ -1,17 +1,25 @@
+"use client";
 import { AnalyticsEvent, EventType } from "@ditch/lib";
+import { useTranslations } from "next-intl";
 
 import Link from "@/components/navigation/link";
 
 export default function AnalyticsEventData({
-  event
+  event,
 }: {
   event: AnalyticsEvent;
 }) {
+  const t = useTranslations("Analytics.EventData");
+
   if (
     event.eventType === EventType.ADDED_TO_CART ||
     event.eventType === EventType.REMOVED_FROM_CART
   ) {
-    return <p>Cart total: ${event.eventData.cart_total}</p>;
+    return (
+      <p>
+        {t("cartTotal")}: ${event.eventData.cart_total}
+      </p>
+    );
   }
 
   if (
@@ -21,7 +29,7 @@ export default function AnalyticsEventData({
   ) {
     return (
       <div>
-        Order{" "}
+        {t("order")}{" "}
         <span>
           <Link
             href={`/orders/edit/${event.eventData.order_id}`}

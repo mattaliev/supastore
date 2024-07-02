@@ -1,13 +1,11 @@
 import { customersPaginated } from "@ditch/lib";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { authenticated } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
 import CustomerList from "@/components/customer/customer-list";
 import CustomerListHeader from "@/components/customer/customer-list-header";
 import TopCustomers from "@/components/customer/top-customers";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type CustomersPageProps = {
   params: {
@@ -45,12 +43,10 @@ async function CustomersPage({
     <div className="grid flex-1 items-start gap-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3 mx-auto">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <CustomerListHeader />
-        <Suspense fallback={<Skeleton />}>
-          <CustomerList
-            customersPaginated={paginatedCustomers}
-            limit={defaultLimit}
-          />
-        </Suspense>
+        <CustomerList
+          customersPaginated={paginatedCustomers}
+          limit={defaultLimit}
+        />
       </div>
       <TopCustomers
         storeId={storeId}

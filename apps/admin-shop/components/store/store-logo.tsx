@@ -2,6 +2,7 @@
 import { Store } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
@@ -21,6 +22,7 @@ import { Label } from "@/components/ui/label";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("SettingsPage");
 
   if (pending) {
     return (
@@ -30,14 +32,14 @@ function SubmitButton() {
         disabled
       >
         <LoaderCircle className={"animate-spin h-5 w-5"} />
-        Saving Changes...
+        {t("savingChanges")}
       </Button>
     );
   }
 
   return (
     <Button size={"sm"} type={"submit"}>
-      Save Changes
+      {t("saveChanges")}
     </Button>
   );
 }
@@ -47,6 +49,7 @@ export default function StoreLogo({ store }: { store: Store }) {
   const [logoDarkUrl, setLogoDarkUrl] = useState<string | null>(
     store.logoDark || null
   );
+  const t = useTranslations("SettingsPage.StoreLogo");
 
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(
     store.logoLight || null
@@ -70,30 +73,31 @@ export default function StoreLogo({ store }: { store: Store }) {
     <form action={formAction}>
       <Card>
         <CardHeader>
-          <CardTitle>Store Logo</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <CardDescription>
-            Upload your brand's logo. Recommended size of the logo is 96x32
-            pixels. You can learn more about your store customization in our{" "}
+            {t("description")}{" "}
             <Link
               href={"https://guides.ditch-concept.com/pages/customize-bot"}
               inStore={false}
               localized={false}
               className={"underline hover:text-primary hover:no-underline"}
             >
-              guide
+              {t("guide")}
             </Link>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className={"grid gap-4 lg:grid-cols-2"}>
             <div className={"grid gap-2"}>
-              <Label htmlFor={"logo-light"}>Light logo</Label>
+              <Label htmlFor={"logo-light"}>
+                {t("FormFields.lightLogo.label")}
+              </Label>
               <p className={"text-muted-foreground text-xs text-start"}>
-                This logo will be used when user has a dark screen
+                {t("FormFields.lightLogo.description")}
               </p>
               {formState?.fieldErrors?.logoLight && (
                 <p className={"text-xs text-destructive text-start"}>
-                  {formState?.fieldErrors.logoLight[0]}
+                  {t("FormFields.lightLogo.error")}
                 </p>
               )}
               <Input
@@ -105,13 +109,15 @@ export default function StoreLogo({ store }: { store: Store }) {
               <LogoPreview logoUrl={logoLightUrl} />
             </div>
             <div className={"grid gap-2"}>
-              <Label htmlFor={"logo-dark"}>Dark logo</Label>
+              <Label htmlFor={"logo-dark"}>
+                {t("FormFields.darkLogo.label")}
+              </Label>
               <p className={"text-muted-foreground text-xs text-start"}>
-                This logo will be used when user has a light screen
+                {t("FormFields.darkLogo.description")}
               </p>
               {formState?.fieldErrors?.logoDark && (
                 <p className={"text-xs text-destructive text-start"}>
-                  {formState?.fieldErrors.logoDark[0]}
+                  {t("FormFields.darkLogo.error")}
                 </p>
               )}
               <Input
@@ -139,10 +145,12 @@ function LogoPreview({
   logoUrl?: string | null;
   isDark?: boolean;
 }) {
+  const t = useTranslations("SettingsPage.StoreLogo.LogoPreview");
+
   if (logoUrl) {
     return (
       <div className={"grid gap-2"}>
-        <Label>Nav Preview</Label>
+        <Label>{t("title")}</Label>
         <div
           className={
             "w-full xs:w-[370px] flex justify-between items-center p-4 border" +

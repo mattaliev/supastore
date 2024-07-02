@@ -8,7 +8,6 @@ import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 
 import AdminDropdownMenu from "@/components/admin/admin-dropdown-menu";
-import HeaderBreadcrumb from "@/components/layout/header-breadcrumb";
 import Link from "@/components/navigation/link";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/ui/logo";
@@ -58,7 +57,7 @@ export default function Header() {
             </nav>
           </SheetContent>
         </Sheet>
-        <HeaderBreadcrumb pathname={pathname} />
+        {/*<HeaderBreadcrumb pathname={pathname} />*/}
         <div className="relative ml-auto flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input

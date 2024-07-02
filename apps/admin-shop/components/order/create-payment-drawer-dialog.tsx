@@ -2,6 +2,7 @@
 
 import { PaymentMethod } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -45,21 +46,21 @@ export default function CreatePaymentDrawerDialog({
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const t = useTranslations("OrderEditPage.OrderPayment.CreatePayment");
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button type="button" size="sm">
-            Create invoice
+            {t("createInvoice")}
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create invoice</DialogTitle>
+            <DialogTitle>{t("createInvoice")}</DialogTitle>
             <DialogDescription>
-              Note: Once you create payment, the customer will not be able to
-              change the order
+              {t("createInvoiceDescription")}
             </DialogDescription>
           </DialogHeader>
           <CreatePaymentForm
@@ -75,16 +76,13 @@ export default function CreatePaymentDrawerDialog({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button size={"sm"} type={"button"}>
-          Create Invoice
+          {t("createInvoice")}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Are you sure you want to cancel this order?</DrawerTitle>
-          <DrawerDescription>
-            The refund for the order will have to be disputed through a payment
-            system that the customer used
-          </DrawerDescription>
+          <DrawerTitle>{t("createInvoice")}</DrawerTitle>
+          <DrawerDescription>{t("createInvoiceDescription")}</DrawerDescription>
         </DrawerHeader>
         <CreatePaymentForm
           orderId={orderId}
@@ -93,7 +91,7 @@ export default function CreatePaymentDrawerDialog({
         />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Go back</Button>
+            <Button variant="outline">{t("goBack")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -113,6 +111,7 @@ function CreatePaymentForm({
   const [formState, formAction] = useFormState(createPaymentManually, null);
 
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const t = useTranslations("OrderEditPage.OrderPayment.CreatePayment");
 
   return (
     <form
@@ -121,13 +120,13 @@ function CreatePaymentForm({
     >
       <input type={"hidden"} value={orderId} name={"order-id"} />
       <div className="flex flex-col items-start space-y-2">
-        <Label htmlFor="tracking-number">Payment Provider</Label>
+        <Label htmlFor="tracking-number">{t("paymentProvider")}</Label>
         <Select
           name="payment-method"
           onValueChange={(value) => setPaymentMethod(value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select a payment provider" />
+            <SelectValue placeholder={t("selectPaymentProvider")} />
           </SelectTrigger>
           <SelectContent>
             {paymentMethods.map((method) => (
@@ -150,10 +149,12 @@ function CreatePaymentForm({
           name="notify-customer"
           defaultChecked={true}
         />
-        <Label htmlFor="notify-user">Send invoice to customer?</Label>
+        <Label htmlFor="notify-user">{t("sendInvoiceNotice")}</Label>
       </div>
       {formState?.error && (
-        <p className={"text-destructive text-end text-xs"}>{formState.error}</p>
+        <p className={"text-destructive text-end text-xs"}>
+          {t("invoiceCreateError")}
+        </p>
       )}
       <SubmitButton />
     </form>
@@ -162,6 +163,7 @@ function CreatePaymentForm({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("OrderEditPage.OrderPayment.CreatePayment");
 
   if (pending) {
     return (
@@ -172,14 +174,14 @@ function SubmitButton() {
         onClick={(e) => e.preventDefault()}
       >
         <LoaderCircle className="animate-spin" />
-        Creating invoice...
+        {t("creatingInvoice")}
       </Button>
     );
   }
 
   return (
     <Button size="sm" type={"submit"}>
-      Create invoice
+      {t("createInvoice")}
     </Button>
   );
 }

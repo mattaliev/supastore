@@ -1,6 +1,7 @@
 import { storeList } from "@ditch/lib";
 import { ChevronRight } from "lucide-react";
 import { getServerSession } from "next-auth";
+import { getTranslations } from "next-intl/server";
 
 import { authenticated, authOptions } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
@@ -27,6 +28,7 @@ async function StorePage({
 }: WithAuthProps<StorePageProps>) {
   const stores = await authenticated(accessToken, storeList, {});
   const session = await getServerSession(authOptions);
+  const t = await getTranslations("StoreSelectPage");
 
   return (
     <div className={"h-[80vh] grid items-center justify-center m-4"}>
@@ -36,14 +38,12 @@ async function StorePage({
             <Logo />
           </div>
           <CardTitle className={"flex justify-between items-center gap-8"}>
-            Welcome Back{session ? `, ${session.user.firstName}!` : ""}
+            {t("welcomeBack", { firstName: session?.user.firstName })}
             <Link href={"/store/create"} inStore={false}>
-              <Button size={"sm"}>Create Store</Button>
+              <Button size={"sm"}>{t("createNewStore")}</Button>
             </Link>
           </CardTitle>
-          <CardDescription>
-            Select the store you want to work with today
-          </CardDescription>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>
           {stores?.map((store) => (

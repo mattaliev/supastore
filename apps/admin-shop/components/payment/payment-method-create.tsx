@@ -1,5 +1,6 @@
 "use client";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
@@ -17,6 +18,7 @@ import {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("PaymentSystemsPage.CreatePaymentSystem");
 
   if (pending) {
     return (
@@ -26,14 +28,14 @@ function SubmitButton() {
         onClick={(e) => e.preventDefault()}
       >
         <LoaderCircle className="animate-spin" />
-        Adding Payment Gateway...
+        {t("creatingPaymentMethod")}
       </Button>
     );
   }
 
   return (
     <Button size="sm" type={"submit"} className={"w-full"}>
-      Add Payment Gateway
+      {t("createPaymentMethod")}
     </Button>
   );
 }
@@ -41,13 +43,14 @@ function SubmitButton() {
 export default function PaymentMethodCreate() {
   const [provider, setProvider] = useState<string | null>(null);
   const [formState, formAction] = useFormState(createPaymentMethod, null);
+  const t = useTranslations("PaymentSystemsPage.CreatePaymentSystem");
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add Payment Gateway</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
         <CardDescription>
-          Learn more about connecting payment gateways in our{" "}
+          {t("description") + " "}
           <Link
             href={
               "https://guides.ditch-concept.com/pages/connect-payment-gateway"
@@ -56,7 +59,7 @@ export default function PaymentMethodCreate() {
             localized={false}
             className={"underline hover:text-primary hover:no-underline"}
           >
-            guide
+            {t("guide")}
           </Link>
         </CardDescription>
       </CardHeader>
@@ -69,7 +72,7 @@ export default function PaymentMethodCreate() {
               setProvider={setProvider}
             />
             {formState?.formError && (
-              <p className="text-destructive text-xs">{formState.formError}</p>
+              <p className="text-destructive text-xs">{t("error")}</p>
             )}
             {provider && <SubmitButton />}
           </div>

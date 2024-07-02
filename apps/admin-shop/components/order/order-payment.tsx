@@ -1,5 +1,6 @@
 import { Order, paymentMethodsList, PaymentStatus } from "@ditch/lib";
 import { CreditCard } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { authenticated } from "@/auth";
 import { getAccessToken } from "@/components/auth/get-token";
@@ -16,13 +17,15 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function OrderPayment({ order }: { order: Order }) {
+export default async function OrderPayment({ order }: { order: Order }) {
+  const t = await getTranslations("OrderEditPage.OrderPayment");
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>
           <div className={"flex items-center justify-start gap-2"}>
-            Payment
+            {t("payment")}
             <PaymentStatusBadge
               paymentStatus={
                 order.payment
@@ -36,21 +39,23 @@ export default function OrderPayment({ order }: { order: Order }) {
       <CardContent>
         <div className="grid gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Subtotal</span>
+            <span className="text-muted-foreground">{t("subtotal")}</span>
             <span>${order.subtotalAmount}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Shipping</span>
+            <span className="text-muted-foreground">{t("shipping")}</span>
             <span>${order.shippingAmount}</span>
           </div>
           <Separator className="my-2" />
           <div className="flex items-center justify-between font-semibold">
-            <span className="text-muted-foreground">Total</span>
+            <span className="text-muted-foreground">{t("total")}</span>
             <span>${order.totalAmount}</span>
           </div>
           {order.payment && (
             <div className="flex justify-between font-semibold">
-              <span className={"text-muted-foreground"}>Payment Method</span>
+              <span className={"text-muted-foreground"}>
+                {t("paymentMethod")}
+              </span>
               <div className="flex items-center justify-center gap-1">
                 <CreditCard className="h-4 w-4" />
                 {order.payment?.paymentMethod?.name}

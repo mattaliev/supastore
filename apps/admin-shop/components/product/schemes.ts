@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const priceRegex = new RegExp(/^\d+(\.\d{1,2})?$|^\d+$/);
 
+const zodArray = z.array(z.string());
+
 export const ProductScheme = z.object({
   title: z
     .string({

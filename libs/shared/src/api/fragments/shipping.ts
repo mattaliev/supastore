@@ -13,15 +13,40 @@ export const shippingDetailsFragment = /* GraphQL */ `
   }
 `;
 
+export const shippingAddressFragment = /* GraphQL */ `
+  fragment ShippingAddressFields on ShippingAddressType {
+    id
+    address
+    additionalInfo
+    created
+    updated
+  }
+`;
+
+export const contactInformationFragment = /* GraphQL */ `
+  fragment ContactInformationFields on ContactInformationType {
+    id
+    name
+    email
+    phone
+    created
+    updated
+  }
+`;
+
 export const shippingFragment = /* GraphQL */ `
   fragment ShippingFields on ShippingType {
     id
-    details {
-      ...ShippingDetailsFields
+    contactInfo {
+      ...ContactInformationFields
+    }
+    shippingAddress {
+      ...ShippingAddressFields
     }
     shippingAmount
     carrier
     trackingNumber
   }
-  ${shippingDetailsFragment}
+  ${shippingAddressFragment}
+  ${contactInformationFragment}
 `;

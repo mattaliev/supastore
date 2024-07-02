@@ -1,4 +1,5 @@
 import { TelegramUser } from "@ditch/lib";
+import { useTranslations } from "next-intl";
 
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
@@ -11,15 +12,17 @@ import {
 } from "@/components/ui/card";
 
 export default function OrderCustomer({ user }: { user?: TelegramUser }) {
+  const t = useTranslations("OrderEditPage");
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Customer</CardTitle>
+        <CardTitle>{t("customer")}</CardTitle>
       </CardHeader>
       <CardContent>
         <dl className="grid gap-3 text-sm">
           <div className="flex items-center justify-between">
-            <dt className="text-muted-foreground">Name</dt>
+            <dt className="text-muted-foreground">{t("name")}</dt>
             <dd>
               {!user && "Anonymous User"}
               {user?.firstName} {user?.lastName || ""}
@@ -27,7 +30,7 @@ export default function OrderCustomer({ user }: { user?: TelegramUser }) {
           </div>
           {user?.username && (
             <div className="flex items-center justify-between">
-              <dt className="text-muted-foreground">Username</dt>
+              <dt className="text-muted-foreground">{t("username")}</dt>
               <dd>@{user?.username}</dd>
             </div>
           )}
@@ -37,7 +40,7 @@ export default function OrderCustomer({ user }: { user?: TelegramUser }) {
         <div className="flex ml-auto">
           <Link href={`/customers/edit/${user?.id}`}>
             <Button variant="outline" size="sm" className="w-full">
-              View Customer
+              {t("viewCustomer")}
             </Button>
           </Link>
         </div>

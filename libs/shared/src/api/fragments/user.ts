@@ -5,6 +5,8 @@ export const customerFragment = /* GraphQL */ `
     firstName
     lastName
     username
+    languageCode
+    photoUrl
   }
 `;
 
@@ -38,7 +40,7 @@ export const customerDetailFragment = /* GraphQL */ `
     isNew
     favoriteProducts {
       id
-      title
+      name
     }
   }
   ${customerFragment}

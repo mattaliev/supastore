@@ -1,4 +1,4 @@
-import { cartFragment, customerFragment } from "../fragments";
+import { customerFragment } from "../fragments";
 
 export const singInAdminMutation = /* GraphQL */ `
   mutation SignInAdmin($dataCheckString: String!) {
@@ -24,24 +24,12 @@ export const signOutAdminMutation = /* GraphQL */ `
 `;
 
 export const signInShopUserMutation = /* GraphQL */ `
-  mutation SignInShopUser(
-    $storeId: UUID!
-    $initDataRaw: String!
-    $cartId: UUID
-  ) {
-    signInShopUser(
-      storeId: $storeId
-      initDataRaw: $initDataRaw
-      cartId: $cartId
-    ) {
+  mutation SignInShopUser($storeId: UUID!, $initDataRaw: String!) {
+    signInShopUser(storeId: $storeId, initDataRaw: $initDataRaw) {
       user {
         ...UserFields
-      }
-      cart {
-        ...CartFields
       }
     }
   }
   ${customerFragment}
-  ${cartFragment}
 `;

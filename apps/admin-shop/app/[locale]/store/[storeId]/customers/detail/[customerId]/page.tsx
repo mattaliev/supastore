@@ -1,5 +1,6 @@
 import { customerDetail } from "@ditch/lib";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { authenticated } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
@@ -34,6 +35,8 @@ async function CustomerDetailPage({
     notFound();
   }
 
+  const t = await getTranslations("CustomerDetailPage.Header");
+
   return (
     <div className="grid flex-1 auto-rows-max gap-4 max-w-[59rem] mx-auto w-full">
       <CustomerDetailHeader customer={customer} />
@@ -51,7 +54,7 @@ async function CustomerDetailPage({
       </div>
       <div>
         <Button size={"sm"} type={"button"} variant="default">
-          Send Personalised Message
+          {t("sendMessage")}
         </Button>
       </div>
     </div>

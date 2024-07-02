@@ -82,7 +82,7 @@ export type TelegramUserDetail = {
   cartCount: number;
   totalCartAmount: string;
   addedToCartCount: number;
-  favoriteProducts: Product[];
+  favoriteProducts: ProductVariant[];
   events: UnparsedAnalyticsEvent[];
 } & TelegramUser;
 
@@ -105,7 +105,8 @@ export type TelegramUserTopList = {
 
 export type Shipping = {
   id: string;
-  details?: ShippingDetails;
+  contactInfo: ContactInformation;
+  shippingAddress: ShippingAddress;
   shippingAmount: string; // Decimal
   carrier?: string;
   trackingNumber?: string;
@@ -124,6 +125,19 @@ export type ShippingDetails = {
   country: string;
 } & BaseEntity;
 
+export type ShippingAddress = {
+  id: string;
+  address: string;
+  additionalInfo?: string;
+} & BaseEntity;
+
+export type ContactInformation = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+} & BaseEntity;
+
 export type Cart = {
   id: string;
   items: CartItem[];
@@ -134,35 +148,94 @@ export type Cart = {
 
 export type CartItem = {
   id: string;
-  product: Product;
+  productVariant: ProductVariant;
   quantity: number;
-  variant: CartProductVariant;
+  size: ProductVariantSize;
+} & BaseEntity;
+
+export type Category = {
+  id: string;
+  nameEn: string;
+  nameRu: string;
+  wbId: number;
+  parent?: Category | null;
+  children?: Category[] | null;
+} & BaseEntity;
+
+export type Characteristic = {
+  id: string;
+  nameEn: string;
+  nameRu: string;
+  wbId: number;
+  required: boolean;
+  type: CharacteristicType;
+  maxCount: number;
+  unitNameEn?: string | null;
+  unitNameRu?: string | null;
+} & BaseEntity;
+
+export enum CharacteristicType {
+  STRING = "STRING",
+  NUMBER = "NUMBER",
+  BOOLEAN = "BOOLEAN",
+  ARRAY_STRING = "ARRAY_STRING",
+  ARRAY_NUMBER = "ARRAY_NUMBER",
+}
+
+export type CategoryCharacteristic = {
+  id: string;
+  category: Category;
+  characteristic: Characteristic;
 } & BaseEntity;
 
 export type Product = {
   id: string;
-  title: string;
-  shortDescription: string;
-  description: string;
-  price: number;
-  sku: string;
-  images?: ProductImage[] | null;
-  variants?: ProductVariant[] | null;
-  quantity?: number;
+  category: Category;
+  store: Store;
+  variants: ProductVariant[];
 } & BaseEntity;
 
-export type ProductImage = {
+export type ProductVariant = {
+  id: string;
+  name: string;
+  shortDescription?: string;
+  description?: string;
+  brand?: string;
+  sku?: string;
+  wbId?: number;
+  sizes: ProductVariantSize[];
+  product: {
+    id: string;
+    category: Category;
+    variants: {
+      id: string;
+      name: string;
+      images: string[];
+    }[];
+  };
+  images: string[];
+  productCharacteristics: ProductVariantCharacteristic[];
+} & BaseEntity;
+
+export type ProductVariantSize = {
+  id: string;
+  sizeEn?: string;
+  sizeRu?: string;
+  price: string;
+  discountPrice?: string;
+} & BaseEntity;
+
+export type ProductVariantImage = {
   id: string;
   url: string;
   order: number;
 } & BaseEntity;
 
-export type ProductVariant = {
+export type ProductVariantCharacteristic = {
   id: string;
-  size?: string | null;
-  material?: string | null;
-  color?: string | null;
-  quantity: number;
+  variant: ProductVariant;
+  characteristic: Characteristic;
+  value: string[];
 } & BaseEntity;
 
 export type StrippedProductVariant = Omit<
@@ -194,18 +267,45 @@ export type Order = {
 
 export type ProductCreateInput = {
   storeId: string;
-  title: string;
-  shortDescription?: string;
-  description?: string;
-  price: string;
-  sku?: string;
-  images?: string[];
-  variants?: StrippedProductVariant[];
-  quantity?: number;
+  categoryId: string;
+  variants: ProductVariantInput[];
 };
 
-export type ProductUpdateInput = ProductCreateInput & {
+export type ProductVariantInput = {
+  name: string;
+  shortDescription?: string;
+  description?: string;
+  brand?: string;
+  sku?: string;
+  wbId?: number;
+  sizes: ProductVariantSizeInput[];
+  images: string[];
+  characteristics: ProductVariantCharacteristicInput[];
+};
+
+export type ProductVariantUpdateInput = Omit<ProductVariantInput, "sizes"> & {
+  productVariantId?: string;
+};
+
+export type ProductVariantSizeInput = {
+  sizeEn?: string;
+  sizeRu?: string;
+  price: string;
+  discountPrice?: string;
+};
+
+export type ProductVariantSizeUpdateInput = ProductVariantSizeInput & {
+  productVariantSizeId?: string;
+};
+
+export type ProductVariantCharacteristicInput = {
+  characteristicId: string;
+  value: string;
+};
+
+export type ProductUpdateInput = Omit<ProductCreateInput, "variants"> & {
   productId: string;
+  variants: ProductVariantUpdateInput[];
 };
 
 export type AnalyticsEvent =
@@ -436,19 +536,26 @@ export type BackendSignInShopUserOperation = {
   data: {
     signInShopUser: {
       user: TelegramUser;
-      cart: Cart;
     };
   };
   variables: {
     storeId: string;
     initDataRaw: string;
-    cartId?: string;
   };
 };
 
 export type BackendProductDetailOperation = {
   data: {
-    productDetail: Product;
+    productDetail: ProductVariant;
+  };
+  variables: {
+    id: string;
+  };
+};
+
+export type BackendAdminProductGetOperation = {
+  data: {
+    adminProductGet: Product;
   };
   variables: {
     id: string;
@@ -467,7 +574,7 @@ export type BackendProductsGetOperation = {
 
 export type BackendProductsPaginatedGetOperation = {
   data: {
-    productsPaginatedGet: Paginated<Product>;
+    productsPaginatedGet: Paginated<ProductVariant>;
   };
   variables: {
     storeId: string;
@@ -511,12 +618,33 @@ export type BackendProductDeleteOperation = {
   };
 };
 
+export type BackendProductVariantDeleteOperation = {
+  data: {
+    productVariantDelete: {
+      success: boolean;
+    };
+  };
+  variables: {
+    storeId: string;
+    id: string;
+  };
+};
+
 export type BackendCartGetOperation = {
   data: {
     cartGet: Cart;
   };
   variables: {
-    cartId?: string;
+    cartId: string;
+    storeId: string;
+  };
+};
+
+export type BackendCartGetByUserIdOperation = {
+  data: {
+    cartGetByUserId: Cart;
+  };
+  variables: {
     storeId: string;
   };
 };
@@ -541,8 +669,8 @@ export type BackendCartAddItemOperation = {
   variables: {
     input: {
       cartId: string;
-      productId: string;
-      variantId?: string | null;
+      productVariantId: string;
+      productVariantSizeId: string;
       quantity: number;
     };
   };
@@ -618,11 +746,14 @@ export type BackendOrderCreateOperation = {
   data: {
     orderCreate: {
       order: Order;
+      paymentProvider: PaymentProvider;
+      paymentInfo: string;
     };
   };
   variables: {
     storeId: string;
     cartId: string;
+    paymentMethodId: string;
   };
 };
 
@@ -985,5 +1116,159 @@ export type BackendSessionAnalyticsByHourGetOperation = {
   variables: {
     storeId: string;
     date?: string;
+  };
+};
+
+export type BackendShippingAddressListGetOperation = {
+  data: {
+    shippingAddressListGet: ShippingAddress[];
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendShippingAddressDefaultGetOperation = {
+  data: {
+    shippingAddressDefaultGet: ShippingAddress;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendShippingAddressCreateOperation = {
+  data: {
+    shippingAddressCreate: {
+      shippingAddress: ShippingAddress;
+    };
+  };
+  variables: {
+    input: {
+      storeId: string;
+      address: string;
+      additionalInfo?: string;
+    };
+  };
+};
+
+export type BackendShippingAddressDefaultSetOperation = {
+  data: {
+    shippingAddressDefaultSet: {
+      shippingAddress: ShippingAddress;
+    };
+  };
+  variables: {
+    storeId: string;
+    shippingAddressId: string;
+  };
+};
+
+export type BackendShippingAddressDeleteOperation = {
+  data: {
+    shippingAddressDelete: {
+      success: boolean;
+    };
+  };
+  variables: {
+    shippingAddressId: string;
+  };
+};
+
+export type BackendContactInformationListGetOperation = {
+  data: {
+    contactInformationListGet: ContactInformation[];
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendContactInformationDefaultGetOperation = {
+  data: {
+    contactInformationDefaultGet: ContactInformation;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendContactInformationCreateOperation = {
+  data: {
+    contactInformationCreate: {
+      contactInformation: ContactInformation;
+    };
+  };
+  variables: {
+    input: {
+      storeId: string;
+      name: string;
+      email: string;
+      phone: string;
+    };
+  };
+};
+
+export type BackendContactInformationDefaultSetOperation = {
+  data: {
+    contactInformationDefaultSet: {
+      contactInformation: ContactInformation;
+    };
+  };
+  variables: {
+    storeId: string;
+    contactInformationId: string;
+  };
+};
+
+export type BackendContactInformationDeleteOperation = {
+  data: {
+    contactInformationDelete: {
+      success: boolean;
+    };
+  };
+  variables: {
+    contactInformationId: string;
+  };
+};
+
+export type BackendOrderCanCreateOperation = {
+  data: {
+    orderCanCreate: boolean;
+  };
+  variables: {
+    storeId: string;
+    cartId: string;
+  };
+};
+
+export type BackendCategoriesGetOperation = {
+  data: {
+    categoriesGet: {
+      parentCategories: {
+        id: string;
+        nameEn: string;
+        nameRu: string;
+      }[];
+      subcategories: {
+        id: string;
+        nameEn: string;
+        nameRu: string;
+      }[];
+    };
+  };
+  variables: {
+    parentId?: string;
+    locale?: string;
+    search?: string;
+  };
+};
+
+export type BackendCategoryCharacteristicsGetOperation = {
+  data: {
+    categoryCharacteristicsGet: Characteristic[];
+  };
+  variables: {
+    categoryId?: string;
   };
 };

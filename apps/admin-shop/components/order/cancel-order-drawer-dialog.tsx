@@ -1,6 +1,7 @@
 "use client";
 import { FulfilmentStatus } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -35,23 +36,21 @@ export function CancelOrderDrawerDialog({ orderId }: { orderId: string }) {
     typeof window !== "undefined"
       ? window.matchMedia("(min-width: 768px)").matches
       : false;
+  const t = useTranslations("OrderEditPage");
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="destructive" type="button" size="sm">
-            Cancel
+            {t("cancel")}
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              Are you sure you want to cancel this order?
-            </DialogTitle>
+            <DialogTitle>{t("cancelConfirmationDialog")}</DialogTitle>
             <DialogDescription>
-              The refund for the order will have to be disputed through a
-              payment system that the customer used
+              {t("cancelConfirmationDialogDescription")}
             </DialogDescription>
           </DialogHeader>
           <CancelOrderForm orderId={orderId} />
@@ -64,21 +63,20 @@ export function CancelOrderDrawerDialog({ orderId }: { orderId: string }) {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button variant="destructive" size={"sm"} type={"button"}>
-          Cancel
+          {t("cancel")}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Are you sure you want to cancel this order?</DrawerTitle>
+          <DrawerTitle>{t("cancelConfirmationDialog")}</DrawerTitle>
           <DrawerDescription>
-            The refund for the order will have to be disputed through a payment
-            system that the customer used
+            {t("cancelConfirmationDialogDescription")}
           </DrawerDescription>
         </DrawerHeader>
         <CancelOrderForm orderId={orderId} className={"px-4"} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Go back</Button>
+            <Button variant="outline">{t("goBack")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -95,6 +93,7 @@ function CancelOrderForm({
 }) {
   const storeId = useStore();
   const [formStatus, formAction] = useFormState(updateOrderStatus, null);
+  const t = useTranslations("OrderEditPage");
   return (
     <form
       action={formAction}
@@ -109,11 +108,11 @@ function CancelOrderForm({
       />
       <div className="flex items-center space-x-2">
         <Checkbox id="notify-user" name="notify-user" />
-        <Label htmlFor="notify-user">Notify customer about cancellation?</Label>
+        <Label htmlFor="notify-user">{t("notifyAboutCancellation")}</Label>
       </div>
       {formStatus?.error && (
         <p className={"text-destructive text-center sm:text-start text-xs"}>
-          {formStatus.error}
+          {t("cancelError")}
         </p>
       )}
       <SubmitButton />
@@ -123,6 +122,7 @@ function CancelOrderForm({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("OrderEditPage");
 
   if (pending) {
     return (
@@ -133,7 +133,7 @@ function SubmitButton() {
         variant={"destructive"}
       >
         <LoaderCircle className="animate-spin" />
-        Canceling order...
+        {t("cancellingOrder")}
       </Button>
     );
   }
@@ -145,7 +145,7 @@ function SubmitButton() {
       className={"w-full"}
       variant={"destructive"}
     >
-      Cancel order
+      {t("cancelOrder")}
     </Button>
   );
 }

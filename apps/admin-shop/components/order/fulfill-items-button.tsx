@@ -1,6 +1,7 @@
 "use client";
 import { FulfilmentStatus } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { updateOrderStatus } from "@/components/order/actions";
@@ -10,11 +11,14 @@ import { Button } from "@/components/ui/button";
 export default function FulfillItemsButton({ orderId }: { orderId: string }) {
   const storeId = useStore();
   const [formState, formAction] = useFormState(updateOrderStatus, null);
+  const t = useTranslations("OrderDetailsPage.OrderFulfillment");
 
   return (
     <form action={formAction}>
       {formState?.error && (
-        <p className={"text-destructive text-end text-xs"}>{formState.error}</p>
+        <p className={"text-destructive text-end text-xs"}>
+          {t("fulfillmentError")}
+        </p>
       )}
       <input type={"hidden"} name={"store-id"} value={storeId} />
       <input type={"hidden"} name={"order-id"} value={orderId} />
@@ -30,6 +34,7 @@ export default function FulfillItemsButton({ orderId }: { orderId: string }) {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("OrderDetailsPage.OrderFulfillment");
 
   if (pending) {
     return (
@@ -40,14 +45,14 @@ function SubmitButton() {
         onClick={(e) => e.preventDefault()}
       >
         <LoaderCircle className="animate-spin" />
-        Fulfilling items...
+        {t("fulfillingItems")}
       </Button>
     );
   }
 
   return (
     <Button size="sm" type={"submit"}>
-      Fulfill items
+      {t("fulfillItems")}
     </Button>
   );
 }

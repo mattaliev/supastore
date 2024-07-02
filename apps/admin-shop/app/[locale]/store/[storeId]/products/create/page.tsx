@@ -1,16 +1,7 @@
-import WithAuth from "@/components/auth/with-auth";
-import ProductCreateForm from "@/components/product/product-create-form";
+import ProductFormFields from "@/components/product/ProductFormFields";
 
-export const dynamic = "force-dynamic";
-
-type ProductCreatePageProps = {
-  params: {
-    storeId: string;
-  };
-};
-
-function ProductCreatePage() {
-  return <ProductCreateForm />;
+function NewProductPage() {
+  return <ProductFormFields />;
 }
 
-export default WithAuth<ProductCreatePageProps>(ProductCreatePage);
+export default NewProductPage;

@@ -7,6 +7,7 @@
     "eslint-plugin-tsdoc",
     "eslint-plugin-prefer-arrow",
     "@typescript-eslint",
+    "@tanstack/query",
     "import"
   ],
   "rules": {

@@ -1,25 +1,25 @@
 import {
-  collectionProductFragment,
   paginatedProductsFragment,
-  productDetailFragment,
+  productFragment,
+  productVariantDetailFragment,
 } from "../fragments";
 
 export const productDetailQuery = /* GraphQL */ `
   query ProductDetail($id: UUID!) {
     productDetail(id: $id) {
-      ...ProductDetailFields
+      ...ProductVariantDetailFields
     }
   }
-  ${productDetailFragment}
+  ${productVariantDetailFragment}
 `;
 
-export const productsGetQuery = /* GraphQL */ `
-  query ProductsGet($storeId: UUID!, $state: String) {
-    productsGet(storeId: $storeId, state: $state) {
-      ...CollectionProductFields
+export const adminProductGetQuery = /* GraphQL */ `
+  query AdminProductGet($id: UUID!) {
+    adminProductGet(id: $id) {
+      ...ProductFields
     }
   }
-  ${collectionProductFragment}
+  ${productFragment}
 `;
 
 export const productsPaginatedGetQuery = /* GraphQL */ `

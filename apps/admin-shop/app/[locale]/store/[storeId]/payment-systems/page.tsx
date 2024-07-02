@@ -1,4 +1,5 @@
 import { paymentMethodsList } from "@ditch/lib";
+import { getTranslations } from "next-intl/server";
 
 import { authenticated } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
@@ -37,25 +38,25 @@ async function PaymentSystemsPage({
   const paymentMethods = await authenticated(accessToken, paymentMethodsList, {
     storeId
   });
+  const t = await getTranslations("PaymentSystemsPage");
 
   return (
     <div className="grid grid-cols-1 max-w-[59rem] mx-auto w-full auto-rows-max gap-4">
       <div className="grid gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Payment Systems</CardTitle>
-            <CardDescription>
-              Connect 40+ payment gateways to your store and accept payment from
-              all over the world.
-            </CardDescription>
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[75%] sm:w-fit">Name</TableHead>
+                  <TableHead className="w-[75%] sm:w-fit">
+                    {t("TableHead.name")}
+                  </TableHead>
                   <TableHead className={"hidden sm:table-cell"}>
-                    Status
+                    {t("TableHead.status")}
                   </TableHead>
                   <TableHead></TableHead>
                 </TableRow>

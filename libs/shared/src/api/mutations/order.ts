@@ -1,11 +1,21 @@
 import { orderFragment } from "../fragments";
 
 export const orderCreateMutation = /* GraphQL */ `
-  mutation orderCreate($storeId: UUID!, $cartId: UUID!) {
-    orderCreate(storeId: $storeId, cartId: $cartId) {
+  mutation orderCreate(
+    $storeId: UUID!
+    $cartId: UUID!
+    $paymentMethodId: UUID!
+  ) {
+    orderCreate(
+      storeId: $storeId
+      cartId: $cartId
+      paymentMethodId: $paymentMethodId
+    ) {
       order {
         ...OrderFields
       }
+      paymentProvider
+      paymentInfo
     }
   }
   ${orderFragment}

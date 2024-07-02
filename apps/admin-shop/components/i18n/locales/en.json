@@ -68,5 +68,530 @@
       "stores": "My Stores",
       "logout": "Logout"
     }
+  },
+  "ProductListPage": {
+    "addProduct": "Add Product",
+    "title": "Products",
+    "description": "Manage your products and view their sales performance.",
+    "ProductListTable": {
+      "image": "Image",
+      "name": "Name",
+      "status": "Status",
+      "sku": "SKU",
+      "brand": "Brand",
+      "created-at": "Created at",
+      "actions": "Actions",
+      "Footer": {
+        "showing": "Showing",
+        "of": "of",
+        "products": "products"
+      }
+    },
+    "NoProducts": {
+      "heading": "No products found",
+      "description": "Try changing the filters or add a new product.",
+      "allProductsButton": "All products",
+      "newProductButton": "New product"
+    }
+  },
+  "Pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "more-pages": "More pages"
+  },
+  "ProductForm": {
+    "create": "Create",
+    "creating": "Creating...",
+    "save": "Save",
+    "saving": "Saving...",
+    "back-to-products": "Back to products list",
+    "VariantSelector": {
+      "addVariant": "Add variant",
+      "allVariants": "All variants",
+      "untitled": "Untitled",
+      "deleteVariant": "Delete variant",
+      "sku": "SKU"
+    },
+    "Fields": {
+      "title": "Main Information",
+      "showAll": "Show all",
+      "showLess": "Show less",
+      "Sizes": {
+        "sizeAndPrice": "Sizes and Price",
+        "size": "Size",
+        "sizeRu": "Rus. size",
+        "price": "Price",
+        "error": "Please, enter price for a product",
+        "add": "Add"
+      }
+    }
+  },
+  "OrderListPage": {
+    "title": "Orders",
+    "description": "Introducing Our Dynamic Orders Dashboard for Seamless Management and Insightful Analysis.",
+    "this-week": "This week",
+    "this-month": "This month",
+    "from-last-week": "from last week",
+    "from-last-month": "from last month",
+    "increase": "increase",
+    "decrease": "decrease",
+    "OrderListTable": {
+      "title": "Orders",
+      "description": "Recent orders from your store.",
+      "order": "Order",
+      "customer": "Customer",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "anonymous": "Anonymous User",
+      "Footer": {
+        "showing": "Showing",
+        "of": "of",
+        "orders": "orders"
+      }
+    },
+    "NoOrdersYet": {
+      "heading": "No orders yet",
+      "description": "Try changing the filters or view all orders",
+      "viewOrdersButton": "View orders"
+    },
+    "OrderPreview": {
+      "order": "Order",
+      "date": "Date",
+      "trackOrderButton": "Track order",
+      "orderDetails": "Order details",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "total": "Total",
+      "shippingInformation": "Shipping Information",
+      "noShippingInformation": "No shipping information",
+      "customerInformation": "Customer Information",
+      "customer": "Customer",
+      "anonymous": "Anonymous User",
+      "username": "Username",
+      "paymentMethod": "Payment Method",
+      "na": "N/A",
+      "fulfilledOn": "Fulfilled on",
+      "previousOrder": "Previous Order",
+      "nextOrder": "Next Order"
+    }
+  },
+  "OrderEditPage": {
+    "backButton": "Back",
+    "order": "Order",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "deleteConfirmationHeading": "Are you sure you want to delete this order?",
+    "deleteConfirmationDescription": "Once you delete the order, you want be able to see it again",
+    "goBack": "Go back",
+    "deleteFormError": "Could not delete order",
+    "OrderDetailsTable": {
+      "title": "Order Details",
+      "created": "Created",
+      "image": "Image",
+      "product": "Product",
+      "total": "Total"
+    },
+    "cancel": "Cancel",
+    "cancelOrder": "Cancel order",
+    "cancelingOrder": "Cancelling order...",
+    "cancelConfirmationDialog": "Are you sure you want to cancel this order?",
+    "cancelConfirmationDialogDescription": "The refund for the order will have to be disputed through a payment system that the customer used",
+    "notifyAboutCancellation": "Notify customer about cancellation?",
+    "cancelError": "Could not cancel order",
+    "OrderFulfillment": {
+      "fulfillItems": "Fulfill items",
+      "fulfillingItems": "Fulfilling items...",
+      "fulfillmentError": "Could not fulfill items"
+    },
+    "OrderPayment": {
+      "payment": "Payment",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "total": "Total",
+      "paymentMethod": "Payment method",
+      "CreatePayment": {
+        "createInvoice": "Create invoice",
+        "createInvoiceDescription": "Note: Once you create payment, the customer will not be able to change the order",
+        "goBack": "Go back",
+        "paymentProvider": "Payment Provider",
+        "selectPaymentProvider": "Select payment provider",
+        "sendInvoiceNotice": "Send invoice to customer?",
+        "invoiceCreateError": "Could not create invoice",
+        "creatingInvoice": "Creating invoice..."
+      },
+      "MarkAsPaid": {
+        "markAsPaidButton": "Mark as paid",
+        "markingAsPaidButton": "Marking as paid...",
+        "markAsPaidTitle": "Mark order as paid",
+        "markAsPaidDescription": " Are you sure you want to mark this order as paid?",
+        "cancel": "Cancel",
+        "notifyAboutReceivingPayment": "Notify customer about receiving a payment?",
+        "markAsPaidError": "Could not mark order as paid"
+      }
+    },
+    "OrderShipping": {
+      "title": "Shipping",
+      "contactInformation": "Contact Information",
+      "noContactInformation": "No contact information provided",
+      "shippingAddress": "Shipping Address",
+      "noShippingAddress": "No shipping address provided",
+      "trackingInformation": "Tracking Information",
+      "noTrackingInformation": "No tracking information provided",
+      "carrier": "Carrier",
+      "trackingNumber": "Tracking Number",
+      "AddTracking": {
+        "addTrackingButton": "Add tracking",
+        "addingTrackingButton": "Adding tracking...",
+        "addTrackingTitle": "Add shipping tracking number",
+        "cancel": "Cancel",
+        "shippingCarrier": "Shipping carrier",
+        "trackingNumber": "Tracking number",
+        "shippingCarrierError": "Please, enter shipping carrier",
+        "trackingNumberError": "Please, enter tracking number",
+        "notifyUser": "Notify user about tracking number?",
+        "addTrackingError": "Could not add tracking number"
+      },
+      "customer": "Customer",
+      "name": "Name",
+      "anonymous": "Anonymous User",
+      "username": "Username",
+      "viewCustomer": "View Customer"
+    }
+  },
+  "CustomerListPage": {
+    "Header": {
+      "title": "Your Customers",
+      "description": "Manage your customers and their orders. Analyze their sessions and sales patterns to improve your store.",
+      "storeSessionsThisWeek": "Store Sessions This Week",
+      "fromLastWeek": "from last week",
+      "storeSessionsThisMonth": "Store Sessions This Month",
+      "fromLastMonth": "from last month"
+    },
+    "CustomerListTable": {
+      "Tabs": {
+        "all": "All",
+        "new": "New",
+        "returning": "Returning",
+        "madePurchase": "Made a Purchase"
+      },
+      "title": "Customers",
+      "description": "Recent customers from your store.",
+      "TableHead": {
+        "customer": "Customer",
+        "status": "Status",
+        "lastVisit": "Last Visit",
+        "orders": "Orders",
+        "amountSpent": "Amount spent"
+      },
+      "TableFooter": {
+        "showing": "Showing",
+        "of": "of",
+        "customers": "customers"
+      }
+    },
+    "TopCustomers": {
+      "title": "Top Customers",
+      "description": "Check out the customers who interact with your shop the most",
+      "TableHead": {
+        "customer": "Customer",
+        "sales": "Sales",
+        "visits": "Visits"
+      }
+    }
+  },
+  "CustomerDetailPage": {
+    "Header": {
+      "back": "Back",
+      "sendMessage": "Send message"
+    },
+    "CustomerOrders": {
+      "title": "Orders",
+      "TableHead": {
+        "order": "Order",
+        "date": "Date",
+        "status": "Status",
+        "total": "Total"
+      }
+    },
+    "CustomerEvents": {
+      "title": "Timeline",
+      "TableHead": {
+        "date": "Date",
+        "time": "Time",
+        "event": "Event",
+        "details": "Details"
+      }
+    },
+    "CustomerInformation": {
+      "title": "Customer",
+      "customerInformation": "Customer Information",
+      "name": "Name",
+      "username": "Username",
+      "registeredOn": "Registered on",
+      "lastVisit": "Last visit",
+      "orders": "Orders",
+      "ordersCreated": "Orders created",
+      "ordersPaid": "Orders paid",
+      "amountSpent": "Amount spent",
+      "carts": "Carts",
+      "cartsCreated": "Carts created",
+      "addedToCart": "Added To Cart",
+      "totalCartAmount": "Total cart amount"
+    },
+    "CustomerFavoriteProducts": {
+      "title": "Favorite Products",
+      "noFavoriteProducts": "No favorite products"
+    }
+  },
+  "PaymentSystemsPage": {
+    "title": "Payment Systems",
+    "description": "Connect 40+ payment gateways to your store and accept payment from all over the world.",
+    "TableHead": {
+      "name": "Name",
+      "status": "Status"
+    },
+    "DeletePaymentSystem": {
+      "title": "Are you sure you want to delete this payment method?",
+      "description": "Once you delete the payment method, you want be able to see it again",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "deleteError": "Could not delete payment method",
+      "cancel": "Cancel"
+    },
+    "UpdatePaymentSystem": {
+      "title": "Edit Payment Method",
+      "edit": "Edit",
+      "discard": "Discard",
+      "updatePaymentMethod": "Update Payment Method",
+      "updatingPaymentMethod": "Updating Payment Method...",
+      "updateError": "Could not update payment method"
+    },
+    "CreatePaymentSystem": {
+      "title": "Add Payment Gateway",
+      "description": "Learn more about connecting payment gateways in our",
+      "guide": "Quick guide",
+      "error": "Could not create payment method",
+      "creatingPaymentMethod": "Creating Payment Method...",
+      "createPaymentMethod": "Create Payment Method"
+    },
+    "FormFields": {
+      "Name": {
+        "label": "Name",
+        "placeholder": "Enter payment method name",
+        "error": "Please, enter payment method name"
+      },
+      "Provider": {
+        "label": "Provider",
+        "placeholder": "Select payment provider",
+        "error": "Please, select payment provider"
+      },
+      "ButtonText": {
+        "label": "Button Text",
+        "description": "This text will be displayed on the payment button",
+        "placeholder": "Enter button text",
+        "error": "Please, enter button text"
+      },
+      "Status": {
+        "label": "Status",
+        "placeholder": "Select status",
+        "active": "Active",
+        "draft": "Draft"
+      },
+      "TelegramPayments": {
+        "PaymentGateway": {
+          "label": "Payment Gateway",
+          "placeholder": "Select payment gateway",
+          "error": "Please, select payment gateway"
+        },
+        "ProviderToken": {
+          "label": "Provider Token",
+          "placeholder": "Enter provider token",
+          "error": "Please, enter provider token"
+        }
+      },
+      "CryptoTransfer": {
+        "Network": {
+          "label": "Network",
+          "placeholder": "Enter network",
+          "error": "Please, Enter network"
+        },
+        "Address": {
+          "label": "Address",
+          "placeholder": "Enter address on selected network",
+          "error": "Please, enter address on selected network"
+        }
+      },
+      "BankTransfer": {
+        "Message": {
+          "label": "Message",
+          "placeholder": "Enter message",
+          "error": "Please, enter message",
+          "description": "This message with your requisites will be sent to the user when they checkout. It is recommended that you include all the necessary information for the user to make a successful payment."
+        }
+      },
+      "WalletPay": {
+        "ApiKey": {
+          "label": "API Key",
+          "placeholder": "Enter API key",
+          "error": "Please, enter API key"
+        },
+        "AutoConversionCurrency": {
+          "label": "Auto Conversion Currency",
+          "placeholder": "Enter auto conversion currency",
+          "error": "Please, enter auto conversion currency"
+        }
+      }
+    }
+  },
+  "SettingsPage": {
+    "StoreInformation": {
+      "title": "Store Information",
+      "description": "Update your store's name, description, and logo.",
+      "FormFields": {
+        "storeName": {
+          "label": "Store Name",
+          "placeholder": "Enter store name",
+          "error": "Please, enter store name"
+        },
+        "storeDescription": {
+          "label": "Store Description",
+          "placeholder": "Enter store description",
+          "error": "Please, enter store description"
+        },
+        "storeTimezone": {
+          "label": "Store Timezone",
+          "placeholder": "Select store timezone",
+          "error": "Please, select store timezone",
+          "selectTimezone": "Select timezone...",
+          "searchTimezone": "Search timezone...",
+          "noTimezoneFound": "No timezone found."
+        }
+      },
+      "StoreLogo": {
+        "title": "Store Logo",
+        "description": "Upload your brand's logo. Recommended size of the logo is 96x32 pixels. You can learn more about your store customization in our",
+        "guide": "guide",
+        "FormFields": {
+          "lightLogo": {
+            "label": "Light logo",
+            "description": "This logo will be used when user has a dark screen",
+            "error": "Please, upload light logo"
+          },
+          "darkLogo": {
+            "label": "Dark logo",
+            "description": "This logo will be used when user has a light screen",
+            "error": "Please, upload dark logo"
+          }
+        },
+        "LogoPreview": {
+          "title": "Nav Preview"
+        }
+      },
+      "saveChanges": "Save Changes",
+      "savingChanges": "Saving Changes..."
+    },
+    "StoreBotToken": {
+      "title": "Telegram Bot",
+      "description": "Connect Telegram Bot to your store to be able interact with users.Learn how to do it in our",
+      "guide": "guide",
+      "FormFields": {
+        "storeUrl": {
+          "label": "Store URL",
+          "description": "Learn more on how to connect your store to telegram"
+        },
+        "botUsername": {
+          "label": "Telegram Bot Username",
+          "placeholder": "Enter your Telegram Bot username",
+          "error": "Please, enter your Telegram Bot username"
+        },
+        "botToken": {
+          "label": "Telegram Bot API Key",
+          "placeholder": "Enter your Telegram Bot API key",
+          "error": "Please, enter your Telegram Bot API key"
+        }
+      }
+    }
+  },
+  "StoreCreatePage": {
+    "title": "Create Your Store In Telegram",
+    "description": "We are currently in beta, so we can't accept all stores. Please, start by filling out an application and we will let you know as soon as we can onboard you.",
+    "FormFields": {
+      "storeName": {
+        "label": "Store Name",
+        "placeholder": "Enter store name",
+        "error": "Please, enter store name"
+      },
+      "storeDescription": {
+        "label": "Store Description",
+        "placeholder": "Enter store description",
+        "error": "Please, enter store description"
+      },
+      "telegramChannels": {
+        "label": "Telegram Channels (Optional)",
+        "placeholder": "Enter your telegram channels, separated by comma",
+        "error": "Please, enter your telegram channels, separated by comma"
+      },
+      "productCategory": {
+        "label": "Please select products you are planning to sell",
+        "error": "Please, select products you are planning to sell",
+        "categories": {
+          "clothingAndAccessories": "Clothing and Accessories",
+          "electronicsAndGadgets": "Electronics and Gadgets",
+          "beachAndBody": "Beach and Personal Care",
+          "digitalProductsAndServices": "Digital Products and Services",
+          "educationAndOnlineCourses": "Education and Online Courses",
+          "other": "Other"
+        },
+        "otherCategory": {
+          "label": "Other Category",
+          "placeholder": "Enter other category",
+          "error": "Please, enter other category"
+        }
+      }
+    },
+    "submitApplication": "Submit Application",
+    "submittingApplication": "Submitting Application...",
+    "formError": "Could not submit application"
+  },
+  "StoreApplicationSuccess": {
+    "title": "Your application has been submitted!",
+    "description": "We will review your application and get back to you as soon as possible. We will notify you once it's done.",
+    "backToStores": "Back to Stores"
+  },
+  "StoreSelectPage": {
+    "welcomeBack": "Welcome back, {firstName}!",
+    "createNewStore": "Create new store",
+    "description": "Select a store to manage"
+  },
+  "LandingPage": {
+    "title": "Create your Telegram store in just a few minutes",
+    "description": "Upload your products, connect to your Telegram bot, setup a payment system, and you are ready to go!",
+    "goToDashboard": "Go to Dashboard",
+    "signIn": "Sign In",
+    "Nav": {
+      "guides": "Guides",
+      "pricing": "Pricing",
+      "contact": "Contact"
+    }
+  },
+  "Analytics": {
+    "EventBadge": {
+      "addedToCart": "Added to cart",
+      "checkout": "Checkout",
+      "paymentStarted": "Payment Started",
+      "paymentCompleted": "Payment Completed",
+      "removedFromCart": "Removed From Cart",
+      "userRegistered": "User Registered",
+      "userVisited": "User Visited"
+    },
+    "EventData": {
+      "cartTotal": "Cart total",
+      "order": "Order"
+    }
+  },
+  "ProductBadge": {
+    "draft": "Draft",
+    "active": "Active"
   }
 }

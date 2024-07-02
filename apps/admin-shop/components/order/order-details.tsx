@@ -1,6 +1,7 @@
 import { FulfilmentStatus, Order } from "@ditch/lib";
 import { DateTime } from "luxon";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
 import Link from "@/components/navigation/link";
 import { CancelOrderDrawerDialog } from "@/components/order/cancel-order-drawer-dialog";
@@ -14,6 +15,7 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
+import { NoImage } from "@/components/ui/NoImage";
 import {
   Table,
   TableBody,
@@ -23,7 +25,9 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-export default function OrderDetails({ order }: { order: Order }) {
+export default async function OrderDetails({ order }: { order: Order }) {
+  const t = await getTranslations("OrderEditPage.OrderDetailsTable");
+
   function formatDate(date: string) {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL, {
       locale: "en-US"
@@ -35,53 +39,64 @@ export default function OrderDetails({ order }: { order: Order }) {
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-start gap-2">
-            Order Details
+            {t("title")}
             <FulfilmentStatusBadge fulfilmentStatus={order.fulfilmentStatus} />
           </div>
         </CardTitle>
-        <CardDescription>Created: {formatDate(order.created)}</CardDescription>
+        <CardDescription>
+          {t("created")}: {formatDate(order.created)}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="hidden w-[100px] lg:table-cell">
-                <span className="sr-only">Image</span>
+                <span className="sr-only">{t("image")}</span>
               </TableHead>
-              <TableHead>Product</TableHead>
+              <TableHead>{t("product")}</TableHead>
               <TableHead></TableHead>
-              <TableHead>Total</TableHead>
+              <TableHead>{t("total")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {order.cart.items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="hidden lg:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src={
-                      item.product.images && item.product.images.length > 0
-                        ? item.product.images[0].url
-                        : ""
-                    }
-                    width="64"
-                  />
+                  {item.productVariant.images.length > 0 ? (
+                    <Image
+                      alt="Product image"
+                      className="aspect-square rounded-md object-cover"
+                      height="64"
+                      src={
+                        item.productVariant.images.length > 0
+                          ? item.productVariant.images[0]
+                          : ""
+                      }
+                      width="64"
+                    />
+                  ) : (
+                    <NoImage
+                      iconSize={"xs"}
+                      className={
+                        "w-[64px] aspect-square rounded-md object-cover"
+                      }
+                    />
+                  )}
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/products/edit/${item.product.id}`}
+                    href={`/products/edit/${item.productVariant.id}`}
                     className="hover:underline"
                   >
-                    {item.product.title}
+                    {item.productVariant.name}
                   </Link>
                 </TableCell>
                 <TableCell>
-                  {item.quantity} x {"$" + item.product.price}
+                  {item.quantity} x {"$" + item.size.price}
                 </TableCell>
                 <TableCell>
-                  {"$" + (item.product.price * item.quantity).toFixed(2)}
+                  {"$" + (parseInt(item.size.price) * item.quantity).toFixed(2)}
                 </TableCell>
               </TableRow>
             ))}

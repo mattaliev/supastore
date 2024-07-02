@@ -11,16 +11,16 @@ import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { formatFileSize } from "@edgestore/react/utils";
 import * as React from "react";
-import { useDropzone, type DropzoneOptions } from "react-dropzone";
+import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
 
 import Dropzone from "@/components/file-upload/dropzone";
 import { SortableDropzoneImage } from "@/components/file-upload/dropzone-image";
 
 const variants = {
-  base: "flex aspect-square min-w-full items-center justify-center rounded-md border border-dashed",
+  base: "flex min-w-full items-center justify-center rounded-md border border-dashed",
   image:
-    "border-0 p-0 w-full h-full relative shadow-md bg-slate-200 dark:bg-slate-900 rounded-md",
+    "border-0 p-0 w-full h-full relative shadow-md bg-slate-200 dark:bg-slate-900 rounded-md object-contain",
   active: "border-2",
   disabled:
     "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700",
@@ -105,7 +105,7 @@ const MultiImageSortableDropzone = React.forwardRef<
       isDragAccept,
       isDragReject
     } = useDropzone({
-      accept: { "image/*": [] },
+      accept: { "image/*": [], "video/*": [] },
       disabled,
       onDrop: (acceptedFiles) => {
         const files = acceptedFiles;
@@ -184,7 +184,7 @@ const MultiImageSortableDropzone = React.forwardRef<
     }
 
     return (
-      <div>
+      <div className={"w-full"}>
         <DndContext
           id={"sortable-files"}
           modifiers={[restrictToWindowEdges]}
@@ -206,7 +206,7 @@ const MultiImageSortableDropzone = React.forwardRef<
                   onRemoveImage={onRemoveImage}
                   className={twMerge(
                     variants.image,
-                    "w-full aspect-square first:col-span-3"
+                    "w-full first:col-span-3 max-h-96"
                   )}
                 />
               ))}
@@ -214,7 +214,10 @@ const MultiImageSortableDropzone = React.forwardRef<
                 fileStates={value}
                 dropzoneOptions={dropzoneOptions}
                 rootProps={getRootProps({
-                  className: twMerge(dropZoneClassName, "first:col-span-3")
+                  className: twMerge(
+                    dropZoneClassName,
+                    "first:col-span-3 first:h-96 second:aspect-square"
+                  )
                 })}
                 ref={ref}
                 inputProps={getInputProps()}

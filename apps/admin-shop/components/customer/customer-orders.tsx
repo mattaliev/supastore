@@ -1,5 +1,6 @@
 import { PaymentStatus, TelegramUserDetailParsed } from "@ditch/lib";
 import { DateTime } from "luxon";
+import { getTranslations } from "next-intl/server";
 
 import Link from "@/components/navigation/link";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
@@ -14,7 +15,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-export default function CustomerOrders({
+export default async function CustomerOrders({
   customer
 }: {
   customer: TelegramUserDetailParsed;
@@ -25,19 +26,23 @@ export default function CustomerOrders({
     });
   };
 
+  const t = await getTranslations("CustomerDetailPage.CustomerOrders");
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Orders</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order #</TableHead>
-              <TableHead className="hidden sm:table-cell">Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Total</TableHead>
+              <TableHead>{t("TableHead.order")} #</TableHead>
+              <TableHead className="hidden sm:table-cell">
+                {t("TableHead.date")}
+              </TableHead>
+              <TableHead>{t("TableHead.status")}</TableHead>
+              <TableHead>{t("TableHead.total")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -65,7 +70,7 @@ export default function CustomerOrders({
           <TableFooter>
             <TableRow>
               <TableCell colSpan={2} className="text-left">
-                Total
+                {t("TableHead.total")}
               </TableCell>
               <TableCell className="hidden sm:table-cell"></TableCell>
               <TableCell>${customer.amountSpent}</TableCell>

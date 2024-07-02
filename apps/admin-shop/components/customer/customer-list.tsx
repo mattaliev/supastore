@@ -1,5 +1,6 @@
 import { Paginated, TelegramUserList } from "@ditch/lib";
 import { DateTime } from "luxon";
+import { useTranslations } from "next-intl";
 
 import Link from "@/components/navigation/link";
 import Pagination from "@/components/pagination";
@@ -29,6 +30,8 @@ export default function CustomerList({
   customersPaginated: Paginated<TelegramUserList>;
   limit: number;
 }) {
+  const t = useTranslations("CustomerListPage.CustomerListTable");
+
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_SHORT, {
       locale: "en-US"
@@ -51,28 +54,28 @@ export default function CustomerList({
     <div className="grid gap-3">
       <Tabs defaultValue={"all"}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="new">New</TabsTrigger>
-          <TabsTrigger value="return">Returning</TabsTrigger>
-          <TabsTrigger value="made-sale">Made a Purchase</TabsTrigger>
+          <TabsTrigger value="all">{t("Tabs.all")}</TabsTrigger>
+          <TabsTrigger value="new">{t("Tabs.new")}</TabsTrigger>
+          <TabsTrigger value="return">{t("Tabs.returning")}</TabsTrigger>
+          <TabsTrigger value="made-sale">{t("Tabs.madePurchase")}</TabsTrigger>
         </TabsList>
       </Tabs>
       <Card>
         <CardHeader>
-          <CardTitle>Customers</CardTitle>
-          <CardDescription>Recent customers from your store</CardDescription>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Customer</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("TableHead.customer")}</TableHead>
+                <TableHead>{t("TableHead.status")}</TableHead>
                 <TableHead className="hidden sm:table-cell">
-                  Last Visit
+                  {t("TableHead.lastVisit")}
                 </TableHead>
-                <TableHead>Orders</TableHead>
-                <TableHead>Amount spent</TableHead>
+                <TableHead>{t("TableHead.orders")}</TableHead>
+                <TableHead>{t("TableHead.amountSpent")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -93,7 +96,7 @@ export default function CustomerList({
                   </TableCell>
                   <TableCell className="">
                     <Badge variant={customer.isNew ? "success" : "outline"}>
-                      {customer.isNew ? "New" : "Returning"}
+                      {customer.isNew ? t("Tabs.new") : t("Tabs.returning")}
                     </Badge>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
@@ -108,11 +111,13 @@ export default function CustomerList({
         </CardContent>
         <CardFooter>
           <div className="text-xs text-muted-foreground">
-            Showing{" "}
+            {t("TableFooter.showing") + " "}
             <strong>
               {firstProductIndex} - {lastProductIndex}
             </strong>{" "}
-            of <strong>{customersPaginated.totalItems}</strong> customer
+            {t("TableFooter.of")}{" "}
+            <strong>{customersPaginated.totalItems}</strong>{" "}
+            {t("TableFooter.customer")}
           </div>
         </CardFooter>
       </Card>

@@ -2,6 +2,7 @@
 
 import { PaymentStatus } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -40,20 +41,21 @@ export default function MarkAsPaidDrawerDialog({
       ? window.matchMedia("(min-width: 768px)").matches
       : false;
   const [open, setOpen] = useState<boolean>(false);
+  const t = useTranslations("OrderEditPage.OrderPayment.MarkAsPaid");
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button size={"sm"} type={"button"}>
-            Mark as paid
+            {t("markAsPaidButton")}
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mark order as paid</DialogTitle>
+            <DialogTitle>{t("markingAsPaidTitle")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to mark this order as paid?
+              {t("markingAsPaidDescription")}
             </DialogDescription>
           </DialogHeader>
           <MarkAsPaidForm paymentId={paymentId} />
@@ -66,21 +68,19 @@ export default function MarkAsPaidDrawerDialog({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button size={"sm"} type={"button"}>
-          Mark as paid
+          {t("markAsPaidButton")}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Mark order as paid</DrawerTitle>
-          <DrawerDescription>
-            Are you sure you want to mark this order as paid?
-          </DrawerDescription>
+          <DrawerTitle>{t("markingAsPaidTitle")}</DrawerTitle>
+          <DrawerDescription>{t("markingAsPaidDescription")}</DrawerDescription>
         </DrawerHeader>
         <MarkAsPaidForm paymentId={paymentId} className={"px-4"} />
         <DrawerFooter className={"pt-2"}>
           <DrawerClose asChild>
             <Button variant="outline" size="sm">
-              Cancel
+              {t("cancel")}
             </Button>
           </DrawerClose>
         </DrawerFooter>
@@ -98,6 +98,7 @@ function MarkAsPaidForm({
 }) {
   const storeId = useStore();
   const [formState, formAction] = useFormState(updatePaymentStatus, null);
+  const t = useTranslations("OrderEditPage.OrderPayment.MarkAsPaid");
 
   return (
     <form
@@ -112,12 +113,12 @@ function MarkAsPaidForm({
       />
       <div className="flex items-center space-x-2">
         <Checkbox id="notify-user" name="notify-user" />
-        <Label htmlFor="notify-user">
-          Notify customer about receiving a payment?
-        </Label>
+        <Label htmlFor="notify-user">{t("notifyAboutReceivingPayment")}</Label>
       </div>
       {formState?.error && (
-        <p className={"text-destructive text-end text-xs"}>{formState.error}</p>
+        <p className={"text-destructive text-end text-xs"}>
+          {t("markAsPaidError")}
+        </p>
       )}
       <SubmitButton />
     </form>
@@ -126,6 +127,7 @@ function MarkAsPaidForm({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("OrderEditPage.OrderPayment.MarkAsPaid");
 
   if (pending) {
     return (
@@ -136,14 +138,14 @@ function SubmitButton() {
         onClick={(e) => e.preventDefault()}
       >
         <LoaderCircle className="animate-spin" />
-        Marking as paid...
+        {t("markingAsPaidButton")}
       </Button>
     );
   }
 
   return (
     <Button size="sm" type={"submit"}>
-      Mark as paid
+      {t("markAsPaidButton")}
     </Button>
   );
 }

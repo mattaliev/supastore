@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 
 import AuthProvider from "@/components/auth/auth-provider";
+import ReactQueryClientProvider from "@/components/providers/ReactQueryClientProvider";
 import { ThemeProvider } from "@/components/theme";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 
@@ -30,17 +31,19 @@ export default async function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <NextIntlClientProvider messages={messages}>
-            <EdgeStoreProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                enableColorScheme
-                disableTransitionOnChange
-              >
-                {children}
-              </ThemeProvider>
-            </EdgeStoreProvider>
+            <ReactQueryClientProvider>
+              <EdgeStoreProvider>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  enableColorScheme
+                  disableTransitionOnChange
+                >
+                  {children}
+                </ThemeProvider>
+              </EdgeStoreProvider>
+            </ReactQueryClientProvider>
           </NextIntlClientProvider>
         </AuthProvider>
       </body>
