@@ -37,24 +37,18 @@ class CartType(DjangoObjectType):
 
 
 class CartItemType(DjangoObjectType):
-    product = graphene.Field('product.schemas.ProductType', required=True)
-    variant = graphene.Field('product.schemas.ProductVariantType')
+    product_variant = graphene.Field("product.schemas.ProductVariantType")
+    size = graphene.Field("product.schemas.ProductVariantSizeType")
 
     class Meta:
         model = CartItem
-        fields = ["id", "product", "variant", "quantity", "created", "updated"]
-
-    def resolve_product(self, info):
-        return self.product
-
-    def resolve_variant(self, info):
-        return self.variant
+        fields = "__all__"
 
 
 class AddToCartInput(graphene.InputObjectType):
     cart_id = graphene.UUID(required=True)
-    product_id = graphene.UUID(required=True)
-    variant_id = graphene.UUID()
+    product_variant_id = graphene.UUID(required=True)
+    product_variant_size_id = graphene.UUID()
     quantity = graphene.Int(default_value=1)
 
 

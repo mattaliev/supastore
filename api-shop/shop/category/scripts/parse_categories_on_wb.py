@@ -7,8 +7,7 @@ from tqdm import tqdm
 from category.models import Category, Characteristic, CategoryCharacteristic
 
 URL = "https://suppliers-api.wildberries.ru"
-API_TOKEN = "eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczNDM4MTU4NywiaWQiOiIxNTIyOTJkNC1mZjYyLTQwZjYtODk2MS05YjYzNWFlMmViNzUiLCJpaWQiOjU1NzU3MTE0LCJvaWQiOjI2Mzc5MiwicyI6Miwic2lkIjoiMmJmOGRhMDktNmRlNS00YzM1LTkwOGItNjIwZDkyNGYxZmMxIiwidCI6ZmFsc2UsInVpZCI6NTU3NTcxMTR9.jNZQKftq5IytBxBdbnG9efbhQorOqgEqJhYGYlBFi2McFP0G44UvjbP_qD6pvutoJZSfdBoBiy3Hog6utkwgMg"
-
+API_TOKEN = ""
 
 def get_wildberries_categories(locale: str = "ru"):
     categories_url = f"{URL}/content/v2/object/parent/all"

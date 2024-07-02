@@ -27,7 +27,7 @@ class Cart(BaseEntity):
     def get_total_price(self):
         total = 0
         for item in self.items.all():
-            total += item.quantity * item.product.price
+            total += item.quantity * item.size.price
         return total
 
     def get_total_quantity(self):
@@ -40,15 +40,8 @@ class Cart(BaseEntity):
 class CartItem(BaseEntity):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE,
                              related_name="items")
-    product = models.ForeignKey("product.Product", on_delete=models.CASCADE,
-                                related_name="cart_items")
-    variant = models.ForeignKey(
-        "product.ProductVariant",
-        on_delete=models.CASCADE,
-        related_name="cart_items",
-        null=True,
-        blank=True
-    )
+    product_variant = models.ForeignKey("product.ProductVariant", on_delete=models.CASCADE)
+    size = models.ForeignKey("product.ProductVariantSize", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
 
     class Meta:
@@ -56,6 +49,7 @@ class CartItem(BaseEntity):
         verbose_name = "cart item"
         verbose_name_plural = "cart items"
         constraints = [
-            models.UniqueConstraint(fields=['cart', 'variant'],
+            models.UniqueConstraint(fields=['cart', 'product_variant', "size"],
                                     name='unique_cart_variant')
         ]
+        ordering = ["-created"]

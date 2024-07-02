@@ -1,105 +1,284 @@
 import logging
-from decimal import Decimal
 from uuid import UUID
 
-from core.models import Image, EntityStateChoices
-from product.models.product import Product, ProductImage, ProductVariant
+from core.exceptions import NotFoundError, ServerError
+from core.models import EntityStateChoices, Image
+from product.models import (
+    ProductVariant,
+    Product,
+    ProductVariantCharacteristics,
+    ProductVariantImage,
+    ProductVariantSize
+)
 
 __all__ = [
-    "product_list",
-    "product_detail",
+    "product_variant_list",
+    "product_variant_detail",
     "product_create",
     "product_update",
-    "product_delete",
-    "product_images_create",
-    "product_variants_create"
+    "product_variant_create",
+    "product_variant_update",
+    "product_variant_size_create",
+    "product_variant_size_update",
+    "product_variant_image_create",
+    "product_variant_characteristics_create",
+    "product_variant_delete",
+    "product_delete"
 ]
 
 
-def product_list(*, store_id: UUID, state: EntityStateChoices = None):
+def product_detail(*, id: UUID):
+    logger = logging.getLogger(__name__)
+    logger.debug("Fetching product with id: %s", id)
+
+    try:
+        product = Product.objects.filter(variants__id=id).first()
+        charcs = ProductVariantCharacteristics.objects.all().first()
+        return product
+    except Product.DoesNotExist as e:
+        raise NotFoundError(str(e))
+    except Exception as e:
+        raise ServerError(str(e))
+
+
+def product_variant_list(*, store_id: UUID, state: EntityStateChoices = None):
     logger = logging.getLogger(__name__)
     logger.debug("Fetching all products. State: %s", state if state else "All")
 
     if state:
-        return Product.objects.filter(store_id=store_id, state=state)
+        return ProductVariant.objects.filter(store_id=store_id, state=state)
 
-    return Product.objects.filter(store_id=store_id)
+    return ProductVariant.objects.filter(store_id=store_id)
 
 
-def product_detail(id: UUID) -> Product:
+def product_variant_detail(id: UUID) -> ProductVariant:
     logger = logging.getLogger(__name__)
     logger.debug("Fetching product with id: %s", id)
-    return Product.objects.get(pk=id)
+
+    try:
+        product = ProductVariant.objects.get(pk=id)
+        return product
+    except ProductVariant.DoesNotExist as e:
+        raise NotFoundError(str(e))
+    except Exception as e:
+        raise ServerError(str(e))
 
 
 def product_create(
-    *,
-    store_id: UUID,
-    title: str,
-    short_description: str = None,
-    description: str = None,
-    price: str,
-    sku: str,
-    quantity: int = None,
-    image_urls: list[str] = [],
-    variants: list[dict] = [],
-    state: str = EntityStateChoices.ACTIVE
+        *,
+        store_id: UUID,
+        category_id: UUID,
+        variants: list[dict] = [],
 ) -> Product:
-    logger = logging.getLogger(__name__)
-    logger.debug("Creating product with title: %s", title)
-
     product = Product.objects.create(
         store_id=store_id,
-        title=title,
-        short_description=short_description,
-        description=description,
-        price=Decimal(price),
-        sku=sku,
-        quantity=quantity,
-        state=state
+        category_id=category_id,
     )
 
-    product_images_create(product_id=product.id, image_urls=image_urls)
-
-    product_variants_create(product_id=product.id, variants=variants)
+    for variant in variants:
+        product_variant_create(
+            store_id=store_id,
+            product_id=product.id,
+            **variant
+        )
 
     return product
 
 
 def product_update(
-    *,
-    product_id: UUID,
-    title: str,
-    short_description: str = None,
-    description: str = None,
-    price: str,
-    sku: str,
-    quantity: int = None,
-    image_urls: list[str] = [],
-    variants: list[dict] = [],
-    state: str = EntityStateChoices.ACTIVE
+        *,
+        product_id: UUID,
+        store_id: UUID,
+        category_id: UUID,
+        variants: list[dict] = [],
 ) -> Product:
-    logger = logging.getLogger(__name__)
-    logger.debug("Updating product with id: %s", product_id)
-
     product = Product.objects.get(pk=product_id)
-
-    product.title = title
-    product.short_description = short_description
-    product.description = description
-    product.price = Decimal(price)
-    product.sku = sku
-    product.quantity = quantity
-    product.state = state
+    product.category_id = category_id
     product.save()
 
-    ProductImage.objects.filter(product=product).delete()
-    product_images_create(product_id=product_id, image_urls=image_urls)
-
-    ProductVariant.objects.filter(product=product).delete()
-    product_variants_create(product_id=product_id, variants=variants)
+    for variant in variants:
+        product_variant_update(
+            product_id=product.id,
+            store_id=store_id,
+            **variant
+        )
 
     return product
+
+
+def product_variant_create(
+        *,
+        store_id: UUID,
+        product_id: UUID,
+        name: str,
+        short_description: str = None,
+        description: str = None,
+        brand: str = None,
+        sku: str,
+        wb_id: int = None,
+        state: EntityStateChoices = EntityStateChoices.ACTIVE,
+        sizes: list[dict] = [],
+        images: list[str] = [],
+        characteristics: list[dict] = [],
+):
+    product_variant = ProductVariant.objects.create(
+        product_id=product_id,
+        store_id=store_id,
+        name=name,
+        short_description=short_description,
+        description=description,
+        brand=brand,
+        sku=sku,
+        wb_id=wb_id,
+        state=state
+    )
+
+    for size in sizes:
+        product_variant_size_create(
+            product_variant_id=product_variant.id,
+            **size
+        )
+
+    for image_url in images:
+        product_variant_image_create(
+            product_variant_id=product_variant.id,
+            image_url=image_url
+        )
+
+    for characteristic in characteristics:
+        product_variant_characteristics_create(
+            product_variant_id=product_variant.id,
+            **characteristic
+        )
+
+    return product_variant
+
+
+def product_variant_update(
+        *,
+        product_variant_id: UUID = None,
+        product_id: UUID,
+        store_id: UUID,
+        name: str,
+        short_description: str = None,
+        description: str = None,
+        brand: str = None,
+        sku: str,
+        wb_id: int = None,
+        state: EntityStateChoices = EntityStateChoices.ACTIVE,
+        sizes: list[dict] = [],
+        images: list[str] = [],
+        characteristics: list[dict] = [],
+):
+    product_variant, created = ProductVariant.objects.update_or_create(
+        id=product_variant_id,
+        defaults={
+            "product_id": product_id,
+            "store_id": store_id,
+            "name": name,
+            "short_description": short_description,
+            "description": description,
+            "brand": brand,
+            "sku": sku,
+            "wb_id": wb_id,
+            "state": state
+        }
+    )
+
+    # Only keep the sizes that are in the sizes list
+    (ProductVariantSize.objects.filter(product_variant_id=product_variant.id)
+     .exclude(id__in=[size.get("product_variant_size_id") for size in sizes])
+     .delete())
+
+    for size in sizes:
+        product_variant_size_update(
+            product_variant_id=product_variant.id,
+            **size
+        )
+
+    product_variant.images.all().delete()
+
+    for image in images:
+        product_variant_image_create(
+            product_variant_id=product_variant.id,
+            image_url=image
+        )
+
+    product_variant.product_characteristics.all().delete()
+
+    for characteristic in characteristics:
+        product_variant_characteristics_create(
+            product_variant_id=product_variant.id,
+            **characteristic
+        )
+
+    return product_variant
+
+
+def product_variant_size_create(
+        *,
+        product_variant_id: UUID,
+        size_en: str = None,
+        size_ru: str = None,
+        price: str,
+        discount_price: str = None
+):
+    return ProductVariantSize.objects.create(
+        product_variant_id=product_variant_id,
+        size_en=size_en,
+        size_ru=size_ru,
+        price=price,
+        discount_price=discount_price
+    )
+
+
+def product_variant_size_update(
+        *,
+        product_variant_id: UUID,
+        product_variant_size_id: UUID = None,
+        size_en: str = None,
+        size_ru: str = None,
+        price: str,
+        discount_price: str = None
+):
+    return ProductVariantSize.objects.update_or_create(
+        id=product_variant_size_id,
+        defaults={
+            "product_variant_id": product_variant_id,
+            "size_en": size_en,
+            "size_ru": size_ru,
+            "price": price,
+            "discount_price": discount_price
+        }
+    )
+
+
+def product_variant_image_create(
+        *,
+        product_variant_id: UUID,
+        image_url: str,
+        order: int = 0,
+):
+    image, created = Image.objects.get_or_create(url=image_url)
+
+    return ProductVariantImage.objects.create(
+        product_variant_id=product_variant_id,
+        image=image,
+        order=order
+    )
+
+
+def product_variant_characteristics_create(
+        *,
+        product_variant_id: UUID,
+        characteristic_id: UUID,
+        value: list[str]
+) -> ProductVariantCharacteristics:
+    return ProductVariantCharacteristics.objects.create(
+        product_variant_id=product_variant_id,
+        characteristic_id=characteristic_id,
+        value=value
+    )
 
 
 def product_delete(id: UUID) -> None:
@@ -108,37 +287,7 @@ def product_delete(id: UUID) -> None:
     Product.objects.get(pk=id).delete()
 
 
-def product_images_create(
-    *,
-    product_id: UUID,
-    image_urls: list[str] = []
-) -> None:
+def product_variant_delete(id: UUID) -> None:
     logger = logging.getLogger(__name__)
-    logger.debug("Creating images for product with id: %s", product_id)
-
-    images = [Image.objects.get_or_create(url=image)[0] for image in image_urls]
-
-    for index, image in enumerate(images):
-        ProductImage.objects.create(
-            product_id=product_id,
-            image=image,
-            order=index
-        )
-
-
-def product_variants_create(
-    *,
-    product_id: UUID,
-    variants: list[dict] = []
-) -> None:
-    logger = logging.getLogger(__name__)
-    logger.debug("Creating variants for product with id: %s", product_id)
-
-    for index, variant in enumerate(variants):
-        ProductVariant.objects.create(
-            product_id=product_id,
-            size=variant.get("size") if variant.get("size") else None,
-            color=variant.get("color") if variant.get("color") else None,
-            material=variant.get("material") if variant.get("material") else None,
-            quantity=variant.get("quantity")
-        )
+    logger.debug("Deleting product variant with id: %s", id)
+    ProductVariant.objects.get(pk=id).delete()

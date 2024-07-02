@@ -38,7 +38,7 @@ class TelegramUserType(DjangoObjectType):
     added_to_cart_count = graphene.Int()
     total_cart_amount = graphene.Decimal()
     completed_payment_count = graphene.Int()
-    favorite_products = graphene.List("product.schemas.ProductType")
+    favorite_products = graphene.List("product.schemas.ProductVariantType")
 
     def resolve_orders(self, info):
         return self.orders.all()

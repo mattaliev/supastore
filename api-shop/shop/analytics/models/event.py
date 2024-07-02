@@ -6,7 +6,7 @@ from cart.models import Cart, CartItem
 from core.models import BaseEntity
 from order.models import Order
 from payment.models import Payment
-from product.models import Product
+from product.models import ProductVariant
 from user.models import TelegramUser
 
 __all__ = [
@@ -82,16 +82,16 @@ class Event(BaseEntity):
             user=cart.user,
             store_id=store_id,
             event_data={
-                "product_id": str(cart_item.product.id),
+                "product_variant_id": str(cart_item.product_variant.id),
                 "cart_id": str(cart.id),
                 "cart_total": str(cart.get_total_price()),
                 "quantity": cart_item.quantity,
-                "product_name": cart_item.product.title
+                "product_variant_name": cart_item.product_variant.name
             }
         )
 
     @staticmethod
-    def register_removed_from_cart(*, cart: Cart, product: Product, store_id: UUID):
+    def register_removed_from_cart(*, cart: Cart, product: ProductVariant, store_id: UUID):
         Event.objects.create(
             event_type=EventTypeChoices.REMOVED_FROM_CART,
             user=cart.user,
@@ -100,7 +100,7 @@ class Event(BaseEntity):
                 "product_id": str(product.id),
                 "cart_id": str(cart.id),
                 "cart_total": str(cart.get_total_price()),
-                "product_name": product.title
+                "product_name": product.name
             }
         )
 
