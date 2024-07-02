@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0005_alter_cart_store'),
+        ('cart', '0006_auto_20240620_0826'),
         ('product', '0014_alter_wbproduct_category_alter_wbproduct_store_and_more'),
     ]
 
@@ -27,13 +27,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cartitem',
             name='product_variant',
-            field=models.ForeignKey(default='db090976-bd59-46fd-a8b7-d2a173d56ee7', on_delete=django.db.models.deletion.CASCADE, to='product.wbproductvariant'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.wbproductvariant'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='cartitem',
             name='size',
-            field=models.ForeignKey(default='23868b3d-1d91-4631-80db-a54dce5113f2', on_delete=django.db.models.deletion.CASCADE, to='product.wbproductvariantsize'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.wbproductvariantsize'),
             preserve_default=False,
         ),
     ]

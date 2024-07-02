@@ -10,7 +10,7 @@ def delete_all_carts(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0006_remove_cartitem_unique_cart_variant_and_more'),
+        ('cart', '0005_alter_cart_store'),
     ]
 
     operations = [
