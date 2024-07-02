@@ -46,6 +46,13 @@ class Order(BaseEntity):
         null=True,
         related_name="order"
     )
+    payment = models.OneToOneField(
+        "payment.Payment",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="order"
+    )
     fulfilment_status = models.CharField(
         max_length=20,
         choices=FulfillmentStatusChoices.choices,

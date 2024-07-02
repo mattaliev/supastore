@@ -33,7 +33,6 @@ class OrderType(DjangoObjectType):
     user = graphene.Field('user.schemas.TelegramUserType')
     cart = graphene.Field('cart.schemas.CartType')
     store = graphene.Field('store.schemas.StoreType')
-    has_default_shipping_details = graphene.Boolean()
     shipping = graphene.Field("shipping.schemas.ShippingType")
     payment = graphene.Field("payment.schemas.schema.PaymentType")
     state = graphene.String()
@@ -47,15 +46,8 @@ class OrderType(DjangoObjectType):
         fields = [
             "id", "order_number", "fulfilment_status", "fulfilment_date",
             "user", "cart", "store",
-            "has_default_shipping_details",
             "shipping", "payment", "state", "created", "updated"
         ]
-
-    def resolve_has_default_shipping_details(self, info):
-        if hasattr(self, "shipping"):
-            return self.shipping.details is not None
-
-        return False
 
     def resolve_shipping(self, info):
         if hasattr(self, "shipping"):
