@@ -68,7 +68,9 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.BACKEND_SERVICE_URL }}
             NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}
-
+            NEXTAUTH_URL=${{ secrets.TG_NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ secrets.TG_NEXTAUTH_SECRET }}
+            
 
       - name: Deploy to Cloud Run
         run: |
