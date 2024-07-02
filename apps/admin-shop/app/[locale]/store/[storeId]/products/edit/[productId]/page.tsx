@@ -1,9 +1,9 @@
-import { productDetail } from "@ditch/lib";
+import { adminProductGet } from "@ditch/lib";
 import { notFound } from "next/navigation";
 
 import { authenticated } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
-import ProductUpdateForm from "@/components/product/product-update-form";
+import ProductFormFields from "@/components/product/ProductFormFields";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +18,7 @@ async function ProductEditPage({
   params: { productId },
   accessToken
 }: WithAuthProps<ProductEditPageProps>) {
-  const product = await authenticated(accessToken, productDetail, {
+  const product = await authenticated(accessToken, adminProductGet, {
     id: productId
   });
 
@@ -26,7 +26,7 @@ async function ProductEditPage({
     notFound();
   }
 
-  return <ProductUpdateForm product={product} />;
+  return <ProductFormFields product={product} />;
 }
 
 export default WithAuth<ProductEditPageProps>(ProductEditPage);

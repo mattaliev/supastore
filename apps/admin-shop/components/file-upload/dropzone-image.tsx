@@ -18,7 +18,7 @@ export function DropzoneImage(props: {
   return (
     <>
       <img
-        className="h-full w-full rounded-md object-cover"
+        className="h-full w-full rounded-md object-contain"
         src={imageUrls[index]}
         alt={
           typeof fileState.file === "string"
@@ -41,7 +41,6 @@ export function DropzoneImage(props: {
         type={"button"}
       >
         <X className="text-primary" width={16} height={16} />
-        {/*<div className=" rounded-md border border-solid  bg-accent transition-all duration-300 hover:h-6 hover:w-6 dark:bg-accent"></div>*/}
       </Button>
     </>
   );

@@ -29,6 +29,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ["@ditch/lib"],
 };
 
 const withMDX = createMDX({});

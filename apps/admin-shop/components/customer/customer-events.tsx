@@ -1,5 +1,6 @@
 import { AnalyticsEvent } from "@ditch/lib";
 import { DateTime } from "luxon";
+import { getTranslations } from "next-intl/server";
 import React from "react";
 
 import AnalyticsEventBadge from "@/components/analytics/analytics-event-badge";
@@ -14,11 +15,13 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-export default function CustomerEvents({
+export default async function CustomerEvents({
   events
 }: {
   events: AnalyticsEvent[];
 }) {
+  const t = await getTranslations("CustomerDetailPage.CustomerEvents");
+
   const formatDate = (date: string) => {
     return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED, {
       locale: "en-US"
@@ -45,17 +48,19 @@ export default function CustomerEvents({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Timeline</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-2">Date</TableHead>
-              <TableHead className="px-2">Time</TableHead>
-              <TableHead className="px-2 text-center">Event</TableHead>
+              <TableHead className="px-2">{t("TableHead.date")}</TableHead>
+              <TableHead className="px-2">{t("TableHead.time")}</TableHead>
+              <TableHead className="px-2 text-center">
+                {t("TableHead.event")}
+              </TableHead>
               <TableHead className="hidden sm:table-cell px-2">
-                Details
+                {t("TableHead.details")}
               </TableHead>
             </TableRow>
           </TableHeader>

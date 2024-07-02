@@ -1,5 +1,3 @@
-import { cartProductFragment } from "./product";
-
 export const cartFragment = /* GraphQL */ `
   fragment CartFields on CartType {
     id
@@ -8,16 +6,18 @@ export const cartFragment = /* GraphQL */ `
     items {
       id
       quantity
-      product {
-        ...CartProductFields
-      }
-      variant {
+      productVariant {
         id
-        size
-        material
-        color
+        name
+        images
+      }
+      size {
+        id
+        sizeEn
+        sizeRu
+        discountPrice
+        price
       }
     }
   }
-  ${cartProductFragment}
 `;

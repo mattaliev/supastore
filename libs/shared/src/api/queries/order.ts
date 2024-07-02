@@ -40,3 +40,9 @@ export const orderGetByCartIdQuery = /* GraphQL */ `
   }
   ${orderFragment}
 `;
+
+export const canCreateOrderQuery = /* GraphQL */ `
+  query canCreateOrder($storeId: UUID!, $cartId: UUID!) {
+    orderCanCreate(storeId: $storeId, cartId: $cartId)
+  }
+`;

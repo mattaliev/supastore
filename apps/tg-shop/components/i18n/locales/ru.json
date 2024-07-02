@@ -1,0 +1,161 @@
+{
+  "ErrorPage": {
+    "somethingWentWrong": "Упс, что-то пошло не так...",
+    "tryAgain": "Попробовать снова",
+    "goToCatalog": "Перейти к каталогу"
+  },
+  "UnauthorizedPage": {
+    "unauthorized": "Неавторизован",
+    "unauthorizedMessage": "У вас нет доступа к этой странице.",
+    "goToCatalog": "Перейти к каталогу"
+  },
+  "ShippingPage": {
+    "title": "Ваши адреса доставки",
+    "noShippingAddresses": "У вас нет сохраненных адресов доставки.",
+    "addShippingAddress": "Добавить новый адрес доставки",
+    "select": "Выбрать",
+    "selecting": "Выбирается...",
+    "deleteMessage": "Вы уверены, что хотите удалить этот адрес?",
+    "delete": "Удалить",
+    "deleting": "Удаляется...",
+    "deleteAddressError": "Не удалось удалить адрес доставки",
+    "selectAddressError": "Не удалось выбрать адрес доставки"
+  },
+  "ShippingCreatePage": {
+    "title": "Введите новый адрес доставки",
+    "select": "Выбрать",
+    "close": "Закрыть",
+    "pleaseSelectAddress": "Пожалуйста, выберите адрес",
+    "add": "Добавить",
+    "adding": "Добавляется...",
+    "CreateForm": {
+      "houseNumber": {
+        "label": "Номер дома",
+        "placeholder": "Введите номер дома",
+        "errorMessage": "Пожалуйста, введите номер дома или отметьте галочку 'Частный дом'"
+      },
+      "privateHouse": {
+        "label": "Частный дом",
+        "placeholder": "Введите частный дом"
+      },
+      "floor": {
+        "label": "Этаж",
+        "placeholder": "Введите этаж"
+      },
+      "entrance": {
+        "label": "Подъезд",
+        "placeholder": "Введите подъезд"
+      },
+      "intercom": {
+        "label": "Домофон",
+        "placeholder": "Введите домофон"
+      },
+      "additionalInfoMessage": "Дополнительная информация для доставки",
+      "formError": "Не удалось создать адрес доставки"
+    }
+  },
+  "ContactInfoPage": {
+    "title": "Ваши контактные данные",
+    "noContactInfo": "У вас нет сохраненных контактных данных.",
+    "addContactInfo": "Добавить контактные данные",
+    "select": "Выбрать",
+    "selecting": "Выбирается...",
+    "deleteMessage": "Вы уверены, что хотите удалить эти контактные данные?",
+    "delete": "Удалить",
+    "deleting": "Удалятся...",
+    "deleteContactInfoError": "Не удалось удалить контактные данные",
+    "selectContactInfoError": "Не удалось выбрать контактные данные",
+    "CreateForm": {
+      "fullName": {
+        "label": "Полное имя",
+        "placeholder": "Введите полное имя",
+        "errorMessage": "Пожалуйста, введите полное имя"
+      },
+      "phone": {
+        "label": "Телефон",
+        "placeholder": "Введите номер телефона",
+        "errorMessage": "Пожалуйста, введите номер телефона"
+      },
+      "email": {
+        "label": "Электронная почта",
+        "placeholder": "Введите адрес электронной почты",
+        "errorMessage": "Пожалуйста, введите действующий адрес электронной почты"
+      },
+      "save": "Сохранить",
+      "saving": "Сохраняется...",
+      "formError": "Не удалось создать контактную информацию"
+    }
+  },
+  "ProductCatalogPage": {
+    "selectVariant": "Пожалуйста, выберите раземер",
+    "addToCart": "В корзину",
+    "sizeTitle": "Размер",
+    "colorTitle": "Цвет",
+    "materialTitle": "Материал",
+    "selectVariantButton": "Выбрать вариант",
+    "AddToCartErrors": {
+      "noProductFound": "Товар не найден, пожалуйста, попробуйте обновить страницу",
+      "noVariantSelected": "Пожалуйста, выберите вариант",
+      "couldNotAddToCart": "Не удалось добавить товар в корзину",
+      "couldNotCreateCart": "Не удалось создать корзину, пожалуйста, попробуйте обновить страницу"
+    },
+    "RemoveFromCartErrors": {
+      "noCartFound": "Корзина не найдена, пожалуйста, попробуйте обновить страницу",
+      "noProductFound": "Товар не найден, пожалуйста, попробуйте обновить страницу",
+      "couldNotRemoveFromCart": "Не удалось удалить товар из корзины"
+    },
+    "UpdateCartItemErrors": {
+      "noCartFound": "Корзина не найдена, пожалуйста, попробуйте обновить страницу",
+      "noProductFound": "Товар не найден, пожалуйста, попробуйте обновить страницу",
+      "couldNotUpdateCartItem": "Не удалось обновить товар в корзине"
+    }
+  },
+  "ProductDetailPage": {
+    "characteristics": "Характеристики",
+    "description": "Описание"
+  },
+  "CartPage": {
+    "cartTotalMessage": "{count, selectordinal, one {# товар} few {# товара} other {# товаров}}. Итого (без учета доставки)",
+    "CheckoutForm": {
+      "errors": {
+        "noCartFound": "Корзина не найдена",
+        "noPaymentMethodSelected": "Пожалуйста, выберите способ оплаты",
+        "couldNotCreateOrder": "Не удалось создать заказ"
+      }
+    },
+    "CheckoutTotal": {
+      "items": "{count, selectordinal, zero {Товаров} one {Товар} few {Товара} many {Товаров} other {Товаров}}, {count}",
+      "shipping": "Доставка",
+      "total": "Итого"
+    },
+    "checkoutButton": "Оформить заказ",
+    "checkoutShippingAddress": "Адрес доставки",
+    "checkoutContactInformation": "Контактные данные",
+    "checkoutPaymentMethods": "Способы оплаты",
+    "loading": "Загрузка...",
+    "createNewShippingAddress": "Добавить новый адрес доставки",
+    "createNewContactInfo": "Добавить новые контактные данные",
+    "noPaymentMethods": "В этом магазине нет доступных способов оплаты",
+    "emptyCart": "Ваша корзина пуста",
+    "shopNow": "Начать покупки"
+  },
+  "PaymentSuccessPage": {
+    "paymentSuccess": "Успешная оплата",
+    "thankYou": "Спасибо за вашу покупку!",
+    "orderNumber": "Номер заказа",
+    "items": "{count, selectordinal, zero {# Товаров} one {# Товар} few {# Товара} many {# Товаров} other {# Товаров}}",
+    "total": "Итого",
+    "continueShopping": "Продолжить покупки"
+  },
+  "PoliciesPage": {
+    "title": "Политики",
+    "termsOfService": "Условия использования",
+    "privacyPolicy": "Политика конфиденциальности",
+    "returnPolicy": "Политика возврата",
+    "deliveryPolicy": "Политика доставки"
+  },
+  "Footer": {
+    "contact": "Контакт",
+    "policies": "Политики"
+  }
+}

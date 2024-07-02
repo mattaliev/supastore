@@ -1,6 +1,8 @@
 "use client";
 import { Store } from "@ditch/lib";
-import { LoaderCircle } from "lucide-react";
+import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { updateStore } from "@/components/store/actions";
@@ -13,20 +15,27 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { timezones } from "@/lib/timezones";
+import { cn } from "@/lib/utils";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("SettingsPage");
 
   if (pending) {
     return (
@@ -37,36 +46,37 @@ function SubmitButton() {
         disabled
       >
         <LoaderCircle className={"animate-spin h-5 w-5"} />
-        Saving Changes...
+        {t("savingChanges")}
       </Button>
     );
   }
 
   return (
     <Button variant={"default"} size={"sm"} type={"submit"}>
-      Save Changes
+      {t("saveChanges")}
     </Button>
   );
 }
 
 export default function StoreInformation({ store }: { store: Store }) {
   const [formState, formAction] = useFormState(updateStore, null);
+  const t = useTranslations("SettingsPage.StoreInformation");
 
   return (
     <form action={formAction}>
       <Card>
         <CardHeader>
-          <CardTitle>Store Information</CardTitle>
-          <CardDescription>
-            Update your store's name, description, and logo.
-          </CardDescription>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="store-name">Store Name</Label>
+            <Label htmlFor="store-name">
+              {t("FormFields.storeName.label")}
+            </Label>
             {formState?.fieldErrors && formState?.fieldErrors?.storeName && (
               <p className={"text-xs text-destructive text-start"}>
-                {formState.fieldErrors.storeName[0]}
+                {t("FormFields.storeName.error")}
               </p>
             )}
             <Input
@@ -76,11 +86,13 @@ export default function StoreInformation({ store }: { store: Store }) {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="store-description">Store Description</Label>
+            <Label htmlFor="store-description">
+              {t("FormFields.storeDescription.label")}
+            </Label>
             {formState?.fieldErrors &&
               formState?.fieldErrors?.storeDescription && (
                 <p className={"text-xs text-destructive text-start"}>
-                  {formState.fieldErrors.storeDescription[0]}
+                  {t("FormFields.storeDescription.error")}
                 </p>
               )}
             <Textarea
@@ -90,23 +102,16 @@ export default function StoreInformation({ store }: { store: Store }) {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="store-timezone">Store Timezone</Label>
+            <Label htmlFor="store-timezone">
+              {t("FormFields.storeTimezone.label")}
+            </Label>
             {formState?.fieldErrors &&
               formState?.fieldErrors?.storeTimezone && (
                 <p className={"text-xs text-destructive text-start"}>
-                  {formState.fieldErrors.storeTimezone[0]}
+                  {t("FormFields.storeTimezone.error")}
                 </p>
               )}
-            <Select defaultValue={store.storeTimezone} name={"store-timezone"}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {timezones.map(({ name, value }) => (
-                  <SelectItem value={value}>{name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <TimezoneCombobox defaultTimezone={store.storeTimezone} />
           </div>
         </CardContent>
         <CardFooter>
@@ -114,5 +119,58 @@ export default function StoreInformation({ store }: { store: Store }) {
         </CardFooter>
       </Card>
     </form>
+  );
+}
+
+function TimezoneCombobox({ defaultTimezone }: { defaultTimezone?: string }) {
+  const [open, setOpen] = useState(false);
+  const t = useTranslations(
+    "SettingsPage.StoreInformation.FormFields.storeTimezone"
+  );
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {defaultTimezone
+            ? timezones.find((timezone) => timezone.value === defaultTimezone)
+                ?.name
+            : t("selectTimezone")}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className={"p-0"}>
+        <Command>
+          <CommandInput placeholder={"Search timezone..."} />
+          <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
+          <CommandGroup>
+            {timezones.map((timezone) => (
+              <CommandItem
+                key={timezone.value}
+                value={timezone.value}
+                onSelect={(currentValue) => {
+                  setOpen(false);
+                }}
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    defaultTimezone === timezone.value
+                      ? "opacity-100"
+                      : "opacity-0"
+                  )}
+                />
+                {timezone.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }

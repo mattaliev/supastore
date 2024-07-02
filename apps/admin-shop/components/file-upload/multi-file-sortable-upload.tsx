@@ -11,9 +11,11 @@ import {
 import { useEdgeStore } from "@/lib/edgestore";
 
 export default function MultiFileSortableUpload({
-  initialFileStates
+  initialFileStates,
+  onChange
 }: {
   initialFileStates?: FileState[];
+  onChange?: (files: FileState[]) => void | Promise<void>;
 }) {
   const [fileStates, setFileStates] = useState<FileState[]>(
     initialFileStates || []
@@ -42,6 +44,7 @@ export default function MultiFileSortableUpload({
       if (fileState) {
         fileState.file = url;
       }
+      onChange?.(newFileStates);
       return newFileStates;
     });
   }
@@ -63,7 +66,7 @@ export default function MultiFileSortableUpload({
 
   return (
     <MultiImageSortableDropzone
-      className="aspect-square rounded-md object-cover"
+      className="rounded-md object-contain"
       value={fileStates}
       dropzoneOptions={{
         maxFiles: 20

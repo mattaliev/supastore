@@ -1,8 +1,12 @@
+import { ErrorFactory } from "./errors";
 import {
   cartAddItemMutation,
   cartCreateMutation,
   cartRemoveItemMutation,
   cartUpdateItemMutation,
+  contactInformationCreateMutation,
+  contactInformationDefaultSetMutation,
+  contactInformationDeleteMutation,
   orderCreateMutation,
   orderDeleteMutation,
   orderStatusUpdateMutation,
@@ -14,6 +18,10 @@ import {
   productCreateMutation,
   productDeleteMutation,
   productUpdateMutation,
+  productVariantDeleteMutation,
+  shippingAddressCreateMutation,
+  shippingAddressDefaultSetMutation,
+  shippingAddressDeleteMutation,
   shippingAddTrackingMutation,
   shippingDetailsCreateMutation,
   shippingDetailsUpdateMutation,
@@ -25,6 +33,9 @@ import {
   storeUpdateMutation,
 } from "./mutations";
 import {
+  adminProductGetQuery,
+  canCreateOrderQuery,
+  cartGetByUserIdQuery,
   cartGetQuery,
   customerDetailQuery,
   customerPaginatedQuery,
@@ -33,12 +44,21 @@ import {
   ordersPaginatedGetQuery,
   paymentMethodsListQuery,
   productDetailQuery,
-  productsGetQuery,
   productsPaginatedGetQuery,
   salesAnalyticsGetQuery,
   sessionAnalyticsByHourGetQuery,
   shopPaymentMethodsListQuery,
 } from "./queries";
+import {
+  categoriesGetQuery,
+  categoryCharacteristicsGetQuery,
+} from "./queries/category";
+import {
+  contactInformationDefaultGetQuery,
+  contactInformationListGetQuery,
+  shippingAddressDefaultGetQuery,
+  shippingAddressListGetQuery,
+} from "./queries/shipping";
 import {
   storeBotTokenGetQuery,
   storeBotUsernameGetQuery,
@@ -49,13 +69,23 @@ import {
   storeLogoGetQuery,
 } from "./queries/store";
 import {
+  BackendAdminProductGetOperation,
   BackendCartAddItemOperation,
   BackendCartCreateOperation,
+  BackendCartGetByUserIdOperation,
   BackendCartGetOperation,
   BackendCartRemoveItemOperation,
   BackendCartUpdateItemOperation,
+  BackendCategoriesGetOperation,
+  BackendCategoryCharacteristicsGetOperation,
+  BackendContactInformationCreateOperation,
+  BackendContactInformationDefaultGetOperation,
+  BackendContactInformationDefaultSetOperation,
+  BackendContactInformationDeleteOperation,
+  BackendContactInformationListGetOperation,
   BackendCustomerDetailOperation,
   BackendCustomersPaginatedGetOperation,
+  BackendOrderCanCreateOperation,
   BackendOrderCreateOperation,
   BackendOrderDeleteOperation,
   BackendOrderGetByCartIdOperation,
@@ -71,11 +101,16 @@ import {
   BackendProductCreateOperation,
   BackendProductDeleteOperation,
   BackendProductDetailOperation,
-  BackendProductsGetOperation,
   BackendProductsPaginatedGetOperation,
   BackendProductUpdateOperation,
+  BackendProductVariantDeleteOperation,
   BackendSalesAnalyticsOperation,
   BackendSessionAnalyticsByHourGetOperation,
+  BackendShippingAddressCreateOperation,
+  BackendShippingAddressDefaultGetOperation,
+  BackendShippingAddressDefaultSetOperation,
+  BackendShippingAddressDeleteOperation,
+  BackendShippingAddressListGetOperation,
   BackendShippingAddTrackingOperation,
   BackendShippingDetailsCreateOperation,
   BackendShippingDetailsUpdateOperation,
@@ -104,6 +139,7 @@ import {
   Product,
   ProductCreateInput,
   ProductUpdateInput,
+  ProductVariant,
   SafePaymentMethod,
   SalesAnalytics,
   Shipping,
@@ -123,8 +159,8 @@ type ExtractVariables<T> = T extends { variables: object }
 
 export type APIFunction<T, U> = (
   body: T,
-  headers: { Authorization: string },
-) => Promise<U>;
+  headers?: HeadersInit,
+) => Promise<U | undefined>;
 
 const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/graphql/`;
 
@@ -135,6 +171,7 @@ export const TAGS = {
   PAYMENT: "payment",
   USER: "user",
   STORE: "store",
+  SHIPPING: "shipping",
 };
 
 export const backendFetch = async <T>({
@@ -166,36 +203,37 @@ export const backendFetch = async <T>({
     });
 
     if (!result.ok) {
-      const responseText = await result.text();
-      console.error("Response Text: ", responseText);
+      const errorBody = await result.json();
       throw {
-        errors: responseText,
+        code: result.status,
+        error: errorBody.errors[0],
         query,
       };
     }
 
     const body = await result.json();
+
     if (body.errors) {
       throw {
-        errors: body.errors[0],
+        error: body.errors[0],
         query,
       };
     }
     return { status: result.status, body };
   } catch (e: any) {
     console.error(e);
-    console.error(e.errors);
-    const error = e.errors ? e.errors.message : e;
-    const errorCode =
-      e.errors && e.errors.extensions && e.errors.extensions.code
-        ? e.errors.extensions.code
-        : "UNKNOWN";
+    let errorCode: number | undefined;
 
-    throw {
-      message: error,
+    if (e.code) {
+      errorCode = e.code;
+    } else if (e.error && e.error.extensions && e.error.extensions.code) {
+      errorCode = e.error.extensions.code;
+    }
+
+    ErrorFactory.from({
+      error: e.error.message,
       errorCode,
-      query,
-    };
+    });
   }
 };
 
@@ -203,10 +241,9 @@ export const signInShopUser = async (
   body: {
     storeId: string;
     initDataRaw: string;
-    cartId?: string;
   },
   headers?: HeadersInit,
-): Promise<{ user: TelegramUser; cart: Cart }> => {
+): Promise<{ user: TelegramUser }> => {
   const { body: responseBody } =
     await backendFetch<BackendSignInShopUserOperation>({
       query: signInShopUserMutation,
@@ -218,29 +255,6 @@ export const signInShopUser = async (
   return responseBody.data.signInShopUser;
 };
 
-export const productsGet = async (
-  body: {
-    state?: EntityState;
-    storeId: string;
-  },
-  headers?: HeadersInit,
-): Promise<Product[]> => {
-  const { body: responseBody } =
-    await backendFetch<BackendProductsGetOperation>({
-      query: productsGetQuery,
-      tags: [TAGS.PRODUCT],
-      variables: body,
-      headers,
-      cache: "no-store",
-    });
-
-  if (!responseBody.data.productsGet) {
-    return [];
-  }
-
-  return responseBody.data.productsGet;
-};
-
 export const productsPaginatedGet = async (
   body: {
     storeId: string;
@@ -249,7 +263,7 @@ export const productsPaginatedGet = async (
     limit?: number;
   },
   headers?: HeadersInit,
-): Promise<Paginated<Product>> => {
+): Promise<Paginated<ProductVariant>> => {
   const { body: responseBody } =
     await backendFetch<BackendProductsPaginatedGetOperation>({
       query: productsPaginatedGetQuery,
@@ -267,7 +281,7 @@ export const productDetail = async (
     id: string;
   },
   headers?: HeadersInit,
-): Promise<Product | undefined> => {
+): Promise<ProductVariant | undefined> => {
   const { body: responseBody } =
     await backendFetch<BackendProductDetailOperation>({
       query: productDetailQuery,
@@ -281,6 +295,27 @@ export const productDetail = async (
   }
 
   return responseBody.data.productDetail;
+};
+
+export const adminProductGet = async (
+  body: {
+    id: string;
+  },
+  headers?: HeadersInit,
+): Promise<Product | undefined> => {
+  const { body: responseBody } =
+    await backendFetch<BackendAdminProductGetOperation>({
+      query: adminProductGetQuery,
+      variables: body,
+      tags: [TAGS.PRODUCT],
+      headers,
+    });
+
+  if (!responseBody.data.adminProductGet) {
+    return undefined;
+  }
+
+  return responseBody.data.adminProductGet;
 };
 
 export const productCreate = async (
@@ -340,8 +375,23 @@ export const productDelete = async (
   return responseBody.data.productDelete.success;
 };
 
+export const productVariantDelete = async (
+  body: { id: string; storeId: string },
+  headers?: HeadersInit,
+): Promise<boolean> => {
+  const { body: responseBody } =
+    await backendFetch<BackendProductVariantDeleteOperation>({
+      query: productVariantDeleteMutation,
+      tags: [TAGS.PRODUCT],
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.productVariantDelete.success;
+};
+
 export const cartGet = async (
-  body: { cartId?: string; storeId: string },
+  body: { cartId: string; storeId: string },
   headers?: HeadersInit,
 ): Promise<Cart | undefined> => {
   const { body: responseBody } = await backendFetch<BackendCartGetOperation>({
@@ -356,6 +406,21 @@ export const cartGet = async (
   }
 
   return responseBody.data.cartGet;
+};
+
+export const cartGetByUserId = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendCartGetByUserIdOperation>({
+      query: cartGetByUserIdQuery,
+      variables: body,
+      tags: [TAGS.CART],
+      headers,
+    });
+
+  return responseBody.data.cartGetByUserId;
 };
 
 export const cartCreate = async (
@@ -379,8 +444,8 @@ export const cartAddItem = async (
   body: {
     input: {
       cartId: string;
-      productId: string;
-      variantId: string | null;
+      productVariantId: string;
+      productVariantSizeId: string;
       quantity: number;
     };
   },
@@ -523,9 +588,14 @@ export const orderCreate = async (
   body: {
     storeId: string;
     cartId: string;
+    paymentMethodId: string;
   },
   headers?: HeadersInit,
-): Promise<Order> => {
+): Promise<{
+  paymentProvider: PaymentProvider;
+  order: Order;
+  paymentInfo: string;
+}> => {
   const { body: responseBody } =
     await backendFetch<BackendOrderCreateOperation>({
       query: orderCreateMutation,
@@ -535,7 +605,7 @@ export const orderCreate = async (
       headers,
     });
 
-  return responseBody.data.orderCreate.order;
+  return responseBody.data.orderCreate;
 };
 
 export const orderStatusUpdate = async (
@@ -1002,7 +1072,7 @@ export const storeConnectToTelegram = async (
   body: {
     storeId: string;
   },
-  headers: HeadersInit,
+  headers?: HeadersInit,
 ): Promise<boolean> => {
   const { body: responseBody } =
     await backendFetch<BackendStoreConnectToTelegramOperation>({
@@ -1066,7 +1136,7 @@ export const storeApplicationCreate = async (
       productCategory?: string;
     };
   },
-  headers: HeadersInit,
+  headers?: HeadersInit,
 ): Promise<StoreApplication | undefined> => {
   const { body: responseBody } =
     await backendFetch<BackendStoreApplicationCreateOperation>({
@@ -1144,4 +1214,223 @@ export const storeBotUsernameGet = async (
     });
 
   return responseBody.data.storeBotUsernameGet;
+};
+
+export const shippingAddressList = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendShippingAddressListGetOperation>({
+      query: shippingAddressListGetQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.shippingAddressListGet;
+};
+
+export const shippingAddressDefaultGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendShippingAddressDefaultGetOperation>({
+      query: shippingAddressDefaultGetQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.shippingAddressDefaultGet;
+};
+
+export const shippingAddressDefaultSet = async (
+  body: { storeId: string; shippingAddressId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendShippingAddressDefaultSetOperation>({
+      query: shippingAddressDefaultSetMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.shippingAddressDefaultSet.shippingAddress;
+};
+
+export const shippingAddressCreate = async (
+  body: {
+    input: {
+      storeId: string;
+      address: string;
+      additionalInfo?: string;
+    };
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendShippingAddressCreateOperation>({
+      query: shippingAddressCreateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.shippingAddressCreate.shippingAddress;
+};
+
+export const shippingAddressDelete = async (
+  body: { shippingAddressId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendShippingAddressDeleteOperation>({
+      query: shippingAddressDeleteMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.shippingAddressDelete.success;
+};
+
+export const contactInformationList = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendContactInformationListGetOperation>({
+      query: contactInformationListGetQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.contactInformationListGet;
+};
+
+export const contactInformationDefaultGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendContactInformationDefaultGetOperation>({
+      query: contactInformationDefaultGetQuery,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.contactInformationDefaultGet;
+};
+
+export const contactInformationCreate = async (
+  body: {
+    input: {
+      storeId: string;
+      name: string;
+      email: string;
+      phone: string;
+    };
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendContactInformationCreateOperation>({
+      query: contactInformationCreateMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.contactInformationCreate.contactInformation;
+};
+
+export const contactInformationDefaultSet = async (
+  body: { storeId: string; contactInformationId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendContactInformationDefaultSetOperation>({
+      query: contactInformationDefaultSetMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.contactInformationDefaultSet.contactInformation;
+};
+
+export const contactInformationDelete = async (
+  body: { contactInformationId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendContactInformationDeleteOperation>({
+      query: contactInformationDeleteMutation,
+      variables: body,
+      cache: "no-store",
+      tags: [TAGS.ORDER, TAGS.SHIPPING],
+      headers,
+    });
+
+  return responseBody.data.contactInformationDelete.success;
+};
+
+export const orderCanCreate = async (
+  body: { storeId: string; cartId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendOrderCanCreateOperation>({
+      query: canCreateOrderQuery,
+      variables: body,
+      headers,
+      tags: [TAGS.CART, TAGS.ORDER],
+      cache: "no-store",
+    });
+
+  return responseBody.data.orderCanCreate;
+};
+
+export const categoriesGet = async (
+  body: { locale?: string; parentId?: string; search?: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendCategoriesGetOperation>({
+      query: categoriesGetQuery,
+      cache: "no-store",
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.categoriesGet;
+};
+
+export const categoryCharacteristicsGet = async (
+  body: { categoryId?: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendCategoryCharacteristicsGetOperation>({
+      query: categoryCharacteristicsGetQuery,
+      cache: "no-store",
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.categoryCharacteristicsGet;
 };

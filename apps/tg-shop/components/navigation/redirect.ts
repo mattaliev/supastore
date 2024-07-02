@@ -3,8 +3,10 @@ import { getStoreId } from "@/components/store/getStoreId";
 
 type RedirectArgs = Parameters<typeof intlRedirect>;
 
-export default function storeRedirect(...args: RedirectArgs): never {
-  const storeId = getStoreId();
+export default async function storeRedirect(
+  ...args: RedirectArgs
+): Promise<never> {
+  const storeId = await getStoreId();
   const [url, ...rest] = args;
   const storeUrl = `/store/${storeId}${url}`;
 

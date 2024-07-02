@@ -1,7 +1,10 @@
-import { cartGet } from "@ditch/lib";
+import { cartGet, cartGetByUserId } from "@ditch/lib";
 import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
 
+import { authOptions } from "@/auth";
 import Link from "@/components/navigation/link";
+import { tmaAuthenticated } from "@/lib/auth";
 
 export default async function CartIcon({ storeId }: { storeId: string }) {
   const cartId = cookies().get("cartId")?.value;
@@ -10,6 +13,18 @@ export default async function CartIcon({ storeId }: { storeId: string }) {
 
   if (cartId) {
     cart = await cartGet({ cartId, storeId });
+  }
+
+  const session = await getServerSession(authOptions);
+  if (session) {
+    cart = await tmaAuthenticated(
+      session.user.initDataRaw,
+      storeId,
+      cartGetByUserId,
+      {
+        storeId
+      }
+    );
   }
 
   return (

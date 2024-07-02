@@ -1,6 +1,7 @@
 "use client";
 import { Store } from "@ditch/lib";
 import { CheckIcon, CopyIcon, Eye, EyeOff, LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useFormState, useFormStatus } from "react-dom";
@@ -21,6 +22,7 @@ import { Label } from "@/components/ui/label";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("SettingsPage");
 
   if (pending) {
     return (
@@ -30,14 +32,14 @@ function SubmitButton() {
         disabled
       >
         <LoaderCircle className={"animate-spin h-5 w-5"} />
-        Saving Changes...
+        {t("savingChanges")}
       </Button>
     );
   }
 
   return (
     <Button size={"sm"} type={"submit"}>
-      Save Changes
+      {t("saveChanges")}
     </Button>
   );
 }
@@ -49,6 +51,7 @@ export default function StoreBotToken({
   store: Store;
   botToken?: string | null;
 }) {
+  const t = useTranslations("SettingsPage.StoreBotToken");
   const [urlCopied, setUrlCopied] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [formState, formAction] = useFormState(updateStore, null);
@@ -56,25 +59,26 @@ export default function StoreBotToken({
     <form action={formAction}>
       <Card>
         <CardHeader>
-          <CardTitle>Telegram Bot</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <CardDescription>
-            Connect Telegram Bot to your store to be able interact with users.
-            Learn how to do it in our{" "}
+            {t("description")}{" "}
             <Link
               href={"https://guides.ditch-concept.com/pages/connect-bot"}
               inStore={false}
               localized={false}
               className={"underline hover:text-primary hover:no-underline"}
             >
-              quick guide
+              {t("guide")}
             </Link>
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className={"grid gap-2"}>
-            <Label htmlFor={"store-url"}>Store URL</Label>
+            <Label htmlFor={"store-url"}>
+              {t("FormFields.storeUrl.label")}
+            </Label>
             <p className="text-muted-foreground text-xs">
-              Learn more on how to connect your store to telegram
+              {t("FormFields.storeUrl.description")}
             </p>
             <div className={"relative"}>
               <Input
@@ -101,25 +105,27 @@ export default function StoreBotToken({
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="bot-username">Telegram Bot Username</Label>
+            <Label htmlFor="bot-username">
+              {t("FormFields.botUsername.label")}
+            </Label>
             {formState?.fieldErrors && formState.fieldErrors?.botUsername && (
               <p className={"text-xs text-destructive text-start"}>
-                {formState.fieldErrors.botUsername[0]}
+                {t("FormFields.botUsername.error")}
               </p>
             )}
             <Input
               id="bot-username"
               name="bot-username"
               type={"text"}
-              placeholder={"Enter your Telegram Bot username"}
+              placeholder={t("FormFields.botUsername.placeholder")}
               defaultValue={store.botUsername || ""}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="bot-token">Telegram Bot API Key</Label>
+            <Label htmlFor="bot-token">{t("FormFields.botToken.label")}</Label>
             {formState?.fieldErrors && formState.fieldErrors?.botToken && (
               <p className={"text-xs text-destructive text-start"}>
-                {formState.fieldErrors.botToken[0]}
+                {t("FormFields.botToken.error")}
               </p>
             )}
             <div className={"relative"}>
@@ -127,7 +133,7 @@ export default function StoreBotToken({
                 id="bot-token"
                 name="bot-token"
                 type={hidden ? "password" : "text"}
-                placeholder={"Enter your Telegram Bot API key"}
+                placeholder={t("FormFields.botToken.placeholder")}
                 defaultValue={botToken || ""}
                 className={"pr-10"}
               />

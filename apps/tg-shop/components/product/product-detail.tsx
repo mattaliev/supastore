@@ -1,23 +1,23 @@
 "use client";
-import { Product } from "@ditch/lib";
+import { ProductVariant } from "@ditch/lib";
+import { useTranslations } from "next-intl";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import { useEffect, useState } from "react";
 
 import AddToCartButton from "@/components/cart/add-to-cart-button";
 import ProductDetailImages from "@/components/product/product-detail-images";
-import ProductDetailVariants from "@/components/product/product-detail-variants";
+import ProductDetailSizes from "@/components/product/product-detail-sizes";
+import ProductCharacteristics from "@/components/product/ProductCharacteristics";
+import ProductVariants from "@/components/product/ProductVariants";
 
 export default function ProductDetail({
-  product,
-  storeId
+  product
 }: {
-  product: Product;
-  storeId: string;
+  product: ProductVariant;
 }) {
-  const [variant, setVariant] = useState(
-    product.variants && product.variants[0]
-  );
+  const t = useTranslations("ProductDetailPage");
+  const [size, setSize] = useState(product.sizes[0]);
   const [serializedDescription, setSerializedDescription] =
     useState<MDXRemoteSerializeResult | null>(null);
 
@@ -37,46 +37,58 @@ export default function ProductDetail({
     <div className="p-4 sm:p-6">
       <div className="grid gap-6">
         <ProductDetailImages productImages={product.images || []} />
-        <div className="grid gap-4">
+        <div className="grid gap-2">
           <div className="grid gap-2">
             <h1 className="text-2xl font-bold text-telegram-text-color">
-              {product.title}
+              {product.name}
             </h1>
             <p className="text-telegram-hint-color">
               {product.shortDescription || ""}
             </p>
           </div>
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-telegram-text-color">
-                ${product.price}
-              </span>
-              <div className="flex items-center w-1/2 justify-stretch">
-                <AddToCartButton
-                  productId={product.id}
-                  doesProductHaveVariants={
-                    (product.variants && product.variants.length > 0) as boolean
-                  }
-                  selectedVariantId={variant?.id}
-                />
-              </div>
-            </div>
+          <div className="flex items-center justify-between">
+            <span className="text-2xl font-bold text-telegram-text-color">
+              ${size.price}
+            </span>
           </div>
-          <ProductDetailVariants
-            variants={product.variants || []}
-            selectedVariant={variant}
-            setSelectedVariant={setVariant}
+          <ProductVariants
+            variants={product.product.variants}
+            selectedVariantId={product.id}
+          />
+          <ProductDetailSizes
+            sizes={product.sizes}
+            selectedSize={size}
+            setSelectedSize={setSize}
+          />
+          <ProductCharacteristics
+            characteristics={product.productCharacteristics}
           />
           {serializedDescription && (
-            <MDXRemote
-              {...serializedDescription}
-              components={{
-                p: (props) => (
-                  <p className="text-telegram-text-color text-sm" {...props} />
-                )
-              }}
-            />
+            <div className={"grid gap-2"}>
+              <h2 className="text-lg font-semibold text-telegram-text-color">
+                {t("description")}
+              </h2>
+              <MDXRemote
+                {...serializedDescription}
+                components={{
+                  p: (props) => (
+                    <p
+                      className="text-telegram-text-color text-sm"
+                      {...props}
+                    />
+                  )
+                }}
+              />
+            </div>
           )}
+          <div className={"sticky bottom-0 py-4 bg-telegram-bg-color"}>
+            <AddToCartButton
+              productVariantId={product.id}
+              doesProductHaveVariants={product.sizes.length > 1}
+              productVariantSizeId={size?.id}
+              size={"lg"}
+            />
+          </div>
         </div>
       </div>
     </div>

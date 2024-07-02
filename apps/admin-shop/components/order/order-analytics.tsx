@@ -1,4 +1,5 @@
 import { salesAnalyticsGet } from "@ditch/lib";
+import { getTranslations } from "next-intl/server";
 
 import {
   Card,
@@ -17,21 +18,21 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
     salesIncreaseThisWeek,
     salesIncreaseThisMonth
   } = await salesAnalyticsGet({ storeId });
+  const t = await getTranslations("OrderListPage");
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
       <Card className="sm:col-span-2">
         <CardHeader className="pb-3">
-          <CardTitle>Your Orders</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <CardDescription className="max-w-lg text-balance leading-relaxed">
-            Introducing Our Dynamic Orders Dashboard for Seamless Management and
-            Insightful Analysis.
+            {t("description")}
           </CardDescription>
         </CardHeader>
       </Card>
       <Card>
         <CardHeader className="pb-2">
-          <CardDescription>This Week</CardDescription>
+          <CardDescription>{t("this-week")}</CardDescription>
           <CardTitle className="text-4xl">${salesThisWeek}</CardTitle>
         </CardHeader>
         <CardContent>
@@ -39,7 +40,7 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
             {salesIncreaseThisWeek >= 0
               ? "+" + salesIncreaseThisWeek
               : salesIncreaseThisWeek}
-            % from last week
+            % {t("from-last-week")}
           </div>
         </CardContent>
         <CardFooter>
@@ -47,8 +48,8 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
             value={Math.abs(salesIncreaseThisWeek)}
             aria-label={
               salesIncreaseThisWeek >= 0
-                ? "+" + salesIncreaseThisWeek + "% increase"
-                : salesIncreaseThisWeek + "% decrease"
+                ? "+" + salesIncreaseThisWeek + "% " + t("increase")
+                : salesIncreaseThisWeek + "% " + t("decrease")
             }
             indicatorColor={
               salesIncreaseThisWeek >= 0 ? "bg-primary" : "bg-destructive"
@@ -58,7 +59,7 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
       </Card>
       <Card>
         <CardHeader className="pb-2">
-          <CardDescription>This Month</CardDescription>
+          <CardDescription>{t("this-month")}</CardDescription>
           <CardTitle className="text-4xl">${salesThisMonth}</CardTitle>
         </CardHeader>
         <CardContent>
@@ -66,7 +67,7 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
             {salesIncreaseThisMonth > 0
               ? "+" + salesIncreaseThisMonth
               : salesIncreaseThisMonth}
-            % from last month
+            % {t("from-last-month")}
           </div>
         </CardContent>
         <CardFooter>
@@ -74,8 +75,8 @@ export default async function OrderAnalytics({ storeId }: { storeId: string }) {
             value={Math.abs(salesIncreaseThisMonth)}
             aria-label={
               salesIncreaseThisMonth > 0
-                ? "+" + salesIncreaseThisMonth + "% increase"
-                : salesIncreaseThisMonth + "% decrease"
+                ? "+" + salesIncreaseThisMonth + "% " + t("increase")
+                : salesIncreaseThisMonth + "% " + t("decrease")
             }
             indicatorColor={
               salesIncreaseThisMonth > 0 ? "bg-primary" : "bg-destructive"

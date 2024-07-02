@@ -8,7 +8,7 @@ type RevalidatePathArgs = Parameters<typeof revalidatePath>;
 export default async function revalidateStorePath(...args: RevalidatePathArgs) {
   const [path, ...rest] = args;
 
-  const storeId = getStoreId();
+  const storeId = await getStoreId();
   const locale = await getLocale();
 
   revalidatePath(`/${locale}/store/${storeId}${path}`, ...rest);

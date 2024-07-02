@@ -1,6 +1,7 @@
 "use client";
 import { ParsedPaymentMethod } from "@ditch/lib";
 import { FilePenIcon, LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -35,6 +36,7 @@ export default function PaymentMethodUpdateDialogDrawer({
       ? window.matchMedia("(min-width: 768px)").matches
       : false;
   const [open, setOpen] = useState<boolean>(false);
+  const t = useTranslations("PaymentSystemsPage.UpdatePaymentSystem");
 
   if (isDesktop) {
     return (
@@ -42,12 +44,12 @@ export default function PaymentMethodUpdateDialogDrawer({
         <DialogTrigger asChild>
           <Button variant="outline" type="button" size="icon">
             <FilePenIcon className="w-5 h-5" />
-            <span className="sr-only">Edit</span>
+            <span className="sr-only">{t("edit")}</span>
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Payment Method</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
           </DialogHeader>
           <PaymentMethodUpdateForm
             paymentMethod={paymentMethod}
@@ -63,12 +65,12 @@ export default function PaymentMethodUpdateDialogDrawer({
       <DrawerTrigger asChild>
         <Button variant="outline" type="button" size="icon">
           <FilePenIcon className="w-5 h-5" />
-          <span className="sr-only">Edit</span>
+          <span className="sr-only">{t("edit")}</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Edit Payment Method</DrawerTitle>
+          <DrawerTitle>{t("title")}</DrawerTitle>
         </DrawerHeader>
         <PaymentMethodUpdateForm
           paymentMethod={paymentMethod}
@@ -78,7 +80,7 @@ export default function PaymentMethodUpdateDialogDrawer({
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline" type={"button"}>
-              Discard
+              {t("discard")}
             </Button>
           </DrawerClose>
         </DrawerFooter>
@@ -98,6 +100,7 @@ function PaymentMethodUpdateForm({
 }) {
   const [provider, setProvider] = useState<string>(paymentMethod.provider);
   const [formState, formAction] = useFormState(updatePaymentMethod, null);
+  const t = useTranslations("PaymentSystemsPage.UpdatePaymentSystem");
 
   useEffect(() => {
     if (formState?.success) {
@@ -115,7 +118,7 @@ function PaymentMethodUpdateForm({
         setProvider={setProvider}
       />
       {formState?.formError && (
-        <p className="text-destructive text-xs">{formState.formError}</p>
+        <p className="text-destructive text-xs">{t("updateError")}</p>
       )}
       {provider && <SubmitButton />}
     </form>
@@ -124,6 +127,7 @@ function PaymentMethodUpdateForm({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("PaymentSystemsPage.UpdatePaymentSystem");
 
   if (pending) {
     return (
@@ -133,14 +137,14 @@ function SubmitButton() {
         onClick={(e) => e.preventDefault()}
       >
         <LoaderCircle className="animate-spin" />
-        Updating Payment Gateway...
+        {t("updatingPaymentMethod")}
       </Button>
     );
   }
 
   return (
     <Button size="sm" type={"submit"} className={"w-full"}>
-      Update Payment Gateway
+      {t("updatePaymentMethod")}
     </Button>
   );
 }

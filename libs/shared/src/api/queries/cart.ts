@@ -8,3 +8,12 @@ export const cartGetQuery = /* GraphQL */ `
   }
   ${cartFragment}
 `;
+
+export const cartGetByUserIdQuery = /* GraphQL */ `
+  query GetCartByUserId($storeId: UUID!) {
+    cartGetByUserId(storeId: $storeId) {
+      ...CartFields
+    }
+  }
+  ${cartFragment}
+`;

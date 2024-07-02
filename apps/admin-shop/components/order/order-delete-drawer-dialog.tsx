@@ -1,5 +1,6 @@
 "use client";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -30,6 +31,8 @@ export default function OrderDeleteDrawerDialog({
 }: {
   orderId: string;
 }) {
+  const t = useTranslations("OrderEditPage");
+
   const [open, setOpen] = useState<boolean>(false);
   const isDesktop =
     typeof window !== "undefined"
@@ -41,16 +44,14 @@ export default function OrderDeleteDrawerDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button size={"sm"} type={"button"} variant={"destructive"}>
-            Delete
+            {t("delete")}
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              Are you sure you want to delete this order?
-            </DialogTitle>
+            <DialogTitle>{t("deleteConfirmationHeading")}</DialogTitle>
             <DialogDescription>
-              Once you delete the order, you want be able to see it again
+              {t("deleteConfirmationDescription")}
             </DialogDescription>
           </DialogHeader>
           <DeleteOrderForm orderId={orderId} />
@@ -63,21 +64,21 @@ export default function OrderDeleteDrawerDialog({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button size={"sm"} type={"button"} variant={"destructive"}>
-          Delete
+          {t("delete")}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Are you sure you want to delete this order?</DrawerTitle>
+          <DrawerTitle>{t("deleteConfirmationHeading")}</DrawerTitle>
           <DrawerDescription>
-            Once you delete the order, you want be able to see it again
+            {t("deleteConfirmationDescription")}{" "}
           </DrawerDescription>
         </DrawerHeader>
         <DeleteOrderForm orderId={orderId} className="px-4 mt-4" />
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline" type={"button"}>
-              Go back
+              {t("goBack")}
             </Button>
           </DrawerClose>
         </DrawerFooter>
@@ -93,6 +94,7 @@ function DeleteOrderForm({
   orderId: string;
   className?: string;
 }) {
+  const t = useTranslations("OrderEditPage");
   const [formStatus, formAction] = useFormState(deleteOrder, null);
 
   const actionWithOrderId = formAction.bind(null, orderId);
@@ -104,7 +106,7 @@ function DeleteOrderForm({
     >
       {formStatus?.error && (
         <p className={"text-destructive text-center sm:text-start text-xs"}>
-          {formStatus.error}
+          {t("deleteFormError")}
         </p>
       )}
       <SubmitButton />
@@ -114,6 +116,7 @@ function DeleteOrderForm({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("OrderEditPage");
 
   if (pending) {
     return (
@@ -124,7 +127,7 @@ function SubmitButton() {
         variant={"destructive"}
       >
         <LoaderCircle className="animate-spin" />
-        Deleting...
+        {t("deleting")}
       </Button>
     );
   }
@@ -136,7 +139,7 @@ function SubmitButton() {
       className={"w-full"}
       variant={"destructive"}
     >
-      Delete
+      {t("delete")}
     </Button>
   );
 }

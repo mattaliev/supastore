@@ -26,7 +26,7 @@ export default function Logo({
           alt="Logo"
           width={200}
           height={200}
-          className="w-24 h-8 object-contain"
+          className="w-24 h-8 object-contain cursor-pointer"
         />
       </Link>
     );

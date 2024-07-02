@@ -1,78 +1,68 @@
-export const cartProductFragment = /* GraphQL */ `
-  fragment CartProductFields on ProductType {
+export const catalogProductVariantFragment = /* GraphQL */ `
+  fragment CatalogProductVariantFields on ProductVariantType {
     id
-    title
-    price
-    description
-    images {
-      order
-      url
+    name
+    sizes {
       id
-    }
-  }
-`;
-
-export const orderProductFragment = /* GraphQL */ `
-  fragment OrderProductFields on ProductType {
-    id
-    title
-    price
-    description
-    images {
-      order
-      url
-      id
-    }
-  }
-`;
-
-export const collectionProductFragment = /* GraphQL */ `
-  fragment CollectionProductFields on ProductType {
-    id
-    title
-    price
-    description
-    images {
-      order
-      url
-      id
-    }
-    variants {
-      id
-      size
-      material
-      color
-      quantity
+      sizeEn
+      sizeRu
+      price
     }
     state
+    images
+    sku
+    brand
     created
-    updated
   }
 `;
 
-export const productDetailFragment = /* GraphQL */ `
-  fragment ProductDetailFields on ProductType {
-    id
-    title
-    price
+export const productVariantDetailFragment = /* GraphQL */ `
+  fragment ProductVariantDetailFields on ProductVariantType {
+    ...CatalogProductVariantFields
+    brand
     description
     shortDescription
-    sku
-    images {
-      order
-      url
-      id
+    productCharacteristics {
+      value
+      characteristic {
+        id
+        nameEn
+        nameRu
+        unitNameEn
+        unitNameRu
+        type
+      }
     }
-    variants {
-      id
-      size
-      material
-      color
-      quantity
+    product {
+      variants {
+        images
+        name
+        id
+      }
+      category {
+        nameEn
+        nameRu
+        id
+      }
     }
-    state
-    created
+    name
   }
+  ${catalogProductVariantFragment}
+`;
+
+export const productFragment = /* GraphQL */ `
+  fragment ProductFields on ProductType {
+    category {
+      nameEn
+      nameRu
+      id
+    }
+    id
+    variants {
+      ...ProductVariantDetailFields
+    }
+  }
+  ${productVariantDetailFragment}
 `;
 
 export const paginatedProductsFragment = /* GraphQL */ `
@@ -83,8 +73,8 @@ export const paginatedProductsFragment = /* GraphQL */ `
     pages
     totalItems
     objects {
-      ...CollectionProductFields
+      ...CatalogProductVariantFields
     }
   }
-  ${collectionProductFragment}
+  ${catalogProductVariantFragment}
 `;

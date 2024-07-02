@@ -32,7 +32,7 @@ const nextConfig = {
       }
     ],
   },
-  transpilePackages: ['lucide-react']
+  transpilePackages: ['lucide-react', '@ditch/lib']
 };
 
 export default withNextIntl(nextConfig);

@@ -1,11 +1,14 @@
 "use client";
 import { PlusCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import StateFilter from "@/components/filters/state-filter";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 
 export default function ProductFilters() {
+  const t = useTranslations("ProductListPage");
+
   return (
     <div className="flex items-center">
       <StateFilter />
@@ -21,7 +24,7 @@ export default function ProductFilters() {
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
+              {t("addProduct")}
             </span>
           </Button>
         </Link>

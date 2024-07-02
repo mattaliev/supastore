@@ -51,7 +51,7 @@ const SDKProviderError = ({ error }: SDKProviderErrorProps) => {
 
 const SDKProviderLoading = () => {
   return (
-    <div className={"min-h-screen m-auto bg-telegram-bg-color"}>
+    <div className={"min-h-[80vh] m-auto bg-telegram-bg-color"}>
       <AiOutlineLoading3Quarters
         className={
           "animate-spin w-16 h-16 mx-auto text-telegram-button-color mt-64"
@@ -63,7 +63,7 @@ const SDKProviderLoading = () => {
 
 const SDKInitialState = () => {
   return (
-    <div className={"min-h-screen m-auto bg-telegram-bg-color"}>
+    <div className={"min-h-[80vh] m-auto bg-telegram-bg-color"}>
       <AiOutlineLoading3Quarters
         className={
           "animate-spin w-16 h-16 mx-auto text-telegram-button-color mt-64"

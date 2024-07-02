@@ -7,6 +7,7 @@ import {
   WalletPayPaymentMethod
 } from "@ditch/lib";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { PaymentFieldErrors } from "@/components/payment/schemes";
@@ -33,32 +34,33 @@ export default function PaymentMethodFields({
   fieldErrors?: PaymentFieldErrors;
 }) {
   const [state, setState] = useState<string>("ACTIVE");
+  const t = useTranslations("PaymentSystemsPage.FormFields");
 
   return (
     <div className="grid gap-4">
       <div className="grid gap-2">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">{t("Name.label")}</Label>
         {fieldErrors && "name" in fieldErrors && (
-          <p className="text-destructive text-xs">{fieldErrors?.name}</p>
+          <p className="text-destructive text-xs">{t("Name.error")}</p>
         )}
         <Input
           id="name"
           name="name"
-          placeholder="Enter a name for payment gateway"
+          placeholder={t("Name.placeholder")}
           defaultValue={paymentMethod?.name || ""}
         />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="provider">Provider</Label>
+        <Label htmlFor="provider">{t("Provider.label")}</Label>
         {fieldErrors && "provider" in fieldErrors && (
-          <p className="text-destructive text-xs">{fieldErrors?.provider}</p>
+          <p className="text-destructive text-xs">{t("Provider.error")}</p>
         )}
         <Select
           onValueChange={(value) => setProvider(value)}
           defaultValue={provider || ""}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select a payment provider" />
+            <SelectValue placeholder={t("Provider.placeholder")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="TELEGRAM_INVOICE">Telegram Payments</SelectItem>
@@ -77,19 +79,19 @@ export default function PaymentMethodFields({
       {provider && (
         <>
           <div className="grid gap-2">
-            <Label htmlFor="button-text">Button text</Label>
+            <Label htmlFor="button-text">{t("ButtonText.label")}</Label>
             <p className="text-muted-foreground text-xs">
-              This text will be displayed on the payment button
+              {t("ButtonText.description")}
             </p>
             {fieldErrors && "buttonText" in fieldErrors && (
               <p className="text-destructive text-xs">
-                {fieldErrors?.buttonText}
+                {t("ButtonText.error")}
               </p>
             )}
             <Input
               id="buttonText"
               name="buttonText"
-              placeholder="Enter button text"
+              placeholder={t("ButtonText.placeholder")}
               defaultValue={paymentMethod?.buttonText || ""}
             />
           </div>
@@ -119,20 +121,20 @@ export default function PaymentMethodFields({
           )}
 
           <div className="grid gap-2">
-            <Label htmlFor="state">Status</Label>
+            <Label htmlFor="state">{t("Status.label")}</Label>
             {fieldErrors && "state" in fieldErrors && (
-              <p className="text-destructive text-xs">{fieldErrors?.state}</p>
+              <p className="text-destructive text-xs">{t("Status.error")}</p>
             )}
             <Select
               onValueChange={(value) => setState(value)}
               defaultValue="ACTIVE"
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={t("Status.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Draft</SelectItem>
+                <SelectItem value="ACTIVE">{t("Status.active")}</SelectItem>
+                <SelectItem value="INACTIVE">{t("Status.draft")}</SelectItem>
               </SelectContent>
               <input type="hidden" name="state" id="state" value={state} />
             </Select>
@@ -154,14 +156,15 @@ function TelegramPaymentsFields({
     paymentMethod?.otherInfo.paymentGateway || ""
   );
   const [hidden, setHidden] = useState<boolean>(true);
+  const t = useTranslations("PaymentSystemsPage.FormFields.TelegramPayments");
 
   return (
     <>
       <div className="grid gap-2">
-        <Label htmlFor="paymentGateway">Payment Gateway</Label>
+        <Label htmlFor="paymentGateway">{t("PaymentGateway.label")}</Label>
         {fieldErrors && "paymentGateway" in fieldErrors && (
           <p className="text-destructive text-xs">
-            {fieldErrors?.paymentGateway}
+            {t("PaymentGateway.error")}
           </p>
         )}
         <Select
@@ -169,7 +172,7 @@ function TelegramPaymentsFields({
           defaultValue={gateway}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select payment gateway" />
+            <SelectValue placeholder={t("PaymentGateway.placeholder")} />
           </SelectTrigger>
           <SelectContent>
             {telegramPaymentProviders.map((provider) => (
@@ -187,17 +190,15 @@ function TelegramPaymentsFields({
         </Select>
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="providerToken">Provider Token</Label>
+        <Label htmlFor="providerToken">{t("ProviderToken.label")}</Label>
         {fieldErrors && "providerToken" in fieldErrors && (
-          <p className="text-destructive text-xs">
-            {fieldErrors?.providerToken}
-          </p>
+          <p className="text-destructive text-xs">{t("ProviderToken.error")}</p>
         )}
         <div className="relative">
           <Input
             id="providerToken"
             name="providerToken"
-            placeholder="Enter provider token"
+            placeholder={t("ProviderToken.placeholder")}
             defaultValue={paymentMethod?.otherInfo.provider_token || ""}
             type={hidden ? "password" : "text"}
           />
@@ -234,30 +235,31 @@ function CryptoTransferFields({
 }) {
   const network = paymentMethod?.otherInfo?.network || "";
   const address = paymentMethod?.otherInfo?.address || "";
+  const t = useTranslations("PaymentSystemsPage.FormFields.CryptoTransfer");
 
   return (
     <>
       <div className="grid gap-2">
-        <Label htmlFor="network">Network</Label>
+        <Label htmlFor="network">{t("Network.label")}</Label>
         {fieldErrors && "network" in fieldErrors && (
-          <p className="text-destructive text-xs">{fieldErrors?.network}</p>
+          <p className="text-destructive text-xs">{t("Network.error")}</p>
         )}
         <Input
           id="network"
           name="network"
-          placeholder="Enter network"
+          placeholder={t("Network.placeholder")}
           defaultValue={network}
         />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="address">Address</Label>
+        <Label htmlFor="address">{t("Address.label")}</Label>
         {fieldErrors && "address" in fieldErrors && (
-          <p className="text-destructive text-xs">{fieldErrors?.address}</p>
+          <p className="text-destructive text-xs">{t("Address.error")}</p>
         )}
         <Input
           id="address"
           name="address"
-          placeholder="Enter address on selected network"
+          placeholder={t("Address.placeholder")}
           defaultValue={address}
         />
       </div>
@@ -273,23 +275,22 @@ function BankTransferFields({
   fieldErrors?: PaymentFieldErrors;
 }) {
   const message = paymentMethod?.otherInfo?.message || "";
+  const t = useTranslations("PaymentSystemsPage.FormFields.BankTransfer");
 
   return (
     <>
       <div className="grid gap-2">
-        <Label htmlFor="name">Message</Label>
+        <Label htmlFor="name">{t("Message.label")}</Label>
         <p className="text-muted-foreground text-xs">
-          This message with your requisites will be sent to the user when they
-          checkout. It is recommended that you include all the necessary
-          information for the user to make a successful payment.
+          {t("Message.description")}
         </p>
         {fieldErrors && "message" in fieldErrors && (
-          <p className="text-destructive text-xs">{fieldErrors?.message}</p>
+          <p className="text-destructive text-xs">{t("Message.error")}</p>
         )}
         <Textarea
           id="message"
           name="message"
-          placeholder="Enter message"
+          placeholder={t("Message.placeholder")}
           defaultValue={message}
         />
       </div>
@@ -308,19 +309,20 @@ function WalletPayFields({
     paymentMethod?.otherInfo?.autoConversionCurrency || ""
   );
   const [hidden, setHidden] = useState<boolean>(true);
+  const t = useTranslations("PaymentSystemsPage.FormFields.WalletPay");
 
   return (
     <>
       <div className="grid gap-2">
-        <Label htmlFor="apiKey">API key</Label>
+        <Label htmlFor="apiKey">{t("ApiKey.label")}</Label>
         {fieldErrors && "apiKey" in fieldErrors && (
-          <p className="text-destructive text-xs">{fieldErrors?.apiKey}</p>
+          <p className="text-destructive text-xs">{t("ApiKey.error")}</p>
         )}
         <div className="relative">
           <Input
             id="apiKey"
             name="apiKey"
-            placeholder="Enter Wallet Pay API Key"
+            placeholder={t("ApiKey.placeholder")}
             defaultValue={paymentMethod?.otherInfo?.api_key || ""}
             type={hidden ? "password" : "text"}
           />
@@ -345,18 +347,20 @@ function WalletPayFields({
         </div>
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="address">Auto Conversion Currency</Label>
+        <Label htmlFor="address">{t("AutoConversionCurrency.label")}</Label>
         <p className="text-muted-foreground text-xs">
-          All payments will be converted to the selected currency
+          {t("AutoConversionCurrency.description")}
         </p>
         {fieldErrors && "autoConversionCurrency" in fieldErrors && (
           <p className="text-destructive text-xs">
-            {fieldErrors?.autoConversionCurrency}
+            {t("AutoConversionCurrency.error")}
           </p>
         )}
         <Select onValueChange={(value) => setCurrency(value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Select currency" />
+            <SelectValue
+              placeholder={t("AutoConversionCurrency.placeholder")}
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="USDT">USDT</SelectItem>

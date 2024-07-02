@@ -1,5 +1,6 @@
 "use client";
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
@@ -19,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("StoreCreatePage");
 
   if (pending) {
     return (
@@ -29,7 +31,7 @@ function SubmitButton() {
         disabled
       >
         <LoaderCircle className={"animate-spin h-5 w-5"} />
-        Submitting Application...
+        {t("submittingApplication")}
       </Button>
     );
   }
@@ -41,7 +43,7 @@ function SubmitButton() {
       type={"submit"}
       className={"w-full"}
     >
-      Submit Application
+      {t("submitApplication")}
     </Button>
   );
 }
@@ -50,18 +52,19 @@ export default function StoreCreatePage() {
   const [formState, formAction] = useFormState(createStoreApplication, null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
+  const t = useTranslations("StoreCreatePage");
 
   const categories = [
-    "Clothing and Accessories",
-    "Electronics and Gadgets",
-    "Beauty and Personal Care",
-    "Digital Products and Services",
-    "Education and Online Courses",
-    "Other"
+    t("FormFields.productCategory.categories.clothingAndAccessories"),
+    t("FormFields.productCategory.categories.electronicsAndGadgets"),
+    t("FormFields.productCategory.categories.beachAndBody"),
+    t("FormFields.productCategory.categories.digitalProductsAndServices"),
+    t("FormFields.productCategory.categories.educationAndOnlineCourses"),
+    t("FormFields.productCategory.categories.other")
   ];
 
   const handleSelectedCategory = (category: string) => {
-    if (category !== "Other") {
+    if (category !== t("FormFields.productCategory.categories.other")) {
       setCategory(category);
       setSelectedCategory(category);
     } else {
@@ -79,65 +82,67 @@ export default function StoreCreatePage() {
     >
       <Card className={"w-full border"}>
         <CardHeader>
-          <CardTitle>Create Your Store In Telegram</CardTitle>
-          <CardDescription>
-            We are currently in beta, so we can't accept all stores. Please,
-            start by filling out an application and we will let you know as soon
-            as we can onboard you.
-          </CardDescription>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className={"grid gap-4"}>
             <div className={"grid gap-2"}>
-              <Label htmlFor={"store-name"}>Store Name</Label>
+              <Label htmlFor={"store-name"}>
+                {t("FormFields.storeName.label")}
+              </Label>
               {formState?.fieldErrors && formState?.fieldErrors.storeName && (
                 <p className={"text-destructive text-xs text-start"}>
-                  {formState?.fieldErrors.storeName}
+                  {t("FormFields.storeName.error")}
                 </p>
               )}
               <Input
                 type={"text"}
                 id={"store-name"}
                 name={"store-name"}
-                placeholder={"Enter your store name"}
+                placeholder={t("FormFields.storeName.placeholder")}
               />
             </div>
             <div className={"grid gap-2"}>
-              <Label htmlFor={"store-description"}>Store Description</Label>
+              <Label htmlFor={"store-description"}>
+                {t("FormFields.storeDescription.label")}
+              </Label>
               {formState?.fieldErrors &&
                 formState?.fieldErrors.storeDescription && (
                   <p className={"text-destructive text-xs text-start"}>
-                    {formState?.fieldErrors.storeDescription}
+                    {t("FormFields.storeDescription.error")}
                   </p>
                 )}
               <Textarea
                 id={"store-description"}
                 name={"store-description"}
-                placeholder={"Enter description for your store"}
+                placeholder={t("FormFields.storeDescription.placeholder")}
               />
             </div>
             <div className={"grid gap-2"}>
-              <Label htmlFor={"channels"}>Telegram Channels (Optional)</Label>
+              <Label htmlFor={"channels"}>
+                {t("FormFields.telegramChannels.label")}
+              </Label>
               {formState?.fieldErrors && formState?.fieldErrors.channels && (
                 <p className={"text-destructive text-xs text-start"}>
-                  {formState?.fieldErrors.channels}
+                  {t("FormFields.telegramChannels.error")}
                 </p>
               )}
               <Input
                 type={"text"}
                 name={"channels"}
                 id={"channels"}
-                placeholder={"Enter your telegram channels, separated by comma"}
+                placeholder={t("FormFields.telegramChannels.placeholder")}
               />
             </div>
             <div className={"grid gap-3"}>
               <Label htmlFor={"product-category"}>
-                Please select products you are planning to sell
+                {t("FormFields.productCategory.label")}
               </Label>
               {formState?.fieldErrors &&
                 formState?.fieldErrors.productCategory && (
                   <p className={"text-destructive text-xs text-start"}>
-                    {formState?.fieldErrors.productCategory}
+                    {t("FormFields.productCategory.error")}
                   </p>
                 )}
               <div
@@ -165,13 +170,18 @@ export default function StoreCreatePage() {
                 ))}
               </div>
             </div>
-            {selectedCategory === "Other" && (
+            {selectedCategory ===
+              t("FormFields.productCategory.categories.other") && (
               <div className={"grid gap-2"}>
-                <Label htmlFor={"other-category"}>Other Category</Label>
+                <Label htmlFor={"other-category"}>
+                  {t("FormFields.productCategory.otherCategory.label")}
+                </Label>
                 <Input
                   type={"text"}
                   id={"other-category"}
-                  placeholder={"Enter other category"}
+                  placeholder={t(
+                    "FormFields.productCategory.otherCategory.placeholder"
+                  )}
                   onChange={(e) => setCategory(e.target.value)}
                 />
               </div>
@@ -186,7 +196,7 @@ export default function StoreCreatePage() {
         <CardFooter>
           {formState?.formError && (
             <p className={"text-destructive text-xs text-start"}>
-              {formState?.formError}
+              {t("FormFields.formError")}
             </p>
           )}
           <SubmitButton />

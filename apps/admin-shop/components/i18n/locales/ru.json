@@ -30,7 +30,6 @@
         "header": "Подключите платежную систему",
         "description": "Выберите платежную систему, которая соответствует вашим требованиям, и интегрируйте ее в ваш магазин. Обязательно протестируйте платежную систему, чтобы убедиться, что она работает правильно и что клиенты могут совершать покупки без проблем."
       },
-
       "is-done": {
         "header": "Готово!",
         "description": "Все готово! Ваш магазин готов к запуску. Обязательно протестируйте все функции и возможности, чтобы убедиться, что все работает как ожидалось. Если вы столкнетесь с ошибками, не стесняйтесь обращаться в нашу службу поддержки за помощью."
@@ -68,6 +67,532 @@
       "stores": "Мои магазины",
       "logout": "Выйти"
     }
+  },
+  "ProductListPage": {
+    "addProduct": "Добавить товар",
+    "title": "Товары",
+    "description": "Управляйте своими товарами и просматривайте их показатели продаж.",
+    "ProductListTable": {
+      "image": "Изображение",
+      "name": "Название",
+      "status": "Статус",
+      "sku": "Артикул",
+      "brand": "Бренд",
+      "created-at": "Создан",
+      "actions": "Действия",
+      "Footer": {
+        "showing": "Показано",
+        "of": "из",
+        "products": "товаров"
+      }
+    },
+    "NoProducts": {
+      "heading": "Товары не найдены",
+      "description": "Попробуйте изменить фильтры или добавить новый товар.",
+      "allProductsButton": "Все товары",
+      "newProductButton": "Новый товар"
+    }
+  },
+  "Pagination": {
+    "previous": "Предыдущий",
+    "next": "Следующий",
+    "more-pages": "Больше страниц"
+  },
+  "ProductForm": {
+    "create": "Создать",
+    "creating": "Создается...",
+    "save": "Сохранить",
+    "saving": "Сохраняется...",
+    "back-to-products": "Назад к списку товаров",
+    "VariantSelector": {
+      "addVariant": "Добавить вариант",
+      "allVariants": "Все варианты",
+      "untitled": "Без названия",
+      "deleteVariant": "Удалить вариант",
+      "sku": "Артикул"
+    },
+    "Fields": {
+      "title": "Основная информация",
+      "showAll": "Показать все",
+      "showLess": "Показать меньше",
+      "Sizes": {
+        "sizeAndPrice": "Размеры и цена",
+        "size": "Размер",
+        "sizeRu": "Рус. размер",
+        "price": "Цена",
+        "error": "Пожалуйста, введите цену для товара",
+        "add": "Добавить"
+      }
+    }
+  },
+  "OrderListPage": {
+    "title": "Заказы",
+    "description": "Представляем нашу динамическую панель заказов для удобного управления и анализа.",
+    "this-week": "На этой неделе",
+    "this-month": "В этом месяце",
+    "from-last-week": "с прошлой недели",
+    "from-last-month": "с прошлого месяца",
+    "increase": "увеличение",
+    "decrease": "уменьшение",
+    "OrderListTable": {
+      "title": "Заказы",
+      "description": "Последние заказы из вашего магазина.",
+      "order": "Заказ",
+      "customer": "Клиент",
+      "amount": "Сумма",
+      "status": "Статус",
+      "date": "Дата",
+      "anonymous": "Анонимный пользователь",
+      "Footer": {
+        "showing": "Показано",
+        "of": "из",
+        "orders": "заказов"
+      }
+    },
+    "NoOrdersYet": {
+      "heading": "Пока что нет заказов",
+      "description": "Попробуйте изменить фильтры или просмотреть все заказы",
+      "viewOrdersButton": "Просмотреть заказы"
+    },
+    "OrderPreview": {
+      "order": "Заказ",
+      "date": "Дата",
+      "trackOrderButton": "Отследить заказ",
+      "orderDetails": "Детали заказа",
+      "subtotal": "Промежуточный итог",
+      "shipping": "Доставка",
+      "total": "Итого",
+      "shippingInformation": "Информация о доставке",
+      "noShippingInformation": "Информация о доставке отсутствует",
+      "customerInformation": "Информация о клиенте",
+      "customer": "Клиент",
+      "anonymous": "Анонимный пользователь",
+      "username": "Имя пользователя",
+      "paymentMethod": "Способ оплаты",
+      "na": "Н/Д",
+      "fulfilledOn": "Выполнено",
+      "previousOrder": "Предыдущий заказ",
+      "nextOrder": "Следующий заказ"
+    }
+  },
+  "OrderEditPage": {
+    "backButton": "Назад",
+    "order": "Заказ",
+    "delete": "Удалить",
+    "deleting": "Удаляется...",
+    "deleteConfirmationHeading": "Вы уверены, что хотите удалить этот заказ?",
+    "deleteConfirmationDescription": "После удаления заказа, вы не сможете его увидеть снова",
+    "goBack": "Вернуться",
+    "deleteFormError": "Не удалось удалить заказ",
+    "OrderDetailsTable": {
+      "title": "Детали заказа",
+      "created": "Создан",
+      "image": "Изображение",
+      "product": "Товар",
+      "total": "Итого"
+    },
+    "cancel": "Отмена",
+    "cancelOrder": "Отменить заказ",
+    "cancelingOrder": "Отменяется...",
+    "cancelConfirmationDialog": "Вы уверены, что хотите отменить этот заказ?",
+    "cancelConfirmationDialogDescription": "Возврат средств за заказ придется оспаривать через платежную систему, которую использовал клиент",
+    "notifyAboutCancellation": "Уведомить клиента об отмене?",
+    "cancelError": "Не удалось отменить заказ",
+    "OrderFulfillment": {
+      "fulfillItems": "Выполнить позиции",
+      "fulfillingItems": "Выполняется...",
+      "fulfillmentError": "Не удалось выполнить позиции"
+    },
+    "OrderPayment": {
+      "payment": "Оплата",
+      "subtotal": "Промежуточный итог",
+      "shipping": "Доставка",
+      "total": "Итого",
+      "paymentMethod": "Способ оплаты",
+      "CreatePayment": {
+        "createInvoice": "Создать счет",
+        "createInvoiceDescription": "Примечание: После создания оплаты, клиент не сможет изменить заказ",
+        "goBack": "Вернуться",
+        "paymentProvider": "Платежный провайдер",
+        "selectPaymentProvider": "Выберите платежного провайдера",
+        "sendInvoiceNotice": "Отправить счет клиенту?",
+        "invoiceCreateError": "Не удалось создать счет",
+        "creatingInvoice": "Создается счет..."
+      },
+      "MarkAsPaid": {
+        "markAsPaidButton": "Отметить как оплачено",
+        "markingAsPaidButton": "Отмечается как оплачено...",
+        "markAsPaidTitle": "Отметить заказ как оплаченный",
+        "markAsPaidDescription": "Вы уверены, что хотите отметить этот заказ как оплаченный?",
+        "cancel": "Отмена",
+        "notifyAboutReceivingPayment": "Уведомить клиента о получении оплаты?",
+        "markAsPaidError": "Не удалось отметить заказ как оплаченный"
+      }
+    },
+    "OrderShipping": {
+      "title": "Доставка",
+      "contactInformation": "Контактная информация",
+      "noContactInformation": "Контактная информация не предоставлена",
+      "shippingAddress": "Адрес доставки",
+      "noShippingAddress": "Адрес доставки не предоставлен",
+      "trackingInformation": "Информация об отслеживании",
+      "noTrackingInformation": "Информация об отслеживании отсутствует",
+      "carrier": "Перевозчик",
+      "trackingNumber": "Номер отслеживания",
+      "AddTracking": {
+        "addTrackingButton": "Добавить отслеживание",
+        "addingTrackingButton": "Добавляется отслеживание...",
+        "addTrackingTitle": "Добавить номер отслеживания доставки",
+        "cancel": "Отмена",
+        "shippingCarrier": "Перевозчик",
+        "trackingNumber": "Номер отслеживания",
+        "shippingCarrierError": "Пожалуйста, введите перевозчика",
+        "trackingNumberError": "Пожалуйста, введите номер отслеживания",
+        "notifyUser": "Уведомить пользователя о номере отслеживания?",
+        "addTrackingError": "Не удалось добавить номер отслеживания"
+      },
+      "customer": "Клиент",
+      "name": "Имя",
+      "anonymous": "Анонимный пользователь",
+      "username": "Имя пользователя",
+      "viewCustomer": "Посмотреть клиента"
+    }
+  },
+  "CustomerListPage": {
+    "Header": {
+      "title": "Ваши клиенты",
+      "description": "Управляйте своими клиентами и их заказами. Анализируйте их сессии и паттерны продаж, чтобы улучшить ваш магазин.",
+      "storeSessionsThisWeek": "Сессии магазина на этой неделе",
+      "fromLastWeek": "с прошлой недели",
+      "storeSessionsThisMonth": "Сессии магазина в этом месяце",
+      "fromLastMonth": "с прошлого месяца"
+    },
+    "CustomerListTable": {
+      "Tabs": {
+        "all": "Все",
+        "new": "Новые",
+        "returning": "Возвращающиеся",
+        "madePurchase": "Сделали покупку"
+      },
+      "title": "Клиенты",
+      "description": "Последние клиенты вашего магазина.",
+      "TableHead": {
+        "customer": "Клиент",
+        "status": "Статус",
+        "lastVisit": "Последний визит",
+        "orders": "Заказы",
+        "amountSpent": "Потрачено"
+      },
+      "TableFooter": {
+        "showing": "Показано",
+        "of": "из",
+        "customers": "клиентов"
+      }
+    },
+    "TopCustomers": {
+      "title": "Топ клиенты",
+      "description": "Посмотрите на клиентов, которые больше всего взаимодействуют с вашим магазином",
+      "TableHead": {
+        "customer": "Клиент",
+        "sales": "Продажи",
+        "visits": "Визиты"
+      }
+    }
+  },
+  "CustomerDetailPage": {
+    "Header": {
+      "back": "Назад",
+      "sendMessage": "Отправить сообщение"
+    },
+    "CustomerOrders": {
+      "title": "Заказы",
+      "TableHead": {
+        "order": "Заказ",
+        "date": "Дата",
+        "status": "Статус",
+        "total": "Итого"
+      }
+    },
+    "CustomerEvents": {
+      "title": "Хронология",
+      "TableHead": {
+        "date": "Дата",
+        "time": "Время",
+        "event": "Событие",
+        "details": "Детали"
+      }
+    },
+    "CustomerInformation": {
+      "title": "Клиент",
+      "customerInformation": "Информация о клиенте",
+      "name": "Имя",
+      "username": "Имя пользователя",
+      "registeredOn": "Зарегистрирован",
+      "lastVisit": "Последний визит",
+      "orders": "Заказы",
+      "ordersCreated": "Созданные заказы",
+      "ordersPaid": "Оплаченные заказы",
+      "amountSpent": "Потрачено",
+      "carts": "Корзины",
+      "cartsCreated": "Созданные корзины",
+      "addedToCart": "Добавлено в корзину",
+      "totalCartAmount": "Общая сумма корзины"
+    },
+    "CustomerFavoriteProducts": {
+      "title": "Любимые товары",
+      "noFavoriteProducts": "Нет любимых товаров"
+    }
+  },
+  "PaymentSystemsPage": {
+    "title": "Платежные системы",
+    "description": "Подключите более 40 платежных шлюзов к вашему магазину и принимайте оплату со всего мира.",
+    "TableHead": {
+      "name": "Название",
+      "status": "Статус"
+    },
+    "DeletePaymentSystem": {
+      "title": "Вы уверены, что хотите удалить этот способ оплаты?",
+      "description": "После удаления способа оплаты вы не сможете снова его увидеть",
+      "delete": "Удалить",
+      "deleting": "Удаляется...",
+      "deleteError": "Не удалось удалить способ оплаты",
+      "cancel": "Отмена"
+    },
+    "UpdatePaymentSystem": {
+      "title": "Редактировать способ оплаты",
+      "edit": "Редактировать",
+      "discard": "Отменить",
+      "updatePaymentMethod": "Обновить способ оплаты",
+      "updatingPaymentMethod": "Обновляется способ оплаты...",
+      "updateError": "Не удалось обновить способ оплаты"
+    },
+    "CreatePaymentSystem": {
+      "title": "Добавить платежный шлюз",
+      "description": "Узнайте больше о подключении платежных шлюзов в нашем",
+      "guide": "Краткое руководство",
+      "error": "Не удалось создать способ оплаты",
+      "creatingPaymentMethod": "Создается способ оплаты...",
+      "createPaymentMethod": "Создать способ оплаты"
+    },
+    "FormFields": {
+      "Name": {
+        "label": "Название",
+        "placeholder": "Введите название способа оплаты",
+        "error": "Пожалуйста, введите название способа оплаты"
+      },
+      "Provider": {
+        "label": "Провайдер",
+        "placeholder": "Выберите платежного провайдера",
+        "error": "Пожалуйста, выберите платежного провайдера"
+      },
+      "ButtonText": {
+        "label": "Текст кнопки",
+        "description": "Этот текст будет отображаться на кнопке оплаты",
+        "placeholder": "Введите текст кнопки",
+        "error": "Пожалуйста, введите текст кнопки"
+      },
+      "Status": {
+        "label": "Статус",
+        "placeholder": "Выберите статус",
+        "active": "Активен",
+        "draft": "Черновик"
+      },
+      "TelegramPayments": {
+        "PaymentGateway": {
+          "label": "Платежный шлюз",
+          "placeholder": "Выберите платежный шлюз",
+          "error": "Пожалуйста, выберите платежный шлюз"
+        },
+        "ProviderToken": {
+          "label": "Токен провайдера",
+          "placeholder": "Введите токен провайдера",
+          "error": "Пожалуйста, введите токен провайдера"
+        }
+      },
+      "CryptoTransfer": {
+        "Network": {
+          "label": "Сеть",
+          "placeholder": "Введите сеть",
+          "error": "Пожалуйста, введите сеть"
+        },
+        "Address": {
+          "label": "Адрес",
+          "placeholder": "Введите адрес в выбранной сети",
+          "error": "Пожалуйста, введите адрес в выбранной сети"
+        }
+      },
+      "BankTransfer": {
+        "Message": {
+          "label": "Сообщение",
+          "placeholder": "Введите сообщение",
+          "error": "Пожалуйста, введите сообщение",
+          "description": "Это сообщение с вашими реквизитами будет отправлено пользователю при оформлении заказа. Рекомендуется включить всю необходимую информацию для успешной оплаты."
+        }
+      },
+      "WalletPay": {
+        "ApiKey": {
+          "label": "API ключ",
+          "placeholder": "Введите API ключ",
+          "error": "Пожалуйста, введите API ключ"
+        },
+        "AutoConversionCurrency": {
+          "label": "Валюта автоматической конверсии",
+          "placeholder": "Введите валюту автоматической конверсии",
+          "error": "Пожалуйста, введите валюту автоматической конверсии"
+        }
+      }
+    }
+  },
+  "SettingsPage": {
+    "StoreInformation": {
+      "title": "Информация о магазине",
+      "description": "Обновите название, описание и логотип вашего магазина.",
+      "FormFields": {
+        "storeName": {
+          "label": "Название магазина",
+          "placeholder": "Введите название магазина",
+          "error": "Пожалуйста, введите название магазина"
+        },
+        "storeDescription": {
+          "label": "Описание магазина",
+          "placeholder": "Введите описание магазина",
+          "error": "Пожалуйста, введите описание магазина"
+        },
+        "storeTimezone": {
+          "label": "Часовой пояс магазина",
+          "placeholder": "Выберите часовой пояс магазина",
+          "error": "Пожалуйста, выберите часовой пояс магазина",
+          "selectTimezone": "Выберите часовой пояс...",
+          "searchTimezone": "Поиск часового пояса...",
+          "noTimezoneFound": "Часовой пояс не найден."
+        }
+      },
+      "StoreLogo": {
+        "title": "Логотип магазина",
+        "description": "Загрузите логотип вашего бренда. Рекомендуемый размер логотипа - 96x32 пикселя. Узнайте больше о настройке вашего магазина в нашем",
+        "guide": "руководстве",
+        "FormFields": {
+          "lightLogo": {
+            "label": "Светлый логотип",
+            "description": "Этот логотип будет использоваться, когда у пользователя темный экран",
+            "error": "Пожалуйста, загрузите светлый логотип"
+          },
+          "darkLogo": {
+            "label": "Темный логотип",
+            "description": "Этот логотип будет использоваться, когда у пользователя светлый экран",
+            "error": "Пожалуйста, загрузите темный логотип"
+          }
+        },
+        "LogoPreview": {
+          "title": "Предпросмотр навигации"
+        }
+      },
+      "saveChanges": "Сохранить изменения",
+      "savingChanges": "Сохранение изменений..."
+    },
+    "StoreBotToken": {
+      "title": "Telegram бот",
+      "description": "Подключите Telegram бота к вашему магазину, чтобы взаимодействовать с пользователями. Узнайте, как это сделать, в нашем",
+      "guide": "руководстве",
+      "FormFields": {
+        "storeUrl": {
+          "label": "URL магазина",
+          "description": "Узнайте больше о том, как подключить ваш магазин к Telegram"
+        },
+        "botUsername": {
+          "label": "Имя пользователя Telegram бота",
+          "placeholder": "Введите имя пользователя вашего Telegram бота",
+          "error": "Пожалуйста, введите имя пользователя вашего Telegram бота"
+        },
+        "botToken": {
+          "label": "API ключ Telegram бота",
+          "placeholder": "Введите API ключ вашего Telegram бота",
+          "error": "Пожалуйста, введите API ключ вашего Telegram бота"
+        }
+      }
+    }
+  },
+  "StoreCreatePage": {
+    "title": "Создайте ваш магазин в Telegram",
+    "description": "Мы находимся в бета-версии, поэтому не можем принять все магазины. Пожалуйста, начните с заполнения заявки, и мы сообщим вам, как только сможем вас зарегистрировать.",
+    "FormFields": {
+      "storeName": {
+        "label": "Название магазина",
+        "placeholder": "Введите название магазина",
+        "error": "Пожалуйста, введите название магазина"
+      },
+      "storeDescription": {
+        "label": "Описание магазина",
+        "placeholder": "Введите описание магазина",
+        "error": "Пожалуйста, введите описание магазина"
+      },
+      "telegramChannels": {
+        "label": "Каналы Telegram (необязательно)",
+        "placeholder": "Введите ваши каналы в Telegram, разделенные запятыми",
+        "error": "Пожалуйста, введите ваши каналы в Telegram, разделенные запятыми"
+      },
+      "productCategory": {
+        "label": "Выберите товары, которые вы планируете продавать",
+        "error": "Пожалуйста, выберите товары, которые вы планируете продавать",
+        "categories": {
+          "clothingAndAccessories": "Одежда и аксессуары",
+          "electronicsAndGadgets": "Электроника и гаджеты",
+          "beachAndBody": "Уход за телом и пляж",
+          "digitalProductsAndServices": "Цифровые продукты и услуги",
+          "educationAndOnlineCourses": "Образование и онлайн-курсы",
+          "other": "Другое"
+        },
+        "otherCategory": {
+          "label": "Другая категория",
+          "placeholder": "Введите другую категорию",
+          "error": "Пожалуйста, введите другую категорию"
+        }
+      }
+    },
+    "submitApplication": "Отправить заявку",
+    "submittingApplication": "Отправка заявки...",
+    "formError": "Не удалось отправить заявку"
+  },
+  "StoreApplicationSuccess": {
+    "title": "Ваша заявка отправлена!",
+    "description": "Мы рассмотрим вашу заявку и свяжемся с вами как можно скорее. Мы уведомим вас, как только это будет сделано.",
+    "backToStores": "Назад к магазинам"
+  },
+  "StoreSelectPage": {
+    "welcomeBack": "С возвращением, {firstName}!",
+    "createNewStore": "Создать новый магазин",
+    "description": "Выберите магазин для управления"
+  },
+  "LandingPage": {
+    "title": "Создайте свой магазин в Telegram за несколько минут",
+    "description": "Загрузите свои товары, подключите к вашему Telegram боту, настройте платежную систему, и вы готовы к работе!",
+    "goToDashboard": "Перейти к панели управления",
+    "signIn": "Войти",
+    "Nav": {
+      "guides": "Руководства",
+      "pricing": "Цены",
+      "contact": "Контакты"
+    }
+  },
+  "Analytics": {
+    "EventBadge": {
+      "addedToCart": "Добавлено в корзину",
+      "checkout": "Оформление заказа",
+      "paymentStarted": "Начало оплаты",
+      "paymentCompleted": "Оплата завершена",
+      "removedFromCart": "Удалено из корзины",
+      "userRegistered": "Пользователь зарегистрировался",
+      "userVisited": "Пользователь посетил"
+    },
+    "EventData": {
+      "cartTotal": "Итого в корзине",
+      "order": "Заказ"
+    }
+  },
+  "ProductBadge": {
+    "draft": "Черновик",
+    "active": "Активен"
   }
 }
+
 

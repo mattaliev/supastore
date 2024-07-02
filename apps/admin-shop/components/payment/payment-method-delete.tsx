@@ -1,6 +1,7 @@
 "use client";
 
 import { LoaderCircle, Trash2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -36,6 +37,7 @@ export default function PaymentMethodDelete({
     typeof window !== "undefined"
       ? window.matchMedia("(min-width: 768px)").matches
       : false;
+  const t = useTranslations("PaymentSystemsPage.DeletePaymentSystem");
 
   if (isDesktop) {
     return (
@@ -43,18 +45,13 @@ export default function PaymentMethodDelete({
         <DialogTrigger asChild>
           <Button size="icon" variant="outline">
             <Trash2Icon className="w-5 h-5" />
-            <span className="sr-only">Delete</span>
+            <span className="sr-only">{t("delete")}</span>
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              Are you sure you want to delete this payment method?
-            </DialogTitle>
-            <DialogDescription>
-              Once you delete the payment method, you want be able to see it
-              again
-            </DialogDescription>
+            <DialogTitle>{t("title")}</DialogTitle>
+            <DialogDescription>{t("description")}</DialogDescription>
           </DialogHeader>
           <PaymentMethodDeleteForm
             paymentMethodId={paymentMethodId}
@@ -70,17 +67,13 @@ export default function PaymentMethodDelete({
       <DrawerTrigger asChild>
         <Button size="icon" variant="outline">
           <Trash2Icon className="w-5 h-5" />
-          <span className="sr-only">Delete</span>
+          <span className="sr-only">{t("delete")}</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>
-            Are you sure you want to delete this payment method?
-          </DrawerTitle>
-          <DrawerDescription>
-            Once you delete the payment method, you want be able to see it again
-          </DrawerDescription>
+          <DrawerTitle>{t("title")}</DrawerTitle>
+          <DrawerDescription>{t("description")}</DrawerDescription>
         </DrawerHeader>
         <PaymentMethodDeleteForm
           setOpen={setOpen}
@@ -90,7 +83,7 @@ export default function PaymentMethodDelete({
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline" type="button">
-              Cancel
+              {t("cancel")}
             </Button>
           </DrawerClose>
         </DrawerFooter>
@@ -109,6 +102,7 @@ function PaymentMethodDeleteForm({
   setOpen: (value: boolean) => void;
 }) {
   const [formState, formAction] = useFormState(deletePaymentMethod, null);
+  const t = useTranslations("PaymentSystemsPage.DeletePaymentSystem");
 
   useEffect(() => {
     if (formState?.success) {
@@ -120,7 +114,7 @@ function PaymentMethodDeleteForm({
   return (
     <form action={actionWithPaymentId} className={twMerge(className)}>
       {formState?.error && (
-        <p className="text-destructive text-xs">{formState.error}</p>
+        <p className="text-destructive text-xs">{t("deleteError")}</p>
       )}
       <SubmitButton />
     </form>
@@ -129,6 +123,7 @@ function PaymentMethodDeleteForm({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("PaymentSystemsPage.DeletePaymentSystem");
 
   if (pending) {
     return (
@@ -139,7 +134,7 @@ function SubmitButton() {
         variant={"destructive"}
       >
         <LoaderCircle className="animate-spin" />
-        Deleting...
+        {t("deleting")}
       </Button>
     );
   }
@@ -151,7 +146,7 @@ function SubmitButton() {
       className={"w-full"}
       variant={"destructive"}
     >
-      Delete
+      {t("delete")}
     </Button>
   );
 }

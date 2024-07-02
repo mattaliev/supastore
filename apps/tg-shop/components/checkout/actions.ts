@@ -1,194 +1,77 @@
 "use server";
 
 import {
-  EntityState,
+  contactInformationCreate,
+  contactInformationDefaultSet,
+  contactInformationDelete,
   orderCreate,
-  orderGetByCartId,
-  orderGetById,
-  paymentCreate,
   PaymentProvider,
-  ShippingDetails,
-  shippingDetailsCreate,
-  shippingDetailsUpdate,
+  shippingAddressCreate,
+  shippingAddressDefaultSet,
+  shippingAddressDelete,
   TAGS
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { getTranslations } from "next-intl/server";
 
+import { authOptions } from "@/auth";
+import { getInitDataRaw } from "@/components/auth/getInitDataRaw";
 import storeRedirect from "@/components/navigation/redirect";
 import { getStoreId } from "@/components/store/getStoreId";
 import { tmaAuthenticated } from "@/lib/auth";
 
-import { ShippingDetailsFieldErrors, ShippingDetailsScheme } from "./schemes";
+import { ContactInformationScheme } from "./schemes";
 
-export const createOrder = async (prevState: any): Promise<string | void> => {
-  const storeId = getStoreId();
-  const cartId = cookies().get("cartId")?.value;
-  const initDataRaw = cookies().get("initDataRaw")?.value;
-  const orderId = cookies().get("orderId")?.value;
-
-  if (!initDataRaw) {
-    redirect("/unauthenticated");
-  }
-
-  if (!cartId) {
-    return "No cart found";
-  }
-
-  let redirectPath = "/checkout/shipping";
-
-  try {
-    let order;
-
-    if (orderId) {
-      order = await tmaAuthenticated(initDataRaw, storeId, orderGetById, {
-        storeId,
-        orderId,
-        state: EntityState.ACTIVE
-      });
-    }
-
-    if (!order) {
-      order = await tmaAuthenticated(initDataRaw, storeId, orderGetByCartId, {
-        storeId,
-        cartId,
-        state: EntityState.ACTIVE
-      });
-    }
-
-    if (!order) {
-      order = await tmaAuthenticated(initDataRaw, storeId, orderCreate, {
-        storeId,
-        cartId
-      });
-    }
-
-    cookies().set("orderId", order.id);
-    redirectPath = `/checkout/shipping?shippingId=${order.shipping.id}`;
-
-    if (order.hasDefaultShippingDetails) {
-      redirectPath = `/checkout/payment`;
-    }
-  } catch (e) {
-    console.error(e);
-    return "Could not create order";
-  }
-
-  revalidateTag(TAGS.ORDER);
-  storeRedirect(redirectPath, RedirectType.push);
-};
-
-export type FormErrorResponse = {
-  fieldErrors?: ShippingDetailsFieldErrors;
-  formError?: string;
-};
-
-export const createOrUpdateShippingDetails = async (
+export const createOrder = async (
   prevState: any,
   formData: FormData
-): Promise<FormErrorResponse> => {
-  const initDataRaw = cookies().get("initDataRaw")?.value;
-  const storeId = formData.get("storeId") as string;
-  const shippingId = formData.get("shipping-id") as string;
-
-  if (!initDataRaw) {
-    redirect("/unauthenticated");
-  }
-
-  if (!shippingId) {
-    return { formError: "No shipping found" };
-  }
-
-  const validatedData = ShippingDetailsScheme.safeParse({
-    firstName: formData.get("first-name") || "",
-    lastName: formData.get("last-name") || "",
-    email: formData.get("email") || undefined,
-    phone: formData.get("phone") || undefined,
-    address: formData.get("address") || "",
-    country: formData.get("country") || "",
-    city: formData.get("city") || "",
-    province: formData.get("province") || "",
-    postcode: formData.get("postcode") || ""
-  });
-
-  if (!validatedData.success) {
-    return { fieldErrors: validatedData.error.flatten().fieldErrors };
-  }
-
-  const shippingDetailsId = String(formData.get("id"));
-
-  try {
-    if (shippingDetailsId) {
-      await tmaAuthenticated(initDataRaw, storeId, shippingDetailsUpdate, {
-        input: {
-          ...(validatedData.data as ShippingDetails),
-          shippingId,
-          shippingDetailsId,
-          isDefault: Boolean(formData.get("is-default"))
-        }
-      });
-    } else {
-      await tmaAuthenticated(initDataRaw, storeId, shippingDetailsCreate, {
-        input: {
-          ...(validatedData.data as ShippingDetails),
-          shippingId,
-          isDefault: Boolean(formData.get("is-default"))
-        }
-      });
+): Promise<
+  | {
+      success: boolean;
+      formError?: string;
+      paymentLink?: string;
     }
-  } catch (e) {
-    return { formError: "Could not create shipping details" };
+  | undefined
+> => {
+  const storeId = await getStoreId();
+  const cartId = cookies().get("cartId")?.value;
+  const initDataRaw = await getInitDataRaw();
+  const paymentMethodId = formData.get("payment-method-id") as string;
+  const t = await getTranslations("CartPage.CheckoutForm");
+
+  if (!cartId) {
+    return { success: false, formError: t("errors.noCartFound") };
   }
 
-  revalidateTag(TAGS.ORDER);
-  storeRedirect(`/checkout/payment`, RedirectType.push);
-};
-
-export const createPayment = async (
-  prevState: any,
-  payload: {
-    storeId: string;
-    paymentMethodId: string;
-    currency?: string;
-  }
-): Promise<{ success: boolean; paymentLink?: string; error?: string }> => {
-  const orderId = cookies().get("orderId")?.value;
-  const initDataRaw = cookies().get("initDataRaw")?.value;
-
-  if (!initDataRaw) {
-    redirect("/unauthenticated");
+  if (!paymentMethodId) {
+    return { success: false, formError: t("errors.noPaymentMethodSelected") };
   }
 
-  const { storeId, paymentMethodId, currency = "USD" } = payload;
-  if (!orderId) {
-    return { success: false, error: "No order found" };
-  }
-
-  const result = await tmaAuthenticated(initDataRaw, storeId, paymentCreate, {
-    input: {
-      orderId,
-      paymentMethodId,
-      currency
-    }
+  const result = await tmaAuthenticated(initDataRaw, storeId, orderCreate, {
+    storeId,
+    cartId,
+    paymentMethodId
   });
 
   if (!result) {
-    return { success: false, error: "Could not create payment" };
+    return { success: false, formError: t("errors.couldNotCreateOrder") };
   }
 
-  const { paymentInfo, provider } = result;
+  const { paymentProvider, paymentInfo } = result;
 
   if (
-    provider === PaymentProvider.BANK_TRANSFER ||
-    provider === PaymentProvider.CRYPTO_TRANSFER
+    paymentProvider === PaymentProvider.BANK_TRANSFER ||
+    paymentProvider === PaymentProvider.CRYPTO_TRANSFER
   ) {
     return { success: true };
   }
 
   const parsedPaymentInfo = JSON.parse(paymentInfo);
 
-  if (provider === PaymentProvider.TELEGRAM_INVOICE) {
+  if (paymentProvider === PaymentProvider.TELEGRAM_INVOICE) {
     return {
       success: true,
       paymentLink: parsedPaymentInfo.payment_link
@@ -199,4 +82,193 @@ export const createPayment = async (
     success: true,
     paymentLink: parsedPaymentInfo.direct_payment_link
   };
+};
+
+export const setDefaultShippingAddress = async (
+  prevState: any,
+  formData: FormData
+) => {
+  const storeId = await getStoreId();
+  const shippingAddressId = formData.get("shipping-address-id") as string;
+  const session = await getServerSession(authOptions);
+  const t = await getTranslations("ShippingPage");
+
+  if (!session) {
+    redirect("/unauthenticated");
+  }
+
+  const shippingAddress = await tmaAuthenticated(
+    session.user.initDataRaw,
+    storeId,
+    shippingAddressDefaultSet,
+    {
+      storeId,
+      shippingAddressId
+    }
+  );
+
+  if (!shippingAddress) {
+    return t("selectAddressError");
+  }
+
+  revalidateTag(TAGS.SHIPPING);
+  return await storeRedirect("/cart", RedirectType.push);
+};
+
+export const createShippingAddress = async (
+  prevState: any,
+  formData: FormData
+) => {
+  const storeId = await getStoreId();
+  const initDataRaw = await getInitDataRaw();
+  const t = await getTranslations("ShippingCreatePage.CreateForm");
+
+  const address = formData.get("address") as string;
+  const houseNumber = formData.get("house-number") as unknown as number;
+  const privateHouse = Boolean(formData.get("private-house"));
+
+  if (!houseNumber && !privateHouse) {
+    return {
+      fieldErrors: {
+        houseNumber: t("houseNumber.errorMessage")
+      }
+    };
+  }
+
+  const floor = formData.get("floor") as unknown as number;
+  const entrance = formData.get("entrance") as unknown as number;
+  const intercom = formData.get("intercom") as unknown as number;
+
+  const house = privateHouse
+    ? t("privateHouse.label") + " "
+    : `${t("houseNumber.label")}: ${houseNumber} `;
+  const floorString = floor ? `${t("floor.label")}: ${floor} ` : "";
+  const entranceString = entrance ? `${t("entrance.label")}: ${entrance} ` : "";
+  const intercomString = intercom ? `${t("intercom.label")}: ${intercom}` : "";
+
+  const additionalInfo = `${house}${floorString}${entranceString}${intercomString}`;
+
+  const shippingAddress = await tmaAuthenticated(
+    initDataRaw,
+    storeId,
+    shippingAddressCreate,
+    {
+      input: {
+        storeId,
+        address,
+        additionalInfo
+      }
+    }
+  );
+
+  if (!shippingAddress) {
+    return { formError: t("formError") };
+  }
+
+  revalidateTag(TAGS.SHIPPING);
+  return await storeRedirect("/shipping", RedirectType.push);
+};
+
+export const deleteShippingAddress = async (
+  prevState: any,
+  shippingAddressId: string
+) => {
+  const initDataRaw = await getInitDataRaw();
+  const storeId = await getStoreId();
+  const t = await getTranslations("ShippingPage");
+  const success = await tmaAuthenticated(
+    initDataRaw,
+    storeId,
+    shippingAddressDelete,
+    {
+      shippingAddressId
+    }
+  );
+
+  if (!success) return t("deleteAddressError");
+
+  revalidateTag(TAGS.SHIPPING);
+};
+
+export const createContactInformation = async (
+  prevState: any,
+  formData: FormData
+) => {
+  const storeId = await getStoreId();
+  const initDataRaw = await getInitDataRaw();
+  const t = await getTranslations("ContactInfoPage.CreateForm");
+
+  const validatedData = ContactInformationScheme.safeParse({
+    name: formData.get("name") || "",
+    email: formData.get("email") || undefined,
+    phone: formData.get("phone") || undefined
+  });
+
+  if (!validatedData.success) {
+    return { fieldErrors: validatedData.error.flatten().fieldErrors };
+  }
+
+  const contactInformation = await tmaAuthenticated(
+    initDataRaw,
+    storeId,
+    contactInformationCreate,
+    {
+      input: {
+        ...validatedData.data,
+        storeId
+      }
+    }
+  );
+
+  if (!contactInformation) return { formError: t("formError") };
+
+  revalidateTag(TAGS.SHIPPING);
+  return await storeRedirect("/contact-info", RedirectType.push);
+};
+
+export const setDefaultContactInformation = async (
+  prevState: any,
+  formData: FormData
+) => {
+  const storeId = await getStoreId();
+  const initDataRaw = await getInitDataRaw();
+  const t = await getTranslations("ContactInfoPage");
+
+  const contactInformationId = formData.get("contact-information-id") as string;
+
+  const contactInformation = await tmaAuthenticated(
+    initDataRaw,
+    storeId,
+    contactInformationDefaultSet,
+    {
+      storeId,
+      contactInformationId
+    }
+  );
+
+  if (!contactInformation) return { formError: t("selectContactInfoError") };
+
+  revalidateTag(TAGS.SHIPPING);
+  return await storeRedirect("/cart", RedirectType.push);
+};
+
+export const deleteContactInformation = async (
+  prevState: any,
+  contactInformationId: string
+) => {
+  const initDataRaw = await getInitDataRaw();
+  const storeId = await getStoreId();
+  const t = await getTranslations("ContactInfoPage");
+  const success = await tmaAuthenticated(
+    initDataRaw,
+    storeId,
+    contactInformationDelete,
+    {
+      contactInformationId
+    }
+  );
+
+  if (!success) return t("deleteContactInfoError");
+
+  revalidateTag(TAGS.SHIPPING);
 };

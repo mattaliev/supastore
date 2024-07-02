@@ -1,11 +1,11 @@
 import { FulfilmentStatus, Shipping } from "@ditch/lib";
+import { useTranslations } from "next-intl";
 
 import AddTrackingDrawerDialog from "@/components/order/add-tracking-drawer-dialog";
 import { FulfilmentStatusBadge } from "@/components/order/order-badges";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle
@@ -18,61 +18,57 @@ export default function OrderShipping({
   shipping: Shipping;
   fulfilmentStatus: FulfilmentStatus;
 }) {
+  const t = useTranslations("OrderEditPage.OrderShipping");
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-start gap-2">
-            Shipping
+            {t("title")}
             {fulfilmentStatus === FulfilmentStatus.TRACKING && (
               <FulfilmentStatusBadge fulfilmentStatus={fulfilmentStatus} />
             )}
           </div>
         </CardTitle>
-        <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="text-sm">
         <dl className="grid gap-3">
-          <div className="font-semibold">Contact Information</div>
+          <div className="font-semibold">{t("contactInformation")}</div>
           <div className="grid gap-0.5 text-muted-foreground">
-            {shipping.details ? (
+            {shipping.contactInfo ? (
               <>
-                <dd>
-                  {shipping.details?.firstName +
-                    " " +
-                    shipping.details?.lastName}
-                </dd>
-                <dd>{shipping.details?.phone}</dd>
-                <dd>{shipping.details?.email}</dd>
+                <dd>{shipping.contactInfo?.name}</dd>
+                <dd>{shipping.contactInfo?.phone}</dd>
+                <dd>{shipping.contactInfo?.email}</dd>
               </>
             ) : (
-              <dd className={"my-4"}>No contact information provided</dd>
+              <dd className={"my-4"}>{t("noContactInformation")}</dd>
             )}
           </div>
-          <div className="font-semibold">Shipping Address</div>
-          {shipping.details ? (
+          <div className="font-semibold">{t("shippingAddress")}</div>
+          {shipping.shippingAddress ? (
             <address className="grid gap-0.5 not-italic text-muted-foreground">
-              <dd>{shipping.details?.address}</dd>
-              <dd>{shipping.details?.city || ""}</dd>
-              <dd>{shipping.details?.province || ""}</dd>
-              <dd>{shipping.details?.postcode || ""}</dd>
-              <dd>{shipping.details?.country || ""}</dd>
+              <dd>{shipping.shippingAddress?.address}</dd>
+              <dd>{shipping.shippingAddress?.additionalInfo || ""}</dd>
             </address>
           ) : (
             <dd className={"my-4 text-muted-foreground"}>
-              No shipping information provided
+              {t("noShippingAddress")}
             </dd>
           )}
           {fulfilmentStatus === FulfilmentStatus.TRACKING && (
             <>
-              <div className="font-semibold">Tracking Information</div>
+              <div className="font-semibold">{t("trackingInformation")}</div>
               <div className="grid gap-0.5 text-muted-foreground">
                 <div className="flex items-center justify-start space-x-1">
-                  <dt className="text-muted-foreground">Carrier:</dt>
+                  <dt className="text-muted-foreground">{t("carrier")}:</dt>
                   <dd>{shipping.carrier}</dd>
                 </div>
                 <div className="flex items-center justify-start space-x-1">
-                  <dt className="text-muted-foreground">Tracking Number:</dt>
+                  <dt className="text-muted-foreground">
+                    {t("trackingNumber")}:
+                  </dt>
                   <dd>{shipping.trackingNumber}</dd>
                 </div>
               </div>

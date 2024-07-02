@@ -1,4 +1,5 @@
 import { Order, PaymentStatus } from "@ditch/lib";
+import { getTranslations } from "next-intl/server";
 
 import Link from "@/components/navigation/link";
 import { PaymentStatusBadge } from "@/components/order/order-badges";
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { formatDateShort } from "@/lib/utils";
 
-export default function OrderList({
+export default async function OrderList({
   orders,
   page,
   limit,
@@ -35,14 +36,15 @@ export default function OrderList({
 }) {
   const firstProductIndex = (page - 1) * limit + 1;
   const lastProductIndex = Math.min(page * limit, totalOrderCount);
+  const t = await getTranslations("OrderListPage.OrderListTable");
 
   return (
     <div className="grid gap-3">
       <OrderFilters />
       <Card>
         <CardHeader className="px-7">
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>Recent orders from your store.</CardDescription>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>
           {totalOrderCount === 0 ? (
@@ -53,11 +55,12 @@ export default function OrderList({
 
           <CardFooter>
             <div className="text-xs text-muted-foreground">
-              Showing{" "}
+              {t("Footer.showing") + " "}
               <strong>
                 {firstProductIndex} - {lastProductIndex}
               </strong>{" "}
-              of <strong>{totalOrderCount}</strong> orders
+              {t("Footer.of")} <strong>{totalOrderCount}</strong>{" "}
+              {t("Footer.orders")}
             </div>
           </CardFooter>
         </CardContent>
@@ -66,16 +69,18 @@ export default function OrderList({
   );
 }
 
-function OrderTable({ orders }: { orders?: Order[] }) {
+async function OrderTable({ orders }: { orders?: Order[] }) {
+  const t = await getTranslations("OrderListPage.OrderListTable");
+
   return (
     <Table containerClassname={"w-full overflow-x-auto relative"}>
       <TableHeader>
         <TableRow>
-          <TableHead>Order #</TableHead>
-          <TableHead>Customer</TableHead>
-          <TableHead className="hidden sm:table-cell">Status</TableHead>
-          <TableHead className="hidden md:table-cell">Date</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead>{t("order")} #</TableHead>
+          <TableHead>{t("customer")}</TableHead>
+          <TableHead className="hidden sm:table-cell">{t("status")}</TableHead>
+          <TableHead className="hidden md:table-cell">{t("date")}</TableHead>
+          <TableHead className="text-right">{t("amount")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody className="overflow-y-auto">
@@ -90,7 +95,7 @@ function OrderTable({ orders }: { orders?: Order[] }) {
               <div className="font-medium">
                 {!order.user?.firstName &&
                   !order.user?.lastName &&
-                  "Anonymous User"}
+                  t("anonymous")}
                 {order.user?.firstName || ""} {order.user?.lastName || ""}
               </div>
               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -117,17 +122,17 @@ function OrderTable({ orders }: { orders?: Order[] }) {
   );
 }
 
-function NoOrdersYet() {
+async function NoOrdersYet() {
+  const t = await getTranslations("OrderListPage.NoOrdersYet");
+
   return (
     <div className="flex flex-1 items-center justify-center h-64">
       <div className="flex flex-col items-center gap-1 text-center">
-        <h3 className="text-2xl font-bold tracking-tight">No orders found</h3>
-        <p className="text-sm text-muted-foreground">
-          Try changing the filters or view all orders
-        </p>
+        <h3 className="text-2xl font-bold tracking-tight">{t("heading")}</h3>
+        <p className="text-sm text-muted-foreground">{t("description")}</p>
         <Link href={`/orders`}>
           <Button className="mt-4" size="sm">
-            View orders
+            {t("viewOrdersButton")}
           </Button>
         </Link>
       </div>
