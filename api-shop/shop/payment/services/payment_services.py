@@ -4,6 +4,7 @@ from uuid import UUID
 from django.utils import timezone
 
 from analytics.models import Event
+from core.exceptions import ServerError
 from core.models import EntityStateChoices
 from core.utils.encryption import encrypt
 from order.models import Order, FulfillmentStatusChoices
@@ -107,51 +108,66 @@ def payment_create(
         currency: str = "USD",
         notify_customer: bool = True
 ) -> tuple[str, dict]:
-    payment_method = PaymentMethod.objects.get(pk=payment_method_id)
-    order = Order.objects.get(pk=order_id)
+    logger = logging.getLogger(__name__)
+    logger.debug(
+        "Creating payment for order: %(order_id)s Payment method: %(payment_method_id)s",
+        {
+            "order_id": order_id,
+            "payment_method_id": payment_method_id
+        }
+    )
+    try:
+        payment_method = PaymentMethod.objects.get(pk=payment_method_id)
+        order = Order.objects.get(pk=order_id)
 
-    if not payment_method or not order:
-        raise ValueError("Payment method or order not found")
+        if not payment_method or not order:
+            raise ServerError("Payment method or order not found")
 
-    # Create payment
-    if hasattr(order, "payment"):
-        previous_payment = order.payment
-        previous_payment.order = None
-        previous_payment.save()
+        # Create payment
+        # if hasattr(order, "payment"):
+        #     previous_payment = order.payment
+        #     previous_payment.order = None
+        #     previous_payment.save()
+        #     order.save()
+
+        payment = Payment.objects.create(
+            payment_method=payment_method,
+            currency=currency,
+            subtotal_amount=order.cart.get_total_price(),
+            shipping_amount=order.shipping.shipping_amount,
+            total_amount=order.cart.get_total_price() + order.shipping.shipping_amount
+        )
+
+        order.payment = payment
         order.save()
 
-    payment = Payment.objects.create(
-        order=order,
-        payment_method=payment_method,
-        currency=currency,
-        subtotal_amount=order.cart.get_total_price(),
-        shipping_amount=order.shipping.shipping_amount,
-        total_amount=order.cart.get_total_price() + order.shipping.shipping_amount
-    )
+        payment_info = None
 
-    payment_info = None
+        for provider in payment_providers:
+            if provider.provider == payment_method.provider:
+                payment_info = provider.create_payment(payment=payment)
+                if notify_customer:
+                    bot_token = store_bot_token_get(store=order.store)
+                    provider.send_payment_message(payment=payment, bot_token=bot_token)
 
-    for provider in payment_providers:
-        if provider.provider == payment_method.provider:
-            payment_info = provider.create_payment(payment=payment)
-            if notify_customer:
-                bot_token = store_bot_token_get(store=order.store)
-                provider.send_payment_message(payment=payment, bot_token=bot_token)
+        if not payment_info:
+            raise ServerError("Payment provider not found")
 
-    if not payment_info:
-        raise ValueError("Payment provider not found")
 
-    # Make order immutable. Once user creates and order it should not be changed
-    order.state = EntityStateChoices.INACTIVE
-    order.cart.state = EntityStateChoices.INACTIVE
-    order.fulfilment_status = FulfillmentStatusChoices.PENDING
+        # Make order immutable. Once user creates and order it should not be changed
+        order.state = EntityStateChoices.INACTIVE
+        order.cart.state = EntityStateChoices.INACTIVE
+        order.fulfilment_status = FulfillmentStatusChoices.PENDING
 
-    order.save()
-    order.cart.save()
+        order.save()
+        order.cart.save()
 
-    Event.register_payment_started(payment=payment, store_id=order.store.id)
+        Event.register_payment_started(payment=payment, store_id=order.store.id)
 
-    return payment_info
+        return payment_info
+    except Exception as e:
+        logger.warning("Error creating payment: %(error)s", {"error": e})
+        raise e
 
 
 def payment_status_update(

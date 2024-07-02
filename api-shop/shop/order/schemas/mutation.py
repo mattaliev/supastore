@@ -14,18 +14,26 @@ __all__ = [
 
 class OrderCreateMutation(graphene.Mutation):
     order = graphene.Field("order.schemas.OrderType")
+    payment_provider = graphene.String()
+    payment_info = graphene.JSONString()
 
     class Arguments:
         cart_id = graphene.UUID(required=True)
         store_id = graphene.UUID(required=True)
+        payment_method_id = graphene.UUID(required=True)
 
-    def mutate(self, info, cart_id, store_id, **kwargs):
+    def mutate(self, info, cart_id, store_id, payment_method_id, **kwargs):
         user = info.context.user
         if not user.is_authenticated:
             raise UNAUTHENTICATED()
 
-        order = order_create(user_id=user.id, cart_id=cart_id, store_id=store_id)
-        return OrderCreateMutation(order=order)
+        order, provider, payment_info = order_create(
+            user=user,
+            cart_id=cart_id,
+            store_id=store_id,
+            payment_method_id=payment_method_id
+        )
+        return OrderCreateMutation(order=order, payment_provider=provider, payment_info=payment_info)
 
 
 class OrderUpdateMutation(graphene.Mutation):

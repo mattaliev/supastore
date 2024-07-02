@@ -1,2 +1,3 @@
-from .schema import *
 from .mutation import *
+from .query import *
+from .schema import *

@@ -84,13 +84,6 @@ class PaymentMethod(BaseEntity):
 
 
 class Payment(BaseEntity):
-    order = models.OneToOneField(
-        "order.Order",
-        on_delete=models.SET_NULL,
-        related_name="payment",
-        blank=True,
-        null=True
-    )
     payment_method = models.ForeignKey(
         "payment.PaymentMethod",
         on_delete=models.SET_NULL,

@@ -152,7 +152,7 @@ class OpenOrderButton(InlineButton):
         return {
             "text": self.text,
             "web_app": {
-                "url": f"{self.store_url}/checkout/payment?orderId={self.order_id}"
+                "url": f"{self.store_url}/order/{self.order_id}"
             }
         }
 

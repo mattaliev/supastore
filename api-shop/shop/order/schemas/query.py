@@ -1,6 +1,6 @@
 import graphene
 
-from core.exceptions import UNAUTHORIZED, UNAUTHENTICATED
+from core.exceptions import UNAUTHORIZED, UNAUTHENTICATED, AuthenticationError
 from core.utils import get_paginator
 from order.schemas.schema import OrderType, OrderPaginatedType
 from order.services import order_list, order_get_by_id, order_get_by_cart_id
@@ -8,6 +8,8 @@ from order.services import order_list, order_get_by_id, order_get_by_cart_id
 __all__ = [
     "Query"
 ]
+
+from order.services.order_services import can_create_order
 
 from store.services import can_manage_store
 
@@ -34,6 +36,8 @@ class Query(graphene.ObjectType):
         page=graphene.Int(),
         limit=graphene.Int()
     )
+
+    order_can_create = graphene.Boolean(store_id=graphene.UUID(required=True), cart_id=graphene.UUID(required=True))
 
     def resolve_order_get_by_id(self, info, order_id, store_id, state=None):
         user = info.context.user
@@ -91,3 +95,10 @@ class Query(graphene.ObjectType):
             state=state
         )
         return get_paginator(orders, limit, page, OrderPaginatedType)
+
+    def resolve_order_can_create(self, info, store_id, cart_id):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise AuthenticationError()
+
+        return can_create_order(user=user, store_id=store_id, cart_id=cart_id)

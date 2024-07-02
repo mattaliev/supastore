@@ -1,7 +1,12 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from shipping.models import Shipping, ShippingDetails
+from shipping.models import (
+    Shipping,
+    ShippingDetails,
+    ShippingAddress,
+    ContactInformation
+)
 
 __all__ = [
     "ShippingType",
@@ -9,12 +14,17 @@ __all__ = [
     "ShippingAddTrackingInput",
     "ShippingDetailsInput",
     "ShippingDetailsCreateInput",
-    "ShippingDetailsUpdateInput"
+    "ShippingDetailsUpdateInput",
+    "ShippingAddressType",
+    "ShippingAddressCreateInput",
+    "ContactInformationType",
+    "ContactInformationCreateInput"
 ]
 
 
 class ShippingType(DjangoObjectType):
-    details = graphene.Field("shipping.schemas.ShippingDetailsType")
+    contact_info = graphene.Field("shipping.schemas.ContactInformationType")
+    shipping_address = graphene.Field("shipping.schemas.ShippingAddressType")
 
     class Meta:
         model = Shipping
@@ -54,3 +64,28 @@ class ShippingDetailsCreateInput(ShippingDetailsInput):
 class ShippingDetailsUpdateInput(ShippingDetailsInput):
     shipping_details_id = graphene.UUID(required=True)
     shipping_id = graphene.UUID(required=True)
+
+
+class ShippingAddressType(DjangoObjectType):
+    class Meta:
+        model = ShippingAddress
+        fields = "__all__"
+
+
+class ShippingAddressCreateInput(graphene.InputObjectType):
+    store_id = graphene.UUID(required=True)
+    address = graphene.String(required=True)
+    additional_info = graphene.String()
+
+
+class ContactInformationType(DjangoObjectType):
+    class Meta:
+        model = ContactInformation
+        fields = "__all__"
+
+
+class ContactInformationCreateInput(graphene.InputObjectType):
+    store_id = graphene.UUID(required=True)
+    name = graphene.String(required=True)
+    email = graphene.String(required=True)
+    phone = graphene.String(required=True)

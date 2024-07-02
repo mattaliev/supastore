@@ -75,10 +75,32 @@ class StoreUser(BaseEntity):
         default=UserRoleChoices.USER
     )
 
+    default_shipping_address = models.OneToOneField(
+        "shipping.ShippingAddress",
+        on_delete=models.SET_NULL,
+        related_name="default_shipping_address",
+        null=True,
+        blank=True
+    )
+
+    default_contact_info = models.OneToOneField(
+        "shipping.ContactInformation",
+        on_delete=models.SET_NULL,
+        related_name="default_contact_info",
+        null=True,
+        blank=True
+    )
+
     class Meta:
         db_table = "store_user"
         verbose_name = "Store User"
         verbose_name_plural = "Store Users"
+
+    def is_manager(self):
+        return (
+            self.role == UserRoleChoices.ADMIN or
+            self.role == UserRoleChoices.OWNER
+        )
 
 
 class UserSession(BaseEntity):
@@ -91,3 +113,4 @@ class UserSession(BaseEntity):
         "store.Store",
         on_delete=models.CASCADE,
     )
+

@@ -7,12 +7,22 @@ from core.models.core import BaseEntity
 __all__ = [
     "Shipping",
     "ShippingDetails",
+    "ShippingAddress",
+    "ContactInformation"
 ]
 
 
 class Shipping(BaseEntity):
-    details = models.ForeignKey(
-        "shipping.ShippingDetails",
+    contact_info = models.ForeignKey(
+        "shipping.ContactInformation",
+        on_delete=models.SET_NULL,
+        related_name="shipping_label",
+        null=True,
+        blank=True
+    )
+
+    shipping_address = models.ForeignKey(
+        "shipping.ShippingAddress",
         on_delete=models.SET_NULL,
         related_name="shipping_label",
         null=True,
@@ -43,9 +53,18 @@ class Shipping(BaseEntity):
         else:
             self.shipping_amount = Decimal("19.99")
 
-    def save(self, *args, **kwargs):
-        self.calculate_shipping_amount()
-        super().save(*args, **kwargs)
+
+class ShippingAddress(BaseEntity):
+    store_user = models.ForeignKey("user.StoreUser", on_delete=models.CASCADE)
+    address = models.CharField(max_length=255)
+    additional_info = models.TextField(null=True, blank=True)
+
+
+class ContactInformation(BaseEntity):
+    store_user = models.ForeignKey("user.StoreUser", on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=50)
 
 
 class ShippingDetails(BaseEntity):
