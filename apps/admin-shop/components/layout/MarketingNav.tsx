@@ -12,7 +12,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 function MarketingNavOption({
   label,
   href,
-  inStore,
+  inStore
 }: {
   label: string;
   href: string;
@@ -34,7 +34,7 @@ function MarketingNavOption({
 function MobileMarketingNavOption({
   label,
   href,
-  inStore,
+  inStore
 }: {
   label: string;
   href: string;
@@ -62,18 +62,18 @@ export default async function MarketingNav() {
     {
       label: t("guides"),
       href: "https://guides.ditch-concept.com",
-      inStore: false,
+      inStore: false
     },
     {
       label: t("pricing"),
       href: "/",
-      inStore: false,
+      inStore: false
     },
     {
       label: t("contact"),
       href: "https://t.me/matveyaliev",
-      inStore: false,
-    },
+      inStore: false
+    }
   ];
 
   return (
