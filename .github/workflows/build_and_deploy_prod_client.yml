@@ -10,7 +10,7 @@ on:
       - main
     paths:
       - "apps/tg-shop/**"
-      - ".github/workflows/build_and_deploy_client.yml"
+      - ".github/workflows/build_and_deploy_prod_client.yml"
   workflow_dispatch:
 
 env:

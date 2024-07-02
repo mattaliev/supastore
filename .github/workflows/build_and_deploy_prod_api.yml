@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "api-shop/**"
-      - ".github/workflows/build_and_deploy_api.yml"
+      - ".github/workflows/build_and_deploy_prod_api.yml"
   workflow_dispatch:
 
 

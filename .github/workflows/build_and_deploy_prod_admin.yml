@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "apps/admin-shop/**"
-      - ".github/workflows/build_and_deploy_admin.yml"
+      - ".github/workflows/build_and_deploy_prod_admin.yml"
   workflow_dispatch:
 
 env:
