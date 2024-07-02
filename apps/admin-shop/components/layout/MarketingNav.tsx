@@ -1,7 +1,6 @@
 import { PanelLeft } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { getTranslations } from "next-intl/server";
-import { useMemo } from "react";
 
 import { authOptions } from "@/auth";
 import AdminDropdownMenu from "@/components/admin/admin-dropdown-menu";
@@ -13,7 +12,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 function MarketingNavOption({
   label,
   href,
-  inStore
+  inStore,
 }: {
   label: string;
   href: string;
@@ -35,7 +34,7 @@ function MarketingNavOption({
 function MobileMarketingNavOption({
   label,
   href,
-  inStore
+  inStore,
 }: {
   label: string;
   href: string;
@@ -59,25 +58,23 @@ export default async function MarketingNav() {
   const session = await getServerSession(authOptions);
   const t = await getTranslations("LandingPage.Nav");
 
-  const marketingNavOptions = useMemo(() => {
-    return [
-      {
-        label: t("guides"),
-        href: "https://guides.ditch-concept.com",
-        inStore: false
-      },
-      {
-        label: t("pricing"),
-        href: "/",
-        inStore: false
-      },
-      {
-        label: t("contact"),
-        href: "https://t.me/matveyaliev",
-        inStore: false
-      }
-    ];
-  }, []);
+  const marketingNavOptions = [
+    {
+      label: t("guides"),
+      href: "https://guides.ditch-concept.com",
+      inStore: false,
+    },
+    {
+      label: t("pricing"),
+      href: "/",
+      inStore: false,
+    },
+    {
+      label: t("contact"),
+      href: "https://t.me/matveyaliev",
+      inStore: false,
+    },
+  ];
 
   return (
     <nav className={"flex items-center justify-between p-6"}>
