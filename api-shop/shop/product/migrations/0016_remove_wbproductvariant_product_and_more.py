@@ -7,122 +7,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0008_alter_cartitem_options_cartitem_unique_cart_variant'),
-        ('category', '0010_alter_characteristicschoice_value_en_and_more'),
-        ('core', '0001_initial'),
-        ('product', '0015_remove_product_store_remove_productimage_product_and_more'),
-        ('store', '0015_auto_20240605_1040'),
+        ('cart', '0006_auto_20240620_0826'),
+        ('product', '0015_remove_product_store_remove_productimage_product_and_more')
     ]
 
     operations = [
-        migrations.RenameModel(
-            old_name="WBProduct",
-            new_name="Product"
+        migrations.CreateModel(
+            name="Product",
+            fields=[
+                ('id', models.UUIDField(default=django.db.models.deletion.CASCADE, editable=False, primary_key=True, serialize=False, unique=True)),
+                ('state', models.CharField(choices=[('ACTIVE', 'Active'), ('INACTIVE', 'Inactive'), ('DELETED', 'Deleted')], default='ACTIVE', max_length=10)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('updated', models.DateTimeField(auto_now=True)),
+                ('name', models.CharField(max_length=255)),
+                ('description', models.TextField(blank=True)),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="products", to="category.category")),
+                ('store', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="products", to="store.store")),
+            ],
         ),
-        migrations.RenameModel(
-            old_name='WBProductVariant',
-            new_name='ProductVariant',
-        ),
-        migrations.RenameModel(
-            old_name='WBProductVariantCharacteristics',
-            new_name='ProductVariantCharacteristics',
-        ),
-        migrations.RenameModel(
-            old_name='WBProductVariantImage',
-            new_name='ProductVariantImage',
-        ),
-        migrations.RenameModel(
-            old_name='WBProductVariantSize',
-            new_name='ProductVariantSize',
-        ),
-        migrations.AlterModelOptions(
-            name='product',
-            options={'ordering': ['-created'], 'verbose_name': 'product',
-                     'verbose_name_plural': 'products'},
-        ),
-        migrations.AlterModelOptions(
-            name='productvariant',
-            options={'ordering': ['-created'],
-                     'verbose_name': 'product variant',
-                     'verbose_name_plural': 'product variants'},
-        ),
-        migrations.AlterModelOptions(
-            name='productvariantimage',
-            options={'ordering': ['order'],
-                     'verbose_name': 'product variant image',
-                     'verbose_name_plural': 'product variant images'},
-        ),
-        migrations.AlterModelOptions(
-            name='productvariantsize',
-            options={'ordering': ['-created'],
-                     'verbose_name': 'product variant size',
-                     'verbose_name_plural': 'product variant sizes'},
-        ),
-        migrations.AlterModelTable(
-            name='product',
-            table='products',
-        ),
-        migrations.AlterModelTable(
-            name='productvariant',
-            table='product_variants',
-        ),
-        migrations.AlterModelTable(
-            name='productvariantimage',
-            table='product_variant_images',
-        ),
-        migrations.AlterModelTable(
-            name='productvariantsize',
-            table='product_variant_sizes',
-        ),
-        migrations.AlterField(
-            model_name="product",
-            name="category",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="products",
-                to="category.category",
-            ),
-        ),
-        migrations.AlterField(
-            model_name="product",
-            name="store",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="products",
-                to="store.store",
-            ),
-        ),
-        migrations.AlterField(
-            model_name="productvariant",
-            name="product",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="variants",
-                to="product.product",
-            ),
-        ),
-        migrations.AlterField(
-            model_name="productvariant",
-            name="store",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="product_variants",
-                to="store.store",
-            ),
-        ),
-        migrations.AlterField(
-            model_name='productvariantcharacteristics',
-            name='product_variant',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='product_characteristics', to='product.productvariant'),
-        ),
-        migrations.AlterField(
-            model_name='productvariantimage',
-            name='product_variant',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='product.productvariant'),
-        ),
-        migrations.AlterField(
-            model_name='productvariantsize',
-            name='product_variant',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sizes', to='product.productvariant'),
+        migrations.CreateModel(
+            name="ProductVariant",
+            fields=[
+                ('id', models.UUIDField(default=django.db.models.deletion.CASCADE, editable=False, primary_key=True, serialize=False, unique=True)),
+            ]
         )
     ]

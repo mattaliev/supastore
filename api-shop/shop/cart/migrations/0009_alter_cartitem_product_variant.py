@@ -8,7 +8,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('cart', '0008_alter_cartitem_options_cartitem_unique_cart_variant'),
-        ('product', '0016_remove_wbproductvariant_product_and_more'),
     ]
 
     operations = [
