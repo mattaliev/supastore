@@ -1,4 +1,5 @@
 import logging
+from typing import List
 from uuid import UUID
 
 from core.exceptions import NotFoundError, ServerError
@@ -23,7 +24,8 @@ __all__ = [
     "product_variant_image_create",
     "product_variant_characteristics_create",
     "product_variant_delete",
-    "product_delete"
+    "product_delete",
+    "product_variants_order_set",
 ]
 
 
@@ -291,3 +293,11 @@ def product_variant_delete(id: UUID) -> None:
     logger = logging.getLogger(__name__)
     logger.debug("Deleting product variant with id: %s", id)
     ProductVariant.objects.get(pk=id).delete()
+
+
+def product_variants_order_set(product_ids: List[UUID]):
+    logger = logging.getLogger(__name__)
+    logger.debug("Setting the order of product variants")
+
+    for idx, variant_id in enumerate(product_ids):
+        ProductVariant.objects.filter(id=variant_id).update(order_display=idx)

@@ -24,12 +24,13 @@ class ProductVariant(BaseEntity):
     brand = models.CharField(max_length=50, null=True, blank=True)
     sku = models.CharField(max_length=50)
     wb_id = models.IntegerField(null=True, blank=True)
+    order_display = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = "product_variants"
         verbose_name = "product variant"
         verbose_name_plural = "product variants"
-        ordering = ["created"]
+        ordering = ["order_display"]
 
 
 class ProductVariantSize(BaseEntity):

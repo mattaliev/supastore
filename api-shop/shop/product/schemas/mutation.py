@@ -1,13 +1,15 @@
 import graphene
 
-from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
+from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED, PermissionDeniedError
 from product.schemas.schema import (
     ProductCreateInput, ProductUpdateInput
 )
 from product.services import (
     product_create,
     product_update,
-    product_delete, product_variant_delete
+    product_delete,
+    product_variant_delete,
+    product_variants_order_set
 )
 from store.services import can_manage_store
 
@@ -94,8 +96,28 @@ class ProductVariantDeleteMutation(graphene.Mutation):
         return ProductVariantDeleteMutation(success=True)
 
 
+class ProductVariantOrderSetMutationMutation(graphene.Mutation):
+    class Arguments:
+        store_id = graphene.UUID(required=True)
+        product_ids = graphene.List(graphene.UUID, required=True)
+
+    success = graphene.Boolean()
+
+    def mutate(self, info, store_id, product_ids, **kwargs):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise PermissionDeniedError()
+
+        if not can_manage_store(user=user, store_id=store_id):
+            raise PermissionDeniedError()
+
+        product_variants_order_set(product_ids=product_ids)
+        return ProductVariantOrderSetMutationMutation(success=True)
+
+
 class Mutation(graphene.ObjectType):
     product_create = ProductCreateMutation.Field()
     product_update = ProductUpdateMutation.Field()
     product_delete = ProductDeleteMutation.Field()
     product_variant_delete = ProductVariantDeleteMutation.Field()
+    product_variants_order_set = ProductVariantOrderSetMutationMutation.Field()
