@@ -3,15 +3,23 @@ import {
   categoriesGet,
   Category,
   categoryCharacteristicsGet,
+  EntityState,
+  Paginated,
   Product,
+  productsPaginatedGet,
   ProductVariant,
-  ProductVariantSize
+  ProductVariantSize,
+  productVariantsOrderSet
 } from "@ditch/lib";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 
 import { createProduct, updateProduct } from "@/components/product/actions";
+import { useStore } from "@/components/store/store-context";
 
 export type ProductVariantStateUpdate = {
   field: string;
@@ -184,4 +192,124 @@ export function useProductVariantSizes({
     setSizes(newSizes);
   };
   return { sizes, addSize, deleteSize, onValueChange };
+}
+
+export function useProductInfiniteScroll({
+  paginatedProducts,
+  page,
+  state,
+  limit
+}: {
+  paginatedProducts: Paginated<ProductVariant>;
+  state: EntityState;
+  page: number | undefined;
+  limit: number | undefined;
+}) {
+  const [products, setProducts] = useState(paginatedProducts.objects);
+  const observer = useRef<IntersectionObserver>();
+  const storeId = useStore();
+
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["products"],
+      queryFn: async ({ pageParam }) =>
+        await productsPaginatedGet({
+          storeId,
+          page: pageParam,
+          limit,
+          state
+        }),
+      getNextPageParam: (lastPage, allPages) =>
+        lastPage.hasNext ? lastPage.page + 1 : undefined,
+      initialData: {
+        pages: [paginatedProducts],
+        pageParams: [page]
+      },
+      initialPageParam: page
+    });
+
+  useEffect(() => {
+    setProducts(
+      data?.pages.reduce((acc, page) => {
+        return [...acc, ...page.objects];
+      }, [] as ProductVariant[])
+    );
+  }, [data]);
+
+  const lastElementRef = useCallback(
+    (node: HTMLTableCellElement) => {
+      if (isLoading) return;
+
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [fetchNextPage, hasNextPage, isFetching, isLoading]
+  );
+
+  return {
+    products,
+    setProducts,
+    lastElementRef,
+    isFetching,
+    isLoading
+  };
+}
+
+export function useProductListDragAndDrop({
+  products,
+  setProducts
+}: {
+  products: ProductVariant[];
+  setProducts: React.Dispatch<React.SetStateAction<ProductVariant[]>>;
+}) {
+  const [productOrderChanged, setProductOrderChanged] = useState(false);
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  const { data } = useSession();
+  const storeId = useStore();
+
+  const { mutate } = useMutation({
+    mutationKey: ["productVariantsOrderSet"],
+    mutationFn: async (productIds: string[]) =>
+      productVariantsOrderSet(
+        { productIds, storeId },
+        { Authorization: `Bearer ${data?.user.accessToken}` }
+      )
+  });
+
+  const handleDrag = (event: any) => {
+    const { active, over } = event;
+
+    if (active === null || over === null) {
+      return;
+    }
+
+    if (active.id !== over.id) {
+      const oldIndex = products.findIndex(
+        (product) => product.id === active.id
+      );
+      const newIndex = products.findIndex((product) => product.id === over.id);
+      const newProducts = arrayMove(products, oldIndex, newIndex);
+      setProducts(newProducts);
+      setProductOrderChanged(true);
+    }
+  };
+
+  useEffect(() => {
+    if (productOrderChanged) {
+      mutate(products.map((product) => product.id));
+      setProductOrderChanged(false);
+    }
+  }, [productOrderChanged]);
+
+  return {
+    sensors,
+    handleDrag
+  };
 }
