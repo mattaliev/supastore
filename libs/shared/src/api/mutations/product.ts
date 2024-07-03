@@ -37,3 +37,11 @@ export const productDeleteMutation = /* GraphQL */ `
     }
   }
 `;
+
+export const productVariantsOrderSetMutation = /* GraphQL */ `
+  mutation ProductVariantsOrderSet($productIds: [UUID!]!, $storeId: UUID!) {
+    productVariantsOrderSet(productIds: $productIds, storeId: $storeId) {
+      success
+    }
+  }
+`;

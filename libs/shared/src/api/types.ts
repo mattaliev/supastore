@@ -1272,3 +1272,15 @@ export type BackendCategoryCharacteristicsGetOperation = {
     categoryId?: string;
   };
 };
+
+export type BackendProductVariantsOrderSetOperation = {
+  data: {
+    productVariantsOrderSet: {
+      success: boolean;
+    };
+  };
+  variables: {
+    productIds: string[];
+    storeId: string;
+  };
+};
