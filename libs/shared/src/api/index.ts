@@ -19,6 +19,7 @@ import {
   productDeleteMutation,
   productUpdateMutation,
   productVariantDeleteMutation,
+  productVariantsOrderSetMutation,
   shippingAddressCreateMutation,
   shippingAddressDefaultSetMutation,
   shippingAddressDeleteMutation,
@@ -104,6 +105,7 @@ import {
   BackendProductsPaginatedGetOperation,
   BackendProductUpdateOperation,
   BackendProductVariantDeleteOperation,
+  BackendProductVariantsOrderSetOperation,
   BackendSalesAnalyticsOperation,
   BackendSessionAnalyticsByHourGetOperation,
   BackendShippingAddressCreateOperation,
@@ -1433,4 +1435,21 @@ export const categoryCharacteristicsGet = async (
     });
 
   return responseBody.data.categoryCharacteristicsGet;
+};
+
+export const productVariantsOrderSet = async (
+  body: {
+    productIds: string[];
+    storeId: string;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendProductVariantsOrderSetOperation>({
+      query: productVariantsOrderSetMutation,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.productVariantsOrderSet;
 };

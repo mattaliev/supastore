@@ -1,7 +1,6 @@
 import { EntityState, productsPaginatedGet } from "@ditch/lib";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
-import Pagination from "@/components/pagination";
 import ProductFilters from "@/components/product/product-filters";
 import ProductList from "@/components/product/product-list";
 
@@ -24,35 +23,25 @@ async function ProductListPage({
   params: { storeId },
   searchParams: { page: selectedPage, limit, state }
 }: WithAuthProps<ProductListPageProps>) {
-  const {
-    objects: products,
-    hasNext,
-    hasPrev,
-    pages,
-    totalItems,
-    page
-  } = await productsPaginatedGet({
+  const entityState = EntityState[state as keyof typeof EntityState];
+  const paginatedProducts = await productsPaginatedGet({
     storeId,
-    state: EntityState[state as keyof typeof EntityState],
+    state: entityState,
     page: selectedPage ? parseInt(selectedPage) : 1,
     limit: limit ? parseInt(limit) : defaultLimit
   });
+
+  const { totalItems, page } = paginatedProducts;
 
   return (
     <>
       <ProductFilters />
       <ProductList
-        products={products}
+        paginatedProducts={paginatedProducts}
+        state={entityState}
         page={page}
         limit={defaultLimit}
         totalProductCount={totalItems}
-      />
-      <Pagination
-        page={page}
-        totalPages={pages}
-        limit={defaultLimit}
-        hasNext={hasNext}
-        hasPrev={hasPrev}
       />
     </>
   );

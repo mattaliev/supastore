@@ -1,8 +1,25 @@
-import { ProductVariant } from "@ditch/lib";
+"use client";
+import { EntityState, Paginated, ProductVariant } from "@ditch/lib";
+import { DndContext, UniqueIdentifier } from "@dnd-kit/core";
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges
+} from "@dnd-kit/modifiers";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, LoaderCircle } from "lucide-react";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { useFormatter, useTranslations } from "next-intl";
 
 import Link from "@/components/navigation/link";
+import {
+  useProductInfiniteScroll,
+  useProductListDragAndDrop
+} from "@/components/product/hooks";
 import ProductAdminActions from "@/components/product/product-admin-actions";
 import { ProductBadge } from "@/components/product/product-badges";
 import { Button } from "@/components/ui/button";
@@ -23,10 +40,9 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
-import { formatDateMedium } from "@/lib/utils";
 
-async function NoProducts() {
-  const t = await getTranslations("ProductListPage.NoProducts");
+function NoProducts() {
+  const t = useTranslations("ProductListPage.NoProducts");
 
   return (
     <div className="flex flex-1 items-center justify-center h-64">
@@ -54,20 +70,31 @@ async function NoProducts() {
   );
 }
 
-export default async function ProductList({
-  products,
+export default function ProductList({
   page,
   limit,
-  totalProductCount
+  totalProductCount,
+  paginatedProducts,
+  state
 }: {
-  products: ProductVariant[];
+  paginatedProducts: Paginated<ProductVariant>;
   page: number;
   totalProductCount: number;
   limit: number;
+  state: EntityState;
 }) {
-  const firstProductIndex = (page - 1) * limit + 1;
-  const lastProductIndex = Math.min(page * limit, totalProductCount);
-  const t = await getTranslations("ProductListPage");
+  const t = useTranslations("ProductListPage");
+  const { products, setProducts, lastElementRef, isFetching, isLoading } =
+    useProductInfiniteScroll({
+      state: EntityState[state as keyof typeof EntityState],
+      paginatedProducts,
+      page,
+      limit
+    });
+  const { sensors, handleDrag } = useProductListDragAndDrop({
+    products,
+    setProducts
+  });
 
   return (
     <Card>
@@ -82,18 +109,21 @@ export default async function ProductList({
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-[20px] table-cell"></TableHead>
                 <TableHead className="hidden w-[100px] sm:table-cell">
                   <span className="sr-only">{t("ProductListTable.image")}</span>
                 </TableHead>
                 <TableHead>{t("ProductListTable.name")}</TableHead>
-                <TableHead>{t("ProductListTable.status")}</TableHead>
+                <TableHead className={"hidden sm:table-cell"}>
+                  {t("ProductListTable.status")}
+                </TableHead>
                 <TableHead className="hidden md:table-cell">
                   {t("ProductListTable.sku")}
                 </TableHead>
-                <TableHead className="hidden md:table-cell">
+                <TableHead className="hidden lg:table-cell">
                   {t("ProductListTable.brand")}
                 </TableHead>
-                <TableHead className="hidden md:table-cell">
+                <TableHead className="hidden lg:table-cell">
                   {t("ProductListTable.created-at")}
                 </TableHead>
                 <TableHead>
@@ -103,48 +133,43 @@ export default async function ProductList({
                 </TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="hidden sm:table-cell">
-                    {product.images && product.images.length > 0 ? (
-                      <Image
-                        alt="Product image"
-                        className="aspect-square rounded-md object-cover"
-                        height="64"
-                        src={product.images[0]}
-                        width="64"
-                      />
-                    ) : (
-                      <NoImage
-                        iconSize={"xs"}
-                        className="aspect-square rounded-md w-full"
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell className="font-medium hover:underline">
-                    <Link href={`/products/edit/${product.id}`}>
-                      {product.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <ProductBadge state={product.state} />
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {product.sku}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {product.brand}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {product.created && formatDateMedium(product.created)}
-                  </TableCell>
-                  <TableCell>
-                    <ProductAdminActions id={product.id} title={product.name} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            <DndContext
+              id={"sortable-collection-products"}
+              modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+              sensors={sensors}
+              onDragEnd={handleDrag}
+            >
+              <SortableContext
+                items={products}
+                strategy={verticalListSortingStrategy}
+              >
+                <TableBody>
+                  {products.map((product) => (
+                    <TableProduct
+                      key={product.id}
+                      product={product}
+                      id={product.id}
+                      lastElementRef={lastElementRef}
+                    />
+                  ))}
+                  {(isFetching || isLoading) && (
+                    <TableRow>
+                      <TableCell colSpan={8} className={"text-center"}>
+                        <div
+                          className={
+                            "flex items-center justify-center w-full text-primary"
+                          }
+                        >
+                          <div className={"animate-spin"}>
+                            <LoaderCircle className={"h-6 w-6"} />
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </SortableContext>
+            </DndContext>
           </Table>
         )}
       </CardContent>
@@ -152,12 +177,88 @@ export default async function ProductList({
         <div className="text-xs text-muted-foreground">
           {t("ProductListTable.Footer.showing")}{" "}
           <strong>
-            {firstProductIndex} - {lastProductIndex}
+            {1} - {products.length}
           </strong>{" "}
           {t("ProductListTable.Footer.of")} <strong>{totalProductCount}</strong>{" "}
           {t("ProductListTable.Footer.products")}
         </div>
       </CardFooter>
     </Card>
+  );
+}
+
+function TableProduct({
+  product,
+  id,
+  lastElementRef
+}: {
+  product: ProductVariant;
+  id: UniqueIdentifier;
+  lastElementRef: (node: HTMLTableCellElement) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition
+  } = useSortable({ id: id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  };
+
+  const format = useFormatter();
+
+  return (
+    <TableRow key={product.id} ref={setNodeRef} style={style}>
+      <TableCell className="table-cell" ref={lastElementRef}>
+        <div
+          ref={setActivatorNodeRef}
+          {...listeners}
+          {...attributes}
+          className="cursor-move"
+        >
+          <GripVertical className="h-4 w-4" />
+        </div>
+      </TableCell>
+      <TableCell className="hidden sm:table-cell">
+        {product.images && product.images.length > 0 ? (
+          <Image
+            alt="Product image"
+            className="aspect-square rounded-md object-cover"
+            height="64"
+            src={product.images[0]}
+            width="64"
+          />
+        ) : (
+          <NoImage
+            iconSize={"xs"}
+            className="aspect-square rounded-md w-full"
+          />
+        )}
+      </TableCell>
+      <TableCell className="font-medium hover:underline">
+        <Link href={`/products/edit/${product.id}`}>{product.name}</Link>
+      </TableCell>
+      <TableCell className={"hidden sm:table-cell"}>
+        <ProductBadge state={product.state} />
+      </TableCell>
+      <TableCell className="hidden md:table-cell">{product.sku}</TableCell>
+      <TableCell className="hidden lg:table-cell">{product.brand}</TableCell>
+      <TableCell className="hidden lg:table-cell">
+        {product.created &&
+          format.dateTime(new Date(product.created), {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+          })}
+      </TableCell>
+      <TableCell>
+        <ProductAdminActions id={product.id} title={product.name} />
+      </TableCell>
+    </TableRow>
   );
 }
