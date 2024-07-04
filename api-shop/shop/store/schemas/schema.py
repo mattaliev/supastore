@@ -29,6 +29,7 @@ class StoreType(DjangoObjectType):
     state = graphene.String()
     logo_dark = graphene.String()
     logo_light = graphene.String()
+    telegram_store_url = graphene.String()
 
     class Meta:
         model = Store
@@ -81,6 +82,9 @@ class StoreType(DjangoObjectType):
     def resolve_is_connected_to_telegram(self, info):
         return self.is_connected_to_telegram
 
+    def resolve_telegram_store_url(self, info):
+        return self.store_bot.telegram_store_url
+
 
 class StoreInputType(graphene.InputObjectType):
     store_name = graphene.String(required=True)
@@ -90,6 +94,7 @@ class StoreInputType(graphene.InputObjectType):
     logo_light = Upload()
     bot_token = graphene.String()
     bot_username = graphene.String()
+    telegram_store_url = graphene.String()
 
 
 class StoreCreateInputType(StoreInputType):

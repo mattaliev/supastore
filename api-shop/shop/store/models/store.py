@@ -27,6 +27,7 @@ class StoreBot(BaseEntity):
     store = models.OneToOneField(Store, on_delete=models.CASCADE, related_name="store_bot")
     bot_username = models.TextField(max_length=100, null=True, blank=True)
     token = models.TextField(max_length=255, null=True, blank=True)
+    telegram_store_url = models.URLField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = "store_bot"

@@ -123,6 +123,7 @@ def store_update(
         logo_light: InMemoryUploadedFile = None,
         bot_username: str = None,
         bot_token: str = None,
+        telegram_store_url: str = None
 ):
     logger = logging.getLogger(__name__)
     logger.info("Updating store with id: %s", store_id)
@@ -150,6 +151,10 @@ def store_update(
 
     if bot_username:
         store.store_bot.bot_username = bot_username
+        store.store_bot.save()
+
+    if telegram_store_url:
+        store.store_bot.telegram_store_url = telegram_store_url
         store.store_bot.save()
 
     if bot_token:
