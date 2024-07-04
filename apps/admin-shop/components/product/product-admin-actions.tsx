@@ -1,6 +1,7 @@
 "use client";
-import { MoreHorizontal } from "lucide-react";
+import { CheckIcon, CopyIcon, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { useRouter } from "@/components/i18n/i18n-navigation";
 import ProductDeleteDialog from "@/components/product/product-delete-dialog";
@@ -17,10 +18,12 @@ import {
 
 export default function ProductAdminActions({
   id,
-  title
+  title,
+  telegramStoreUrl
 }: {
   id: string;
   title: string;
+  telegramStoreUrl: string | undefined;
 }) {
   const storeId = useStore();
   const router = useRouter();
@@ -51,6 +54,10 @@ export default function ProductAdminActions({
           <DropdownMenuItem>
             <DialogTrigger>Delete</DialogTrigger>
           </DropdownMenuItem>
+          <ProductLinkOnTelegram
+            productId={id}
+            telegramStoreUrl={telegramStoreUrl}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
       <ProductDeleteDialog
@@ -61,5 +68,35 @@ export default function ProductAdminActions({
         isProductsPage={true}
       />
     </Dialog>
+  );
+}
+
+function ProductLinkOnTelegram({
+  productId,
+  telegramStoreUrl
+}: {
+  productId: string;
+  telegramStoreUrl: string | undefined;
+}) {
+  const [urlCopied, setUrlCopied] = useState(false);
+  const productLink = `${telegramStoreUrl}?startapp=product_${productId}`;
+
+  if (!telegramStoreUrl) {
+    return null;
+  }
+
+  return (
+    <DropdownMenuItem>
+      <div className={"flex items-center gap-4"}>
+        <p>Link on Telegram</p>
+        <CopyToClipboard text={productLink} onCopy={() => setUrlCopied(true)}>
+          {urlCopied ? (
+            <CheckIcon className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+          ) : (
+            <CopyIcon className="w-5 h-5 text-muted-foreground hover:text-foreground" />
+          )}
+        </CopyToClipboard>
+      </div>
+    </DropdownMenuItem>
   );
 }
