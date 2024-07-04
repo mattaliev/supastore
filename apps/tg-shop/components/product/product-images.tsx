@@ -7,7 +7,7 @@ export default function ProductImages({ images }: { images: string[] }) {
     return (
       <Image
         alt={"product-image-" + images[0]}
-        className="object-cover h-48 w-full rounded-xl"
+        className="object-cover h-64 w-full rounded-xl"
         height={600}
         src={images[0]}
         width={600}
@@ -15,5 +15,5 @@ export default function ProductImages({ images }: { images: string[] }) {
     );
   }
 
-  return <NoImage iconSize={"sm"} className={"h-48 w-full rounded-xl"} />;
+  return <NoImage iconSize={"sm"} className={"h-64 w-full rounded-xl"} />;
 }

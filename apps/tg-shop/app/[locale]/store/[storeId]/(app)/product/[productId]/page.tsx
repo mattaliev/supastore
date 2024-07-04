@@ -13,7 +13,7 @@ type ProductDetailPageProps = {
 export const revalidate = 60;
 
 export default async function ProductDetailPage({
-  params
+  params,
 }: ProductDetailPageProps) {
   const { productId } = params;
 

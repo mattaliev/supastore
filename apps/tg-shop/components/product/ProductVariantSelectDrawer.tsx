@@ -1,4 +1,5 @@
 import { ProductVariantSize } from "@ditch/lib";
+import { ShoppingCart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -10,18 +11,18 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 
 export default function VariantSelectDrawer({
   sizes,
-  productId
+  productId,
 }: {
   sizes: ProductVariantSize[];
   productId: string;
 }) {
   const [selectedSize, setSelectedSize] = useState<ProductVariantSize>(
-    sizes[0]
+    sizes[0],
   );
 
   const t = useTranslations("ProductCatalogPage");
@@ -29,8 +30,13 @@ export default function VariantSelectDrawer({
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button size={"sm"} className={"text-xs w-full"} type={"button"}>
-          {t("addToCart")}
+        <Button
+          size={"sm"}
+          className={"text-xs w-full text-telegram-text-color h-10"}
+          variant="ghost"
+          type={"button"}
+        >
+          <ShoppingCart className="h-4 w-4" />
         </Button>
       </DrawerTrigger>
 
@@ -42,7 +48,7 @@ export default function VariantSelectDrawer({
         <DrawerHeader>
           <DrawerTitle>{t("selectVariant")}</DrawerTitle>
         </DrawerHeader>
-        <div className={"grid gap-2"}>
+        <div className={"grid gap-2 mb-5"}>
           <ProductDetailSizes
             sizes={sizes}
             setSelectedSize={setSelectedSize}
@@ -53,6 +59,7 @@ export default function VariantSelectDrawer({
             doesProductHaveVariants={sizes.length > 0}
             productVariantSizeId={selectedSize.id}
             size={"lg"}
+            className={"w-full"}
           />
         </div>
       </DrawerContent>

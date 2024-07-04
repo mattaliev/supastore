@@ -5,7 +5,7 @@ import CatalogProduct from "@/components/product/product";
 
 export default function Catalog({
   paginatedProducts,
-  limit
+  limit,
 }: { paginatedProducts: Paginated<ProductVariant> } & {
   limit: number;
 }) {
@@ -14,13 +14,13 @@ export default function Catalog({
     hasNext,
     hasPrev,
     pages,
-    page
+    page,
   } = paginatedProducts;
 
   return (
     products && (
-      <div className={"grid gap-6"}>
-        <div className="grid grid-cols-2 gap-6 px-6 py-6 bg-telegram-bg-color">
+      <div className={"grid gap-2"}>
+        <div className="grid grid-cols-2 gap-x-1 gap-y-3 px-2 py-6 bg-telegram-bg-color">
           {products?.map((product) => (
             <CatalogProduct key={product.id} product={product} />
           ))}

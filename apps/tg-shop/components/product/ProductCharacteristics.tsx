@@ -7,11 +7,11 @@ import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger
+  AccordionTrigger,
 } from "@/components/ui/accordion";
 
 export default function ProductCharacteristics({
-  characteristics
+  characteristics,
 }: {
   characteristics: ProductVariantCharacteristic[];
 }) {
@@ -30,11 +30,11 @@ export default function ProductCharacteristics({
         title={"All Characteristics"}
         className={"border-none"}
       >
-        <AccordionTrigger className={"text-telegram-text-color text-lg"}>
+        <AccordionTrigger className={"text-telegram-text-color text-lg p-0"}>
           {t("characteristics")}
         </AccordionTrigger>
-        <AccordionContent>
-          <div className={"grid gap-2"}>
+        <AccordionContent className={"pt-2 pb-0"}>
+          <div className={"grid gap-1"}>
             {characteristics.map(
               ({ characteristic: { nameEn, nameRu }, value, id }) => {
                 if (value.length > 0 && value[0] !== "") {
@@ -53,7 +53,7 @@ export default function ProductCharacteristics({
                   );
                 }
                 return null;
-              }
+              },
             )}
           </div>
         </AccordionContent>

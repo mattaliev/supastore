@@ -12,7 +12,7 @@ import ProductCharacteristics from "@/components/product/ProductCharacteristics"
 import ProductVariants from "@/components/product/ProductVariants";
 
 export default function ProductDetail({
-  product
+  product,
 }: {
   product: ProductVariant;
 }) {
@@ -25,8 +25,8 @@ export default function ProductDetail({
     const getAndSerializeSource = async () => {
       return await serialize(product.description || "", {
         mdxOptions: {
-          development: process.env.NODE_ENV === "development"
-        }
+          development: process.env.NODE_ENV === "development",
+        },
       });
     };
 
@@ -60,14 +60,14 @@ export default function ProductDetail({
             selectedSize={size}
             setSelectedSize={setSize}
           />
-          <ProductCharacteristics
-            characteristics={product.productCharacteristics}
-          />
+          {/*<ProductCharacteristics*/}
+          {/*  characteristics={product.productCharacteristics}*/}
+          {/*/>*/}
           {serializedDescription && (
             <div className={"grid gap-2"}>
-              <h2 className="text-lg font-semibold text-telegram-text-color">
-                {t("description")}
-              </h2>
+              {/*<h2 className="text-lg font-semibold text-telegram-text-color">*/}
+              {/*  {t("description")}*/}
+              {/*</h2>*/}
               <MDXRemote
                 {...serializedDescription}
                 components={{
@@ -76,17 +76,21 @@ export default function ProductDetail({
                       className="text-telegram-text-color text-sm"
                       {...props}
                     />
-                  )
+                  ),
                 }}
               />
             </div>
           )}
-          <div className={"sticky bottom-0 py-4 bg-telegram-bg-color"}>
+          <ProductCharacteristics
+            characteristics={product.productCharacteristics}
+          />
+          <div className={"sticky bottom-0 pt-2 pb-6 bg-telegram-bg-color"}>
             <AddToCartButton
               productVariantId={product.id}
               doesProductHaveVariants={product.sizes.length > 1}
               productVariantSizeId={size?.id}
               size={"lg"}
+              className={"w-full"}
             />
           </div>
         </div>
