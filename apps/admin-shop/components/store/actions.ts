@@ -51,7 +51,8 @@ export const updateStore = async (
     logoDark: formData.get("logo-dark"),
     logoLight: formData.get("logo-light"),
     botToken: formData.get("bot-token"),
-    botUsername: formData.get("bot-username")
+    botUsername: formData.get("bot-username"),
+    telegramStoreUrl: formData.get("telegram-store-url")
   });
 
   if (!validatedData.success) {
