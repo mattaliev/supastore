@@ -157,6 +157,26 @@ export default function StoreBotToken({
               </div>
             </div>
           </div>
+          <div className="grid gap-2">
+            <Label htmlFor="telegram-store-url">
+              {t("FormFields.telegramStoreUrl.label")}
+            </Label>
+            <p className="text-muted-foreground text-xs">
+              {t("FormFields.telegramStoreUrl.description")}
+            </p>
+            {formState?.fieldErrors && formState.fieldErrors?.botUsername && (
+              <p className={"text-xs text-destructive text-start"}>
+                {t("FormFields.telegramStoreUrl.error")}
+              </p>
+            )}
+            <Input
+              id="telegram-store-url"
+              name="telegram-store-url"
+              type={"text"}
+              placeholder={t("FormFields.telegramStoreUrl.placeholder")}
+              defaultValue={store.telegramStoreUrl || ""}
+            />
+          </div>
         </CardContent>
         <CardFooter>
           <SubmitButton />

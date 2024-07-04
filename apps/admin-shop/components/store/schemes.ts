@@ -38,6 +38,12 @@ export const StoreScheme = z.object({
       invalid_type_error: "Store timezone must be a string"
     })
     .optional()
+    .nullable(),
+  telegramStoreUrl: z
+    .string({
+      invalid_type_error: "Telegram store URL must be a string"
+    })
+    .optional()
     .nullable()
 });
 

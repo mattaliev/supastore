@@ -50,12 +50,14 @@ export default function ProductDetailImages({
           loop: true
         }}
       >
-        <CarouselContent>
+        <CarouselContent className={"-ml-2"}>
           {productImages.map((image, index) => (
             <CarouselItem
               key={index}
               onClick={() => setCurrent(index + 1)}
-              className={cn({ "basis-4/5": productImages.length > 1 })}
+              className={cn("pl-2", {
+                "basis-4/5": productImages.length > 1
+              })}
             >
               <Image
                 src={image}

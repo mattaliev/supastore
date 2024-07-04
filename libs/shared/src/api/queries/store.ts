@@ -18,6 +18,14 @@ export const storeGetQuery = /* GraphQL */ `
   ${storeFragment}
 `;
 
+export const storeTelegramStoreUrlGetQuery = /* GraphQL */ `
+  query StoreTelegramStoreUrlGet($storeId: UUID!) {
+    storeGet(storeId: $storeId) {
+      telegramStoreUrl
+    }
+  }
+`;
+
 export const storeCheckpointsQuery = /* GraphQL */ `
   query StoreCheckpoints($storeId: UUID!) {
     storeGet(storeId: $storeId) {

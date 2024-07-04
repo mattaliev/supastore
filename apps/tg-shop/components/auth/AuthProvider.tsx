@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { locales } from "@/components/i18n/i18n";
 import { usePathname, useRouter } from "@/components/i18n/i18n-navigation";
 import { useStore } from "@/components/store/store-context";
-import { getPath } from "@/lib/path";
 
 type Props = {
   children: React.ReactNode;
@@ -37,12 +36,7 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
       if (pageReload && status === "authenticated") return;
 
       if (launchParams.initDataRaw) {
-        let callbackUrl = `/en/store/${store}`;
-
-        if (launchParams.startParam) {
-          const path = getPath(launchParams.startParam);
-          callbackUrl = `${callbackUrl}${path}`;
-        }
+        const callbackUrl = `/en/store/${store}`;
         await signIn("telegram", {
           storeId: store,
           initDataRaw: launchParams.initDataRaw,
