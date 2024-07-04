@@ -68,6 +68,7 @@ import {
   storeGetQuery,
   storeListQuery,
   storeLogoGetQuery,
+  storeTelegramStoreUrlGetQuery,
 } from "./queries/store";
 import {
   BackendAdminProductGetOperation,
@@ -129,6 +130,7 @@ import {
   BackendStoreGetOperation,
   BackendStoreListOperation,
   BackendStoreLogoGetOperation,
+  BackendStoreTelegramStoreUrlGetOperation,
   BackendStoreUpdateOperation,
   Cart,
   EntityState,
@@ -1182,6 +1184,22 @@ export const storeBotTokenGet = async (
     });
 
   return responseBody.data.storeBotTokenGet;
+};
+
+export const storeTelegramStoreUrlGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreTelegramStoreUrlGetOperation>({
+      query: storeTelegramStoreUrlGetQuery,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.storeGet.telegramStoreUrl;
 };
 
 export const sessionAnalyticsGet = async (

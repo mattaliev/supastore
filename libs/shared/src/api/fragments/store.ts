@@ -10,6 +10,7 @@ export const storeFragment = /* GraphQL */ `
     storeUrl
     isConnectedToTelegram
     state
+    telegramStoreUrl
   }
 `;
 

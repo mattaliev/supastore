@@ -487,6 +487,7 @@ export type Store = {
   owner: TelegramUser;
   admins: TelegramUser[];
   isConnectedToTelegram: boolean;
+  telegramStoreUrl?: string;
 } & BaseEntity;
 
 export type StoreCheckpoints = {
@@ -521,6 +522,7 @@ export type StoreUpdateInputType = {
   logoLight?: File | null;
   botUsername?: string | null;
   botToken?: string | null;
+  telegramStoreUrl?: string | null;
 };
 
 export type SessionAnalyticsByHour = {
@@ -1281,6 +1283,17 @@ export type BackendProductVariantsOrderSetOperation = {
   };
   variables: {
     productIds: string[];
+    storeId: string;
+  };
+};
+
+export type BackendStoreTelegramStoreUrlGetOperation = {
+  data: {
+    storeGet: {
+      telegramStoreUrl: string;
+    };
+  };
+  variables: {
     storeId: string;
   };
 };
