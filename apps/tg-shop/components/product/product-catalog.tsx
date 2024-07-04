@@ -5,7 +5,7 @@ import CatalogProduct from "@/components/product/product";
 
 export default function Catalog({
   paginatedProducts,
-  limit,
+  limit
 }: { paginatedProducts: Paginated<ProductVariant> } & {
   limit: number;
 }) {
@@ -14,7 +14,7 @@ export default function Catalog({
     hasNext,
     hasPrev,
     pages,
-    page,
+    page
   } = paginatedProducts;
 
   return (

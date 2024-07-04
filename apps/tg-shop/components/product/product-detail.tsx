@@ -12,7 +12,7 @@ import ProductCharacteristics from "@/components/product/ProductCharacteristics"
 import ProductVariants from "@/components/product/ProductVariants";
 
 export default function ProductDetail({
-  product,
+  product
 }: {
   product: ProductVariant;
 }) {
@@ -25,8 +25,8 @@ export default function ProductDetail({
     const getAndSerializeSource = async () => {
       return await serialize(product.description || "", {
         mdxOptions: {
-          development: process.env.NODE_ENV === "development",
-        },
+          development: process.env.NODE_ENV === "development"
+        }
       });
     };
 
@@ -76,7 +76,7 @@ export default function ProductDetail({
                       className="text-telegram-text-color text-sm"
                       {...props}
                     />
-                  ),
+                  )
                 }}
               />
             </div>

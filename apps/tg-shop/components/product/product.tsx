@@ -8,7 +8,7 @@ import ProductImages from "@/components/product/product-images";
 import VariantSelectDrawer from "@/components/product/ProductVariantSelectDrawer";
 
 export default function CatalogProduct({
-  product,
+  product
 }: {
   product: ProductVariant;
 }) {

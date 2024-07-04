@@ -9,13 +9,13 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious,
+  CarouselPrevious
 } from "@/components/ui/carousel";
 import { NoImage } from "@/components/ui/NoImage";
 import { cn } from "@/lib/utils";
 
 export default function ProductDetailImages({
-  productImages,
+  productImages
 }: {
   productImages: string[];
 }) {
@@ -47,7 +47,7 @@ export default function ProductDetailImages({
         setApi={setApi}
         opts={{
           align: "start",
-          loop: true,
+          loop: true
         }}
       >
         <CarouselContent className={"-ml-2"}>
@@ -56,7 +56,7 @@ export default function ProductDetailImages({
               key={index}
               onClick={() => setCurrent(index + 1)}
               className={cn("pl-2", {
-                "basis-4/5": productImages.length > 1,
+                "basis-4/5": productImages.length > 1
               })}
             >
               <Image

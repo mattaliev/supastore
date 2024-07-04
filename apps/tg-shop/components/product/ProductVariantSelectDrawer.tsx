@@ -11,18 +11,18 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 
 export default function VariantSelectDrawer({
   sizes,
-  productId,
+  productId
 }: {
   sizes: ProductVariantSize[];
   productId: string;
 }) {
   const [selectedSize, setSelectedSize] = useState<ProductVariantSize>(
-    sizes[0],
+    sizes[0]
   );
 
   const t = useTranslations("ProductCatalogPage");

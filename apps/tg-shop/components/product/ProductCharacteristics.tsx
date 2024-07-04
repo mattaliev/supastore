@@ -7,11 +7,11 @@ import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger,
+  AccordionTrigger
 } from "@/components/ui/accordion";
 
 export default function ProductCharacteristics({
-  characteristics,
+  characteristics
 }: {
   characteristics: ProductVariantCharacteristic[];
 }) {
@@ -53,7 +53,7 @@ export default function ProductCharacteristics({
                   );
                 }
                 return null;
-              },
+              }
             )}
           </div>
         </AccordionContent>

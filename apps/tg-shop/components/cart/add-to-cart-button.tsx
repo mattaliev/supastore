@@ -21,7 +21,7 @@ const SubmitButton = React.forwardRef<
 >(
   (
     { selectedSizeId, doesProductHaveVariants, className, children, ...props },
-    ref,
+    ref
   ) => {
     console.log(props.variant);
 
@@ -65,7 +65,7 @@ const SubmitButton = React.forwardRef<
         className={clsx(
           buttonClass,
           "flex justify-center space-x-1 m-0 items-center",
-          className,
+          className
         )}
         type={"submit"}
         onClick={() => hapticFeedback.impactOccurred("light")}
@@ -74,7 +74,7 @@ const SubmitButton = React.forwardRef<
         {/*{t("addToCart")}*/}
       </Button>
     );
-  },
+  }
 );
 
 type AddToCartProps = {
@@ -95,7 +95,7 @@ const AddToCartButton = React.forwardRef<HTMLFormElement, AddToCartButtonProps>(
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [message, formAction] = useFormState(addToCart, null);
     const storeId = useStore();
@@ -105,7 +105,7 @@ const AddToCartButton = React.forwardRef<HTMLFormElement, AddToCartButtonProps>(
       productVariantId,
       productVariantSizeId,
       doesProductHaveVariants,
-      quantity: 1,
+      quantity: 1
     };
 
     const actionWithProductVariant = formAction.bind(null, payload);
@@ -126,7 +126,7 @@ const AddToCartButton = React.forwardRef<HTMLFormElement, AddToCartButtonProps>(
         )}
       </form>
     );
-  },
+  }
 );
 AddToCartButton.displayName = "AddToCartButton";
 
