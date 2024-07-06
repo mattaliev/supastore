@@ -21,14 +21,14 @@ const defaultLimit = 10;
 
 async function ProductListPage({
   params: { storeId },
-  searchParams: { page: selectedPage, limit, state },
+  searchParams: { page: selectedPage, limit, state }
 }: WithAuthProps<ProductListPageProps>) {
   const entityState = EntityState[state as keyof typeof EntityState];
   const paginatedProducts = await productsPaginatedGet({
     storeId,
     state: entityState,
     page: selectedPage ? parseInt(selectedPage) : 1,
-    limit: limit ? parseInt(limit) : defaultLimit,
+    limit: limit ? parseInt(limit) : defaultLimit
   });
 
   const { totalItems, page } = paginatedProducts;
