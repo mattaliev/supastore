@@ -25,7 +25,7 @@ const CatalogPage = async ({
 }: CatalogPageProps) => {
   const paginatedProducts = await withErrorHandling(productsPaginatedGet)({
     storeId,
-    state: EntityState[searchParams.state as keyof typeof EntityState],
+    state: EntityState.ACTIVE,
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     limit: searchParams.limit ? parseInt(searchParams.limit) : defaultLimit
   });

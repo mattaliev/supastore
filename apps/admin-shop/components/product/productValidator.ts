@@ -48,7 +48,11 @@ const baseProductVariantScheme = {
         ])
       })
     )
-    .optional()
+    .optional(),
+  state: z.enum(["ACTIVE", "INACTIVE"], {
+    invalid_type_error: "Status is required",
+    required_error: "Status is required"
+  })
 };
 
 const baseVariant = z.object(baseProductVariantScheme);
@@ -189,7 +193,8 @@ const baseProductVariantCharacteristicsGet = (
     sku: formData.get(index + "sku"),
     description: formData.get(index + "description"),
     brand: formData.get(index + "brand"),
-    images: formData.getAll(index + "images")
+    images: formData.getAll(index + "images"),
+    state: formData.get(index + "state")
   };
 };
 
@@ -198,8 +203,6 @@ const productSizesGet = (formData: FormData, index: number) => {
   const sizeRu = formData.getAll(index + "sizeRu");
   const prices = formData.getAll(index + "price");
   const sizeIds = formData.getAll(index + "sizeId");
-
-  console.log(sizeEn, sizeRu, prices, sizeIds);
 
   return prices.map((price, index) => ({
     productVariantSizeId: sizeIds[index],

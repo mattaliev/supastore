@@ -35,26 +35,19 @@ export default function ProductCharacteristics({
         </AccordionTrigger>
         <AccordionContent className={"pt-2 pb-0"}>
           <div className={"grid gap-1"}>
-            {characteristics.map(
-              ({ characteristic: { nameEn, nameRu }, value, id }) => {
-                if (value.length > 0 && value[0] !== "") {
-                  return (
-                    <div
-                      key={id}
-                      className={"flex gap-4 justify-between items-center"}
-                    >
-                      <h2 className="text-sm font-semibold text-telegram-text-color">
-                        {locale === "ru" ? nameRu : nameEn}
-                      </h2>
-                      <p className="text-telegram-hint-color">
-                        {value.join(", ")}
-                      </p>
-                    </div>
-                  );
-                }
-                return null;
-              }
-            )}
+            {characteristics
+              .filter(({ value }) => value.length > 0 && value[0] !== "")
+              .map(({ characteristic: { nameEn, nameRu }, value, id }) => (
+                <div
+                  key={id}
+                  className={"flex gap-4 justify-between items-center"}
+                >
+                  <h2 className="text-sm font-semibold text-telegram-text-color">
+                    {locale === "ru" ? nameRu : nameEn}
+                  </h2>
+                  <p className="text-telegram-hint-color">{value.join(", ")}</p>
+                </div>
+              ))}
           </div>
         </AccordionContent>
       </AccordionItem>

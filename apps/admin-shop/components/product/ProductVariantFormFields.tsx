@@ -7,6 +7,7 @@ import CategoryCharacteristics from "@/components/product/CategoryCharacteristic
 import { ProductVariantStateUpdate } from "@/components/product/hooks";
 import ProductCategorySelect from "@/components/product/ProductCategorySelect";
 import ProductImages from "@/components/product/ProductImages";
+import ProductStatus from "@/components/product/ProductStatus";
 import { ProductVariantFieldErrors } from "@/components/product/productValidator";
 import { Card } from "@/components/ui/card";
 import { FormInput, FormTextarea } from "@/components/ui/form-input";
@@ -149,6 +150,11 @@ export default function ProductVariantFields({
           fieldErrors={fieldErrors}
           category={productCategory}
           variant={variant}
+          variantIndex={variantIndex}
+        />
+        <ProductStatus
+          productState={variant?.state}
+          stateFieldError={fieldErrors?.state}
           variantIndex={variantIndex}
         />
       </div>

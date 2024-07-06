@@ -213,6 +213,7 @@ export type ProductVariant = {
       images: string[];
     }[];
   };
+  productLink?: string;
   images: string[];
   productCharacteristics: ProductVariantCharacteristic[];
 } & BaseEntity;
@@ -281,6 +282,7 @@ export type ProductVariantInput = {
   sizes: ProductVariantSizeInput[];
   images: string[];
   characteristics: ProductVariantCharacteristicInput[];
+  state?: EntityState;
 };
 
 export type ProductVariantUpdateInput = Omit<ProductVariantInput, "sizes"> & {
