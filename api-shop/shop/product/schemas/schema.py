@@ -41,9 +41,15 @@ class ProductType(DjangoObjectType):
 
 class ProductVariantType(DjangoObjectType):
     images = graphene.List(graphene.String)
+    product_link = graphene.String()
 
     def resolve_images(self, info):
         return [image.image.url for image in self.images.all().order_by("order")]
+
+    def resolve_product_link(self, info):
+        telegram_store_url = self.product.store.store_bot.telegram_store_url
+        if telegram_store_url:
+            return f"{telegram_store_url}?startapp=product_{self.id}"
 
     class Meta:
         model = ProductVariant

@@ -6,12 +6,11 @@ from store.services import (
     store_get,
     store_list
 )
+from store.services.store_services import store_logo_get, store_bot_token_get
 
 __all__ = [
     "Query"
 ]
-
-from store.services.store_services import store_logo_get, store_bot_token_get
 
 
 class Query(graphene.ObjectType):
