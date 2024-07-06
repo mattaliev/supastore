@@ -213,6 +213,7 @@ export type ProductVariant = {
       images: string[];
     }[];
   };
+  productLink?: string;
   images: string[];
   productCharacteristics: ProductVariantCharacteristic[];
 } & BaseEntity;

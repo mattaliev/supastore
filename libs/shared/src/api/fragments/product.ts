@@ -13,6 +13,7 @@ export const catalogProductVariantFragment = /* GraphQL */ `
     sku
     brand
     created
+    productLink
   }
 `;
 
