@@ -123,6 +123,13 @@
         "price": "Price",
         "error": "Please, enter price for a product",
         "add": "Add"
+      },
+      "Status" :{
+        "label": "Status",
+        "placeholder": "Select status",
+        "error": "Please, select product status",
+        "active": "Active",
+        "draft": "Draft"
       }
     }
   },

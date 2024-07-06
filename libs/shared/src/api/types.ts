@@ -281,6 +281,7 @@ export type ProductVariantInput = {
   sizes: ProductVariantSizeInput[];
   images: string[];
   characteristics: ProductVariantCharacteristicInput[];
+  state?: EntityState;
 };
 
 export type ProductVariantUpdateInput = Omit<ProductVariantInput, "sizes"> & {
