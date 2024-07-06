@@ -3,12 +3,12 @@ import { EntityState, Paginated, ProductVariant } from "@ditch/lib";
 import { DndContext, UniqueIdentifier } from "@dnd-kit/core";
 import {
   restrictToVerticalAxis,
-  restrictToWindowEdges
+  restrictToWindowEdges,
 } from "@dnd-kit/modifiers";
 import {
   SortableContext,
   useSortable,
-  verticalListSortingStrategy
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, LoaderCircle } from "lucide-react";
@@ -18,7 +18,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import Link from "@/components/navigation/link";
 import {
   useProductInfiniteScroll,
-  useProductListDragAndDrop
+  useProductListDragAndDrop,
 } from "@/components/product/hooks";
 import ProductAdminActions from "@/components/product/product-admin-actions";
 import { ProductBadge } from "@/components/product/product-badges";
@@ -29,7 +29,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { NoImage } from "@/components/ui/NoImage";
 import {
@@ -38,7 +38,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 
 function NoProducts() {
@@ -76,14 +76,12 @@ export default function ProductList({
   totalProductCount,
   paginatedProducts,
   state,
-  telegramStoreUrl
 }: {
   paginatedProducts: Paginated<ProductVariant>;
   page: number;
   totalProductCount: number;
   limit: number;
   state: EntityState;
-  telegramStoreUrl: string | undefined;
 }) {
   const t = useTranslations("ProductListPage");
   const { products, setProducts, lastElementRef, isFetching, isLoading } =
@@ -91,11 +89,11 @@ export default function ProductList({
       state: EntityState[state as keyof typeof EntityState],
       paginatedProducts,
       page,
-      limit
+      limit,
     });
   const { sensors, handleDrag } = useProductListDragAndDrop({
     products,
-    setProducts
+    setProducts,
   });
 
   return (
@@ -152,7 +150,6 @@ export default function ProductList({
                       product={product}
                       id={product.id}
                       lastElementRef={lastElementRef}
-                      telegramStoreUrl={telegramStoreUrl}
                     />
                   ))}
                   {(isFetching || isLoading) && (
@@ -194,12 +191,10 @@ function TableProduct({
   product,
   id,
   lastElementRef,
-  telegramStoreUrl
 }: {
   product: ProductVariant;
   id: UniqueIdentifier;
   lastElementRef: (node: HTMLTableCellElement) => void;
-  telegramStoreUrl: string | undefined;
 }) {
   const {
     attributes,
@@ -207,12 +202,12 @@ function TableProduct({
     setNodeRef,
     setActivatorNodeRef,
     transform,
-    transition
+    transition,
   } = useSortable({ id: id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition
+    transition,
   };
 
   const format = useFormatter();
@@ -258,14 +253,14 @@ function TableProduct({
           format.dateTime(new Date(product.created), {
             year: "numeric",
             month: "short",
-            day: "numeric"
+            day: "numeric",
           })}
       </TableCell>
       <TableCell>
         <ProductAdminActions
           id={product.id}
           title={product.name}
-          telegramStoreUrl={telegramStoreUrl}
+          productLink={product.productLink}
         />
       </TableCell>
     </TableRow>

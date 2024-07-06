@@ -13,17 +13,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export default function ProductAdminActions({
   id,
   title,
-  telegramStoreUrl
+  productLink,
 }: {
   id: string;
   title: string;
-  telegramStoreUrl: string | undefined;
+  productLink?: string;
 }) {
   const storeId = useStore();
   const router = useRouter();
@@ -54,10 +54,7 @@ export default function ProductAdminActions({
           <DropdownMenuItem>
             <DialogTrigger>Delete</DialogTrigger>
           </DropdownMenuItem>
-          <ProductLinkOnTelegram
-            productId={id}
-            telegramStoreUrl={telegramStoreUrl}
-          />
+          <ProductLinkOnTelegram productLink={productLink} />
         </DropdownMenuContent>
       </DropdownMenu>
       <ProductDeleteDialog
@@ -71,17 +68,10 @@ export default function ProductAdminActions({
   );
 }
 
-function ProductLinkOnTelegram({
-  productId,
-  telegramStoreUrl
-}: {
-  productId: string;
-  telegramStoreUrl: string | undefined;
-}) {
+function ProductLinkOnTelegram({ productLink }: { productLink?: string }) {
   const [urlCopied, setUrlCopied] = useState(false);
-  const productLink = `${telegramStoreUrl}?startapp=product_${productId}`;
 
-  if (!telegramStoreUrl) {
+  if (!productLink) {
     return null;
   }
 
