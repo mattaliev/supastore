@@ -21,7 +21,7 @@ export default function ProductVariantFields({
   variantIndex,
   isSelected,
   productCategory,
-  setProductCategory,
+  setProductCategory
 }: {
   variant?: Partial<ProductVariant>;
   fieldErrors?: ProductVariantFieldErrors;
@@ -41,8 +41,8 @@ export default function ProductVariantFields({
       className={cn(
         "grid grid-cols-1 xl:grid-cols-[40%_1fr] gap-4 max-w-[59rem] p-6",
         {
-          hidden: !isSelected,
-        },
+          hidden: !isSelected
+        }
       )}
     >
       <input
@@ -73,7 +73,7 @@ export default function ProductVariantFields({
             updateVariantField({
               field: "name",
               value: e.target.value,
-              variantIndex,
+              variantIndex
             })
           }
         />
@@ -98,7 +98,7 @@ export default function ProductVariantFields({
             updateVariantField({
               field: "sku",
               value: e.target.value,
-              variantIndex,
+              variantIndex
             })
           }
         />

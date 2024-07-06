@@ -20,20 +20,20 @@ const baseProductVariantScheme = {
           sizeRu: z.string().optional(),
           price: z
             .string({
-              invalid_type_error: "Invalid price",
+              invalid_type_error: "Invalid price"
             })
             .min(1, { message: "Price is required" })
             .regex(decimalRegex, {
               message:
-                "Price must be either a whole number or decimal with up to 2 decimal places",
-            }),
+                "Price must be either a whole number or decimal with up to 2 decimal places"
+            })
         })
         .transform((data) => {
           const { productVariantSizeId, ...rest } = data;
           return productVariantSizeId
             ? { ...rest, productVariantSizeId }
             : rest;
-        }),
+        })
     )
     .min(1),
   characteristics: z
@@ -44,15 +44,15 @@ const baseProductVariantScheme = {
           z.string(),
           z.array(z.string()),
           z.number(),
-          z.array(z.number()),
-        ]),
-      }),
+          z.array(z.number())
+        ])
+      })
     )
     .optional(),
   state: z.enum(["ACTIVE", "INACTIVE"], {
     invalid_type_error: "Status is required",
-    required_error: "Status is required",
-  }),
+    required_error: "Status is required"
+  })
 };
 
 const baseVariant = z.object(baseProductVariantScheme);
@@ -71,21 +71,21 @@ const characteristicValidator = (characteristic: Characteristic) => {
     case "NUMBER":
       return buildScalarCharacteristic(
         characteristic,
-        z.string().regex(decimalRegex),
+        z.string().regex(decimalRegex)
       );
     case "ARRAY_STRING":
       return buildArrayCharacteristic(characteristic, z.array(z.string()));
     case "ARRAY_NUMBER":
       return buildArrayCharacteristic(
         characteristic,
-        z.array(z.string().regex(decimalRegex)),
+        z.array(z.string().regex(decimalRegex))
       );
   }
 };
 
 const buildScalarCharacteristic = (
   characteristic: Characteristic,
-  scalar: z.ZodNumber | z.ZodString,
+  scalar: z.ZodNumber | z.ZodString
 ) => {
   if (characteristic.required) {
     return scalar.min(1);
@@ -96,7 +96,7 @@ const buildScalarCharacteristic = (
 
 const buildArrayCharacteristic = (
   characteristic: Characteristic,
-  charc: ZodArray<ZodString | ZodNumber, "many">,
+  charc: ZodArray<ZodString | ZodNumber, "many">
 ) => {
   let newCharc;
 
@@ -113,16 +113,16 @@ const buildArrayCharacteristic = (
 };
 
 export const buildProductVariantScheme = (
-  characteristics: Characteristic[],
+  characteristics: Characteristic[]
 ) => {
   const characteristicsScheme = characteristics.reduce(
     (acc, characteristic) => {
       return {
         ...acc,
-        [characteristic.id]: characteristicValidator(characteristic),
+        [characteristic.id]: characteristicValidator(characteristic)
       };
     },
-    {},
+    {}
   );
 
   return z
@@ -135,16 +135,16 @@ export const buildProductVariantScheme = (
           (
             data:
               | Record<string, string | string[] | number | number[]>
-              | undefined,
+              | undefined
           ) => {
             if (!data) return;
 
             return Object.keys(data).map((key) => ({
               characteristicId: key,
-              value: Array.isArray(data[key]) ? data[key] : [data[key]],
+              value: Array.isArray(data[key]) ? data[key] : [data[key]]
             }));
-          },
-        ),
+          }
+        )
     })
     .transform((data) => {
       const { productVariantId, ...rest } = data;
@@ -155,7 +155,7 @@ export const buildProductVariantScheme = (
 export const productFromFormDataGet = (
   categoryCharacteristics: Characteristic[],
   formData: FormData,
-  variantIndex: number,
+  variantIndex: number
 ) => {
   const baseProductVariantCharacteristics =
     baseProductVariantCharacteristicsGet(formData, variantIndex);
@@ -170,21 +170,21 @@ export const productFromFormDataGet = (
       }
       return acc;
     },
-    {} as Record<string, any>,
+    {} as Record<string, any>
   );
 
   return {
     ...baseProductVariantCharacteristics,
     sizes,
     characteristics: {
-      ...productCategoryCharacteristics,
-    },
+      ...productCategoryCharacteristics
+    }
   };
 };
 
 const baseProductVariantCharacteristicsGet = (
   formData: FormData,
-  index?: number,
+  index?: number
 ) => {
   return {
     productVariantId: formData.get(index + "variantId"),
@@ -194,7 +194,7 @@ const baseProductVariantCharacteristicsGet = (
     description: formData.get(index + "description"),
     brand: formData.get(index + "brand"),
     images: formData.getAll(index + "images"),
-    state: formData.get(index + "state"),
+    state: formData.get(index + "state")
   };
 };
 
@@ -208,6 +208,6 @@ const productSizesGet = (formData: FormData, index: number) => {
     productVariantSizeId: sizeIds[index],
     sizeEn: sizeEn[index],
     sizeRu: sizeRu[index],
-    price,
+    price
   }));
 };
