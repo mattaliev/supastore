@@ -75,15 +75,13 @@ export default function ProductList({
   limit,
   totalProductCount,
   paginatedProducts,
-  state,
-  telegramStoreUrl
+  state
 }: {
   paginatedProducts: Paginated<ProductVariant>;
   page: number;
   totalProductCount: number;
   limit: number;
   state: EntityState;
-  telegramStoreUrl: string | undefined;
 }) {
   const t = useTranslations("ProductListPage");
   const { products, setProducts, lastElementRef, isFetching, isLoading } =
@@ -152,7 +150,6 @@ export default function ProductList({
                       product={product}
                       id={product.id}
                       lastElementRef={lastElementRef}
-                      telegramStoreUrl={telegramStoreUrl}
                     />
                   ))}
                   {(isFetching || isLoading) && (
@@ -193,13 +190,11 @@ export default function ProductList({
 function TableProduct({
   product,
   id,
-  lastElementRef,
-  telegramStoreUrl
+  lastElementRef
 }: {
   product: ProductVariant;
   id: UniqueIdentifier;
   lastElementRef: (node: HTMLTableCellElement) => void;
-  telegramStoreUrl: string | undefined;
 }) {
   const {
     attributes,
@@ -265,7 +260,7 @@ function TableProduct({
         <ProductAdminActions
           id={product.id}
           title={product.name}
-          telegramStoreUrl={telegramStoreUrl}
+          productLink={product.productLink}
         />
       </TableCell>
     </TableRow>
