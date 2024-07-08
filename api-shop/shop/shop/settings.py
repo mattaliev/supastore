@@ -120,7 +120,8 @@ INSTALLED_APPS = [
     'payment.apps.PaymentConfig',
     'authentication.apps.AuthenticationConfig',
     'store.apps.StoreConfig',
-    'category.apps.CategoryConfig'
+    'category.apps.CategoryConfig',
+    'marketing.apps.MarketingConfig'
 ]
 
 MIDDLEWARE = [
