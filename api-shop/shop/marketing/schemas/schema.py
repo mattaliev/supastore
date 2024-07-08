@@ -11,6 +11,8 @@ __all__ = [
 
 
 class ManualMailingType(DjangoObjectType):
+    state = graphene.String()
+
     class Meta:
         model = ManualMailing
         fields = "__all__"
