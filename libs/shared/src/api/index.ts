@@ -7,6 +7,9 @@ import {
   contactInformationCreateMutation,
   contactInformationDefaultSetMutation,
   contactInformationDeleteMutation,
+  manualMailingCreateMutation,
+  manualMailingPreviewMutation,
+  manualMailingSendMutation,
   orderCreateMutation,
   orderDeleteMutation,
   orderStatusUpdateMutation,
@@ -38,8 +41,15 @@ import {
   canCreateOrderQuery,
   cartGetByUserIdQuery,
   cartGetQuery,
+  categoriesGetQuery,
+  categoryCharacteristicsGetQuery,
+  contactInformationDefaultGetQuery,
+  contactInformationListGetQuery,
   customerDetailQuery,
   customerPaginatedQuery,
+  manualMailingAudienceCountQuery,
+  manualMailingGetQuery,
+  manualMailingListQuery,
   orderGetByCartIdQuery,
   orderGetByIdQuery,
   ordersPaginatedGetQuery,
@@ -48,19 +58,9 @@ import {
   productsPaginatedGetQuery,
   salesAnalyticsGetQuery,
   sessionAnalyticsByHourGetQuery,
-  shopPaymentMethodsListQuery,
-} from "./queries";
-import {
-  categoriesGetQuery,
-  categoryCharacteristicsGetQuery,
-} from "./queries/category";
-import {
-  contactInformationDefaultGetQuery,
-  contactInformationListGetQuery,
   shippingAddressDefaultGetQuery,
   shippingAddressListGetQuery,
-} from "./queries/shipping";
-import {
+  shopPaymentMethodsListQuery,
   storeBotTokenGetQuery,
   storeBotUsernameGetQuery,
   storeCanManageQuery,
@@ -69,7 +69,7 @@ import {
   storeListQuery,
   storeLogoGetQuery,
   storeTelegramStoreUrlGetQuery,
-} from "./queries/store";
+} from "./queries";
 import {
   BackendAdminProductGetOperation,
   BackendCartAddItemOperation,
@@ -87,6 +87,12 @@ import {
   BackendContactInformationListGetOperation,
   BackendCustomerDetailOperation,
   BackendCustomersPaginatedGetOperation,
+  BackendManualMailingAudienceCountOperation,
+  BackendManualMailingCreateOperation,
+  BackendManualMailingGetOperation,
+  BackendManualMailingListOperation,
+  BackendManualMailingPreviewOperation,
+  BackendManualMailingSendOperation,
   BackendOrderCanCreateOperation,
   BackendOrderCreateOperation,
   BackendOrderDeleteOperation,
@@ -135,6 +141,9 @@ import {
   Cart,
   EntityState,
   FulfilmentStatus,
+  ManualMailingAudience,
+  ManualMailingCreateInput,
+  ManualMailingPreviewInput,
   Order,
   Paginated,
   ParsedPaymentMethod,
@@ -1470,4 +1479,103 @@ export const productVariantsOrderSet = async (
     });
 
   return responseBody.data.productVariantsOrderSet;
+};
+
+export const manualMailingListGet = async (
+  body: {
+    storeId: string;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendManualMailingListOperation>({
+      query: manualMailingListQuery,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.manualMailingList;
+};
+
+export const manualMailingGet = async (
+  body: {
+    mailingId: string;
+    storeId: string;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendManualMailingGetOperation>({
+      query: manualMailingGetQuery,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.manualMailingGet;
+};
+
+export const manualMailingAudienceCount = async (
+  body: {
+    storeId: string;
+    audiences: ManualMailingAudience[];
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendManualMailingAudienceCountOperation>({
+      query: manualMailingAudienceCountQuery,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.manualMailingAuditCount;
+};
+
+export const manualMailingCreate = async (
+  body: {
+    input: ManualMailingCreateInput;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendManualMailingCreateOperation>({
+      query: manualMailingCreateMutation,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.manualMailingCreate.manualMailing;
+};
+
+export const manualMailingPreview = async (
+  body: {
+    input: ManualMailingPreviewInput;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendManualMailingPreviewOperation>({
+      query: manualMailingPreviewMutation,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.manualMailingPreview.success;
+};
+
+export const manualMailingSend = async (
+  body: {
+    storeId: string;
+    mailingId: string;
+  },
+  headers?: HeadersInit,
+) => {
+  const { body: responseBody } =
+    await backendFetch<BackendManualMailingSendOperation>({
+      query: manualMailingSendMutation,
+      variables: body,
+      headers,
+    });
+
+  return responseBody.data.manualMailingSend.manualMailing;
 };
