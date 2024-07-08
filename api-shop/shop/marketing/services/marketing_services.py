@@ -14,6 +14,17 @@ from telegram.services import telegram_message_send
 from telegram.services.shop.inline_buttons import MailingInlineButton
 from user.models import TelegramUser, UserRoleChoices
 
+__all__ = [
+    "manual_mailing_list_get",
+    "manual_mailing_get",
+    "manual_mailing_create",
+    "manual_mailing_update",
+    "manual_mailing_send",
+    "manual_mailing_to_user_send",
+    "manual_mailing_preview",
+    "manual_mailing_audience_get"
+]
+
 
 def manual_mailing_list_get(*, store_id: UUID):
     logger = logging.getLogger(__name__)
@@ -114,27 +125,18 @@ def manual_mailing_to_user_send(*, user: TelegramUser, mailing: ManualMailing):
             [MailingInlineButton(text=mailing.cta_text, url=mailing.cta_url).as_json()]
         ]
 
-    try:
-        telegram_message_send(
-            bot_token=bot_token,
-            chat_id=user.telegram_id,
-            text=mailing.message,
-            reply_markup=reply_markup,
-            parse_mode=None
-        )
-        return True
-    except Exception as e:
-        logger.error("Error sending manual mailing to user: %(user_id)s. Error: %(error)s", {
-            "user_id": user.id,
-            "error": e
-        })
-        return False
+    return telegram_message_send(
+        bot_token=bot_token,
+        chat_id=user.telegram_id,
+        text=mailing.message,
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
 
 
 def manual_mailing_preview(
         *,
-        mailing_id: UUID = None,
-        user_id: UUID = None,
+        user: TelegramUser,
         store_id: UUID = None,
         message: str,
         cta_text: str,
@@ -142,9 +144,7 @@ def manual_mailing_preview(
         send_to_all_admins: bool = False
 ):
     logger = logging.getLogger(__name__)
-    logger.debug("Previewing manual mailing with id: %(mailing_id)s", {
-        "mailing_id": mailing_id,
-    })
+    logger.debug("Previewing manual mailing")
     store = Store.objects.get(id=store_id)
     bot_token = store_bot_token_get(store=store)
 
@@ -155,7 +155,7 @@ def manual_mailing_preview(
             store_users__store=store
         )
     else:
-        admins = TelegramUser.objects.filter(id=user_id)
+        admins = [user]
 
     reply_markup = None
 
@@ -171,7 +171,7 @@ def manual_mailing_preview(
                 chat_id=admin.telegram_id,
                 text=message,
                 reply_markup=reply_markup,
-                parse_mode=None
+                parse_mode="Markdown"
             )
         return True
     except Exception as e:
