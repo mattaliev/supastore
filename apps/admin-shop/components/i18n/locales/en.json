@@ -1,7 +1,7 @@
 {
   "Dashboard": {
     "title": "Dashboard",
-    "store-sessions" : {
+    "store-sessions": {
       "header": "Store Sessions",
       "tooltip": "{value} Sessions",
       "select-date": "Select",
@@ -30,7 +30,6 @@
         "header": "Connect Payment System",
         "description": "Choose a payment system that suits your needs and integrate it into your store. Make sure to test the payment system to ensure that it works correctly and that customers can make purchases without any issues."
       },
-
       "is-done": {
         "header": "Done!",
         "description": "You are all set! Your store is now ready to launch. Make sure to test all the features and functionalities to ensure that everything is working as expected. If you encounter any errors, feel free to reach out to our support team for assistance."
@@ -62,6 +61,7 @@
     "settings": "Settings",
     "analytics": "Analytics",
     "payment-systems": "Payment Systems",
+    "marketing": "Marketing",
     "search-placeholder": "Search...",
     "dropdown": {
       "label": "My Account",
@@ -124,7 +124,7 @@
         "error": "Please, enter price for a product",
         "add": "Add"
       },
-      "Status" :{
+      "Status": {
         "label": "Status",
         "placeholder": "Select status",
         "error": "Please, select product status",
@@ -589,23 +589,102 @@
       "signIn": "Sign In"
     }
   },
-  "Analytics": {
-    "EventBadge": {
-      "addedToCart": "Added to cart",
-      "checkout": "Checkout",
-      "paymentStarted": "Payment Started",
-      "paymentCompleted": "Payment Completed",
-      "removedFromCart": "Removed From Cart",
-      "userRegistered": "User Registered",
-      "userVisited": "User Visited"
+  "MarketingPage": {
+    "ManualMailingList": {
+      "title": "Past Campaigns",
+      "description": "Analyse your past campaigns to see how your customers are responding to your in-app messages.",
+      "noPastMailings": "No past mailings",
+      "Table": {
+        "name": "Name",
+        "sentAt": "Sent At",
+        "status": "Status",
+        "successful": "Successful",
+        "failed": "Failed",
+        "actions": "Actions"
+      },
+      "MailingStatusBadge": {
+        "sent": "Sent",
+        "draft": "Draft"
+      },
+      "send": "Send",
+      "sending": "Sending..."
     },
-    "EventData": {
-      "cartTotal": "Cart total",
-      "order": "Order"
+    "ManualMailingCreate": {
+      "title": "Create New Campaign",
+      "description": "Create a new campaign to send your customers a message in-app.",
+      "Form": {
+        "Name": {
+          "label": "Name",
+          "placeholder": "Enter campaign name",
+          "error": "Please enter campaign name"
+        },
+        "Message": {
+          "label": "Message",
+          "placeholder": "Enter message content \n\nNote: You can use Markdown.",
+          "error": "Please enter message"
+        },
+        "Audience": {
+          "label": "Audience",
+          "description": "Select the audience for this campaign",
+          "error": "Please select at least one audience",
+          "all": "All",
+          "new": "New",
+          "addedToCart": "Added to cart",
+          "startedCheckout": "Started checkout",
+          "purchased": "Purchased"
+        },
+        "CallToActionText": {
+          "label": "Call-to-Action Text",
+          "placeholder": "Enter Call-to-Action Text",
+          "error": "Please enter Call-to-Action Text"
+        },
+        "CallToActionUrl": {
+          "label": "Call-to-Action URL",
+          "placeholder": "Enter Call-to-Action URL",
+          "error": "Please enter Call-to-Action URL"
+        },
+        "SendImmediately": {
+          "label": "Send Immediately",
+          "description": "Send the campaign immediately after creation"
+        },
+        "createCampaign": "Create Campaign",
+        "creatingCampaign": "Creating Campaign...",
+        "formError": "Could not create campaign"
+      }
+    },
+    "ManualMailingPreview": {
+      "title": "Preview Campaign",
+      "description": "Preview your campaign in the app before sending it to your customers.",
+      "Form": {
+        "SendToAllAdmins": {
+          "label": "Send to all store admins?",
+          "description": "Send the campaign to all store admins"
+        },
+        "invalidMessageError": "Please enter valid message",
+        "formError": "Could not preview campaign",
+        "previewCampaign": "Preview Campaign",
+        "sending": "Sending..."
+      },
+      "close": "Close"
+    },
+    "Analytics": {
+      "EventBadge": {
+        "addedToCart": "Added to cart",
+        "checkout": "Checkout",
+        "paymentStarted": "Payment Started",
+        "paymentCompleted": "Payment Completed",
+        "removedFromCart": "Removed From Cart",
+        "userRegistered": "User Registered",
+        "userVisited": "User Visited"
+      },
+      "EventData": {
+        "cartTotal": "Cart total",
+        "order": "Order"
+      }
+    },
+    "ProductBadge": {
+      "draft": "Draft",
+      "active": "Active"
     }
-  },
-  "ProductBadge": {
-    "draft": "Draft",
-    "active": "Active"
   }
 }

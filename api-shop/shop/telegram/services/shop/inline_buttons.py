@@ -14,6 +14,7 @@ __all__ = [
     "PayWithTelegramInvoiceButton",
     "PayWithWalletPayButton",
     "OpenOrderButton",
+    "MailingInlineButton",
 ]
 
 from store.models import Store
@@ -50,6 +51,7 @@ class InlineButtonType(Enum):
     PAY_WITH_WALLET_PAY = "PAY_WITH_WALLET_PAY"
     OPEN_ORDER = "OPEN_ORDER"
     OPEN_STORE = "OPEN_STORE"
+    MAILING = "MAILING"
 
 
 class InlineButton(ABC):
@@ -153,6 +155,27 @@ class OpenOrderButton(InlineButton):
             "text": self.text,
             "web_app": {
                 "url": f"{self.store_url}/order/{self.order_id}"
+            }
+        }
+
+    def execute(self, *args, **kwargs):
+        """
+        Does not execute anything since it opens the chat with the support
+        """
+        pass
+
+
+class MailingInlineButton(InlineButton):
+    def __init__(self, text: str = "Go to Store!", url: str = None):
+        super().__init__(InlineButtonType.MAILING)
+        self.text = text
+        self.url = url
+
+    def as_json(self):
+        return {
+            "text": self.text,
+            "web_app": {
+                "url": self.url
             }
         }
 

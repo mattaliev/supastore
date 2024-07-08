@@ -536,6 +536,50 @@ export type SessionAnalyticsByHour = {
   }[];
 };
 
+export enum ManualMailingAudience {
+  ALL = "ALL",
+  NEW = "NEW",
+  ADDED_TO_CART = "ADDED_TO_CART",
+  STARTED_CHECKOUT = "STARTED_CHECKOUT",
+  PURCHASED = "PURCHASED",
+}
+
+export enum ManualMailingStatus {
+  SENT = "SENT",
+  DRAFT = "DRAFT",
+}
+
+export type ManualMailing = {
+  id: string;
+  name: string;
+  message: string;
+  audience: ManualMailingAudience[];
+  status: ManualMailingStatus;
+  ctaText?: string;
+  ctaUrl?: string;
+  userCount: number;
+  successfulSendCount: number;
+  sentAt: string;
+};
+
+export type ManualMailingCreateInput = {
+  storeId: string;
+  name: string;
+  message: string;
+  audience: ManualMailingAudience[];
+  ctaText?: string;
+  ctaUrl?: string;
+  executeImmediately?: boolean;
+};
+
+export type ManualMailingPreviewInput = {
+  storeId: string;
+  message: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  sendToAllAdmins?: boolean;
+};
+
 export type BackendSignInShopUserOperation = {
   data: {
     signInShopUser: {
@@ -1297,5 +1341,68 @@ export type BackendStoreTelegramStoreUrlGetOperation = {
   };
   variables: {
     storeId: string;
+  };
+};
+
+export type BackendManualMailingListOperation = {
+  data: {
+    manualMailingList: ManualMailing[];
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendManualMailingGetOperation = {
+  data: {
+    manualMailingGet: ManualMailing;
+  };
+  variables: {
+    mailingId: string;
+    storeId: string;
+  };
+};
+
+export type BackendManualMailingAudienceCountOperation = {
+  data: {
+    manualMailingAuditCount: number;
+  };
+  variables: {
+    storeId: string;
+    audiences: ManualMailingAudience[];
+  };
+};
+
+export type BackendManualMailingCreateOperation = {
+  data: {
+    manualMailingCreate: {
+      manualMailing: ManualMailing;
+    };
+  };
+  variables: {
+    input: ManualMailingCreateInput;
+  };
+};
+
+export type BackendManualMailingPreviewOperation = {
+  data: {
+    manualMailingPreview: {
+      success: boolean;
+    };
+  };
+  variables: {
+    input: ManualMailingPreviewInput;
+  };
+};
+
+export type BackendManualMailingSendOperation = {
+  data: {
+    manualMailingSend: {
+      manualMailing: ManualMailing;
+    };
+  };
+  variables: {
+    storeId: string;
+    mailingId: string;
   };
 };

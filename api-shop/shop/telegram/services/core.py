@@ -58,7 +58,7 @@ def telegram_message_send(
         text: str,
         reply_markup: [dict] = None,
         parse_mode: str | None = "MarkdownV2"
-) -> None:
+) -> bool:
     logger = logging.getLogger(__name__)
     logger.disabled = False
     logger.debug("Telegram sending message...")
@@ -78,9 +78,11 @@ def telegram_message_send(
         telegram_request_send(bot_token=bot_token, method="sendMessage",
                               data=data)
         logger.debug("Telegram message send success!")
+        return True
     except TelegramResponseError as e:
         logger.error("Telegram message send failed. Error: %(error)s",
                      {"error": e.message})
+        return False
 
 
 def telegram_webhook_set(*, bot_token: str, url: str) -> None:
