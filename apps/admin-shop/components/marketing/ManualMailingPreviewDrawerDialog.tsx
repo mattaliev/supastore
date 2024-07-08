@@ -2,8 +2,9 @@ import { ManualMailingPreviewInput } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 
+import { previewManualMailing } from "@/components/marketing/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -99,9 +100,10 @@ function ManualMailingPreview({
   campaign: Partial<ManualMailingPreviewInput>;
   className?: string;
 }) {
+  const [formState, formAction] = useFormState(previewManualMailing, null);
+
   return (
-    <form className={cn("grid gap-4", className)}>
-      <input type={"hidden"} name={"store-id"} value={"123"} />
+    <form className={cn("grid gap-4", className)} action={formAction}>
       <input type={"hidden"} name={"message"} value={campaign.message} />
       <input type={"hidden"} name={"cta-text"} value={campaign.ctaText} />
       <input type={"hidden"} name={"cta-url"} value={campaign.ctaUrl} />
@@ -109,6 +111,9 @@ function ManualMailingPreview({
         <Checkbox id={"send-to-all-admins"} name={"send-to-all-admins"} />
         <Label htmlFor={"send-to-all-admins"}>Send to all store admins?</Label>
       </div>
+      {formState?.formError && (
+        <p className={"text-destructive text-xs"}>{formState.formError}</p>
+      )}
       <SubmitButton />
     </form>
   );

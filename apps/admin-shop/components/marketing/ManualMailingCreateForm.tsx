@@ -1,7 +1,8 @@
 import { ManualMailingPreviewInput } from "@ditch/lib";
 import { LoaderCircle } from "lucide-react";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 
+import { createManualMailing } from "@/components/marketing/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -15,11 +16,18 @@ export default function ManualMailingCreateForm({
   campaign: Partial<ManualMailingPreviewInput>;
   setCampaign: (campaign: Partial<ManualMailingPreviewInput>) => void;
 }) {
+  const [formState, formAction] = useFormState(createManualMailing, null);
+
   return (
-    <form className={"grid gap-4"}>
+    <form className={"grid gap-4"} action={formAction}>
       <input type={"hidden"} name={"store-id"} value={"123"} />
       <div className={"grid gap-2"}>
         <Label htmlFor={"name"}>Name</Label>
+        {formState?.fieldErrors?.name && (
+          <p className={"text-destructive text-xs"}>
+            {formState.fieldErrors.name}
+          </p>
+        )}
         <Input
           type={"text"}
           id={"name"}
@@ -29,6 +37,11 @@ export default function ManualMailingCreateForm({
       </div>
       <div className={"grid gap-2"}>
         <Label htmlFor={"message"}>Message</Label>
+        {formState?.fieldErrors?.message && (
+          <p className={"text-destructive text-xs"}>
+            {formState.fieldErrors.message}
+          </p>
+        )}
         <Textarea
           id={"message"}
           name={"message"}
@@ -44,6 +57,11 @@ export default function ManualMailingCreateForm({
         <p className={"text-muted-foreground text-sm"}>
           Select the audience for this campaign.
         </p>
+        {formState?.fieldErrors?.audience && (
+          <p className={"text-destructive text-xs"}>
+            {formState.fieldErrors.audience}
+          </p>
+        )}
         <div className={"grid gap-1"}>
           <div className={"flex items-center gap-2"}>
             <Checkbox id={"all"} name={"audience"} value={"ALL"} />
@@ -96,6 +114,11 @@ export default function ManualMailingCreateForm({
       </div>
       <div className={"grid gap-2"}>
         <Label htmlFor={"cta-text"}>Call-to-Action Text</Label>
+        {formState?.fieldErrors?.ctaText && (
+          <p className={"text-destructive text-xs"}>
+            {formState.fieldErrors.ctaText}
+          </p>
+        )}
         <Input
           type={"text"}
           id={"cta-text"}
@@ -108,6 +131,11 @@ export default function ManualMailingCreateForm({
       </div>
       <div className={"grid gap-2"}>
         <Label htmlFor={"cta-url"}>Call-to-Action URL</Label>
+        {formState?.fieldErrors?.ctaUrl && (
+          <p className={"text-destructive text-xs"}>
+            {formState.fieldErrors.ctaUrl}
+          </p>
+        )}
         <Input
           type={"text"}
           id={"cta-url"}
@@ -118,6 +146,11 @@ export default function ManualMailingCreateForm({
       </div>
       <div className={"grid gap-2"}>
         <Label htmlFor={"execute-immediately"}>Execute Immediately</Label>
+        {formState?.fieldErrors?.executeImmediately && (
+          <p className={"text-destructive text-xs"}>
+            {formState.fieldErrors.executeImmediately}
+          </p>
+        )}
         <div className={"flex items-center gap-2"}>
           <Checkbox
             id={"execute-immediately"}
@@ -134,6 +167,9 @@ export default function ManualMailingCreateForm({
         </div>
       </div>
       <div className={"grid gap-2"}>
+        {formState?.formError && (
+          <p className={"text-destructive text-xs"}>{formState.formError}</p>
+        )}
         <SubmitButton />
       </div>
     </form>

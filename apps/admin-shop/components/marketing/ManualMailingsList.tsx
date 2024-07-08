@@ -1,10 +1,9 @@
 "use client";
 import { ManualMailing, ManualMailingStatus } from "@ditch/lib";
-import { MoreHorizontal } from "lucide-react";
 import { useFormatter } from "next-intl";
 
+import ManualMailingActions from "@/components/marketing/ManualMailingActions";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,12 +11,6 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -82,16 +75,10 @@ export default function ManualMailingsList({
                       manualMailing.successfulSendCount}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant={"ghost"} size={"icon"}>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="mr-4">
-                        <DropdownMenuItem>Send</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <ManualMailingActions
+                      status={manualMailing.status}
+                      mailingId={manualMailing.id}
+                    />
                   </TableCell>
                   {/*<TableCell className="text-muted-foreground">*/}
                   {/*  {manualMailing.status === "SENT" ? "Send" : "View"}*/}
