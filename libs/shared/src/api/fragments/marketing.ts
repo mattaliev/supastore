@@ -9,5 +9,7 @@ export const manualMailingFragment = /* GraphQL */ `
     userCount
     successfulSendCount
     sentAt
+    status
+    state
   }
 `;

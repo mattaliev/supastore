@@ -544,11 +544,17 @@ export enum ManualMailingAudience {
   PURCHASED = "PURCHASED",
 }
 
+export enum ManualMailingStatus {
+  SENT = "SENT",
+  DRAFT = "DRAFT",
+}
+
 export type ManualMailing = {
   id: string;
   name: string;
   message: string;
   audience: ManualMailingAudience[];
+  status: ManualMailingStatus;
   ctaText?: string;
   ctaUrl?: string;
   userCount: number;
