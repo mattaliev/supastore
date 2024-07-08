@@ -174,7 +174,9 @@ class MailingInlineButton(InlineButton):
     def as_json(self):
         return {
             "text": self.text,
-            "url": self.url
+            "web_app": {
+                "url": self.url
+            }
         }
 
     def execute(self, *args, **kwargs):
