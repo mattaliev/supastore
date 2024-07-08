@@ -20,8 +20,8 @@ export const manualMailingPreviewMutation = /* GraphQL */ `
 `;
 
 export const manualMailingSendMutation = /* GraphQL */ `
-  mutation ManualMailingSend($input: ManualMailingSendInput!) {
-    manualMailingSend(input: $input) {
+  mutation ManualMailingSend($storeId: UUID!, $mailingId: UUID!) {
+    manualMailingSend(storeId: $storeId, mailingId: $mailingId) {
       manualMailing {
         ...ManualMailingFields
       }

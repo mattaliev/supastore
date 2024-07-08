@@ -185,6 +185,7 @@ export const TAGS = {
   USER: "user",
   STORE: "store",
   SHIPPING: "shipping",
+  MARKETING: "marketing",
 };
 
 export const backendFetch = async <T>({
@@ -1492,6 +1493,8 @@ export const manualMailingListGet = async (
       query: manualMailingListQuery,
       variables: body,
       headers,
+      cache: "no-store",
+      tags: [TAGS.MARKETING],
     });
 
   return responseBody.data.manualMailingList;
@@ -1509,6 +1512,8 @@ export const manualMailingGet = async (
       query: manualMailingGetQuery,
       variables: body,
       headers,
+      cache: "no-store",
+      tags: [TAGS.MARKETING],
     });
 
   return responseBody.data.manualMailingGet;
@@ -1526,6 +1531,8 @@ export const manualMailingAudienceCount = async (
       query: manualMailingAudienceCountQuery,
       variables: body,
       headers,
+      cache: "no-store",
+      tags: [TAGS.MARKETING],
     });
 
   return responseBody.data.manualMailingAuditCount;
@@ -1542,6 +1549,8 @@ export const manualMailingCreate = async (
       query: manualMailingCreateMutation,
       variables: body,
       headers,
+      cache: "no-store",
+      tags: [TAGS.MARKETING],
     });
 
   return responseBody.data.manualMailingCreate.manualMailing;
@@ -1558,6 +1567,8 @@ export const manualMailingPreview = async (
       query: manualMailingPreviewMutation,
       variables: body,
       headers,
+      cache: "no-store",
+      tags: [TAGS.MARKETING],
     });
 
   return responseBody.data.manualMailingPreview.success;
@@ -1575,6 +1586,8 @@ export const manualMailingSend = async (
       query: manualMailingSendMutation,
       variables: body,
       headers,
+      cache: "no-store",
+      tags: [TAGS.MARKETING],
     });
 
   return responseBody.data.manualMailingSend.manualMailing;
