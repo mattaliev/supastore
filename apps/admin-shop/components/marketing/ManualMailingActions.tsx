@@ -1,6 +1,7 @@
 "use client";
 import { ManualMailingStatus } from "@ditch/lib";
 import { LoaderCircle, MoreHorizontal } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
@@ -10,12 +11,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export default function ManualMailingActions({
   status,
-  mailingId
+  mailingId,
 }: {
   status: ManualMailingStatus;
   mailingId: string;
@@ -52,6 +53,7 @@ export default function ManualMailingActions({
 
 function SubmitButton({ setOpen }: { setOpen: (open: boolean) => void }) {
   const { pending } = useFormStatus();
+  const t = useTranslations("MarketingPage.ManualMailingList");
 
   if (pending) {
     return (
@@ -63,7 +65,7 @@ function SubmitButton({ setOpen }: { setOpen: (open: boolean) => void }) {
         type={"submit"}
       >
         <LoaderCircle className={"animate-spin"} />
-        Sending...
+        {t("sending")}
       </Button>
     );
   }
@@ -76,7 +78,7 @@ function SubmitButton({ setOpen }: { setOpen: (open: boolean) => void }) {
       variant={"ghost"}
       onClick={() => setOpen(true)}
     >
-      Send
+      {t("send")}
     </Button>
   );
 }

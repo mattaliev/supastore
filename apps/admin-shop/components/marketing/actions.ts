@@ -4,21 +4,22 @@ import {
   manualMailingCreate,
   manualMailingPreview,
   manualMailingSend,
-  TAGS
+  TAGS,
 } from "@ditch/lib";
 import { revalidateTag } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 import { authenticated } from "@/auth";
 import { getAccessToken } from "@/components/auth/get-token";
 import {
   ManualMailingCreateScheme,
-  ManualMailingPreviewScheme
+  ManualMailingPreviewScheme,
 } from "@/components/marketing/schemes";
 import { getStoreId } from "@/components/store/helpers";
 
 export const createManualMailing = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) => {
   const accessToken = await getAccessToken();
   const storeId = getStoreId();
@@ -29,12 +30,12 @@ export const createManualMailing = async (
     audience: formData.getAll("audience") as string[],
     ctaText: formData.get("cta-text") as string,
     ctaUrl: formData.get("cta-url") as string,
-    executeImmediately: Boolean(formData.get("execute-immediately"))
+    executeImmediately: Boolean(formData.get("execute-immediately")),
   });
 
   if (!validatedData.success) {
     return {
-      fieldErrors: validatedData.error.flatten().fieldErrors
+      fieldErrors: validatedData.error.flatten().fieldErrors,
     };
   }
 
@@ -45,9 +46,9 @@ export const createManualMailing = async (
       {
         input: {
           ...validatedData.data,
-          storeId
-        }
-      }
+          storeId,
+        },
+      },
     );
 
     if (!manualMailing) throw new Error("Could not create manual mailing");
@@ -61,21 +62,22 @@ export const createManualMailing = async (
 
 export const previewManualMailing = async (
   prevState: any,
-  formData: FormData
+  formData: FormData,
 ) => {
   const accessToken = await getAccessToken();
   const storeId = getStoreId();
+  const t = await getTranslations("MarketingPage.ManualMailingPreview.Form");
 
   const validatedData = ManualMailingPreviewScheme.safeParse({
     storeId: formData.get("store-id") as string,
     message: formData.get("message") as string,
     ctaText: formData.get("cta-text") as string,
     ctaUrl: formData.get("cta-url") as string,
-    sendToAllAdmins: Boolean(formData.get("send-to-all-admins"))
+    sendToAllAdmins: Boolean(formData.get("send-to-all-admins")),
   });
 
   if (!validatedData.success) {
-    return { formError: "Please enter valid message" };
+    return { formError: t("invalidMessageError") };
   }
 
   try {
@@ -85,15 +87,15 @@ export const previewManualMailing = async (
       {
         input: {
           ...validatedData.data,
-          storeId
-        }
-      }
+          storeId,
+        },
+      },
     );
 
     if (!manualMailing) throw new Error("Could not preview manual mailing");
   } catch (e) {
     console.error(e);
-    return { formError: "Could not preview manual mailing" };
+    return { formError: t("formError") };
   }
 
   revalidateTag(TAGS.MARKETING);
@@ -108,7 +110,7 @@ export const sendManualMailing = async (prevState: any, formData: FormData) => {
   try {
     const manualMailing = await authenticated(accessToken, manualMailingSend, {
       mailingId,
-      storeId
+      storeId,
     });
   } catch (e) {
     console.error(e);

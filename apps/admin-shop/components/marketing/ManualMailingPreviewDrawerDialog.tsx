@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -22,13 +22,13 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export default function ManualMailingPreviewDrawerDialog({
-  campaign
+  campaign,
 }: {
   campaign: Partial<ManualMailingPreviewInput>;
 }) {
@@ -37,7 +37,7 @@ export default function ManualMailingPreviewDrawerDialog({
       ? window.matchMedia("(min-width: 768px)").matches
       : false;
   const [open, setOpen] = useState<boolean>(false);
-  const t = useTranslations("PaymentSystemsPage.UpdatePaymentSystem");
+  const t = useTranslations("MarketingPage.ManualMailingPreview");
 
   if (isDesktop) {
     return (
@@ -48,15 +48,13 @@ export default function ManualMailingPreviewDrawerDialog({
             className={"w-full"}
             variant={"primary-outline"}
           >
-            Preview Campaign
+            {t("title")}
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Preview Campaign</DialogTitle>
-            <DrawerDescription>
-              Preview your campaign in the app, and send it to your customers
-            </DrawerDescription>
+            <DialogTitle>{t("title")}</DialogTitle>
+            <DrawerDescription>{t("description")}</DrawerDescription>
           </DialogHeader>
           <ManualMailingPreview campaign={campaign} />
         </DialogContent>
@@ -72,20 +70,18 @@ export default function ManualMailingPreviewDrawerDialog({
           className={"w-full"}
           variant={"primary-outline"}
         >
-          Preview Campaign
+          {t("title")}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Preview Campaign</DrawerTitle>
-          <DrawerDescription>
-            Preview your campaign in the app before sending it to your customers
-          </DrawerDescription>
+          <DrawerTitle>{t("title")}</DrawerTitle>
+          <DrawerDescription>{t("description")}</DrawerDescription>
         </DrawerHeader>
         <ManualMailingPreview campaign={campaign} className={"px-4"} />
         <DrawerFooter>
           <DrawerClose asChild>
-            <Button variant={"primary-outline"}>Close</Button>
+            <Button variant={"primary-outline"}>{t("close")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -95,12 +91,13 @@ export default function ManualMailingPreviewDrawerDialog({
 
 function ManualMailingPreview({
   campaign,
-  className
+  className,
 }: {
   campaign: Partial<ManualMailingPreviewInput>;
   className?: string;
 }) {
   const [formState, formAction] = useFormState(previewManualMailing, null);
+  const t = useTranslations("MarketingPage.ManualMailingPreview.Form");
 
   return (
     <form className={cn("grid gap-4", className)} action={formAction}>
@@ -109,7 +106,9 @@ function ManualMailingPreview({
       <input type={"hidden"} name={"cta-url"} value={campaign.ctaUrl} />
       <div className={"flex items-center gap-2"}>
         <Checkbox id={"send-to-all-admins"} name={"send-to-all-admins"} />
-        <Label htmlFor={"send-to-all-admins"}>Send to all store admins?</Label>
+        <Label htmlFor={"send-to-all-admins"}>
+          {t("SendToAllAdmins.label")}
+        </Label>
       </div>
       {formState?.formError && (
         <p className={"text-destructive text-xs"}>{formState.formError}</p>
@@ -121,6 +120,7 @@ function ManualMailingPreview({
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const t = useTranslations("MarketingPage.ManualMailingPreview.Form");
 
   if (pending) {
     return (
@@ -130,14 +130,14 @@ function SubmitButton() {
         type={"submit"}
       >
         <LoaderCircle className={"animate-spin"} />
-        Sending...
+        {t("sending")}
       </Button>
     );
   }
 
   return (
     <Button className={"w-full"} type={"submit"}>
-      Preview Campaign
+      {t("previewCampaign")}
     </Button>
   );
 }
