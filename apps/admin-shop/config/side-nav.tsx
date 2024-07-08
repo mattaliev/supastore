@@ -4,6 +4,7 @@ import {
   CreditCard,
   Home,
   LineChart,
+  Mail,
   Package,
   Settings,
   ShoppingCart,
@@ -40,6 +41,12 @@ export function getNavOptions() {
       icon: <Users2 className="h-5 w-5" />,
       label: "customers",
       selected: pathParam[0] === "customers",
+    },
+    {
+      href: "/marketing",
+      icon: <Mail className="h-5 w-5" />,
+      label: "marketing",
+      selected: pathParam[0] === "marketing",
     },
     {
       href: "/payment-systems",
