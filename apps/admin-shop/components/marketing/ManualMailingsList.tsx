@@ -10,13 +10,13 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -24,11 +24,11 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default function ManualMailingsList({
-  manualMailings,
+  manualMailings
 }: {
   manualMailings?: ManualMailing[];
 }) {
@@ -68,7 +68,7 @@ export default function ManualMailingsList({
                       month: "short",
                       day: "numeric",
                       hour: "numeric",
-                      minute: "numeric",
+                      minute: "numeric"
                     })}
                   </TableCell>
                   <TableCell>

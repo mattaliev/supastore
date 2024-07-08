@@ -13,14 +13,14 @@ type MarketingProps = {
 
 async function MarketingPage({
   params: { storeId },
-  accessToken,
+  accessToken
 }: WithAuthProps<MarketingProps>) {
   const manualMailings = await authenticated(
     accessToken,
     manualMailingListGet,
     {
-      storeId,
-    },
+      storeId
+    }
   );
 
   return (

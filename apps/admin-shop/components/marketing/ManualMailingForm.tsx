@@ -9,14 +9,14 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 export default function ManualMailingCreate() {
   const [campaign, setCampaign] = useState<Partial<ManualMailingPreviewInput>>({
     message: "",
     ctaText: "",
-    ctaUrl: "",
+    ctaUrl: ""
   });
 
   return (

@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -21,13 +21,13 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export default function ManualMailingPreviewDrawerDialog({
-  campaign,
+  campaign
 }: {
   campaign: Partial<ManualMailingPreviewInput>;
 }) {
@@ -94,7 +94,7 @@ export default function ManualMailingPreviewDrawerDialog({
 
 function ManualMailingPreview({
   campaign,
-  className,
+  className
 }: {
   campaign: Partial<ManualMailingPreviewInput>;
   className?: string;
