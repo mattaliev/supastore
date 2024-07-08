@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function ManualMailingCreateForm({
   campaign,
-  setCampaign,
+  setCampaign
 }: {
   campaign: Partial<ManualMailingPreviewInput>;
   setCampaign: (campaign: Partial<ManualMailingPreviewInput>) => void;

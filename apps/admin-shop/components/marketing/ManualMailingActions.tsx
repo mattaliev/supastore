@@ -11,12 +11,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 export default function ManualMailingActions({
   status,
-  mailingId,
+  mailingId
 }: {
   status: ManualMailingStatus;
   mailingId: string;

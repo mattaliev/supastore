@@ -9,7 +9,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Table,
@@ -17,11 +17,11 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 export default function ManualMailingsList({
-  manualMailings,
+  manualMailings
 }: {
   manualMailings?: ManualMailing[];
 }) {
@@ -63,7 +63,7 @@ export default function ManualMailingsList({
                       month: "short",
                       day: "numeric",
                       hour: "numeric",
-                      minute: "numeric",
+                      minute: "numeric"
                     })}
                   </TableCell>
                   <TableCell>
@@ -102,7 +102,7 @@ export default function ManualMailingsList({
 
 function MailingStatusBadge({ status }: { status: ManualMailingStatus }) {
   const t = useTranslations(
-    "MarketingPage.ManualMailingList.MailingStatusBadge",
+    "MarketingPage.ManualMailingList.MailingStatusBadge"
   );
 
   if (status === ManualMailingStatus.SENT) {
