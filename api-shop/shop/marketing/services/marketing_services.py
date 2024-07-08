@@ -8,6 +8,7 @@ from django.utils import timezone
 from analytics.models import Event, EventTypeChoices
 from core.exceptions import NotFoundError
 from marketing.models import ManualMailing, ManualMailingAudienceChoices
+from marketing.models.marketing import ManualMailingStatusChoices
 from store.models import Store
 from store.services import store_bot_token_get
 from telegram.services import telegram_message_send
@@ -105,6 +106,7 @@ def manual_mailing_send(*, mailing_id: UUID):
     mailing.user_count = user_count
     mailing.successful_send_count = successful_send_count
     mailing.sent_at = timezone.now()
+    mailing.status = ManualMailingStatusChoices.SENT
     mailing.save()
 
     return mailing

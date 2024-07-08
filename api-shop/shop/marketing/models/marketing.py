@@ -4,10 +4,16 @@ from django.db import models
 from core.models import BaseEntity
 
 __all__ = [
+    "ManualMailingStatusChoices",
     "ManualMailingAudienceChoices",
     "ManualMailing",
     "ManualMailingFiles"
 ]
+
+
+class ManualMailingStatusChoices(models.TextChoices):
+    SENT = "SENT", "SENT"
+    DRAFT = "DRAFT", "DRAFT"
 
 
 class ManualMailingAudienceChoices(models.TextChoices):
@@ -30,6 +36,7 @@ class ManualMailing(BaseEntity):
         models.CharField(max_length=50, choices=ManualMailingAudienceChoices.choices)
         , default=default_audience, blank=True
     )
+    status = models.CharField(max_length=50, choices=ManualMailingStatusChoices.choices, default=ManualMailingStatusChoices.DRAFT)
     cta_text = models.CharField(max_length=50, null=True, blank=True)
     cta_url = models.URLField(max_length=255, null=True, blank=True)
     user_count = models.IntegerField(default=0)
