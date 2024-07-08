@@ -12,6 +12,8 @@ __all__ = [
 
 class ManualMailingType(DjangoObjectType):
     state = graphene.String()
+    status = graphene.String()
+    audience = graphene.List(graphene.String)
 
     class Meta:
         model = ManualMailing
