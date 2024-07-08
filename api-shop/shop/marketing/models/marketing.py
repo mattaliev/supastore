@@ -30,8 +30,8 @@ class ManualMailing(BaseEntity):
         models.CharField(max_length=50, choices=ManualMailingAudienceChoices.choices)
         , default=default_audience, blank=True
     )
-    cta_text = models.CharField(max_length=50)
-    cta_url = models.URLField(max_length=255)
+    cta_text = models.CharField(max_length=50, null=True, blank=True)
+    cta_url = models.URLField(max_length=255, null=True, blank=True)
     user_count = models.IntegerField(default=0)
     successful_send_count = models.IntegerField(default=0)
     sent_at = models.DateTimeField(null=True, blank=True)
