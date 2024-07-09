@@ -374,10 +374,6 @@ def store_support_bot_update(
         if is_forum:
             message_thread_id = int(message_link.split("https://t.me/c/")[1].split("/")[1])
             store_support_bot.message_thread_id = message_thread_id
-        else:
-            store_support_bot.message_thread_id = None
-    else:
-        store_support_bot.group_chat_id = None
 
     store_support_bot.save()
 

@@ -61,3 +61,20 @@ export const storeBotUsernameGetQuery = /* GraphQL */ `
     storeBotUsernameGet(storeId: $storeId)
   }
 `;
+
+export const storeSupportBotGetQuery = /* GraphQL */ `
+  query SupportBotGet($storeId: UUID!) {
+    supportBotGet(storeId: $storeId) {
+      botUsername
+      greetingMessage
+      groupChatId
+      messageThreadId
+    }
+  }
+`;
+
+export const storeSupportBotTokenGetQuery = /* GraphQL */ `
+  query StoreGet($storeId: UUID!) {
+    supportBotTokenGet(storeId: $storeId)
+  }
+`;
