@@ -2,7 +2,8 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphene_file_upload.scalars import Upload
 
-from store.models.store import Store, StoreApplication, StoreLogo
+from store.models.store import Store, StoreApplication, StoreLogo, \
+    StoreSupportBot
 from store.services import store_has_bot_token
 
 __all__ = [
@@ -12,7 +13,10 @@ __all__ = [
     'StoreUpdateInputType',
     'StoreApplicationType',
     'StoreApplicationCreateInput',
-    'StoreLogoType'
+    'StoreLogoType',
+    'StoreSupportBotType',
+    'StoreSupportBotCreateInput',
+    'StoreSupportBotUpdateInput'
 ]
 
 from user.models import StoreUser, UserRoleChoices
@@ -30,6 +34,7 @@ class StoreType(DjangoObjectType):
     logo_dark = graphene.String()
     logo_light = graphene.String()
     telegram_store_url = graphene.String()
+    support_bot = graphene.Field("store.schemas.StoreSupportBotType")
 
     class Meta:
         model = Store
@@ -46,7 +51,7 @@ class StoreType(DjangoObjectType):
             "updated",
             "store_users",
             "store_bot",
-            "store_url"
+            "store_url",
         ]
 
     def resolve_admins(self, info):
@@ -84,6 +89,11 @@ class StoreType(DjangoObjectType):
 
     def resolve_telegram_store_url(self, info):
         return self.store_bot.telegram_store_url
+
+    def resolve_support_bot(self, info):
+        if hasattr(self, "support_bot"):
+            return self.support_bot
+        return None
 
 
 class StoreInputType(graphene.InputObjectType):
@@ -132,3 +142,23 @@ class StoreLogoType(graphene.ObjectType):
 
     def resolve_logo_light(self, info):
         return self.logo_light.url
+
+
+class StoreSupportBotType(DjangoObjectType):
+    class Meta:
+        model = StoreSupportBot
+        fields = ["bot_username", "group_chat_id", "message_thread_id", "greeting_message"]
+
+
+class StoreSupportBotCreateInput(graphene.InputObjectType):
+    store_id = graphene.UUID(required=True)
+    bot_username = graphene.String(required=True)
+    bot_token = graphene.String(required=True)
+    message_link = graphene.String()
+    is_forum = graphene.Boolean()
+    greeting_message = graphene.String()
+
+
+class StoreSupportBotUpdateInput(StoreSupportBotCreateInput):
+    pass
+

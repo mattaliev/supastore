@@ -1,12 +1,15 @@
 import graphene
 
-from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED
+from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED, AuthenticationError, \
+    PermissionDeniedError
+from core.utils.encryption import decrypt
 from store.services import (
     can_manage_store,
     store_get,
     store_list
 )
-from store.services.store_services import store_logo_get, store_bot_token_get
+from store.services.store_services import store_logo_get, store_bot_token_get, \
+    store_support_bot_get
 
 __all__ = [
     "Query"
@@ -20,6 +23,8 @@ class Query(graphene.ObjectType):
     can_manage_store = graphene.Boolean(store_id=graphene.UUID())
     store_bot_token_get = graphene.String(store_id=graphene.UUID(required=True))
     store_bot_username_get = graphene.String(store_id=graphene.UUID(required=True))
+    support_bot_get = graphene.Field('store.schemas.StoreSupportBotType', store_id=graphene.UUID(required=True))
+    support_bot_token_get = graphene.String(store_id=graphene.UUID(required=True))
 
     def resolve_store_logo_get(self, info, store_id):
         return store_logo_get(store_id=store_id)
@@ -68,6 +73,29 @@ class Query(graphene.ObjectType):
         store = store_get(store_id=store_id)
 
         return store.store_bot.bot_username
+
+    def resolve_support_bot_get(self, info, store_id):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise AuthenticationError()
+
+        if not can_manage_store(user=user, store_id=store_id):
+            raise PermissionDeniedError()
+
+        return store_support_bot_get(store_id=store_id)
+
+    def resolve_support_bot_token_get(self, info, store_id):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise AuthenticationError()
+
+        if not can_manage_store(user=user, store_id=store_id):
+            raise PermissionDeniedError()
+
+        store_support_bot = store_support_bot_get(store_id=store_id)
+
+        return decrypt(store_support_bot.bot_token)
+
 
 
 

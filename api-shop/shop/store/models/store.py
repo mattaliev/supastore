@@ -68,7 +68,7 @@ class StoreSupportBot(BaseEntity):
     store = models.OneToOneField(Store, on_delete=models.CASCADE, related_name="support_bot")
     bot_username = models.CharField(max_length=100, null=True, blank=True)
     bot_token = models.CharField(max_length=255, null=True, blank=True)
-    group_chat_id = models.IntegerField(null=True, blank=True)
+    group_chat_id = models.BigIntegerField(null=True, blank=True)
     message_thread_id = models.IntegerField(null=True, blank=True)
     greeting_message = models.TextField(max_length=255, null=True, blank=True)
 
