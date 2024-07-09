@@ -4,17 +4,17 @@ export const StoreScheme = z.object({
   storeName: z
     .string({
       required_error: "Store name is required",
-      invalid_type_error: "Store name must be a string"
+      invalid_type_error: "Store name must be a string",
     })
     .min(1, {
-      message: "Please enter a valid store name"
+      message: "Please enter a valid store name",
     })
     .optional()
     .nullable(),
   storeDescription: z
     .string({
       required_error: "Store description is required",
-      invalid_type_error: "Store description must be a string"
+      invalid_type_error: "Store description must be a string",
     })
     .optional()
     .nullable(),
@@ -22,63 +22,63 @@ export const StoreScheme = z.object({
   logoLight: z.instanceof(File).optional().nullable(),
   botToken: z
     .string({
-      invalid_type_error: "Bot token must be a string"
+      invalid_type_error: "Bot token must be a string",
     })
     .optional()
     .nullable(),
   botUsername: z
     .string({
-      invalid_type_error: "Bot username must be a string"
+      invalid_type_error: "Bot username must be a string",
     })
     .optional()
     .nullable(),
   storeTimezone: z
     .string({
       required_error: "Store timezone is required",
-      invalid_type_error: "Store timezone must be a string"
+      invalid_type_error: "Store timezone must be a string",
     })
     .optional()
     .nullable(),
   telegramStoreUrl: z
     .string({
-      invalid_type_error: "Telegram store URL must be a string"
+      invalid_type_error: "Telegram store URL must be a string",
     })
     .optional()
-    .nullable()
+    .nullable(),
 });
 
 export const StoreApplicationScheme = z.object({
   storeName: z
     .string({
       required_error: "Store name is required",
-      invalid_type_error: "Store name must be a string"
+      invalid_type_error: "Store name must be a string",
     })
     .min(1, {
-      message: "Please enter a valid store name"
+      message: "Please enter a valid store name",
     }),
   storeDescription: z
     .string({
       required_error: "Store description is required",
-      invalid_type_error: "Store description must be a string"
+      invalid_type_error: "Store description must be a string",
     })
     .optional(),
   channels: z.string({
     required_error: "Telegram channels are required",
-    invalid_type_error: "Telegram channels must be a string"
+    invalid_type_error: "Telegram channels must be a string",
   }),
   productCategory: z.string().min(1, {
-    message: "Please select a product category"
-  })
+    message: "Please select a product category",
+  }),
 });
 
-const messageLinkRegex = new RegExp(/^https:\/\/t\.me\/c\/[a-zA-Z0-9]{8,100}$/);
+const messageLinkRegex = new RegExp(/https:\/\/t\.me\/c\/\d+\/\d+(?:\/\d+)?/);
 
 export const StoreSupportBotScheme = z.object({
   botUsername: z.string().min(1, {
-    message: "Please enter a valid bot username"
+    message: "Please enter a valid bot username",
   }),
   botToken: z.string().min(1, {
-    message: "Please enter a valid bot token"
+    message: "Please enter a valid bot token",
   }),
   greetingMessage: z.string().optional(),
   messageLink: z
@@ -88,10 +88,10 @@ export const StoreSupportBotScheme = z.object({
       (value) =>
         value === "" || value === undefined || messageLinkRegex.test(value),
       {
-        message: "Please enter a valid message link"
-      }
+        message: "Please enter a valid message link",
+      },
     ),
-  isForum: z.boolean().optional()
+  isForum: z.boolean().optional(),
 });
 
 export type StoreSupportBotType = z.infer<typeof StoreSupportBotScheme>;
