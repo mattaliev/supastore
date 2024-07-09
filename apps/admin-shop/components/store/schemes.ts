@@ -84,9 +84,13 @@ export const StoreSupportBotScheme = z.object({
   messageLink: z
     .string()
     .optional()
+    .nullable()
     .refine(
       (value) =>
-        value === "" || value === undefined || messageLinkRegex.test(value),
+        value === "" ||
+        value === undefined ||
+        value === null ||
+        messageLinkRegex.test(value),
       {
         message: "Please enter a valid message link"
       }
