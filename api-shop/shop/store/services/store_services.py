@@ -367,13 +367,16 @@ def store_support_bot_update(
     store_support_bot.bot_token = encrypt(bot_token)
     store_support_bot.greeting_message = greeting_message
 
-    if message_link:
+    if message_link and message_link != "":
+
         group_chat_id = int("-100" + message_link.split("https://t.me/c/")[1].split("/")[0])
         store_support_bot.group_chat_id = group_chat_id
 
         if is_forum:
             message_thread_id = int(message_link.split("https://t.me/c/")[1].split("/")[1])
             store_support_bot.message_thread_id = message_thread_id
+        else:
+            store_support_bot.message_thread_id = None
 
     store_support_bot.save()
 
