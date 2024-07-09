@@ -539,7 +539,7 @@ export type StoreSupportBotCreateInput = {
   storeId: string;
   botUsername?: string;
   greetingMessage?: string;
-  messageLink?: string;
+  messageLink?: string | null;
   groupChatId?: number;
   messageThreadId?: number;
 };
