@@ -132,8 +132,6 @@ export const updateSupportBot = async (prevState: any, formData: FormData) => {
     isForum: Boolean(formData.get("support-bot-is-forum"))
   });
 
-  console.log(validatedData);
-
   if (!validatedData.success) {
     return {
       fieldErrors: validatedData.error.flatten().fieldErrors
@@ -151,7 +149,6 @@ export const updateSupportBot = async (prevState: any, formData: FormData) => {
         }
       }
     );
-    console.log(storeSupportBot);
   } catch (e) {
     console.error(e);
     return { formError: "Could not update support bot" };
