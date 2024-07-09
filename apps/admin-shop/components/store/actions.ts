@@ -2,6 +2,7 @@
 import {
   storeApplicationCreate,
   storeConnectToTelegram,
+  storeSupportBotUpdate,
   storeUpdate,
   TAGS
 } from "@ditch/lib";
@@ -14,7 +15,8 @@ import { getStoreId } from "@/components/store/helpers";
 import {
   StoreApplicationScheme,
   StoreFieldErrors,
-  StoreScheme
+  StoreScheme,
+  StoreSupportBotScheme
 } from "@/components/store/schemes";
 
 export const connectToTelegram = async (prevState: any, storeId: string) => {
@@ -116,4 +118,44 @@ export const createStoreApplication = async (
 
   revalidateTag(TAGS.STORE);
   intlRedirect(`/store/create/success`);
+};
+
+export const updateSupportBot = async (prevState: any, formData: FormData) => {
+  const storeId = getStoreId();
+  const accessToken = await getAccessToken();
+
+  const validatedData = StoreSupportBotScheme.safeParse({
+    botUsername: formData.get("support-bot-username"),
+    botToken: formData.get("support-bot-token"),
+    greetingMessage: formData.get("support-bot-greeting-message"),
+    messageLink: formData.get("support-bot-message-link"),
+    isForum: Boolean(formData.get("support-bot-is-forum"))
+  });
+
+  console.log(validatedData);
+
+  if (!validatedData.success) {
+    return {
+      fieldErrors: validatedData.error.flatten().fieldErrors
+    };
+  }
+
+  try {
+    const storeSupportBot = await authenticated(
+      accessToken,
+      storeSupportBotUpdate,
+      {
+        input: {
+          storeId,
+          ...validatedData.data
+        }
+      }
+    );
+    console.log(storeSupportBot);
+  } catch (e) {
+    console.error(e);
+    return { formError: "Could not update support bot" };
+  }
+
+  revalidateTag(TAGS.STORE);
 };

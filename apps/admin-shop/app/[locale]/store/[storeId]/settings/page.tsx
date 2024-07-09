@@ -1,12 +1,14 @@
 import { storeBotTokenGet, storeGet } from "@ditch/lib";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
+import { Suspense } from "react";
 
 import { authenticated } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
 import StoreBotToken from "@/components/store/store-bot-token";
 import StoreInformation from "@/components/store/store-information";
 import StoreLogo from "@/components/store/store-logo";
+import StoreSupportBotSection from "@/components/store/StoreSupportBotSection";
 
 type SettingsPageProps = {
   params: {
@@ -39,6 +41,9 @@ async function SettingsPage({
       <StoreInformation store={store} />
       <StoreLogo store={store} />
       <StoreBotToken store={store} botToken={botToken} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <StoreSupportBotSection store={store} />
+      </Suspense>
     </div>
   );
 }
