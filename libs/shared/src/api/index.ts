@@ -34,6 +34,8 @@ import {
   singInAdminMutation,
   storeApplicationCreateMutation,
   storeConnectToTelegramMutation,
+  storeSupportBotCreateMutation,
+  storeSupportBotUpdateMutation,
   storeUpdateMutation,
 } from "./mutations";
 import {
@@ -68,6 +70,8 @@ import {
   storeGetQuery,
   storeListQuery,
   storeLogoGetQuery,
+  storeSupportBotGetQuery,
+  storeSupportBotTokenGetQuery,
   storeTelegramStoreUrlGetQuery,
 } from "./queries";
 import {
@@ -136,6 +140,10 @@ import {
   BackendStoreGetOperation,
   BackendStoreListOperation,
   BackendStoreLogoGetOperation,
+  BackendStoreSupportBotCreateOperation,
+  BackendStoreSupportBotGetOperation,
+  BackendStoreSupportBotTokenGetOperation,
+  BackendStoreSupportBotUpdateOperation,
   BackendStoreTelegramStoreUrlGetOperation,
   BackendStoreUpdateOperation,
   Cart,
@@ -160,6 +168,9 @@ import {
   Store,
   StoreApplication,
   StoreCheckpoints,
+  StoreSupportBot,
+  StoreSupportBotCreateInput,
+  StoreSupportBotUpdateInput,
   StoreUpdateInputType,
   TelegramUser,
   TelegramUserDetailParsed,
@@ -1591,4 +1602,72 @@ export const manualMailingSend = async (
     });
 
   return responseBody.data.manualMailingSend.manualMailing;
+};
+
+export const storeSupportBotGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+): Promise<StoreSupportBot> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreSupportBotGetOperation>({
+      query: storeSupportBotGetQuery,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.supportBotGet;
+};
+
+export const storeSupportBotTokenGet = async (
+  body: { storeId: string },
+  headers?: HeadersInit,
+): Promise<string> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreSupportBotTokenGetOperation>({
+      query: storeSupportBotTokenGetQuery,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.supportBotTokenGet;
+};
+
+export const storeSupportBotCreate = async (
+  body: {
+    input: StoreSupportBotCreateInput;
+  },
+  headers?: HeadersInit,
+): Promise<StoreSupportBot> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreSupportBotCreateOperation>({
+      query: storeSupportBotCreateMutation,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.storeSupportBotCreate.storeSupportBot;
+};
+
+export const storeSupportBotUpdate = async (
+  body: {
+    input: StoreSupportBotUpdateInput;
+  },
+  headers?: HeadersInit,
+): Promise<StoreSupportBot> => {
+  const { body: responseBody } =
+    await backendFetch<BackendStoreSupportBotUpdateOperation>({
+      query: storeSupportBotUpdateMutation,
+      variables: body,
+      headers,
+      cache: "no-store",
+      tags: [TAGS.STORE],
+    });
+
+  return responseBody.data.storeSupportBotUpdate.storeSupportBot;
 };

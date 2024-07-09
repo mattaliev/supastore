@@ -524,6 +524,52 @@
           "error": "Please, enter your Telegram Store URL"
         }
       }
+    },
+    "StoreSupportBot": {
+      "title": "Store Support Bot",
+      "description": "Connect your store to a support bot to enable clients to contact you in the Telegram support group.",
+      "Form": {
+        "BotUsername": {
+          "label": "Support Bot Username",
+          "placeholder": "Enter your support bot username",
+          "error": "Please enter your support bot username"
+        },
+        "BotToken": {
+          "label": "Support Bot Token",
+          "placeholder": "Enter your support bot token",
+          "error": "Please enter your support bot token"
+        },
+        "GreetingMessage": {
+          "label": "Support Bot Greeting Message",
+          "placeholder": "Enter your support bot greeting message",
+          "error": "Please enter your support bot greeting message"
+        },
+        "SupportBotGroupChat": {
+          "title": "Support Bot Group Chat",
+          "description": "This is the chat where you will receive support enquiries.",
+          "MessageLink": {
+            "label": "Support Bot Message Link",
+            "description": "Learn how to find message link in our guide.",
+            "placeholder": "Enter your support bot message link",
+            "error": "Please enter your support bot message link"
+          },
+          "GroupChatId": {
+            "label": "Group Chat ID"
+          },
+          "GroupTopicId": {
+            "label": "Group Topic ID"
+          },
+          "cancel": "Cancel",
+          "change": "Change",
+          "IsForum": {
+            "label": "Is a Telegram Supergroup?",
+            "error": "Please enter whether this is a forum or not"
+          }
+        },
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "formError": "Could not create support bot"
+      }
     }
   },
   "StoreCreatePage": {

@@ -103,7 +103,7 @@ def telegram_webhook_set(*, bot_token: str, url: str) -> None:
 
 
 def telegram_message_forward(*, bot_token: str, chat_id: int, from_chat_id: int,
-                             message_id: int) -> None:
+                             message_id: int, message_thread_id: int = None) -> None:
     logger = logging.getLogger(__name__)
     logger.debug("Forwarding telegram message...")
 
@@ -112,6 +112,9 @@ def telegram_message_forward(*, bot_token: str, chat_id: int, from_chat_id: int,
         "from_chat_id": from_chat_id,
         "message_id": message_id
     }
+
+    if message_thread_id:
+        data["message_thread_id"] = message_thread_id
 
     try:
         telegram_request_send(bot_token=bot_token, method="forwardMessage",

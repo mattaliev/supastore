@@ -71,6 +71,38 @@ export const StoreApplicationScheme = z.object({
   })
 });
 
+const messageLinkRegex = new RegExp(/https:\/\/t\.me\/c\/\d+\/\d+(?:\/\d+)?/);
+
+export const StoreSupportBotScheme = z.object({
+  botUsername: z.string().min(1, {
+    message: "Please enter a valid bot username"
+  }),
+  botToken: z.string().min(1, {
+    message: "Please enter a valid bot token"
+  }),
+  greetingMessage: z.string().optional(),
+  messageLink: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (value) =>
+        value === "" ||
+        value === undefined ||
+        value === null ||
+        messageLinkRegex.test(value),
+      {
+        message: "Please enter a valid message link"
+      }
+    ),
+  isForum: z.boolean().optional()
+});
+
+export type StoreSupportBotType = z.infer<typeof StoreSupportBotScheme>;
+export type StoreSupportBotFieldErrors = z.inferFlattenedErrors<
+  typeof StoreSupportBotScheme
+>["fieldErrors"];
+
 export type StoreType = z.infer<typeof StoreScheme>;
 export type StoreApplicationType = z.infer<typeof StoreApplicationScheme>;
 

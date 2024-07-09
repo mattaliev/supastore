@@ -490,6 +490,7 @@ export type Store = {
   admins: TelegramUser[];
   isConnectedToTelegram: boolean;
   telegramStoreUrl?: string;
+  supportBot?: StoreSupportBot;
 } & BaseEntity;
 
 export type StoreCheckpoints = {
@@ -526,6 +527,24 @@ export type StoreUpdateInputType = {
   botToken?: string | null;
   telegramStoreUrl?: string | null;
 };
+
+export type StoreSupportBot = {
+  botUsername?: string;
+  greetingMessage?: string;
+  groupChatId?: number;
+  messageThreadId?: number;
+};
+
+export type StoreSupportBotCreateInput = {
+  storeId: string;
+  botUsername?: string;
+  greetingMessage?: string;
+  messageLink?: string | null;
+  groupChatId?: number;
+  messageThreadId?: number;
+};
+
+export type StoreSupportBotUpdateInput = StoreSupportBotCreateInput;
 
 export type SessionAnalyticsByHour = {
   sessionCount: number;
@@ -1404,5 +1423,45 @@ export type BackendManualMailingSendOperation = {
   variables: {
     storeId: string;
     mailingId: string;
+  };
+};
+
+export type BackendStoreSupportBotGetOperation = {
+  data: {
+    supportBotGet: StoreSupportBot;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreSupportBotTokenGetOperation = {
+  data: {
+    supportBotTokenGet: string;
+  };
+  variables: {
+    storeId: string;
+  };
+};
+
+export type BackendStoreSupportBotCreateOperation = {
+  data: {
+    storeSupportBotCreate: {
+      storeSupportBot: StoreSupportBot;
+    };
+  };
+  variables: {
+    input: StoreSupportBotCreateInput;
+  };
+};
+
+export type BackendStoreSupportBotUpdateOperation = {
+  data: {
+    storeSupportBotUpdate: {
+      storeSupportBot: StoreSupportBot;
+    };
+  };
+  variables: {
+    input: StoreSupportBotUpdateInput;
   };
 };

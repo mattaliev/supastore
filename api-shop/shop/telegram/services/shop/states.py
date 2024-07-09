@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from django.contrib.auth import get_user_model
 
 from store.models import Store
+from store.services import store_support_username_get
 from telegram.models.user_bot_state import States, UserBotState
 from telegram.services import telegram_message_send
 from telegram.services.shop.inline_buttons import ContactSupportInlineButton, \
@@ -65,10 +66,11 @@ class JoinPromoCodeStateProcessor(StateProcessor):
         # Send email to user address
 
         text = EMAIL_ACCEPTED_MESSAGE
+        support_username = store_support_username_get(store_id=store.id)
 
         reply_markup = [
             [OpenShopInlineButton().as_json()],
-            [ContactSupportInlineButton().as_json()]
+            [ContactSupportInlineButton(support_username=support_username).as_json()]
         ]
 
         current_user = get_user_model().objects.get(telegram_id=user['id'])

@@ -11,6 +11,12 @@ export const storeFragment = /* GraphQL */ `
     isConnectedToTelegram
     state
     telegramStoreUrl
+    supportBot {
+      botUsername
+      greetingMessage
+      groupChatId
+      messageThreadId
+    }
   }
 `;
 

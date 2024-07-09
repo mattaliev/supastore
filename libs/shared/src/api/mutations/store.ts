@@ -34,3 +34,29 @@ export const storeApplicationCreateMutation = /* GraphQL */ `
     }
   }
 `;
+
+export const storeSupportBotCreateMutation = /* GraphQL */ `
+  mutation StoreSupportBotCreate($input: StoreSupportBotCreateInput!) {
+    storeSupportBotCreate(input: $input) {
+      storeSupportBot {
+        botUsername
+        greetingMessage
+        groupChatId
+        messageThreadId
+      }
+    }
+  }
+`;
+
+export const storeSupportBotUpdateMutation = /* GraphQL */ `
+  mutation StoreSupportBotUpdate($input: StoreSupportBotUpdateInput!) {
+    storeSupportBotUpdate(input: $input) {
+      storeSupportBot {
+        botUsername
+        greetingMessage
+        groupChatId
+        messageThreadId
+      }
+    }
+  }
+`;
