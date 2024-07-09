@@ -5,6 +5,9 @@ from uuid import UUID
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from store.models import Store
+from telegram.services import telegram_message_send
+
 __all__ = [
     "telegram_callback_query_process",
     "InlineButtonType",
@@ -17,8 +20,7 @@ __all__ = [
     "MailingInlineButton",
 ]
 
-from store.models import Store
-from telegram.services import telegram_message_send
+
 
 User = get_user_model()
 
@@ -70,13 +72,14 @@ class InlineButton(ABC):
 
 
 class ContactSupportInlineButton(InlineButton):
-    def __init__(self, text: str = "Contact support"):
+    def __init__(self, support_username: str, text: str = "Contact support" ):
         super().__init__(InlineButtonType.CONTACT_SUPPORT, text)
+        self.support_username = support_username
 
     def as_json(self):
         return {
             "text": self.text,
-            "url": f"https://t.me/{settings.TELEGRAM_SUPPORT_BOT_USERNAME}"
+            "url": f"https://t.me/{self.support_username}"
         }
 
     def execute(self, *args, **kwargs):
@@ -185,8 +188,3 @@ class MailingInlineButton(InlineButton):
         """
         pass
 
-
-inline_buttons = [
-    ContactSupportInlineButton(),
-    OpenShopInlineButton(),
-]

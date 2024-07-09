@@ -4,7 +4,7 @@ from typing import List
 from django.db.models import Q
 
 from order.models import Order
-from store.services import store_bot_token_get
+from store.services import store_bot_token_get, store_support_username_get
 from telegram.services import telegram_message_send
 from telegram.services.shop.inline_buttons import ContactSupportInlineButton, \
     OpenShopInlineButton
@@ -29,10 +29,12 @@ def telegram_order_confirmation_to_user_send(order: Order):
         return
 
     message = f"Order {order.order_number} has been confirmed\\. We will notify you once it's shipped\\."
+    support_username = store_support_username_get(store_id=order.store.id)
 
     reply_markup = [
         [OpenShopInlineButton(text="🛍Continue Shopping").as_json()],
         [ContactSupportInlineButton(
+            support_username=support_username,
             text="Contact Support About This Order").as_json()]
     ]
 
