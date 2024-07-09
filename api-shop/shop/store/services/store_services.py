@@ -6,8 +6,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models import Q
 
 from core.utils.encryption import encrypt, decrypt
-from store.models import Store, StoreBot, StoreLogo
-from store.models.store import StoreApplication
+from store.models import Store, StoreBot, StoreLogo, StoreApplication, \
+    StoreSupportBot
 from telegram.services import telegram_webhook_set
 from telegram.services.admin.actions import \
     telegram_notify_about_store_application
@@ -27,6 +27,10 @@ __all__ = [
     "store_connect_to_telegram",
     "store_application_create",
     "store_application_approve",
+    "store_support_bot_get",
+    "store_support_bot_create",
+    "store_support_chat_id_get",
+    "store_support_username_get",
 ]
 
 def store_logo_get(*, store_id: UUID):
@@ -276,3 +280,145 @@ def store_timezone_get(*, store_id: UUID):
     logger.info("Getting store timezone with id: %s", store_id)
 
     return Store.objects.get(id=store_id).store_timezone
+
+
+def store_support_bot_get(*, store_id: UUID):
+    logger = logging.getLogger(__name__)
+    logger.info("Getting store support bot with id: %s", store_id)
+
+    return StoreSupportBot.objects.get(store_id=store_id)
+
+
+def store_support_bot_create(
+        *,
+        store_id: UUID,
+        bot_username: str,
+        bot_token: str,
+        message_link: str = None,
+        is_forum: bool = False,
+        greeting_message: str = None
+):
+    """
+    This function creates a support bot for the store.
+    It takes in the store id, bot username, bot token, and message link.
+    The message link is optional and is used to get group chat id and message thread id,
+    see https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a for more info
+    If the message link is not provided, the bot will send all messages to store admin chat.
+    :param store_id: The ID of the store
+    :param bot_username: The username of the bot
+    :param bot_token: The token of the bot
+    :param message_link: The link to group chat and message thread,
+           in format https://t.me/c/{group_chat_id}/{message_thread_id}
+    :return: StoreSupportBot
+    """
+    logger = logging.getLogger(__name__)
+    logger.info("Creating store support bot with id: %s", store_id)
+
+    store_support_bot = StoreSupportBot.objects.create(
+        store_id=store_id,
+        bot_username=bot_username,
+        bot_token=encrypt(bot_token),
+        greeting_message=greeting_message
+    )
+
+    if message_link:
+        group_chat_id = int("-100" + message_link.split("https://t.me/c/")[1].split("/")[0])
+        store_support_bot.group_chat_id = group_chat_id
+
+        if is_forum:
+            message_thread_id = int(message_link.split("https://t.me/c/")[1].split("/")[1])
+            store_support_bot.message_thread_id = message_thread_id
+
+        store_support_bot.save()
+
+    # Set webhook to listen for support bot messages
+    webhook_url = f"{settings.SERVICE_URL}/telegram/webhooks/support/{str(store_id)}/update/"
+
+    telegram_webhook_set(
+        bot_token=bot_token,
+        url=webhook_url
+    )
+
+    return store_support_bot
+
+
+def store_support_bot_update(
+        *,
+        store_id: UUID,
+        bot_username: str,
+        bot_token: str,
+        message_link: str = None,
+        is_forum: bool = False,
+        greeting_message: str = None
+):
+    store_support_bot = StoreSupportBot.objects.filter(store_id=store_id).first()
+
+    if not store_support_bot:
+        return store_support_bot_create(
+            store_id=store_id,
+            bot_username=bot_username,
+            bot_token=bot_token,
+            message_link=message_link,
+            is_forum=is_forum,
+            greeting_message=greeting_message
+        )
+
+    store_support_bot.bot_username = bot_username
+    store_support_bot.bot_token = encrypt(bot_token)
+    store_support_bot.greeting_message = greeting_message
+
+    if message_link:
+        group_chat_id = int("-100" + message_link.split("https://t.me/c/")[1].split("/")[0])
+        store_support_bot.group_chat_id = group_chat_id
+
+        if is_forum:
+            message_thread_id = int(message_link.split("https://t.me/c/")[1].split("/")[1])
+            store_support_bot.message_thread_id = message_thread_id
+        else:
+            store_support_bot.message_thread_id = None
+    else:
+        store_support_bot.group_chat_id = None
+
+    store_support_bot.save()
+
+    webhook_url = f"{settings.SERVICE_URL}/telegram/webhooks/support/{str(store_id)}/update/"
+
+    telegram_webhook_set(
+        bot_token=bot_token,
+        url=webhook_url
+    )
+
+    return store_support_bot
+
+
+def store_support_chat_id_get(*, store_id: UUID):
+    store_support_bot = StoreSupportBot.objects.filter(store_id=store_id).first()
+
+    if store_support_bot and store_support_bot.group_chat_id:
+        if store_support_bot.message_thread_id:
+            return store_support_bot.group_chat_id, store_support_bot.message_thread_id
+        return store_support_bot.group_chat_id, None
+
+    admin = TelegramUser.objects.filter(
+        Q(store_users__role=UserRoleChoices.OWNER) |
+        Q(store_users__role=UserRoleChoices.ADMIN),
+        store_users__store_id=store_id
+    ).first()
+
+    if admin:
+        return admin.telegram_id, None
+
+
+def store_support_username_get(*, store_id: UUID):
+    store_support_bot = StoreSupportBot.objects.filter(store_id=store_id).first()
+
+    if store_support_bot and store_support_bot.bot_username:
+        return store_support_bot.bot_username
+
+    admin = TelegramUser.objects.filter(
+        Q(store_users__role=UserRoleChoices.OWNER) |
+        Q(store_users__role=UserRoleChoices.ADMIN),
+        store_users__store_id=store_id
+    ).first()
+
+    return admin.username
