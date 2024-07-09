@@ -44,7 +44,7 @@ def telegram_support_request_process(*, store_id: UUID, body: dict) -> None:
         # If message is sent from admin chat, send the contents of it to the user
         if (
             chat_id == support_chat_id and
-            message_thread_id == support_message_thread_id and
+            (support_message_thread_id is None or message_thread_id == support_message_thread_id) and
             message["reply_to_message"]
         ):
             reply_to_message = message["reply_to_message"]
