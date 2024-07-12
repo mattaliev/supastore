@@ -5,6 +5,7 @@ from core.models.core import BaseEntity
 
 
 class Product(BaseEntity):
+    wb_id = models.IntegerField(null=True, blank=True)
     category = models.ForeignKey("category.Category", on_delete=models.CASCADE, related_name="products")
     store = models.ForeignKey("store.Store", on_delete=models.CASCADE, related_name="products")
 
@@ -31,6 +32,10 @@ class ProductVariant(BaseEntity):
         verbose_name = "product variant"
         verbose_name_plural = "product variants"
         ordering = ["order_display"]
+        indexes = [
+            models.Index(fields=["wb_id"])
+        ]
+
 
 
 class ProductVariantSize(BaseEntity):
@@ -38,6 +43,7 @@ class ProductVariantSize(BaseEntity):
     size_en = models.CharField(max_length=50, null=True, blank=True)
     size_ru = models.CharField(max_length=50, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    wb_id = models.IntegerField(null=True, blank=True)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     class Meta:
@@ -45,6 +51,9 @@ class ProductVariantSize(BaseEntity):
         verbose_name = "product variant size"
         verbose_name_plural = "product variant sizes"
         ordering = ["created"]
+        indexes = [
+            models.Index(fields=["wb_id"])
+        ]
 
 
 class ProductVariantImage(BaseEntity):

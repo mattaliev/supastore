@@ -14,6 +14,9 @@ class Category(BaseEntity):
         verbose_name = "category"
         verbose_name_plural = "categories"
         ordering = ["-created"]
+        indexes = [
+            models.Index(fields=["wb_id"])
+        ]
 
 
 class CategoryCharacteristicTypeChoices(models.TextChoices):
@@ -39,6 +42,9 @@ class Characteristic(BaseEntity):
         verbose_name = "characteristic"
         verbose_name_plural = "characteristics"
         ordering = ["-created"]
+        indexes = [
+            models.Index(fields=["wb_id"])
+        ]
 
 
 class CharacteristicsChoice(BaseEntity):
@@ -67,4 +73,17 @@ class CategoryCharacteristic(BaseEntity):
         ordering = ["-created"]
 
 
-# 7284 subcategories
+excluded_characteristics_ru = [
+    "ТНВЭД",
+    "Номер декларации соответствия",
+    "Номер сертификата соответствия",
+    "Дата регистрации сертификата/декларации",
+    "Дата окончания действия сертификата/декларации",
+    "Ставка НДС",
+    "ИКПУ",
+    "Код упаковки",
+    "Баркод товара",
+    "Теги",
+
+]
+
