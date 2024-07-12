@@ -1,0 +1,1 @@
+from .wildberries import WbAPI
