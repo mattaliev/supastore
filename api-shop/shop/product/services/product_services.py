@@ -33,6 +33,12 @@ __all__ = [
     "product_variant_delete",
     "product_delete",
     "product_variants_order_set",
+    "product_detail",
+    "product_variant_import_from_wb",
+    "bulk_products_from_wb_create",
+    "product_variant_images_from_wb_create",
+    "product_variant_sizes_from_wb_create",
+    "product_variant_characteristics_from_wb_create"
 ]
 
 

@@ -1,6 +1,7 @@
 import graphene
 
-from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED, PermissionDeniedError
+from core.exceptions import UNAUTHENTICATED, UNAUTHORIZED, \
+    PermissionDeniedError, AuthenticationError
 from product.schemas.schema import (
     ProductCreateInput, ProductUpdateInput
 )
@@ -9,7 +10,7 @@ from product.services import (
     product_update,
     product_delete,
     product_variant_delete,
-    product_variants_order_set
+    product_variants_order_set, product_variant_import_from_wb
 )
 from store.services import can_manage_store
 
@@ -114,6 +115,31 @@ class ProductVariantOrderSetMutationMutation(graphene.Mutation):
         product_variants_order_set(product_ids=product_ids)
         return ProductVariantOrderSetMutationMutation(success=True)
 
+
+class ProductsFromWbUploadMutation(graphene.Mutation):
+    class Arguments:
+        store_id = graphene.UUID(required=True)
+        wb_api_token = graphene.String(required=True)
+        overwrite_existing_products = graphene.Boolean()
+
+    success = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, info, store_id, wb_api_token, overwrite_existing_products = False, **kwargs):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise AuthenticationError()
+
+        if not can_manage_store(user=user, store_id=store_id):
+            raise PermissionDeniedError()
+
+        product_variant_import_from_wb(
+            store_id=store_id,
+            wb_api_token=wb_api_token,
+            overwrite_existing_products=overwrite_existing_products
+        )
+
+        return cls(success=True)
 
 class Mutation(graphene.ObjectType):
     product_create = ProductCreateMutation.Field()
