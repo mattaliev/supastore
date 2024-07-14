@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'api-shop/**'
+      - '.github/workflows/api_run_test.yml'
   workflow_dispatch:
 
 jobs:
