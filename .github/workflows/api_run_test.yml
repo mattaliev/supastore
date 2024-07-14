@@ -22,6 +22,16 @@ jobs:
       with:
         python-version: 3.11
 
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+
     - name: Install dependencies
       run: |
         cd api-shop/shop
