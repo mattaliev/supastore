@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Compiled Python files
+*.pyc
+*/__pycache__/
+
+# Django migrations
+*/migrations/*.pyc
+*/migrations/__pycache__/
