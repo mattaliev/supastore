@@ -57,8 +57,6 @@ export const createProduct = async (
   prevState: any,
   formData: FormData
 ): Promise<ProductFormErrorResponse | undefined> => {
-  console.log("Form Data:", formData);
-
   const variantCount = formData.get("variantCount") as string;
   const categoryId = formData.get("category") as string;
 
