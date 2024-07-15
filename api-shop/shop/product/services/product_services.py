@@ -141,10 +141,11 @@ def product_variant_create(
             **size
         )
 
-    for image_url in images:
+    for index, image_url in enumerate(images):
         product_variant_image_create(
             product_variant_id=product_variant.id,
-            image_url=image_url
+            image_url=image_url,
+            order=index
         )
 
     for characteristic in characteristics:
@@ -200,10 +201,11 @@ def product_variant_update(
 
     product_variant.images.all().delete()
 
-    for image in images:
+    for index, image in enumerate(images):
         product_variant_image_create(
             product_variant_id=product_variant.id,
-            image_url=image
+            image_url=image,
+            order=index
         )
 
     product_variant.product_characteristics.all().delete()

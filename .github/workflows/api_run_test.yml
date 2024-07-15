@@ -44,4 +44,3 @@ jobs:
         python manage.py test
       env:
         SETTINGS_NAME: api-shop-test-settings
-

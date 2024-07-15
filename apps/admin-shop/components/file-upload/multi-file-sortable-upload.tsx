@@ -61,6 +61,7 @@ export default function MultiFileSortableUpload({
       const newIndex = fileStates.findIndex((file) => file.key === over.id);
       const orderedFiles = arrayMove(fileStates, oldIndex, newIndex);
       setFileStates(orderedFiles);
+      onChange?.(orderedFiles);
     }
   };
 
