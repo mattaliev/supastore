@@ -4,14 +4,24 @@ on:
   pull_request:
     paths:
       - 'api-shop/**'
-      - '.github/workflows/api_run_test.yml'
   workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Run API Tests
-    environment: Staging
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
     - name: Check out repository code
@@ -21,16 +31,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
-
-    - id: auth
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: ${{ secrets.GOOGLE_CLOUD_SA_KEY }}
-
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
 
     - name: Install dependencies
       run: |
@@ -43,5 +43,4 @@ jobs:
         cd api-shop/shop
         python manage.py test
       env:
-        SETTINGS_NAME: ${{ secrets.SETTINGS_NAME }}
-
+        SETTINGS_NAME: api-shop-test-settings
