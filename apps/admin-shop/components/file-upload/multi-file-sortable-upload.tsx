@@ -6,19 +6,19 @@ import { useState } from "react";
 
 import {
   FileState,
-  MultiImageSortableDropzone,
+  MultiImageSortableDropzone
 } from "@/components/file-upload/multi-file-sortable-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 
 export default function MultiFileSortableUpload({
   initialFileStates,
-  onChange,
+  onChange
 }: {
   initialFileStates?: FileState[];
   onChange?: (files: FileState[]) => void | Promise<void>;
 }) {
   const [fileStates, setFileStates] = useState<FileState[]>(
-    initialFileStates || [],
+    initialFileStates || []
   );
   const { edgestore } = useEdgeStore();
 
@@ -26,7 +26,7 @@ export default function MultiFileSortableUpload({
     setFileStates((fileStates) => {
       const newFileStates = structuredClone(fileStates);
       const fileState = newFileStates.find(
-        (fileState) => fileState.key === key,
+        (fileState) => fileState.key === key
       );
       if (fileState) {
         fileState.progress = progress;
@@ -39,7 +39,7 @@ export default function MultiFileSortableUpload({
     setFileStates((fileStates) => {
       const newFileStates = structuredClone(fileStates);
       const fileState = newFileStates.find(
-        (fileState) => fileState.key === key,
+        (fileState) => fileState.key === key
       );
       if (fileState) {
         fileState.file = url;
@@ -70,7 +70,7 @@ export default function MultiFileSortableUpload({
       className="rounded-md object-contain"
       value={fileStates}
       dropzoneOptions={{
-        maxFiles: 20,
+        maxFiles: 20
       }}
       onChange={(files) => {
         setFileStates(files);
@@ -90,14 +90,14 @@ export default function MultiFileSortableUpload({
                     await new Promise((resolve) => setTimeout(resolve, 1000));
                     updateFileProgress(addedFileState.key, "COMPLETE");
                   }
-                },
+                }
               });
               onFileUploaded(addedFileState.key, res.url);
               addedFileState.file = res.url;
             } catch (err) {
               updateFileProgress(addedFileState.key, "ERROR");
             }
-          }),
+          })
         );
       }}
       handleDrag={handleDrag}

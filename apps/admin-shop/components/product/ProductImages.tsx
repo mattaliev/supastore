@@ -7,7 +7,7 @@ import { ProductVariantStateUpdate } from "@/components/product/hooks";
 export default function ProductImages({
   variant,
   updateVariantField,
-  variantIndex,
+  variantIndex
 }: {
   variant?: Partial<ProductVariant>;
   updateVariantField: (args: ProductVariantStateUpdate) => void;
@@ -19,18 +19,18 @@ export default function ProductImages({
         initialFileStates={variant?.images?.map((image) => ({
           key: image,
           file: image,
-          progress: "COMPLETE",
+          progress: "COMPLETE"
         }))}
         onChange={(fileStates) => {
           const imageUrls = fileStates.map((fileState) =>
             typeof fileState.file === "string"
               ? fileState.file
-              : URL.createObjectURL(fileState.file),
+              : URL.createObjectURL(fileState.file)
           );
           updateVariantField({
             field: "images",
             value: imageUrls,
-            variantIndex,
+            variantIndex
           });
         }}
       />
