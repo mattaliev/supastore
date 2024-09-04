@@ -26,7 +26,7 @@ class CustomerSortChoices(models.TextChoices):
 class TelegramUser(AbstractUser, BaseEntity):
     username = models.CharField(max_length=100, blank=True, null=True,
                                 unique=False)
-    telegram_id = models.IntegerField(unique=True)
+    telegram_id = models.BigIntegerField(unique=True)
     language_code = models.CharField(max_length=10, blank=True, null=True)
     is_bot = models.BooleanField(default=False)
     photo_url = models.URLField(blank=True, null=True)
