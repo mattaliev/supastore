@@ -18,12 +18,12 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:matvey@ditch-concept.com"
+      "url": "mailto:support@example.com"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://admin.ditch-concept.com/en/store"
+    "url": "https://admin.supastore.example.com/en/store"
   },
   "topAnchor": {
     "name": "Guides",

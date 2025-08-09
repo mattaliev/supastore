@@ -1,10 +1,10 @@
 {
   "private": true,
-  "name": "@ditch/lib",
+  "name": "@supastore/lib",
   "version": "1.0.0",
-  "description": "Shared component for ditch admin-shop and tg-shop",
+  "description": "Shared component for supastore admin-shop and tg-shop",
   "main": "dist/index.js",
-  "repository": "https://github.com/Toamatvey/DITCH.git",
+  "repository": "https://github.com/mattaliev/supastore.git",
   "author": "toamatvey@gmail.com",
   "license": "MIT",
   "scripts": {

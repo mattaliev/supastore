@@ -1,5 +1,5 @@
 {
-  "name": "@ditch/tg-shop",
+  "name": "@supastore/tg-shop",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@ditch/lib": "*",
+    "@supastore/lib": "*",
     "@hookform/resolvers": "^3.3.4",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",

@@ -1,36 +1,430 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Supastore Admin Dashboard
 
-## Getting Started
+A modern Next.js admin dashboard for managing your Telegram-based online stores. Built with TypeScript, TailwindCSS, and shadcn/ui components.
 
-First, run the development server:
+## 🚀 Features
 
+### 🏪 **Store Management**
+- Multi-store support and configuration
+- Store branding and customization
+- Telegram bot integration setup
+- Support bot configuration
+
+### 📦 **Product Management**
+- Product catalog with variants and images
+- Drag-and-drop image uploads via EdgeStore
+- Category management and characteristics
+- Inventory tracking and stock management
+- Bulk product operations
+
+### 📊 **Order Management**
+- Order fulfillment workflow
+- Payment tracking and processing
+- Shipping label generation
+- Customer communication tools
+- Order analytics and reporting
+
+### 👥 **Customer Management**
+- Customer profiles and history
+- Order history and analytics
+- Customer segmentation
+- Communication preferences
+
+### 💳 **Payment Systems**
+- Multiple payment gateway integration
+- Payment method configuration
+- Transaction monitoring
+- Revenue analytics
+
+### 📈 **Analytics & Reports**
+- Sales analytics and trends
+- Customer behavior insights
+- Product performance metrics
+- Revenue tracking and forecasting
+
+### 🎯 **Marketing Tools**
+- Manual mailing campaigns
+- Customer segmentation
+- Marketing automation
+- Campaign analytics
+
+## 🛠️ Technology Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: TailwindCSS
+- **UI Components**: shadcn/ui
+- **Authentication**: NextAuth.js with Telegram Login
+- **API**: GraphQL with Apollo Client
+- **File Upload**: EdgeStore
+- **Internationalization**: next-intl (English/Russian)
+- **State Management**: React Query (TanStack Query)
+- **Forms**: React Hook Form with Zod validation
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- Yarn package manager
+- Running Supastore API backend
+- Telegram Bot Token
+
+### Installation
+
+1. **Navigate to admin directory**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd apps/admin-shop
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+yarn install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Environment setup**
+```bash
+cp .env.example .env.local
+# Configure your environment variables
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+4. **Start development server**
+```bash
+yarn dev
+```
 
-## Learn More
+The admin dashboard will be available at `http://localhost:3000`
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 Environment Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Required Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:8000
 
-## Deploy on Vercel
+# Authentication
+NEXTAUTH_SECRET=your-nextauth-secret-key
+NEXTAUTH_URL=http://localhost:3000
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# File Upload
+EDGE_STORE_ACCESS_KEY=your-edgestore-access-key
+EDGE_STORE_SECRET_KEY=your-edgestore-secret-key
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# Telegram Integration
+NEXT_PUBLIC_BOT_USERNAME=your_admin_bot_username
+```
+
+### Optional Variables
+
+```bash
+# Google Services
+NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=your-google-places-api-key
+
+# Production URLs
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+NEXTAUTH_URL=https://your-admin-domain.com
+```
+
+## 🏗️ Project Structure
+
+```
+apps/admin-shop/
+├── app/                    # Next.js App Router
+│   ├── [locale]/          # Internationalized routes
+│   │   ├── layout.tsx     # Root layout
+│   │   ├── page.tsx       # Landing page
+│   │   └── store/         # Store management routes
+│   ├── api/               # API routes
+│   │   ├── auth/          # NextAuth configuration
+│   │   └── edgestore/     # File upload endpoints
+│   └── globals.css        # Global styles
+├── components/            # Reusable components
+│   ├── admin/            # Admin-specific components
+│   ├── auth/             # Authentication components
+│   ├── customer/         # Customer management
+│   ├── order/            # Order management
+│   ├── payment/          # Payment configuration
+│   ├── product/          # Product management
+│   ├── store/            # Store configuration
+│   ├── marketing/        # Marketing tools
+│   ├── analytics/        # Analytics components
+│   └── ui/               # Base UI components
+├── lib/                  # Utilities and configurations
+├── middleware.ts         # Next.js middleware
+└── public/               # Static assets
+```
+
+## 🎨 UI Components
+
+Built with [shadcn/ui](https://ui.shadcn.com/) components:
+
+- **Forms**: Input, Select, Textarea, Checkbox, Radio
+- **Navigation**: Breadcrumb, Pagination, Tabs
+- **Feedback**: Dialog, Drawer, Toast, Badge
+- **Layout**: Card, Separator, ScrollArea
+- **Data Display**: Table, Timeline, Avatar
+
+### Custom Components
+
+- **MultiFileSortableUpload**: Drag-and-drop image management
+- **ProductFormFields**: Comprehensive product editing
+- **OrderManagement**: Order workflow components
+- **Analytics**: Charts and metrics visualization
+
+## 🔐 Authentication
+
+### Telegram Login Integration
+
+Users authenticate via Telegram Login Widget:
+
+```typescript
+// Auth configuration in auth.ts
+export const authOptions: NextAuthOptions = {
+  providers: [
+    CredentialsProvider({
+      id: "telegram",
+      name: "telegram",
+      async authorize(credentials, req) {
+        const authResponse = await signInAdmin({
+          dataCheckString: new URLSearchParams(req.query).toString(),
+        });
+        // Handle authentication response
+      },
+    }),
+  ],
+  // Additional configuration...
+}
+```
+
+### Role-based Access
+
+- **Store Owners**: Full access to their stores
+- **Admins**: System-wide administrative access
+- **Staff**: Limited store management access
+
+## 📊 State Management
+
+### React Query Integration
+
+API calls are managed through React Query for efficient caching and synchronization:
+
+```typescript
+// Example: Product queries
+const { data: products, isLoading } = useQuery({
+  queryKey: ['products', storeId],
+  queryFn: () => getProducts({ storeId }),
+});
+
+// Example: Product mutations
+const createProductMutation = useMutation({
+  mutationFn: createProduct,
+  onSuccess: () => {
+    queryClient.invalidateQueries(['products']);
+  },
+});
+```
+
+### Form State
+
+Forms use React Hook Form with Zod validation:
+
+```typescript
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  price: z.number().positive("Price must be positive"),
+});
+
+const form = useForm<z.infer<typeof formSchema>>({
+  resolver: zodResolver(formSchema),
+});
+```
+
+## 🌍 Internationalization
+
+Supports English and Russian with next-intl:
+
+```typescript
+// Usage in components
+import { useTranslations } from 'next-intl';
+
+export default function Component() {
+  const t = useTranslations('common');
+  
+  return (
+    <h1>{t('welcome')}</h1>
+  );
+}
+```
+
+### Adding Translations
+
+Update translation files in `components/i18n/locales/`:
+
+- `en.json` - English translations
+- `ru.json` - Russian translations
+
+## 🚀 Key Features Walkthrough
+
+### Store Setup
+
+1. **Create Store**: Name, description, timezone configuration
+2. **Bot Integration**: Connect Telegram bot tokens
+3. **Payment Setup**: Configure payment gateways
+4. **Customization**: Upload logos, set branding
+
+### Product Management
+
+1. **Product Creation**: Name, description, pricing
+2. **Variants**: Size, color, material options
+3. **Images**: Drag-and-drop upload with sorting
+4. **Categories**: Organize with characteristics
+5. **Inventory**: Stock tracking and alerts
+
+### Order Processing
+
+1. **Order Tracking**: Real-time order status updates
+2. **Fulfillment**: Mark items as fulfilled
+3. **Payment Processing**: Handle payment confirmations
+4. **Customer Communication**: Order updates via Telegram
+
+### Analytics Dashboard
+
+1. **Sales Metrics**: Revenue, orders, conversion rates
+2. **Customer Insights**: Top customers, behavior analysis
+3. **Product Performance**: Best sellers, inventory turnover
+4. **Timeline View**: Activity feed and notifications
+
+## 🧪 Development
+
+### Available Scripts
+
+```bash
+yarn dev          # Start development server
+yarn build        # Build for production
+yarn start        # Start production server
+yarn lint         # Run ESLint
+yarn lint:fix     # Fix linting issues
+yarn type-check   # Run TypeScript checks
+```
+
+### Code Style
+
+- **ESLint**: Configured with Next.js and TypeScript rules
+- **Prettier**: Code formatting
+- **Husky**: Pre-commit hooks for code quality
+
+### Adding New Features
+
+1. **Create Components**: Follow existing patterns
+2. **API Integration**: Use React Query hooks
+3. **Form Handling**: Use React Hook Form + Zod
+4. **Styling**: Use TailwindCSS utilities
+5. **Translations**: Add to both language files
+
+## 📦 Build & Deployment
+
+### Production Build
+
+```bash
+yarn build
+```
+
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t supastore-admin .
+
+# Run container
+docker run -p 3000:3000 supastore-admin
+```
+
+### Environment Variables for Production
+
+```bash
+NODE_ENV=production
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+NEXTAUTH_URL=https://your-admin-domain.com
+NEXTAUTH_SECRET=your-production-secret
+```
+
+## 🔧 Configuration
+
+### EdgeStore Setup
+
+Configure file upload service:
+
+```typescript
+// lib/edgestore/index.ts
+export const edgestore = new EdgeStoreProvider({
+  accessKey: process.env.EDGE_STORE_ACCESS_KEY,
+  secretKey: process.env.EDGE_STORE_SECRET_KEY,
+});
+```
+
+### API Client Setup
+
+GraphQL client configuration:
+
+```typescript
+// Configured in shared library
+import { apiClient } from '@supastore/lib';
+
+// Usage in components
+const { data } = await apiClient.products.getAll({ storeId });
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Authentication Errors**
+   - Check NEXTAUTH_SECRET and NEXTAUTH_URL
+   - Verify API backend is running
+   - Confirm Telegram bot configuration
+
+2. **File Upload Issues**
+   - Verify EdgeStore credentials
+   - Check file size limits
+   - Ensure proper CORS configuration
+
+3. **API Connection Problems**
+   - Confirm NEXT_PUBLIC_API_URL is correct
+   - Check API backend health
+   - Verify CORS settings on backend
+
+4. **Build Errors**
+   - Run `yarn lint` and fix issues
+   - Check TypeScript errors with `yarn type-check`
+   - Ensure all environment variables are set
+
+### Debug Mode
+
+Enable debug logging:
+
+```bash
+DEBUG=1 yarn dev
+```
+
+## 📚 Additional Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [shadcn/ui Components](https://ui.shadcn.com/)
+- [TailwindCSS](https://tailwindcss.com/docs)
+- [NextAuth.js](https://next-auth.js.org/)
+- [React Query](https://tanstack.com/query/latest)
+
+## 🤝 Contributing
+
+1. Follow existing component patterns
+2. Add proper TypeScript types
+3. Include translations for both languages
+4. Test forms with various data scenarios
+5. Ensure responsive design works on all devices
+
+---
+
+**Ready to manage your Telegram stores!** 🚀
+
+For more information, check the [main Supastore documentation](../../README.md).
