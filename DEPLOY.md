@@ -44,13 +44,32 @@ openssl rand -base64 32   # NEXTAUTH_SECRET (per Vercel app)
 
 ## 1. Backend → Railway
 
-- **New Project → Deploy from GitHub repo**, branch `development`.
-- **Service → Settings → Root Directory:** `api-shop/shop` (the Dockerfile there is used automatically).
-- **Add a Postgres database** to the project. Railway exposes `DATABASE_URL` to the
-  service automatically — do **not** set it manually.
+- The build context is the **repository root**. `railway.json` forces the
+  Dockerfile builder and points at `api-shop/shop/Dockerfile`; the Dockerfile
+  copies only `api-shop/shop/`. `.railwayignore` excludes the frontend
+  workspaces so they aren't uploaded or scanned. Do **not** set a service Root
+  Directory — leave it at the repo root.
+- **Add a Postgres database** to the project. It is a separate service, so set
+  the backend's `DATABASE_URL` to a reference: `${{Postgres.DATABASE_URL}}`.
 - The container runs `migrate` + `collectstatic` on start, then gunicorn on `$PORT`.
   Static files are served by WhiteNoise. `RAILWAY_PUBLIC_DOMAIN` is injected
   automatically and used for `ALLOWED_HOSTS`/CSRF.
+
+CLI deploy (what was used for staging), from the repo root:
+
+```bash
+railway link -p <project> -e <environment>
+railway add --database postgres
+railway add --service api-shop
+railway variables --service api-shop --skip-deploys --set 'DATABASE_URL=${{Postgres.DATABASE_URL}}' --set 'DEBUG=False' ...
+railway domain --service api-shop --port 8080      # also injects RAILWAY_PUBLIC_DOMAIN
+railway up --service api-shop --ci                 # run from repo root, NOT api-shop/shop
+```
+
+> The migration history was reset to clean `0001_initial` migrations (the old
+> chain could not apply to a fresh DB). A brand-new database is therefore
+> required; if a database already has the old history, wipe it first
+> (`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`).
 
 ### Backend environment variables (Railway)
 
@@ -76,7 +95,8 @@ openssl rand -base64 32   # NEXTAUTH_SECRET (per Vercel app)
 | `SUPERUSER_TELEGRAM_ID` | your Telegram numeric id |
 | `TELEGRAM_PAYMENT_RETURN_URL` | the tg-shop Vercel URL |
 
-> Note: `DATABASE_URL` is provided by the Railway Postgres plugin — leave it unset.
+> Note: set `DATABASE_URL` to the reference `${{Postgres.DATABASE_URL}}` so it
+> resolves to the Postgres service in the same environment.
 >
 > Wallet Pay credentials are **not** environment variables — they're entered per
 > store in the admin dashboard and stored encrypted in the database (decrypted at
