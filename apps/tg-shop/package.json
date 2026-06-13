@@ -10,7 +10,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@supastore/lib": "*",
+    "@ditch/lib": "*",
     "@hookform/resolvers": "^3.3.4",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",

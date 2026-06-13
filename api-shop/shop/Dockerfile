@@ -1,7 +1,6 @@
-# Build the file from the root of the project with the following command:
-# docker build -t ditch/tg-api -f ./api-shop/Dockerfile .
-
-# The build directory needs to be api-shop/shop, for gunicorn to work properly
+# Backend container for Railway (build context = this directory, api-shop/shop).
+# Set the Railway service's Root Directory to "api-shop/shop" so this Dockerfile
+# is used with the correct context.
 
 FROM python:3.11-slim
 
@@ -18,11 +17,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy local code to the container image.
 COPY . .
 
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-EXPOSE 8080
-
-CMD exec gunicorn --bind 0.0.0.0:8080 --workers 1 --threads 8 --timeout 0 shop.wsgi:application
+# Run migrations and collect static files (served by WhiteNoise), then start
+# gunicorn bound to the port provided by the platform ($PORT on Railway).
+# Workers default to 1; raise on multi-core instances. Timeout 0 disables the
+# worker timeout so the platform controls instance scaling.
+CMD python manage.py migrate --noinput && \
+    python manage.py collectstatic --noinput && \
+    exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 8 --timeout 0 shop.wsgi:application

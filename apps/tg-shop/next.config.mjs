@@ -14,13 +14,6 @@ const nextConfig = {
         protocol: "https",
         hostname: "files.edgestore.dev",
         port: "",
-        pathname: "/8yckhv8sa2g0jniq/**",
-      },
-      {
-        protocol: "https",
-        hostname: "storage.googleapis.com",
-        port: "",
-        pathname: "/ditch-bucket/**"
       },
       {
         protocol: "https",

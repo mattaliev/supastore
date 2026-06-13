@@ -93,9 +93,9 @@ TELEGRAM_WEB_APP_URL=https://tg.example.com
 TELEGRAM_ADMIN_CHAT_ID=your-admin-chat-id
 TELEGRAM_SUPPORT_CHAT_ID=your-support-chat-id
 
-# Payment Gateways
-TELEGRAM_WALLET_API_KEY=your-wallet-pay-api-key
-TELEGRAM_WALLET_PAY_URL=https://pay.wallet.tg
+# Payments
+# Wallet Pay credentials are configured per-store in the admin (stored
+# encrypted in the DB), not via env vars. Only the return URL is needed here.
 TELEGRAM_PAYMENT_RETURN_URL=https://tg.example.com
 
 # Encryption

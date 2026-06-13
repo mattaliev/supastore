@@ -10,15 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import io
 import os
 from pathlib import Path
 from urllib.parse import urlparse
 
 import environ
-import google.auth
-import google.cloud.logging
-from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,36 +23,19 @@ env = environ.Env(DEBUG=(bool, True))
 
 env_file = os.path.join(BASE_DIR, ".env")
 
-try:
-    credentials, project_id = google.auth.default()
-    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-except google.auth.exceptions.DefaultCredentialsError:
-    print("Could not authenticate with Google Cloud...")
-    pass
-
+# Local development loads configuration from a .env file when present. In
+# deployment (e.g. Railway), configuration is injected directly into the
+# process environment, which django-environ reads automatically — no .env
+# file or external secret manager is required.
 if os.path.isfile(env_file):
-    # Use local file if provided
-    print("Pulling secrets from local .env file")
+    print("Loading configuration from local .env file")
     env.read_env(env_file)
-elif os.environ.get("GOOGLE_CLOUD_PROJECT"):
-    # Use Google Cloud Secrets if available
-    print("Pulling secrets from Google Cloud Secret Manager")
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-    settings_name = os.environ.get("SETTINGS_NAME", "api-shop-settings")
-
-    client = secretmanager.SecretManagerServiceClient()
-    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode(
-        "UTF-8")
-    env.read_env(io.StringIO(payload))
 else:
-    raise Exception(
-        "No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+    print("No .env file found; loading configuration from the environment")
 
 DEBUG = env("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 
-CLOUD_RUN_SERVICE_URL = env("CLOUD_RUN_SERVICE_URL", default=None)
 SERVICE_URL = env("SERVICE_URL", default=None)
 FRONTEND_CLIENT_URL = env("FRONTEND_CLIENT_URL", default=None)
 ADMIN_CLIENT_URL = env("ADMIN_CLIENT_URL", default=None)
@@ -69,16 +48,29 @@ CSRF_TRUSTED_ORIGINS = [
     "https://studio.apollographql.com"
 ]
 
-if CLOUD_RUN_SERVICE_URL:
-    print("Can see CLOUD_RUN_SERVICE_URL...")
-    ALLOWED_HOSTS = [urlparse(CLOUD_RUN_SERVICE_URL).netloc]
-    CSRF_TRUSTED_ORIGINS.append(CLOUD_RUN_SERVICE_URL)
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-else:
+# Public host of this backend. Railway injects RAILWAY_PUBLIC_DOMAIN
+# automatically; SERVICE_URL may also be set explicitly to the public URL.
+RAILWAY_PUBLIC_DOMAIN = env("RAILWAY_PUBLIC_DOMAIN", default=None)
+
+ALLOWED_HOSTS = []
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_PUBLIC_DOMAIN}")
+if SERVICE_URL:
+    ALLOWED_HOSTS.append(urlparse(SERVICE_URL).netloc)
+    CSRF_TRUSTED_ORIGINS.append(SERVICE_URL)
+
+if not ALLOWED_HOSTS:
+    # No public host configured (e.g. local development) — allow all.
+    ALLOWED_HOSTS = ["*"]
+
+if DEBUG:
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
-    ALLOWED_HOSTS = ["*"]
+else:
+    # Railway terminates TLS at its proxy and forwards the original scheme.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
 
 CACHE_MIDDLEWARE_SECONDS = 0
 
@@ -126,6 +118,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -171,21 +164,22 @@ if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-    }
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
 
-GS_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-GS_AUTO_CREATE_BUCKET = True
-GS_DEFAULT_ACL = 'publicRead'
-STATIC_URL = 'https://storage.googleapis.com/{}/static/'.format(GS_BUCKET_NAME)
+# Static files are served by WhiteNoise from STATIC_ROOT (populated by
+# `collectstatic` at container start). Product images are uploaded to
+# EdgeStore from the frontend and stored as URLs, so they don't use Django
+# storage. The few model FileFields fall back to the local filesystem.
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -255,16 +249,14 @@ LOGGING = {
     }
 }
 
-if DEBUG:
-    LOGGING['handlers']['console'] = {
-        'level': 'DEBUG',
-        'class': 'logging.StreamHandler',
-        'formatter': 'detailed',
-    }
-    LOGGING['loggers']['']['handlers'].append('console')
-else:
-    client = google.cloud.logging.Client(credentials=credentials)
-    client.setup_logging(log_level="DEBUG")
+# Log to stdout in every environment. The platform (Railway) captures the
+# container's stdout, so no cloud-specific logging client is needed.
+LOGGING['handlers']['console'] = {
+    'level': 'DEBUG',
+    'class': 'logging.StreamHandler',
+    'formatter': 'detailed',
+}
+LOGGING['loggers']['']['handlers'].append('console')
 
 # ------------------- TELEGRAM -------------------
 TELEGRAM_API_URL = env("TELEGRAM_API_URL")
@@ -280,8 +272,9 @@ SUPERUSER_TELEGRAM_ID = env("SUPERUSER_TELEGRAM_ID")
 TELEGRAM_ADMIN_BOT_TOKEN = env("TELEGRAM_ADMIN_BOT_TOKEN")
 
 # PAYMENT
-TELEGRAM_WALLET_PAY_URL = env("TELEGRAM_WALLET_PAY_URL")
-TELEGRAM_WALLET_API_KEY = env("TELEGRAM_WALLET_API_KEY")
+# Wallet Pay credentials are stored encrypted per-store in the database
+# (PaymentMethod.other_info), not in the environment. Only the return URL the
+# customer comes back to after paying is configured here.
 TELEGRAM_PAYMENT_RETURN_URL = env("TELEGRAM_PAYMENT_RETURN_URL")
 
 # ------------------- ENCRYPTION -------------------
