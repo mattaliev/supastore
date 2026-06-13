@@ -9,14 +9,14 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('order', '0001_initial'),
-        ('payment', '0001_initial'),
+        ('order', '0002_initial'),
+        ('shipping', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='order',
-            name='payment',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='order', to='payment.payment'),
+            name='shipping',
+            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='order', to='shipping.shipping'),
         ),
     ]
