@@ -1,6 +1,6 @@
-# Backend container for Railway (build context = this directory, api-shop/shop).
-# Set the Railway service's Root Directory to "api-shop/shop" so this Dockerfile
-# is used with the correct context.
+# Backend container, built from the repository ROOT context (Railway uploads the
+# whole repo and selects this file via railway.json -> build.dockerfilePath).
+# Local equivalent: docker build -f api-shop/shop/Dockerfile -t supastore-api .
 
 FROM python:3.11-slim
 
@@ -10,12 +10,12 @@ WORKDIR $APP_HOME
 # Removes output stream buffering, allowing for more efficient logging
 ENV PYTHONUNBUFFERED 1
 
-# Install dependencies
-COPY requirements.txt .
+# Install dependencies (paths are relative to the repo root build context)
+COPY api-shop/shop/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy local code to the container image.
-COPY . .
+# Copy the backend application code into the image.
+COPY api-shop/shop/ .
 
 # Run migrations and collect static files (served by WhiteNoise), then start
 # gunicorn bound to the port provided by the platform ($PORT on Railway).

@@ -1,0 +1,8 @@
+# The Railway backend only builds api-shop/shop. Exclude the frontend workspaces
+# and Node files so they aren't uploaded or scanned as part of the backend build.
+apps/
+libs/
+node_modules/
+yarn.lock
+package.json
+.idea/
