@@ -1,4 +1,4 @@
-import { Order, PaymentStatus } from "@ditch/lib";
+import { Order, PaymentStatus } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import Link from "@/components/navigation/link";

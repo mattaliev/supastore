@@ -1,5 +1,5 @@
 "use client";
-import { EntityState } from "@ditch/lib";
+import { EntityState } from "@supastore/lib";
 import { useTranslations } from "next-intl";
 
 import { ProductVariantFieldErrors } from "@/components/product/productValidator";

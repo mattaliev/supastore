@@ -9,7 +9,7 @@ import {
   PaymentStatus,
   paymentStatusUpdate,
   TAGS
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
 

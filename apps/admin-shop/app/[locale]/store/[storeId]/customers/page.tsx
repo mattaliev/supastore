@@ -1,4 +1,4 @@
-import { customersPaginated } from "@ditch/lib";
+import { customersPaginated } from "@supastore/lib";
 import { notFound } from "next/navigation";
 
 import { authenticated } from "@/auth";

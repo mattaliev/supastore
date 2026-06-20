@@ -1,5 +1,5 @@
 "use client";
-import { ManualMailingPreviewInput } from "@ditch/lib";
+import { ManualMailingPreviewInput } from "@supastore/lib";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 

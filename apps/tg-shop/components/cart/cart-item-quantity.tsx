@@ -1,4 +1,4 @@
-import { CartItem } from "@ditch/lib";
+import { CartItem } from "@supastore/lib";
 
 import RemoveFromCartButton from "@/components/cart/remove-from-cart-button";
 import UpdateItemQuantitySelect from "@/components/cart/update-quantity-select";

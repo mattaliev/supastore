@@ -1,6 +1,6 @@
 "use client";
 
-import { PaymentMethod } from "@ditch/lib";
+import { PaymentMethod } from "@supastore/lib";
 import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

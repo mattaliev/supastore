@@ -1,5 +1,5 @@
 "use client";
-import { Store } from "@ditch/lib";
+import { Store } from "@supastore/lib";
 import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

@@ -5,7 +5,7 @@ import {
   PaymentProvider,
   TelegramPaymentMethod,
   WalletPayPaymentMethod
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

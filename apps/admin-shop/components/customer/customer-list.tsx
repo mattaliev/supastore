@@ -1,4 +1,4 @@
-import { Paginated, TelegramUserList } from "@ditch/lib";
+import { Paginated, TelegramUserList } from "@supastore/lib";
 import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
 

@@ -1,4 +1,4 @@
-import { CartItem } from "@ditch/lib";
+import { CartItem } from "@supastore/lib";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 

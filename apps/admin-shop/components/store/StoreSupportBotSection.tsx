@@ -1,4 +1,4 @@
-import { Store, storeSupportBotTokenGet } from "@ditch/lib";
+import { Store, storeSupportBotTokenGet } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 import React from "react";
 

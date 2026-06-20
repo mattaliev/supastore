@@ -1,4 +1,4 @@
-import { Category, Characteristic, ProductVariant } from "@ditch/lib";
+import { Category, Characteristic, ProductVariant } from "@supastore/lib";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

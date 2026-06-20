@@ -1,6 +1,6 @@
 "use client";
 
-import { FulfilmentStatus, Order, PaymentStatus } from "@ditch/lib";
+import { FulfilmentStatus, Order, PaymentStatus } from "@supastore/lib";
 import { ChevronLeft, ChevronRight, CreditCard, Truck } from "lucide-react";
 import { DateTime } from "luxon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

@@ -1,4 +1,4 @@
-import { storeLogoGet } from "@ditch/lib";
+import { storeLogoGet } from "@supastore/lib";
 
 import CartIcon from "@/components/cart/cart-icon";
 import Logo from "@/components/layout/logo";

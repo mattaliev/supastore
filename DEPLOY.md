@@ -114,7 +114,7 @@ For **each** app create a separate Vercel project from the repo (branch `develop
 | Framework preset | Next.js | Next.js |
 
 Vercel auto-detects the Yarn workspaces monorepo and installs from the repo root.
-The shared `@ditch/lib` package is consumed from source (via `transpilePackages`),
+The shared `@supastore/lib` package is consumed from source (via `transpilePackages`),
 so **no separate build step is required**.
 
 ### admin-shop env vars (Vercel)

@@ -1,4 +1,4 @@
-import { ProductVariantSize } from "@ditch/lib";
+import { ProductVariantSize } from "@supastore/lib";
 import { ShoppingCart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

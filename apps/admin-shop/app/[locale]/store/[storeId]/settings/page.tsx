@@ -1,4 +1,4 @@
-import { storeBotTokenGet, storeGet } from "@ditch/lib";
+import { storeBotTokenGet, storeGet } from "@supastore/lib";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Suspense } from "react";

@@ -1,5 +1,5 @@
 "use client";
-import { Order } from "@ditch/lib";
+import { Order } from "@supastore/lib";
 import { useHapticFeedback } from "@tma.js/sdk-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";

@@ -1,4 +1,4 @@
-import { TelegramUser } from "@ditch/lib";
+import { TelegramUser } from "@supastore/lib";
 import { useTranslations } from "next-intl";
 
 import Link from "@/components/navigation/link";

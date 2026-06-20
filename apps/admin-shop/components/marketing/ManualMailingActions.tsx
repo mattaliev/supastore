@@ -1,5 +1,5 @@
 "use client";
-import { ManualMailingStatus } from "@ditch/lib";
+import { ManualMailingStatus } from "@supastore/lib";
 import { LoaderCircle, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 "use client";
-import { ProductVariant } from "@ditch/lib";
+import { ProductVariant } from "@supastore/lib";
 import { useUtils } from "@tma.js/sdk-react";
 import { ShareIcon } from "lucide-react";
 import { useTranslations } from "next-intl";

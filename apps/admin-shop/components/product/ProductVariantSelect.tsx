@@ -1,4 +1,4 @@
-import { Category, ProductVariant } from "@ditch/lib";
+import { Category, ProductVariant } from "@supastore/lib";
 import { AlignJustify, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";

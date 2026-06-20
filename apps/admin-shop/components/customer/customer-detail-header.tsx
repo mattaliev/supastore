@@ -1,5 +1,5 @@
 "use client";
-import { TelegramUserDetailParsed } from "@ditch/lib";
+import { TelegramUserDetailParsed } from "@supastore/lib";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";

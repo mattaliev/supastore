@@ -1,5 +1,5 @@
 "use client";
-import { ShippingAddress } from "@ditch/lib";
+import { ShippingAddress } from "@supastore/lib";
 import { useHapticFeedback } from "@tma.js/sdk-react";
 import { MoreHorizontal, XIcon } from "lucide-react";
 import { useTranslations } from "next-intl";

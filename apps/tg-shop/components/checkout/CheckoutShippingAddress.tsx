@@ -1,4 +1,4 @@
-import { shippingAddressDefaultGet } from "@ditch/lib";
+import { shippingAddressDefaultGet } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/WithAuth";

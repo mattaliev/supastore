@@ -1,4 +1,4 @@
-import { adminProductGet } from "@ditch/lib";
+import { adminProductGet } from "@supastore/lib";
 import { notFound } from "next/navigation";
 
 import { authenticated } from "@/auth";

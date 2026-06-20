@@ -1,5 +1,5 @@
 "use client";
-import { ProductVariant } from "@ditch/lib";
+import { ProductVariant } from "@supastore/lib";
 
 import MultiFileSortableUpload from "@/components/file-upload/multi-file-sortable-upload";
 import { ProductVariantStateUpdate } from "@/components/product/hooks";

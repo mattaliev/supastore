@@ -1,4 +1,4 @@
-import { customersPaginated } from "@ditch/lib";
+import { customersPaginated } from "@supastore/lib";
 
 import { authenticated } from "@/auth";
 import TopCustomerSort from "@/components/customer/top-customer-sort";

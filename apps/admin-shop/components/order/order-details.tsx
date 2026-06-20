@@ -1,4 +1,4 @@
-import { FulfilmentStatus, Order } from "@ditch/lib";
+import { FulfilmentStatus, Order } from "@supastore/lib";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";

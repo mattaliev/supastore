@@ -1,4 +1,4 @@
-import { APIFunction } from "@ditch/lib";
+import { APIFunction } from "@supastore/lib";
 
 import { withErrorHandling } from "@/components/error-handling/withErrorHandling";
 

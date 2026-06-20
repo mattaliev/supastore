@@ -1,4 +1,4 @@
-import { paymentMethodsList } from "@ditch/lib";
+import { paymentMethodsList } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import { authenticated } from "@/auth";

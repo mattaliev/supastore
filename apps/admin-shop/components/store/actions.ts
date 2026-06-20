@@ -5,7 +5,7 @@ import {
   storeSupportBotUpdate,
   storeUpdate,
   TAGS
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { revalidateTag } from "next/cache";
 
 import { authenticated } from "@/auth";

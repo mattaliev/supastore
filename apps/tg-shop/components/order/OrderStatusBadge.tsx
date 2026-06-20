@@ -1,4 +1,4 @@
-import { FulfilmentStatus, PaymentStatus } from "@ditch/lib";
+import { FulfilmentStatus, PaymentStatus } from "@supastore/lib";
 
 import { Badge } from "@/components/ui/badge";
 

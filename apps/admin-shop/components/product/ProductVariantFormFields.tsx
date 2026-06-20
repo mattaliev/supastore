@@ -1,5 +1,5 @@
 "use client";
-import { Category, ProductVariant } from "@ditch/lib";
+import { Category, ProductVariant } from "@supastore/lib";
 import { useLocale, useTranslations } from "next-intl";
 import { ChangeEvent } from "react";
 

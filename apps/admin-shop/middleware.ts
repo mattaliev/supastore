@@ -1,4 +1,4 @@
-import { storeCanManage } from "@ditch/lib";
+import { storeCanManage } from "@supastore/lib";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";

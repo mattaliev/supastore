@@ -25,7 +25,7 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ['lucide-react', '@ditch/lib']
+  transpilePackages: ['lucide-react', '@supastore/lib']
 };
 
 export default withNextIntl(nextConfig);

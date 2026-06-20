@@ -1,4 +1,4 @@
-import { Paginated, ProductVariant } from "@ditch/lib";
+import { Paginated, ProductVariant } from "@supastore/lib";
 
 import Pagination from "@/components/pagination";
 import CatalogProduct from "@/components/product/product";

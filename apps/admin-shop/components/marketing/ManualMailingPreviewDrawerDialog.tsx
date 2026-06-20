@@ -1,4 +1,4 @@
-import { ManualMailingPreviewInput } from "@ditch/lib";
+import { ManualMailingPreviewInput } from "@supastore/lib";
 import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

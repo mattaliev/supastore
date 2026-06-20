@@ -1,4 +1,4 @@
-import { EntityState, productsPaginatedGet } from "@ditch/lib";
+import { EntityState, productsPaginatedGet } from "@supastore/lib";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";
 import ProductFilters from "@/components/product/product-filters";

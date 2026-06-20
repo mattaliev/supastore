@@ -1,4 +1,4 @@
-import { manualMailingListGet } from "@ditch/lib";
+import { manualMailingListGet } from "@supastore/lib";
 
 import { authenticated } from "@/auth";
 import WithAuth, { WithAuthProps } from "@/components/auth/with-auth";

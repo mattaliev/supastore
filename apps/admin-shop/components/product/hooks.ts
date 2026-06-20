@@ -10,7 +10,7 @@ import {
   ProductVariant,
   ProductVariantSize,
   productVariantsOrderSet
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";

@@ -1,4 +1,4 @@
-import { AnalyticsEvent } from "@ditch/lib";
+import { AnalyticsEvent } from "@supastore/lib";
 import { DateTime } from "luxon";
 import { getTranslations } from "next-intl/server";
 import React from "react";

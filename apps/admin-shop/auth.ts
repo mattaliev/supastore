@@ -1,4 +1,4 @@
-import { APIFunction, signInAdmin, signOutAdmin } from "@ditch/lib";
+import { APIFunction, signInAdmin, signOutAdmin } from "@supastore/lib";
 import { redirect as nextRedirect, RedirectType } from "next/navigation";
 import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";

@@ -1,5 +1,5 @@
 "use client";
-import { EntityState, Paginated, ProductVariant } from "@ditch/lib";
+import { EntityState, Paginated, ProductVariant } from "@supastore/lib";
 import { DndContext, UniqueIdentifier } from "@dnd-kit/core";
 import {
   restrictToVerticalAxis,

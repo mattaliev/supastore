@@ -9,7 +9,7 @@ import {
   cartRemoveItem,
   cartUpdateItem,
   TAGS
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";

@@ -6,7 +6,7 @@ import {
   orderStatusUpdate,
   shippingAddTracking,
   TAGS
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { revalidateTag } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { RedirectType } from "next/navigation";

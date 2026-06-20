@@ -1,4 +1,4 @@
-import { shopPaymentMethodsList } from "@ditch/lib";
+import { shopPaymentMethodsList } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/WithAuth";

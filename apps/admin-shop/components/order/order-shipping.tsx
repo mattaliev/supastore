@@ -1,4 +1,4 @@
-import { FulfilmentStatus, Shipping } from "@ditch/lib";
+import { FulfilmentStatus, Shipping } from "@supastore/lib";
 import { useTranslations } from "next-intl";
 
 import AddTrackingDrawerDialog from "@/components/order/add-tracking-drawer-dialog";

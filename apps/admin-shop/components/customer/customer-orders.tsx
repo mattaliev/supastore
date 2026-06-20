@@ -1,4 +1,4 @@
-import { PaymentStatus, TelegramUserDetailParsed } from "@ditch/lib";
+import { PaymentStatus, TelegramUserDetailParsed } from "@supastore/lib";
 import { DateTime } from "luxon";
 import { getTranslations } from "next-intl/server";
 

@@ -1,4 +1,4 @@
-import { contactInformationDefaultGet } from "@ditch/lib";
+import { contactInformationDefaultGet } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/WithAuth";

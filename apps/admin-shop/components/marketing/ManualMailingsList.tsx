@@ -1,5 +1,5 @@
 "use client";
-import { ManualMailing, ManualMailingStatus } from "@ditch/lib";
+import { ManualMailing, ManualMailingStatus } from "@supastore/lib";
 import { useFormatter, useTranslations } from "next-intl";
 
 import ManualMailingActions from "@/components/marketing/ManualMailingActions";

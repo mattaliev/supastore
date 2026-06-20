@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@ditch/lib";
+import { Product } from "@supastore/lib";
 import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useFormStatus } from "react-dom";

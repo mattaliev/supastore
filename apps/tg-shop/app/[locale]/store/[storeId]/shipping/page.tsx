@@ -1,4 +1,4 @@
-import { shippingAddressList } from "@ditch/lib";
+import { shippingAddressList } from "@supastore/lib";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/WithAuth";
 import NoShippingAddresses from "@/components/checkout/NoShippingAddresses";

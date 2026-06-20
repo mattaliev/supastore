@@ -1,4 +1,4 @@
-import { ProductVariant } from "@ditch/lib";
+import { ProductVariant } from "@supastore/lib";
 import { Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 

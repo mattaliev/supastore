@@ -1,6 +1,6 @@
 "use client";
 
-import { storeBotUsernameGet } from "@ditch/lib";
+import { storeBotUsernameGet } from "@supastore/lib";
 import { DisplayGate, SDKProvider } from "@tma.js/sdk-react";
 import { ReactNode, useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";

@@ -1,5 +1,5 @@
 "use client";
-import { ProductVariantSize } from "@ditch/lib";
+import { ProductVariantSize } from "@supastore/lib";
 import { clsx } from "clsx";
 import { useTranslations } from "next-intl";
 

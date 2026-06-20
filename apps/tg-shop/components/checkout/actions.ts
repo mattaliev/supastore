@@ -10,7 +10,7 @@ import {
   shippingAddressDefaultSet,
   shippingAddressDelete,
   TAGS
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";

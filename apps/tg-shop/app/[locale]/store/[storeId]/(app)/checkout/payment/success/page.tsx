@@ -1,4 +1,4 @@
-import { orderGetById } from "@ditch/lib";
+import { orderGetById } from "@supastore/lib";
 import { notFound } from "next/navigation";
 
 import { getInitDataRaw } from "@/components/auth/getInitDataRaw";

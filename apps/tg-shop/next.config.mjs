@@ -22,7 +22,7 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ["@ditch/lib"],
+  transpilePackages: ["@supastore/lib"],
 };
 
 const withMDX = createMDX({});

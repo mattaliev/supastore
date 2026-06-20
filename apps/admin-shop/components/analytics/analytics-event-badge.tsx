@@ -1,5 +1,5 @@
 "use client";
-import { EventType } from "@ditch/lib";
+import { EventType } from "@supastore/lib";
 import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";

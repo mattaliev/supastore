@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductVariantCharacteristic } from "@ditch/lib";
+import { ProductVariantCharacteristic } from "@supastore/lib";
 import { useLocale, useTranslations } from "next-intl";
 
 import {

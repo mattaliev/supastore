@@ -1,4 +1,4 @@
-import { StoreCheckpoints } from "@ditch/lib";
+import { StoreCheckpoints } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 import React from "react";
 

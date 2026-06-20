@@ -1,4 +1,4 @@
-import { ManualMailingAudience } from "@ditch/lib";
+import { ManualMailingAudience } from "@supastore/lib";
 import { z } from "zod";
 
 export const ManualMailingCreateScheme = z.object({

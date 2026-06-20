@@ -1,5 +1,5 @@
 "use client";
-import { AnalyticsEvent, EventType } from "@ditch/lib";
+import { AnalyticsEvent, EventType } from "@supastore/lib";
 import { useTranslations } from "next-intl";
 
 import Link from "@/components/navigation/link";

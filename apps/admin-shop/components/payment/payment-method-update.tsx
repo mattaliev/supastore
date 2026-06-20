@@ -1,5 +1,5 @@
 "use client";
-import { ParsedPaymentMethod } from "@ditch/lib";
+import { ParsedPaymentMethod } from "@supastore/lib";
 import { FilePenIcon, LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";

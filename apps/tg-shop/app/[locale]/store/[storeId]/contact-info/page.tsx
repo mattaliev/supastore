@@ -1,4 +1,4 @@
-import { contactInformationList } from "@ditch/lib";
+import { contactInformationList } from "@supastore/lib";
 
 import WithAuth, { WithAuthProps } from "@/components/auth/WithAuth";
 import ContactInformationList from "@/components/checkout/ContactInformationList";

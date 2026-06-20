@@ -1,6 +1,6 @@
 "use client";
 
-import { Category } from "@ditch/lib";
+import { Category } from "@supastore/lib";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SearchIcon } from "lucide-react";
 import { useLocale } from "next-intl";

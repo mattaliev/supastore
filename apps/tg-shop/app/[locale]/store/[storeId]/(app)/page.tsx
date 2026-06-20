@@ -1,4 +1,4 @@
-import { EntityState, productsPaginatedGet } from "@ditch/lib";
+import { EntityState, productsPaginatedGet } from "@supastore/lib";
 import { notFound } from "next/navigation";
 
 import { withErrorHandling } from "@/components/error-handling/withErrorHandling";

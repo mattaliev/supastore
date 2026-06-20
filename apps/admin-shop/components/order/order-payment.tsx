@@ -1,4 +1,4 @@
-import { Order, paymentMethodsList, PaymentStatus } from "@ditch/lib";
+import { Order, paymentMethodsList, PaymentStatus } from "@supastore/lib";
 import { CreditCard } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 

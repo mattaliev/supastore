@@ -1,4 +1,4 @@
-import { ProductVariant } from "@ditch/lib";
+import { ProductVariant } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import Link from "@/components/navigation/link";

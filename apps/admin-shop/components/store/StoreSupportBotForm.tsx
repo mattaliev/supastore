@@ -1,5 +1,5 @@
 "use client";
-import { StoreSupportBot } from "@ditch/lib";
+import { StoreSupportBot } from "@supastore/lib";
 import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React from "react";

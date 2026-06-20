@@ -1,4 +1,4 @@
-import { Cart, cartGet, cartGetByUserId, signInShopUser } from "@ditch/lib";
+import { Cart, cartGet, cartGetByUserId, signInShopUser } from "@supastore/lib";
 import { cookies } from "next/headers";
 import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";

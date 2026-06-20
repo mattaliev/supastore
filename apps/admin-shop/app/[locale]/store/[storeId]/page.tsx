@@ -1,4 +1,4 @@
-import { sessionAnalyticsGet, storeCheckpointsGet } from "@ditch/lib";
+import { sessionAnalyticsGet, storeCheckpointsGet } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 import React from "react";
 

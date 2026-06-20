@@ -1,4 +1,4 @@
-import { Characteristic } from "@ditch/lib";
+import { Characteristic } from "@supastore/lib";
 import z, { ZodArray, ZodNumber, ZodString } from "zod";
 
 const decimalRegex = new RegExp(/^\d+(\.\d{1,2})?$|^\d+$/);

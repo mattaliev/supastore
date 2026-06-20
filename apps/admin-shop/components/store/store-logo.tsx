@@ -1,5 +1,5 @@
 "use client";
-import { Store } from "@ditch/lib";
+import { Store } from "@supastore/lib";
 import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";

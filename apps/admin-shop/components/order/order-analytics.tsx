@@ -1,4 +1,4 @@
-import { salesAnalyticsGet } from "@ditch/lib";
+import { salesAnalyticsGet } from "@supastore/lib";
 import { getTranslations } from "next-intl/server";
 
 import {

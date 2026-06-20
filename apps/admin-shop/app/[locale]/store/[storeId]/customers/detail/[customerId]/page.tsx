@@ -1,4 +1,4 @@
-import { customerDetail } from "@ditch/lib";
+import { customerDetail } from "@supastore/lib";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 

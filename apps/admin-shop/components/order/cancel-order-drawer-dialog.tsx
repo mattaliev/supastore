@@ -1,5 +1,5 @@
 "use client";
-import { FulfilmentStatus } from "@ditch/lib";
+import { FulfilmentStatus } from "@supastore/lib";
 import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

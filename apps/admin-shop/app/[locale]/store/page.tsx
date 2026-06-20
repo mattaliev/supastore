@@ -1,4 +1,4 @@
-import { storeList } from "@ditch/lib";
+import { storeList } from "@supastore/lib";
 import { ChevronRight } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { getTranslations } from "next-intl/server";

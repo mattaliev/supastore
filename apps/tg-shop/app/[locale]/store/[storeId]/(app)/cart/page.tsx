@@ -1,4 +1,4 @@
-import { cartGet, orderCanCreate } from "@ditch/lib";
+import { cartGet, orderCanCreate } from "@supastore/lib";
 import { cookies } from "next/headers";
 
 import { getInitDataRaw } from "@/components/auth/getInitDataRaw";

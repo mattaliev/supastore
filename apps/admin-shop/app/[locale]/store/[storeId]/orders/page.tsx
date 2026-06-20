@@ -3,7 +3,7 @@ import {
   FulfilmentStatus,
   ordersPaginatedGet,
   PaymentStatus
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { redirect } from "next/navigation";
 
 import { authenticated } from "@/auth";

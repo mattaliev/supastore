@@ -1,4 +1,4 @@
-import { productDetail } from "@ditch/lib";
+import { productDetail } from "@supastore/lib";
 import { notFound } from "next/navigation";
 
 import ProductDetail from "@/components/product/product-detail";

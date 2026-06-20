@@ -1,9 +1,9 @@
-import { APIFunction } from "@ditch/lib";
+import { APIFunction } from "@supastore/lib";
 import {
   AuthenticationError,
   NotFoundError,
   PermissionDeniedError
-} from "@ditch/lib/dist/api/errors";
+} from "@supastore/lib/dist/api/errors";
 import { isNotFoundError } from "next/dist/client/components/not-found";
 import { isRedirectError } from "next/dist/client/components/redirect";
 

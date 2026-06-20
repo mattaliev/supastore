@@ -5,7 +5,7 @@ import {
   manualMailingPreview,
   manualMailingSend,
   TAGS
-} from "@ditch/lib";
+} from "@supastore/lib";
 import { revalidateTag } from "next/cache";
 import { getTranslations } from "next-intl/server";
 

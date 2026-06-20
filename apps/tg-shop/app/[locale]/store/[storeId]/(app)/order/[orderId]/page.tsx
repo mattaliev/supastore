@@ -1,4 +1,4 @@
-import { orderGetById, PaymentStatus } from "@ditch/lib";
+import { orderGetById, PaymentStatus } from "@supastore/lib";
 import { BoxIcon, ContactIcon, MapPinIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 
