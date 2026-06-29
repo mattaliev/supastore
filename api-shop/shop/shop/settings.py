@@ -157,11 +157,6 @@ DATABASES = {
     'default': env.db()
 }
 
-if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-    print("Using Cloud SQL Auth Proxy...")
-    DATABASES["default"]["HOST"] = "127.0.0.1"
-    DATABASES["default"]["PORT"] = "5432"
-
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
